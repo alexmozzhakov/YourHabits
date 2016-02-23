@@ -12,7 +12,6 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request.Method;
@@ -36,7 +35,6 @@ public class RegisterActivity extends Activity {
     private EditText inputFullName;
     private EditText inputEmail;
     private EditText inputPassword;
-    private TextView titleReg;
     private ProgressDialog pDialog;
     private SQLiteHandler db;
 
@@ -84,13 +82,11 @@ public class RegisterActivity extends Activity {
             finish();
         }
 
-        try{
+        try {
             Account[] accounts = AccountManager.get(this).getAccountsByType("com.google");
             inputEmail.setText(accounts[0].name);
-        }
-        catch(Exception e)
-        {
-            Log.i("Exception", "Exception:"+e) ;
+        } catch (Exception e) {
+            Log.i("Exception", "Exception:" + e);
         }
 
         // Register Button Click event
@@ -107,7 +103,7 @@ public class RegisterActivity extends Activity {
                         if (isValidEmail(email))
                             registerUser(name, email, password);
                         else
-                            Toast.makeText(RegisterActivity.this, "Invalid Email Addresss", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(RegisterActivity.this, "Invalid Email Address", Toast.LENGTH_SHORT).show();
 
                     } else {
                         Toast.makeText(RegisterActivity.this, "Invalid Name", Toast.LENGTH_SHORT).show();
