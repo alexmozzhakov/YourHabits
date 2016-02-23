@@ -1,0 +1,6 @@
+<root>
+  <item
+      name='android.os.AsyncTask android.os.AsyncTask&lt;Params,Progress,Result&gt; execute(Params...)'>
+    <annotation name='android.support.annotation.NonNull' />
+  </item>
+</root>

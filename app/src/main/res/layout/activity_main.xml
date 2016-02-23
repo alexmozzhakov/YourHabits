@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:openDrawer="start">
+
+    <ViewFlipper xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/vf"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <include android:id="@+id/home"  layout="@layout/activity_menu" />
+        <include android:id="@+id/calendar"  layout="@layout/activity_menu" />
+        <include android:id="@+id/stats"  layout="@layout/activity_menu" />
+        <include android:id="@+id/progs"  layout="@layout/activity_menu" />
+        <include android:id="@+id/lists"  layout="@layout/activity_menu" />
+        <include android:id="@+id/prof"  layout="@layout/activity_menu" />
+        <include android:id="@+id/settings" layout="@layout/activity_settings" />
+
+    </ViewFlipper>
+
+    <android.support.design.widget.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/nav_header_menu"
+        app:menu="@menu/activity_menu_drawer" />
+
+</android.support.v4.widget.DrawerLayout>
