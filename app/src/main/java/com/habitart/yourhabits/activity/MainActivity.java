@@ -69,7 +69,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
