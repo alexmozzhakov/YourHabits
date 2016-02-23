@@ -66,10 +66,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        TextView nav_name = (TextView) findViewById(R.id.name_info);
-        nav_name.setText("");
-        TextView nav_email = (TextView) findViewById(R.id.email_info);
-        nav_email.setText("");
+
     }
 
     @Override
