@@ -70,6 +70,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         TextView nav_email = (TextView) navigationView.getHeaderView(0).findViewById(R.id.email_info);
         nav_name.setText(name);
         nav_email.setText(email);
+
     }
 
 
