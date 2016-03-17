@@ -1,40 +1,36 @@
-package com.habitart.yourhabits.activity;
+/**
+ * Author: Ravi Tamada
+ * URL: www.androidhive.info
+ * twitter: http://twitter.com/ravitamada
+ */
+package com.habit_track.activity;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.text.Html;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request.Method;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.habitart.yourhabits.R;
-import com.habitart.yourhabits.app.AppController;
-import com.habitart.yourhabits.helper.SQLiteHandler;
-import com.habitart.yourhabits.helper.SessionManager;
+import com.habit_track.R;
+import com.habit_track.app.AppController;
+import com.habit_track.helper.SQLiteHandler;
+import com.habit_track.helper.SessionManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
 public class LoginActivity extends Activity {
     private static final String TAG = RegisterActivity.class.getSimpleName();
@@ -43,9 +39,6 @@ public class LoginActivity extends Activity {
     private ProgressDialog pDialog;
     private SessionManager session;
     private SQLiteHandler db;
-    public static String lastLoginEmail = null;
-    final String SAVED_TEXT = "saved_text";
-    SharedPreferences sPref;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -53,24 +46,13 @@ public class LoginActivity extends Activity {
         setContentView(R.layout.activity_login);
 
         inputEmail = (EditText) findViewById(R.id.email);
-
-
-        if (lastLoginEmail != null)
-            inputEmail.setText(lastLoginEmail);
         inputPassword = (EditText) findViewById(R.id.password);
         Typeface face = Typeface.createFromAsset(getAssets(), "fonts/Montserrat-Regular.ttf");
         inputEmail.setTypeface(face);
         inputPassword.setTypeface(face);
 
-        Button btnForgot = (Button) findViewById(R.id.btnForgot);
         Button btnLogin = (Button) findViewById(R.id.btnLogin);
         Button btnLinkToRegister = (Button) findViewById(R.id.btnLinkToRegisterScreen);
-
-        // Set text for top block
-        TextView mBox = (TextView) findViewById(R.id.titleLog);
-        mBox.setText(Html.fromHtml("Welcome <br><br> <small> Start managing your habits quickly and efficiently </small>"));
-
-        // Set Enter button to Login on last time
         inputPassword.setImeActionLabel("Login", KeyEvent.KEYCODE_ENTER);
 
         // Progress dialog
@@ -82,15 +64,6 @@ public class LoginActivity extends Activity {
 
         // Session manager
         session = new SessionManager(getApplicationContext());
-
-        DisplayMetrics metrics = new DisplayMetrics();
-        WindowManager wm = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
-        wm.getDefaultDisplay().getMetrics(metrics);
-        final float width = metrics.widthPixels;
-        LinearLayout.LayoutParams layoutParamsWidth50 = new LinearLayout.LayoutParams((int) (width / 2), MATCH_PARENT);
-
-        btnLinkToRegister.setLayoutParams(layoutParamsWidth50);
-        btnForgot.setLayoutParams(layoutParamsWidth50);
 
         // Check if user is already logged in or not
         if (session.isLoggedIn()) {
@@ -111,10 +84,7 @@ public class LoginActivity extends Activity {
                     // Check for empty data in the form
                     if (!email.isEmpty() && !password.isEmpty()) {
                         // login user
-                        if (RegisterActivity.isValidEmail(email)) {
-                            checkLogin(email, password);
-                        } else
-                            Toast.makeText(LoginActivity.this, "Invalid Email Address", Toast.LENGTH_SHORT).show();
+                        checkLogin(email, password);
                     } else {
                         // Prompt user to enter credentials
                         Toast.makeText(getApplicationContext(),
@@ -137,10 +107,7 @@ public class LoginActivity extends Activity {
                 // Check for empty data in the form
                 if (!email.isEmpty() && !password.isEmpty()) {
                     // login user
-                    if (RegisterActivity.isValidEmail(email)) {
-                        checkLogin(email, password);
-                    } else
-                        Toast.makeText(LoginActivity.this, "Invalid Email Address", Toast.LENGTH_SHORT).show();
+                    checkLogin(email, password);
                 } else {
                     // Prompt user to enter credentials
                     Toast.makeText(getApplicationContext(),
@@ -164,13 +131,15 @@ public class LoginActivity extends Activity {
 
     }
 
+    /**
+     * function to verify login details in mysql db
+     */
     private void checkLogin(final String email, final String password) {
         // Tag used to cancel the request
         String tag_string_req = "req_login";
 
         pDialog.setMessage("Logging in ...");
         showDialog();
-
 
         StringRequest strReq = new StringRequest(Method.POST,
                 AppController.URL_LOGIN, new Response.Listener<String>() {
@@ -198,10 +167,6 @@ public class LoginActivity extends Activity {
                         String email = user.getString("email");
                         String created_at = user
                                 .getString("created_at");
-
-                        sPref = getPreferences(MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sPref.edit().putString(SAVED_TEXT, email);
-                        editor.apply();
 
                         // Inserting row in users table
                         db.addUser(name, email, uid, created_at);
@@ -238,7 +203,7 @@ public class LoginActivity extends Activity {
             @Override
             protected Map<String, String> getParams() {
                 // Posting parameters to login url
-                HashMap<String, String> params = new HashMap<>();
+                Map<String, String> params = new HashMap<String, String>();
                 params.put("email", email);
                 params.put("password", password);
 
@@ -259,12 +224,5 @@ public class LoginActivity extends Activity {
     private void hideDialog() {
         if (pDialog.isShowing())
             pDialog.dismiss();
-    }
-
-    public void forgotPass(View view) {
-        Intent intent = new Intent(getApplicationContext(),
-                MainActivity.class);
-        startActivity(intent);
-        finish();
     }
 }

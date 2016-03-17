@@ -1,4 +1,4 @@
-package com.habitart.yourhabits.app;
+package com.habit_track.app;
 
 import android.app.Application;
 import android.text.TextUtils;
@@ -9,9 +9,14 @@ import com.android.volley.toolbox.Volley;
 
 public class AppController extends Application {
 
+	// Server user login url
 	public static String URL_LOGIN = "http://habbitsapp.esy.es/android_login_api/login.php";
-
+	// Server user register url
 	public static String URL_REGISTER = "http://habbitsapp.esy.es/android_login_api/register.php";
+	// Server weather api
+	public static String URL_WEATHER_API = "http://habbitsapp.esy.es/weather_api.php";
+	//Server programs api
+	public static String URL_PROGRAMS_API = "http://habbitsapp.esy.es/programs_api.php";
 
 	public static final String TAG = AppController.class.getSimpleName();
 
@@ -42,14 +47,4 @@ public class AppController extends Application {
 		getRequestQueue().add(req);
 	}
 
-	public <T> void addToRequestQueue(Request<T> req) {
-		req.setTag(TAG);
-		getRequestQueue().add(req);
-	}
-
-	public void cancelPendingRequests(Object tag) {
-		if (mRequestQueue != null) {
-			mRequestQueue.cancelAll(tag);
-		}
-	}
 }

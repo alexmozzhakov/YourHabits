@@ -1,11 +1,13 @@
-package com.habitart.yourhabits.activity;
+/**
+ * Author: Ravi Tamada
+ * URL: www.androidhive.info
+ * twitter: http://twitter.com/ravitamada
+ */
+package com.habit_track.activity;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
@@ -18,10 +20,6 @@ import com.android.volley.Request.Method;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.habitart.yourhabits.R;
-import com.habitart.yourhabits.app.AppController;
-import com.habitart.yourhabits.helper.SQLiteHandler;
-import com.habitart.yourhabits.helper.SessionManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,17 +28,25 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import com.habit_track.R;
+import com.habit_track.app.AppController;
+import com.habit_track.helper.SQLiteHandler;
+import com.habit_track.helper.SessionManager;
+
 public class RegisterActivity extends Activity {
     private static final String TAG = RegisterActivity.class.getSimpleName();
+    private Button btnRegister;
+    private Button btnLinkToLogin;
     private EditText inputFullName;
     private EditText inputEmail;
     private EditText inputPassword;
     private ProgressDialog pDialog;
+    private SessionManager session;
     private SQLiteHandler db;
 
-    public final Pattern NAME_PATTERN = Pattern.compile("^[a-zA-Z \\-\\.']*$");
+    public final Pattern NAME_PATTERN = Pattern.compile("^[a-zA-Z \\-\\.\\']*$");
 
-    public static boolean isValidEmail(String email) {
+    private boolean isValidEmail(String email) {
         return Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
@@ -52,23 +58,19 @@ public class RegisterActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        Typeface face = Typeface.createFromAsset(getAssets(), "fonts/Montserrat-Regular.ttf");
-        inputFullName = (EditText) findViewById(R.id.name);
-        inputFullName.setTypeface(face);
-        inputEmail = (EditText) findViewById(R.id.email);
-        inputEmail.setTypeface(face);
-        inputPassword = (EditText) findViewById(R.id.password);
-        inputPassword.setTypeface(face);
-        Button btnRegister = (Button) findViewById(R.id.btnRegister);
-        Button btnLinkToLogin = (Button) findViewById(R.id.btnLinkToLoginScreen);
 
+        inputFullName = (EditText) findViewById(R.id.fullname);
+        inputEmail = (EditText) findViewById(R.id.email);
+        inputPassword = (EditText) findViewById(R.id.password);
+        btnRegister = (Button) findViewById(R.id.btnRegister);
+        btnLinkToLogin = (Button) findViewById(R.id.btnLinkToLoginScreen);
 
         // Progress dialog
         pDialog = new ProgressDialog(this);
         pDialog.setCancelable(false);
 
         // Session manager
-        SessionManager session = new SessionManager(getApplicationContext());
+        session = new SessionManager(getApplicationContext());
 
         // SQLite database handler
         db = new SQLiteHandler(getApplicationContext());
@@ -82,28 +84,21 @@ public class RegisterActivity extends Activity {
             finish();
         }
 
-        try {
-            Account[] accounts = AccountManager.get(this).getAccountsByType("com.google");
-            inputEmail.setText(accounts[0].name);
-        } catch (Exception e) {
-            Log.i("Exception", "Exception:" + e);
-        }
-
         // Register Button Click event
         btnRegister.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 String name = inputFullName.getText().toString().trim();
                 String email = inputEmail.getText().toString().trim();
                 String password = inputPassword.getText().toString().trim();
-                if (name.isEmpty()) {
-                    name = "Anonymous";
+                if (name.isEmpty()){
+                    name="Anonymous";
                 }
                 if (!email.isEmpty() && !password.isEmpty()) {
                     if (isValidName(name)) {
                         if (isValidEmail(email))
                             registerUser(name, email, password);
                         else
-                            Toast.makeText(RegisterActivity.this, "Invalid Email Address", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(RegisterActivity.this, "Invalid Email Addresss", Toast.LENGTH_SHORT).show();
 
                     } else {
                         Toast.makeText(RegisterActivity.this, "Invalid Name", Toast.LENGTH_SHORT).show();
@@ -169,7 +164,9 @@ public class RegisterActivity extends Activity {
                         Toast.makeText(getApplicationContext(), "User successfully registered. Try login now!", Toast.LENGTH_LONG).show();
 
                         // Launch login activity
-                        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                        Intent intent = new Intent(
+                                RegisterActivity.this,
+                                LoginActivity.class);
                         startActivity(intent);
                         finish();
                     } else {
@@ -199,7 +196,7 @@ public class RegisterActivity extends Activity {
             @Override
             protected Map<String, String> getParams() {
                 // Posting params to register url
-                HashMap<String, String> params = new HashMap<>();
+                Map<String, String> params = new HashMap<String, String>();
                 params.put("name", name);
                 params.put("email", email);
                 params.put("password", password);
