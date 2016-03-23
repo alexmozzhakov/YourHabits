@@ -10,7 +10,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,6 +19,10 @@ import com.android.volley.Request.Method;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.habit_track.R;
+import com.habit_track.app.AppController;
+import com.habit_track.helper.SQLiteHandler;
+import com.habit_track.helper.SessionManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,30 +31,20 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import com.habit_track.R;
-import com.habit_track.app.AppController;
-import com.habit_track.helper.SQLiteHandler;
-import com.habit_track.helper.SessionManager;
-
 public class RegisterActivity extends Activity {
+
     private static final String TAG = RegisterActivity.class.getSimpleName();
-    private Button btnRegister;
-    private Button btnLinkToLogin;
-    private EditText inputFullName;
-    private EditText inputEmail;
-    private EditText inputPassword;
     private ProgressDialog pDialog;
-    private SessionManager session;
     private SQLiteHandler db;
 
-    public final Pattern NAME_PATTERN = Pattern.compile("^[a-zA-Z \\-\\.\\']*$");
+    protected static final Pattern NAME_PATTERN = Pattern.compile("^[a-zA-Z \\-\\.']*$");
+    // protected static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,10}$", Pattern.CASE_INSENSITIVE);
+    protected static final Pattern EMAIL_PATTERN = Pattern.compile(
+            "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+                    + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
 
-    private boolean isValidEmail(String email) {
-        return Patterns.EMAIL_ADDRESS.matcher(email).matches();
-    }
-
-    private boolean isValidName(String name) {
-        return NAME_PATTERN.matcher(name).matches();
+    protected static boolean isValidPattern(String str, Pattern pattern) {
+        return pattern.matcher(str).matches();
     }
 
     @Override
@@ -59,18 +52,18 @@ public class RegisterActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        inputFullName = (EditText) findViewById(R.id.fullname);
-        inputEmail = (EditText) findViewById(R.id.email);
-        inputPassword = (EditText) findViewById(R.id.password);
-        btnRegister = (Button) findViewById(R.id.btnRegister);
-        btnLinkToLogin = (Button) findViewById(R.id.btnLinkToLoginScreen);
+        final EditText inputFullName = (EditText) findViewById(R.id.fullname);
+        final EditText inputEmail = (EditText) findViewById(R.id.email);
+        final EditText inputPassword = (EditText) findViewById(R.id.password);
+        final Button btnRegister = (Button) findViewById(R.id.btnRegister);
+        final Button btnLinkToLogin = (Button) findViewById(R.id.btnLinkToLoginScreen);
 
         // Progress dialog
         pDialog = new ProgressDialog(this);
         pDialog.setCancelable(false);
 
         // Session manager
-        session = new SessionManager(getApplicationContext());
+        SessionManager session = new SessionManager(getApplicationContext());
 
         // SQLite database handler
         db = new SQLiteHandler(getApplicationContext());
@@ -90,15 +83,15 @@ public class RegisterActivity extends Activity {
                 String name = inputFullName.getText().toString().trim();
                 String email = inputEmail.getText().toString().trim();
                 String password = inputPassword.getText().toString().trim();
-                if (name.isEmpty()){
-                    name="Anonymous";
+                if (name.isEmpty()) {
+                    name = "Anonymous";
                 }
                 if (!email.isEmpty() && !password.isEmpty()) {
-                    if (isValidName(name)) {
-                        if (isValidEmail(email))
+                    if (isValidPattern(name, NAME_PATTERN)) {
+                        if (isValidPattern(email, EMAIL_PATTERN)) {
                             registerUser(name, email, password);
-                        else
-                            Toast.makeText(RegisterActivity.this, "Invalid Email Addresss", Toast.LENGTH_SHORT).show();
+                        } else
+                            Toast.makeText(RegisterActivity.this, "Invalid Email Address", Toast.LENGTH_SHORT).show();
 
                     } else {
                         Toast.makeText(RegisterActivity.this, "Invalid Name", Toast.LENGTH_SHORT).show();
@@ -150,7 +143,7 @@ public class RegisterActivity extends Activity {
                     if (!error) {
                         // User successfully stored in MySQL
                         // Now store the user in sqlite
-                        String uid = jObj.getString("uid");
+                        //String id = jObj.getString("id");
 
                         JSONObject user = jObj.getJSONObject("user");
                         String name = user.getString("name");
@@ -159,7 +152,7 @@ public class RegisterActivity extends Activity {
                                 .getString("created_at");
 
                         // Inserting row in users table
-                        db.addUser(name, email, uid, created_at);
+                        db.addUser(name, email, created_at);
 
                         Toast.makeText(getApplicationContext(), "User successfully registered. Try login now!", Toast.LENGTH_LONG).show();
 
@@ -196,7 +189,7 @@ public class RegisterActivity extends Activity {
             @Override
             protected Map<String, String> getParams() {
                 // Posting params to register url
-                Map<String, String> params = new HashMap<String, String>();
+                Map<String, String> params = new HashMap<>();
                 params.put("name", name);
                 params.put("email", email);
                 params.put("password", password);

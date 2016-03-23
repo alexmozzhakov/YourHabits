@@ -10,9 +10,6 @@ import com.habit_track.R;
 
 public class CalendarFragment extends Fragment {
 
-    public CalendarFragment() {
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

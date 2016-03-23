@@ -1,9 +1,5 @@
 <resources>
     <string name="app_name">YourHabits</string>
-    <string name="action_settings">Settings</string>
-    <string name="title_activity_main">YourHabits</string>
-    <string name="SignUp">SIGN UP</string>
-    <string name="SignIn">SIGN IN</string>
     <string name="hint_email">Email</string>
     <string name="hint_password">Password</string>
     <string name="hint_name">Fullname</string>
@@ -12,26 +8,13 @@
     <string name="btn_link_to_register">Registration</string>
     <string name="btn_link_to_login">Login</string>
     <string name="btn_terms_and_conditions">Terms &amp; Conditions</string>
-    <string name="welcome">Welcome</string>
-    <string name="btn_logout">LOGOUT</string>
     <string name="forgot">forgot password?</string>
-    <string name="top_img">top image</string>
-    <string name="title_activity_menu">MenuActivity</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="import_item">Import</string>
-    <string name="gallery_item">Gallery</string>
-    <string name="slideshow_item">Slideshow</string>
-    <string name="tools_item">Tools</string>
-    <string name="communicate_item">Communicate</string>
-    <string name="share_item">Share</string>
-    <string name="send_item">Send</string>
-    <string name="facebook_app_id">838204572968918</string>
-    <string name="saved_temp" />
     <string name="loading">Loading...</string>
 
 </resources>

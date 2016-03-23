@@ -3,11 +3,8 @@ package com.habit_track.fragments;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.Bundle;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.TextUtils;
-import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,21 +24,15 @@ import org.json.JSONObject;
 
 public class HomeFragment extends Fragment {
 
-    public HomeFragment() {
-        // Required empty public constructor
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final SharedPreferences sharedpreferences = this.getActivity().getSharedPreferences("pref", Context.MODE_PRIVATE);
         View view = inflater.inflate(R.layout.fragment_home, container, false);
+        final TextView weatherBot = (TextView) view.findViewById(R.id.weatherBot);
 
-        final TextView txt = (TextView) view.findViewById(R.id.weather);
+        final TextView weather = (TextView) view.findViewById(R.id.weather);
 
-        if (sharedpreferences.contains("celsius")) {
-            setBigAndSmallText(sharedpreferences.getString("celsius", "Loading..."), sharedpreferences.getString("location", "Loading..."), txt, new RelativeSizeSpan(3f), new RelativeSizeSpan(1.2f));
-        }
+        final SharedPreferences sharedPreferences = this.getActivity().getSharedPreferences("pref", Context.MODE_PRIVATE);
 
         RequestQueue rq = Volley.newRequestQueue(getActivity().getApplicationContext());
 
@@ -51,10 +42,14 @@ public class HomeFragment extends Fragment {
                     public void onResponse(String response) {
                         try {
                             JSONObject o = new JSONObject(response);
-                            SharedPreferences.Editor editor = sharedpreferences.edit();
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
                             editor.putString("celsius", o.getString("celsius")).apply();
                             editor.putString("location", o.getString("location")).apply();
-                            setBigAndSmallText(o.getString("celsius"), o.getString("location"), txt, new RelativeSizeSpan(3f), new RelativeSizeSpan(1.2f));
+                            weather.setText(o.getString("celsius"));
+                            final Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Montserrat-Regular.ttf");
+                            weatherBot.setTypeface(face);
+                            weatherBot.setText(o.getString("location"));
+                            //setBigAndSmallText(o.getString("celsius"), o.getString("location"), weather, new RelativeSizeSpan(3f), new RelativeSizeSpan(1.2f));
                         } catch (JSONException ignored) {
 
                         }
@@ -72,13 +67,5 @@ public class HomeFragment extends Fragment {
         rq.add(stringRequest);
         // Inflate the layout for this fragment
         return view;
-    }
-
-    public static void setBigAndSmallText(String big, String small, TextView text, RelativeSizeSpan bigSize, RelativeSizeSpan smallSize) {
-        SpannableString bigSpan = new SpannableString(big);
-        SpannableString smallSpan = new SpannableString(small);
-        bigSpan.setSpan(bigSize, 0, bigSpan.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        smallSpan.setSpan(smallSize, 0, smallSpan.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        text.setText(TextUtils.concat(bigSpan, "\n", smallSpan));
     }
 }

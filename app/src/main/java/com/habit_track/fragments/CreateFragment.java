@@ -9,9 +9,6 @@ import android.view.ViewGroup;
 import com.habit_track.R;
 
 public class CreateFragment extends Fragment {
-    public CreateFragment() {
-        // Required empty public constructor
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

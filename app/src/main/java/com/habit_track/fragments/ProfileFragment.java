@@ -10,9 +10,6 @@ import com.habit_track.R;
 
 public class ProfileFragment extends Fragment {
 
-    public ProfileFragment() {
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

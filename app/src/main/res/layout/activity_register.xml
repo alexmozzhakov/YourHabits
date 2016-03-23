@@ -44,10 +44,10 @@
             android:textSize="20sp" />
 
         <EditText
-            android:id="@+id/email_r"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
+            android:id="@+id/email"
             android:background="@drawable/border"
             android:hint="@string/hint_email"
             android:inputType="textEmailAddress"

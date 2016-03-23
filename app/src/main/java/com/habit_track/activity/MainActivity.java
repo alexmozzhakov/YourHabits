@@ -2,7 +2,6 @@ package com.habit_track.activity;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.app.ListFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -19,6 +18,7 @@ import com.habit_track.R;
 import com.habit_track.fragments.CalendarFragment;
 import com.habit_track.fragments.CreateFragment;
 import com.habit_track.fragments.HomeFragment;
+import com.habit_track.fragments.ListFragment;
 import com.habit_track.fragments.ProfileFragment;
 import com.habit_track.fragments.ProgramsFragment;
 import com.habit_track.fragments.SettingsFragment;
