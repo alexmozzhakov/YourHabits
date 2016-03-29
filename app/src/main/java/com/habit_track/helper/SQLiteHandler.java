@@ -68,7 +68,6 @@ public class SQLiteHandler extends SQLiteOpenHelper {
 		ContentValues values = new ContentValues();
 		values.put(KEY_NAME, name); // Name
 		values.put(KEY_EMAIL, email); // Email
-		//values.put(KEY_UID, uid); // Email
 		values.put(KEY_CREATED_AT, created_at); // Created At
 
 		// Inserting Row
@@ -82,7 +81,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
 	 * Getting user data from database
 	 * */
 	public HashMap<String, String> getUserDetails() {
-		HashMap<String, String> user = new HashMap<String, String>();
+		HashMap<String, String> user = new HashMap<>();
 		String selectQuery = "SELECT  * FROM " + TABLE_USER;
 
 		SQLiteDatabase db = this.getReadableDatabase();
@@ -92,7 +91,6 @@ public class SQLiteHandler extends SQLiteOpenHelper {
 		if (cursor.getCount() > 0) {
 			user.put("name", cursor.getString(1));
 			user.put("email", cursor.getString(2));
-		//	user.put("uid", cursor.getString(3));
 			user.put("created_at", cursor.getString(3));
 		}
 		cursor.close();

@@ -1,51 +1,123 @@
 package com.habit_track.fragments;
 
 import android.app.Fragment;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.habit_track.R;
 import com.habit_track.app.AppController;
+import com.habit_track.app.Program;
+import com.habit_track.helper.ProgramListAdapter;
+import com.squareup.picasso.Picasso;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class ProgramsFragment extends Fragment {
+    private JSONObject jsonObject;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View result = inflater.inflate(R.layout.fragment_programs, container, false);
-        RequestQueue rq = Volley.newRequestQueue(getActivity().getApplicationContext());
 
-        final TextView txt = (TextView) result.findViewById(R.id.text);
+        //Create array of programs
+        Program program_data[] = new Program[3];
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, AppController.URL_PROGRAMS_API,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        txt.setText(response);
+        //Create request
+        final StringRequest stringRequest = new StringRequest(Request.Method.GET, AppController.URL_PROGRAMS_API,
+                response -> {
+                    try {
+                        // GET Json response from programs db
+                        jsonObject = new JSONObject(response);
+
+                        for (int i = 0; i < 4; i++) {
+
+                            //Get program as json object from request
+                            final JSONObject program = jsonObject.getJSONObject(String.valueOf(i + 1));
+
+                            //Styles for top program
+                            if (i == 0) {
+                                ImageView bestImage = (ImageView) result.findViewById(R.id.imageView1);
+
+                                //Create link for image to download from json request
+                                final String imageLink = "http://habbitsapp.esy.es/img_progs/"
+                                        + program.getString("image");
+
+                                Log.i("Image request", imageLink);
+
+                                //Download image async and set to ImageView
+                                Picasso.with(getActivity().getApplicationContext())
+                                        .load(imageLink)
+                                        .into(bestImage);
+
+
+                                //Load typefaces from assets
+                                final Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Montserrat-Regular.ttf");
+                                final Typeface faceLight = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Montserrat-Light.otf");
+
+                                //Style title
+                                final TextView titleTop = ((TextView) result.findViewById(R.id.titleTop));
+                                titleTop.setText(program.getString("name"));
+                                titleTop.setTextColor(Color.parseColor("#ffffff"));
+                                titleTop.setTypeface(faceLight);
+                                titleTop.setOnClickListener(this::top);
+
+                                //Style percent view
+                                TextView successTop = (TextView) result.findViewById(R.id.percentTop);
+                                successTop.setText(program.getString("success") + "%");
+                                successTop.setTypeface(face);
+
+                            }
+                            // Add other programs to array
+                            else {
+                                program_data[i - 1] = new Program(program.getString("name"), program.getString("success") + "% SUCCEEDED");
+                            }
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } finally {
+                        //Use adapter for array of non-top programs
+                        ProgramListAdapter adapter = new ProgramListAdapter(getActivity(),
+                                R.layout.prog_listitem, program_data);
+                        ListView listView = (ListView) result.findViewById(R.id.mainListView);
+                        listView.setAdapter(adapter);
+
                     }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        //
-                    }
-                });
+                }, error -> {
+        });
 
-
-        rq.add(stringRequest);
-
-        rq.add(stringRequest);
+        Volley.newRequestQueue(getActivity().getApplicationContext()).add(stringRequest);
 
         return result;
     }
+
+    public void top(View view) {
+        try {
+            final Bundle bundle = new Bundle();
+            bundle.putString("title", jsonObject.getJSONObject("1").getString("name"));
+            bundle.putString("description", jsonObject.getJSONObject("1").getString("description"));
+            final ProgramFragment programFragment = new ProgramFragment();
+            programFragment.setArguments(bundle);
+
+            getFragmentManager().beginTransaction().replace(R.id.content_frame, programFragment).commit();
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 }
+
+

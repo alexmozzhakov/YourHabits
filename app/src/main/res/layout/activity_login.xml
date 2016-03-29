@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="bottom"
-    android:orientation="vertical"
-    android:weightSum="1">
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:gravity="bottom"
+              android:orientation="vertical"
+              android:weightSum="1">
 
     <TextView
         android:layout_width="match_parent"
@@ -12,7 +12,7 @@
         android:background="@drawable/bg_img"
         android:gravity="center"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@color/white" />
+        android:textColor="@color/white"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -40,7 +40,7 @@
             android:singleLine="true"
             android:textColor="@color/input_login"
             android:textColorHint="@color/input_login_hint"
-            android:textSize="20sp" />
+            android:textSize="20sp"/>
 
         <EditText
             android:id="@+id/password"
@@ -55,7 +55,7 @@
             android:paddingTop="5dp"
             android:textColor="@color/input_login"
             android:textColorHint="@color/input_login_hint"
-            android:textSize="20sp" />
+            android:textSize="20sp"/>
 
         <!-- Login Button -->
         <Button
@@ -65,7 +65,7 @@
             android:layout_marginTop="20dip"
             android:background="@color/colorAccent"
             android:text="@string/btn_login"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -86,7 +86,7 @@
                 android:paddingStart="10dp"
                 android:text="@string/btn_register"
                 android:textColor="@color/input_login_hint"
-                android:textSize="12sp" />
+                android:textSize="12sp"/>
 
             <!-- Link to Password Recovery Screen -->
 
@@ -97,13 +97,13 @@
                 android:layout_weight=".5"
                 android:background="@null"
                 android:gravity="end|center_vertical"
+                android:onClick="forgotPass"
                 android:paddingEnd="10dp"
                 android:paddingRight="10dp"
                 android:paddingStart="10dp"
                 android:text="@string/forgot"
                 android:textColor="@color/colorAccent"
-                android:textSize="12sp"
-                android:onClick="forgotPass"/>
+                android:textSize="12sp"/>
 
         </LinearLayout>
     </LinearLayout>

@@ -12,8 +12,6 @@ import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.habit_track.R;
@@ -28,7 +26,7 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-        final TextView weatherBot = (TextView) view.findViewById(R.id.weatherBot);
+        TextView weatherBot = (TextView) view.findViewById(R.id.weatherBot);
 
         final TextView weather = (TextView) view.findViewById(R.id.weather);
 
@@ -37,30 +35,28 @@ public class HomeFragment extends Fragment {
         RequestQueue rq = Volley.newRequestQueue(getActivity().getApplicationContext());
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, AppController.URL_WEATHER_API,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONObject o = new JSONObject(response);
-                            SharedPreferences.Editor editor = sharedPreferences.edit();
-                            editor.putString("celsius", o.getString("celsius")).apply();
-                            editor.putString("location", o.getString("location")).apply();
-                            weather.setText(o.getString("celsius"));
-                            final Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Montserrat-Regular.ttf");
+                response -> {
+                    try {
+                        JSONObject o = new JSONObject(response);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+                        editor.putString("celsius", o.getString("celsius")).apply();
+                        editor.putString("location", o.getString("location")).apply();
+
+                        weather.setText(o.getString("celsius") + "˚C");
+
+                        if (this.getActivity() != null) {
+                            Typeface face = Typeface.createFromAsset(this.getActivity().getAssets(), "fonts/Montserrat-Regular.ttf");
                             weatherBot.setTypeface(face);
-                            weatherBot.setText(o.getString("location"));
-                            //setBigAndSmallText(o.getString("celsius"), o.getString("location"), weather, new RelativeSizeSpan(3f), new RelativeSizeSpan(1.2f));
-                        } catch (JSONException ignored) {
-
                         }
+                        weatherBot.setText(o.getString("location"));
+
+                    } catch (JSONException ignored) {
 
                     }
+
                 },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        //
-                    }
+                error -> {
                 });
 
 

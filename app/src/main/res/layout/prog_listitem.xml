@@ -1,0 +1,29 @@
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:id="@+id/prog_listitem"
+    android:background="@color/white">
+
+
+    <TextView
+        android:id="@+id/prog_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|center_horizontal"
+        android:gravity="center"
+        android:layout_marginTop="20dp"
+        android:textColor="@color/black"
+        android:text="@string/navigation_drawer_close"
+        android:textSize="26sp"/>
+
+    <TextView
+        android:id="@+id/prog_percent"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_gravity="bottom|center_horizontal"
+        android:gravity="center"
+        android:textColor="@color/black"
+        android:text="@string/app_name"
+        android:textSize="12sp"/>
+</FrameLayout>

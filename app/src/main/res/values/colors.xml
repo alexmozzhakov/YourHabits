@@ -6,4 +6,5 @@
     <color name="white">#ffffff</color>
     <color name="input_login">#222222</color>
     <color name="input_login_hint">#9e9e9e</color>
+    <color name="black">#000000</color>
 </resources>

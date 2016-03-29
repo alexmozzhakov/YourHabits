@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:checkableBehavior="single">
+    <group android:checkableBehavior="single"
+        android:id="@+id/j">
+
         <item
             android:id="@+id/nav_home"
             android:icon="@drawable/home"
             android:title="Home"/>
-        <item
-            android:id="@+id/nav_calendar"
-            android:icon="@drawable/group"
-            android:title="Calendar"/>
-        <item
-            android:id="@+id/nav_stats"
-            android:icon="@drawable/overview"
-            android:title="Statistics"/>
+        <!--<item-->
+            <!--android:id="@+id/nav_calendar"-->
+            <!--android:icon="@drawable/group"-->
+            <!--android:title="Calendar"/>-->
+        <!--<item-->
+            <!--android:id="@+id/nav_stats"-->
+            <!--android:icon="@drawable/overview"-->
+            <!--android:title="Statistics"/>-->
         <item
             android:id="@+id/nav_programs"
             android:icon="@drawable/groups"
@@ -22,21 +25,20 @@
             android:id="@+id/nav_lists"
             android:icon="@drawable/lists"
             android:title="Lists"/>
-        <item
-            android:id="@+id/nav_profile"
-            android:icon="@drawable/profile"
-            android:title="Profile"/>
+        <!--<item-->
+            <!--android:id="@+id/nav_profile"-->
+            <!--android:icon="@drawable/profile"-->
+            <!--android:title="Profile"/>-->
     </group>
-    <group
-        >
-        <item
-            android:id="@+id/nav_settings"
-            android:icon="@drawable/settings"
-            android:title="Settings"/>
+
+    <group android:id="@+id/group_settings">
+        <!--<item-->
+            <!--android:id="@+id/nav_settings"-->
+            <!--android:icon="@drawable/settings"-->
+            <!--android:title="Settings"/>-->
         <item
             android:id="@+id/nav_logout"
             android:icon="@drawable/logout"
             android:title="Logout"/>
     </group>
-
 </menu>

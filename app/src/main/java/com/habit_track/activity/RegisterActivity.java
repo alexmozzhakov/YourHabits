@@ -10,14 +10,12 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.android.volley.Request.Method;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.habit_track.R;
 import com.habit_track.app.AppController;
@@ -78,42 +76,37 @@ public class RegisterActivity extends Activity {
         }
 
         // Register Button Click event
-        btnRegister.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                String name = inputFullName.getText().toString().trim();
-                String email = inputEmail.getText().toString().trim();
-                String password = inputPassword.getText().toString().trim();
-                if (name.isEmpty()) {
-                    name = "Anonymous";
-                }
-                if (!email.isEmpty() && !password.isEmpty()) {
-                    if (isValidPattern(name, NAME_PATTERN)) {
-                        if (isValidPattern(email, EMAIL_PATTERN)) {
-                            registerUser(name, email, password);
-                        } else
-                            Toast.makeText(RegisterActivity.this, "Invalid Email Address", Toast.LENGTH_SHORT).show();
-
-                    } else {
-                        Toast.makeText(RegisterActivity.this, "Invalid Name", Toast.LENGTH_SHORT).show();
-                    }
+        btnRegister.setOnClickListener(view -> {
+            String name = inputFullName.getText().toString().trim();
+            String email = inputEmail.getText().toString().trim();
+            String password = inputPassword.getText().toString().trim();
+            if (name.isEmpty()) {
+                name = "Anonymous";
+            }
+            if (!email.isEmpty() && !password.isEmpty()) {
+                if (isValidPattern(name, NAME_PATTERN)) {
+                    if (isValidPattern(email, EMAIL_PATTERN)) {
+                        registerUser(name, email, password);
+                    } else
+                        Toast.makeText(RegisterActivity.this, "Invalid Email Address", Toast.LENGTH_SHORT).show();
 
                 } else {
-                    Toast.makeText(getApplicationContext(),
-                            "Please enter your details!", Toast.LENGTH_LONG)
-                            .show();
+                    Toast.makeText(RegisterActivity.this, "Invalid Name", Toast.LENGTH_SHORT).show();
                 }
+
+            } else {
+                Toast.makeText(getApplicationContext(),
+                        "Please enter your details!", Toast.LENGTH_LONG)
+                        .show();
             }
         });
 
         // Link to Login Screen
-        btnLinkToLogin.setOnClickListener(new View.OnClickListener() {
-
-            public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(),
-                        LoginActivity.class);
-                startActivity(i);
-                finish();
-            }
+        btnLinkToLogin.setOnClickListener(view -> {
+            Intent i = new Intent(getApplicationContext(),
+                    LoginActivity.class);
+            startActivity(i);
+            finish();
         });
     }
 
@@ -130,61 +123,54 @@ public class RegisterActivity extends Activity {
         showDialog();
 
         StringRequest strReq = new StringRequest(Method.POST,
-                AppController.URL_REGISTER, new Response.Listener<String>() {
+                AppController.URL_REGISTER, (Response.Listener<String>) response -> {
+                    Log.d(TAG, "Register Response: " + response);
+                    hideDialog();
 
-            @Override
-            public void onResponse(String response) {
-                Log.d(TAG, "Register Response: " + response);
-                hideDialog();
+                    try {
+                        JSONObject jObj = new JSONObject(response);
+                        boolean error = jObj.getBoolean("error");
+                        if (!error) {
+                            // User successfully stored in MySQL
+                            // Now store the user in sqlite
+                            //String id = jObj.getString("id");
 
-                try {
-                    JSONObject jObj = new JSONObject(response);
-                    boolean error = jObj.getBoolean("error");
-                    if (!error) {
-                        // User successfully stored in MySQL
-                        // Now store the user in sqlite
-                        //String id = jObj.getString("id");
+                            JSONObject user = jObj.getJSONObject("user");
+                            String name1 = user.getString("name");
+                            String email1 = user.getString("email");
+                            String created_at = user
+                                    .getString("created_at");
 
-                        JSONObject user = jObj.getJSONObject("user");
-                        String name = user.getString("name");
-                        String email = user.getString("email");
-                        String created_at = user
-                                .getString("created_at");
+                            // Inserting row in users table
+                            db.addUser(name1, email1, created_at);
 
-                        // Inserting row in users table
-                        db.addUser(name, email, created_at);
+                            Toast.makeText(getApplicationContext(), "User successfully registered. Try login now!",
+                                    Toast.LENGTH_LONG).show();
 
-                        Toast.makeText(getApplicationContext(), "User successfully registered. Try login now!", Toast.LENGTH_LONG).show();
+                            // Launch login activity
+                            Intent intent = new Intent(
+                                    RegisterActivity.this,
+                                    LoginActivity.class);
+                            startActivity(intent);
+                            finish();
+                        } else {
 
-                        // Launch login activity
-                        Intent intent = new Intent(
-                                RegisterActivity.this,
-                                LoginActivity.class);
-                        startActivity(intent);
-                        finish();
-                    } else {
-
-                        // Error occurred in registration. Get the error
-                        // message
-                        String errorMsg = jObj.getString("error_msg");
-                        Toast.makeText(getApplicationContext(),
-                                errorMsg, Toast.LENGTH_LONG).show();
+                            // Error occurred in registration. Get the error
+                            // message
+                            String errorMsg = jObj.getString("error_msg");
+                            Toast.makeText(getApplicationContext(),
+                                    errorMsg, Toast.LENGTH_LONG).show();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
 
-            }
-        }, new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e(TAG, "Registration Error: " + error.getMessage());
-                Toast.makeText(getApplicationContext(),
-                        error.getMessage(), Toast.LENGTH_LONG).show();
-                hideDialog();
-            }
-        }) {
+                }, (Response.ErrorListener) error -> {
+                    Log.e(TAG, "Registration Error: " + error.getMessage());
+                    Toast.makeText(getApplicationContext(),
+                            error.getMessage(), Toast.LENGTH_LONG).show();
+                    hideDialog();
+                }) {
 
             @Override
             protected Map<String, String> getParams() {

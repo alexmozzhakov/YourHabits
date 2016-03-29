@@ -1,0 +1,20 @@
+<?xml version="1.0"  ?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="90dp"
+    android:background="@color/white">
+
+    <TextView
+        android:id="@+id/habit_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start|center"
+        android:layout_marginTop="20dp"
+        android:gravity="start"
+        android:paddingLeft="90dp"
+        android:text="@string/navigation_drawer_close"
+        android:textColor="@color/black"
+        android:textSize="20sp"/>
+
+</FrameLayout>
