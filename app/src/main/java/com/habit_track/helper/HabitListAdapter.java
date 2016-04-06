@@ -17,12 +17,13 @@ import com.habit_track.fragments.ListFragment;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 public class HabitListAdapter extends ArrayAdapter<Habit> {
 
     Context context;
     int layoutResourceId;
-    ArrayList<Habit> habitList;
+    List<Habit> habitList;
 
     public HabitListAdapter(Context context, int layoutResourceId, ArrayList<Habit> data) {
         super(context, layoutResourceId, data);

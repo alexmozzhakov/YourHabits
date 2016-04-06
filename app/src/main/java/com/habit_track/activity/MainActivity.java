@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @SuppressWarnings("CommitTransaction")
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -62,8 +62,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             logoutUser();
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        final ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         if (drawer != null) {
             drawer.addDrawerListener(toggle);
         }
@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @SuppressWarnings({"StatementWithEmptyBody", "CommitTransaction"})
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(final MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
@@ -181,7 +181,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-    public void onCreate(View view) {
+    public void onCreate(final View view) {
         EditText editTitle = (EditText) findViewById(R.id.editTitle);
         EditText editDescription = (EditText) findViewById(R.id.editDescription);
 

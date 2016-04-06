@@ -15,7 +15,6 @@ import java.util.ArrayList;
 
 public class ListFragment extends android.app.ListFragment {
     public static HabitDBHandler habitsDatabase;
-    public static ArrayList<Habit> habitList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -26,7 +25,7 @@ public class ListFragment extends android.app.ListFragment {
         habitsDatabase = new HabitDBHandler(this.getActivity());
 
         //if (habitList == null)
-        habitList = habitsDatabase.getHabitDetailsAsArrayList();
+        ArrayList<Habit> habitList = habitsDatabase.getHabitDetailsAsArrayList();
 
         HabitListAdapter adapter = new HabitListAdapter(getActivity(),
                 R.layout.habit_listitem, habitList);

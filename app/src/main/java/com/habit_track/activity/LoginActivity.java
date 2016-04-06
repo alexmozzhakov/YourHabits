@@ -107,7 +107,7 @@ public class LoginActivity extends Activity {
 
         // Link to Register Screen
         btnLinkToRegister.setOnClickListener(view -> {
-            Intent i = new Intent(getApplicationContext(),
+            final Intent i = new Intent(getApplicationContext(),
                     RegisterActivity.class);
             startActivity(i);
             finish();
