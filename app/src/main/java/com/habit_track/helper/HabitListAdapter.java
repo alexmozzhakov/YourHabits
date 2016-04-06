@@ -2,23 +2,29 @@ package com.habit_track.helper;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Typeface;
+import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.habit_track.R;
 import com.habit_track.app.Habit;
+import com.habit_track.fragments.ListFragment;
+
+import java.util.ArrayList;
+import java.util.Calendar;
 
 public class HabitListAdapter extends ArrayAdapter<Habit> {
 
     Context context;
     int layoutResourceId;
-    Habit habitList[] = null;
+    ArrayList<Habit> habitList = null;
 
-    public HabitListAdapter(Context context, int layoutResourceId, Habit[] data) {
+    public HabitListAdapter(Context context, int layoutResourceId, ArrayList<Habit> data) {
         super(context, layoutResourceId, data);
         this.layoutResourceId = layoutResourceId;
         this.context = context;
@@ -29,39 +35,48 @@ public class HabitListAdapter extends ArrayAdapter<Habit> {
     public View getView(int position, View convertView, ViewGroup parent) {
         View row = convertView;
         ProgramHolder holder;
+        Habit habit = habitList.get(position);
 
-        if(row == null)
-        {
-            LayoutInflater inflater = ((Activity)context).getLayoutInflater();
+        if (row == null) {
+            LayoutInflater inflater = ((Activity) context).getLayoutInflater();
             row = inflater.inflate(layoutResourceId, parent, false);
 
             holder = new ProgramHolder();
-            holder.txtTitle = (TextView)row.findViewById(R.id.prog_title);
-          //  holder.txtPercent = (TextView)row.findViewById(R.id.prog_percent);
+            holder.txtTitle = (TextView) row.findViewById(R.id.habit_title);
+            holder.checkBox = (CheckBox) row.findViewById(R.id.checkBox);
+      //      holder.checkBox.setChecked(ListFragment.habitList.get(position).doneMarker);
+            holder.checkBox.setOnClickListener(v -> {
+                if (holder.checkBox.isChecked()) {
+                    Log.i("****", "captured " + (position + 1));
+                    //ListFragment.habitsDatabase.deleteHabit(ListFragment.habitList.get(position).id);
+                    //ListFragment.habitList.remove(position);
+
+                    habitList.get(position).setDoneMarker(true);
+                    ListFragment.habitsDatabase.updateHabit(habit.id, habit.markerUpdatedDay, habit.markerUpdatedMonth, habit.markerUpdatedYear);
+                    holder.txtTitle.setTextColor(Color.parseColor("#c7c7c7"));
+                } else
+                    holder.txtTitle.setTextColor(Color.parseColor("#000000"));
+            });
 
             row.setTag(holder);
-        }
-        else
-        {
-            holder = (ProgramHolder)row.getTag();
+        } else {
+            holder = (ProgramHolder) row.getTag();
         }
 
-        Habit habit = habitList[position];
 
-        final Typeface face = Typeface.createFromAsset(getContext().getAssets(), "fonts/Montserrat-Regular.ttf");
-        final Typeface faceLight = Typeface.createFromAsset(getContext().getAssets(), "fonts/Montserrat-Light.otf");
+        // final Typeface face = Typeface.createFromAsset(getContext().getAssets(), "fonts/Montserrat-Regular.ttf");
+        //final Typeface faceLight = Typeface.createFromAsset(getContext().getAssets(), "fonts/Montserrat-Light.otf");
 
-        holder.txtTitle.  setText(habit.title);
-        holder.txtTitle.  setTypeface(faceLight);
-//        holder.txtPercent.setTextColor(Color.parseColor("#801D1D26"));
-//        holder.txtPercent.setTypeface(face);
-//        holder.txtPercent.setText(habit.description);
+        Calendar cal = Calendar.getInstance();
+
+        holder.txtTitle.setText(habit.title);
+        holder.checkBox.setChecked(habit.isDone(cal.get(Calendar.DATE),cal.get(Calendar.MONTH),cal.get(Calendar.YEAR)));
 
         return row;
     }
 
     static class ProgramHolder {
         TextView txtTitle;
-        TextView txtPercent;
+        CheckBox checkBox;
     }
 }

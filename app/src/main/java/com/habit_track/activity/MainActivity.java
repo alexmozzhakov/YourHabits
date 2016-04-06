@@ -1,6 +1,7 @@
 package com.habit_track.activity;
 
-import android.app.Fragment;
+
+import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,6 +13,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.habit_track.R;
@@ -22,17 +25,17 @@ import com.habit_track.fragments.ProgramsFragment;
 import com.habit_track.helper.SQLiteHandler;
 import com.habit_track.helper.SessionManager;
 
+import java.util.Calendar;
 import java.util.HashMap;
-
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    private Fragment lastFragment;
+    public static android.app.Fragment lastFragment;
     private FragmentTransaction transaction;
     private SQLiteHandler db;
     private SessionManager session;
     private Toolbar toolbar;
-    private NavigationView navigationView;
+    public static NavigationView navigationView;
 
     @SuppressWarnings("CommitTransaction")
     @Override
@@ -43,8 +46,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (toolbar != null) {
             toolbar.setTitle("Home");
         }
+
+
         setSupportActionBar(toolbar);
         lastFragment = new HomeFragment();
+
 
         // SqLite database handler
         db = new SQLiteHandler(getApplicationContext());
@@ -78,6 +84,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         TextView nav_email = (TextView) navigationView.getHeaderView(0).findViewById(R.id.email_info);
         nav_name.setText(user.get("name"));
         nav_email.setText(user.get("email"));
+
+
     }
 
     @SuppressWarnings({"StatementWithEmptyBody", "CommitTransaction"})
@@ -92,6 +100,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 lastFragment = new HomeFragment();
                 transaction.replace(R.id.content_frame, lastFragment);
                 toolbar.setTitle("Home");
+                navigationView.getMenu().findItem(id).setChecked(true);
             }
         } /*else if (id == R.id.nav_calendar) {
             if (!(lastFragment instanceof CalendarFragment)) {
@@ -110,12 +119,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 lastFragment = new ProgramsFragment();
                 transaction.replace(R.id.content_frame, lastFragment);
                 toolbar.setTitle("Programs");
+                navigationView.getMenu().findItem(id).setChecked(true);
             }
         } else if (id == R.id.nav_lists) {
             if (!(lastFragment instanceof ListFragment)) {
                 lastFragment = new ListFragment();
                 transaction.replace(R.id.content_frame, lastFragment);
                 toolbar.setTitle("List");
+                navigationView.getMenu().findItem(id).setChecked(true);
             }
         } /*else if (id == R.id.nav_profile) {
             if (!(lastFragment instanceof ProfileFragment)) {
@@ -166,6 +177,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void toCreateFragment(View view) {
         navigationView.getMenu().getItem(0).setChecked(false);
         lastFragment = new CreateFragment();
+        getFragmentManager().beginTransaction().replace(R.id.content_frame, lastFragment).commit();
+    }
+
+
+    public void onCreate(View view) {
+        EditText editTitle = (EditText) findViewById(R.id.editTitle);
+        EditText editDescription = (EditText) findViewById(R.id.editDescription);
+
+        if (editDescription != null && editTitle != null) {
+            ListFragment.habitsDatabase.addHabit(editTitle.getText().toString(), editDescription.getText().toString(), 60, false, Calendar.getInstance());
+        }
+
+
+        InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+
+        lastFragment = new ListFragment();
         getFragmentManager().beginTransaction().replace(R.id.content_frame, lastFragment).commit();
     }
 }

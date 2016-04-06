@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.habit_track.R;
 import com.habit_track.app.Program;
 
-public class ProgramListAdapter extends ArrayAdapter<Program> {
+public class ProgramListAdapter extends ArrayAdapter<Program>{
 
     Context context;
     int layoutResourceId;

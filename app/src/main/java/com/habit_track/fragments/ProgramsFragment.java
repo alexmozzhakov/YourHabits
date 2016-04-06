@@ -16,6 +16,7 @@ import com.android.volley.Request;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.habit_track.R;
+import com.habit_track.activity.MainActivity;
 import com.habit_track.app.AppController;
 import com.habit_track.app.Program;
 import com.habit_track.helper.ProgramListAdapter;
@@ -90,10 +91,12 @@ public class ProgramsFragment extends Fragment {
                         e.printStackTrace();
                     } finally {
                         //Use adapter for array of non-top programs
-                        ProgramListAdapter adapter = new ProgramListAdapter(getActivity(),
-                                R.layout.prog_listitem, program_data);
-                        ListView listView = (ListView) result.findViewById(R.id.mainListView);
-                        listView.setAdapter(adapter);
+                        if (program_data[0] != null) {
+                            ProgramListAdapter adapter = new ProgramListAdapter(getActivity(),
+                                    R.layout.prog_listitem, program_data);
+                            ListView listView = (ListView) result.findViewById(R.id.mainListView);
+                            listView.setAdapter(adapter);
+                        }
 
                     }
                 }, error -> {
@@ -109,10 +112,10 @@ public class ProgramsFragment extends Fragment {
             final Bundle bundle = new Bundle();
             bundle.putString("title", jsonObject.getJSONObject("1").getString("name"));
             bundle.putString("description", jsonObject.getJSONObject("1").getString("description"));
-            final ProgramFragment programFragment = new ProgramFragment();
-            programFragment.setArguments(bundle);
-
-            getFragmentManager().beginTransaction().replace(R.id.content_frame, programFragment).commit();
+            MainActivity.lastFragment = new ProgramFragment();
+            MainActivity.lastFragment.setArguments(bundle);
+            MainActivity.navigationView.getMenu().getItem(1).setChecked(false);
+            getFragmentManager().beginTransaction().replace(R.id.content_frame, MainActivity.lastFragment).commit();
 
         } catch (JSONException e) {
             e.printStackTrace();

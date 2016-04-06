@@ -15,6 +15,7 @@ public class CalendarFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View result = inflater.inflate(R.layout.fragment_calendar, container, false);
+
         return result;
     }
 }

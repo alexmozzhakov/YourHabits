@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,10 +23,12 @@ import org.json.JSONObject;
 
 public class HomeFragment extends Fragment {
 
+    View view;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        view = inflater.inflate(R.layout.fragment_home, container, false);
         TextView weatherBot = (TextView) view.findViewById(R.id.weatherBot);
 
         final TextView weather = (TextView) view.findViewById(R.id.weather);
@@ -33,6 +36,14 @@ public class HomeFragment extends Fragment {
         final SharedPreferences sharedPreferences = this.getActivity().getSharedPreferences("pref", Context.MODE_PRIVATE);
 
         RequestQueue rq = Volley.newRequestQueue(getActivity().getApplicationContext());
+
+        TabLayout tabLayout = (TabLayout) view.findViewById(R.id.sliding_tabs);
+        if (tabLayout != null) {
+            tabLayout.addTab(tabLayout.newTab().setText("Tab One"));
+            tabLayout.addTab(tabLayout.newTab().setText("Tab Two"));
+            tabLayout.addTab(tabLayout.newTab().setText("Tab Three"));
+        }
+
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, AppController.URL_WEATHER_API,
                 response -> {
