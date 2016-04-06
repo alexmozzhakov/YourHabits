@@ -62,8 +62,8 @@ public class HomeFragment extends Fragment {
                         }
                         weatherBot.setText(o.getString("location"));
 
-                    } catch (JSONException ignored) {
-
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
 
                 },

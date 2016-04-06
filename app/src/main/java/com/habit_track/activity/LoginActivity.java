@@ -67,8 +67,8 @@ public class LoginActivity extends Activity {
 
         inputPassword.setOnKeyListener((View v, int keyCode, KeyEvent event) -> {
             // If the event is a key-down event on the "enter" button
-            if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
-                    (keyCode == KeyEvent.KEYCODE_ENTER)) {
+            if (event.getAction() == KeyEvent.ACTION_DOWN &&
+                    keyCode == KeyEvent.KEYCODE_ENTER) {
                 String email = inputEmail.getText().toString().trim();
                 String password = inputPassword.getText().toString().trim();
 
@@ -187,8 +187,9 @@ public class LoginActivity extends Activity {
     }
 
     private void showDialog() {
-        if (!pDialog.isShowing())
+        if (!pDialog.isShowing()) {
             pDialog.show();
+        }
     }
 
     private void hideDialog() {

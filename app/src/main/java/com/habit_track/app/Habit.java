@@ -18,7 +18,7 @@ public class Habit {
         super();
         this.title = title;
         this.doneMarker = false;
-        this.time=60;
+        this.time = 60;
     }
 
     public void setDoneMarker(boolean doneMarker) {
@@ -36,10 +36,10 @@ public class Habit {
     }
 
     public boolean isDone(int markerUpdatedDay, int markerUpdatedMonth, int markerUpdatedYear) {
-        return (markerUpdatedDay == this.markerUpdatedDay &&
+        return markerUpdatedDay == this.markerUpdatedDay &&
                 markerUpdatedMonth == this.markerUpdatedMonth &&
                 markerUpdatedYear == this.markerUpdatedYear &&
-                doneMarker);
+                doneMarker;
     }
 
     @Override

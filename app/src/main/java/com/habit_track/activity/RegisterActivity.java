@@ -33,7 +33,7 @@ public class RegisterActivity extends Activity {
 
     private static final String TAG = RegisterActivity.class.getSimpleName();
     private ProgressDialog pDialog;
-    private SQLiteHandler db;
+    private SQLiteHandler database;
 
     protected static final Pattern NAME_PATTERN = Pattern.compile("^[a-zA-Z \\-\\.']*$");
     // protected static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,10}$", Pattern.CASE_INSENSITIVE);
@@ -64,7 +64,7 @@ public class RegisterActivity extends Activity {
         SessionManager session = new SessionManager(getApplicationContext());
 
         // SQLite database handler
-        db = new SQLiteHandler(getApplicationContext());
+        database = new SQLiteHandler(getApplicationContext());
 
         // Check if user is already logged in or not
         if (session.isLoggedIn()) {
@@ -142,7 +142,7 @@ public class RegisterActivity extends Activity {
                                     .getString("created_at");
 
                             // Inserting row in users table
-                            db.addUser(name1, email1, created_at);
+                            database.addUser(name1, email1, created_at);
 
                             Toast.makeText(getApplicationContext(), "User successfully registered. Try login now!",
                                     Toast.LENGTH_LONG).show();

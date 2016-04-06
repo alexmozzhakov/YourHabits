@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public static android.app.Fragment lastFragment;
     private FragmentTransaction transaction;
-    private SQLiteHandler db;
+    private SQLiteHandler database;
     private SessionManager session;
     private Toolbar toolbar;
     public static NavigationView navigationView;
@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
         // SqLite database handler
-        db = new SQLiteHandler(getApplicationContext());
+        database = new SQLiteHandler(getApplicationContext());
 
         // session manager
         session = new SessionManager(getApplicationContext());
@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         transaction.replace(R.id.content_frame, lastFragment).commit();
 
         // Fetching user details from SQLite
-        HashMap<String, String> user = db.getUserDetails();
+        HashMap<String, String> user = database.getUserDetails();
 
         TextView nav_name = (TextView) navigationView.getHeaderView(0).findViewById(R.id.name_info);
         TextView nav_email = (TextView) navigationView.getHeaderView(0).findViewById(R.id.email_info);
@@ -166,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void logoutUser() {
         session.setLogin(false);
 
-        db.deleteUsers();
+        database.deleteUsers();
 
         // Launching the login activity
         Intent intent = new Intent(MainActivity.this, LoginActivity.class);
