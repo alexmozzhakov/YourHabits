@@ -22,7 +22,7 @@ public class HabitListAdapter extends ArrayAdapter<Habit> {
 
     Context context;
     int layoutResourceId;
-    ArrayList<Habit> habitList = null;
+    ArrayList<Habit> habitList;
 
     public HabitListAdapter(Context context, int layoutResourceId, ArrayList<Habit> data) {
         super(context, layoutResourceId, data);

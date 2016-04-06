@@ -17,7 +17,7 @@ public class ProgramListAdapter extends ArrayAdapter<Program>{
 
     Context context;
     int layoutResourceId;
-    Program progList[] = null;
+    Program progList[];
 
     public ProgramListAdapter(Context context, int layoutResourceId, Program[] data) {
         super(context, layoutResourceId, data);
