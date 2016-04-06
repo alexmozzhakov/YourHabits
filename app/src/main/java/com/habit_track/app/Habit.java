@@ -32,7 +32,7 @@ public class Habit {
         this.markerUpdatedDay = cal.get(Calendar.DATE);
         this.markerUpdatedMonth = cal.get(Calendar.MONTH);
         this.markerUpdatedYear = cal.get(Calendar.YEAR);
-        Log.i("doneMarker ", ""+toString());
+        Log.i("doneMarker ", toString());
     }
 
     public boolean isDone(int markerUpdatedDay, int markerUpdatedMonth, int markerUpdatedYear) {

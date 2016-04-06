@@ -103,9 +103,9 @@ public class HabitDBHandler extends SQLiteOpenHelper {
 
         // Move to first row
         cursor.moveToFirst();
-
+        Habit temp;
         for (int i = 0; i < cursor.getCount(); i++) {
-            Habit temp = new Habit(cursor.getString(cursor.getColumnIndex(KEY_NAME)));
+            temp = new Habit(cursor.getString(cursor.getColumnIndex(KEY_NAME)));
             temp.doneMarker = cursor.getInt(cursor.getColumnIndex(KEY_DONE)) == 1;
             temp.id = cursor.getInt(cursor.getColumnIndex(KEY_ID));
             temp.markerUpdatedDay = cursor.getInt(cursor.getColumnIndex(KEY_UPDATED_DATE));
