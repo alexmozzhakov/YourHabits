@@ -12,8 +12,8 @@ import com.habit_track.R;
 public class ProgramFragment extends Fragment {
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
+                             final Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View result = inflater.inflate(R.layout.fragment_program, container, false);
         final Bundle bundle = getArguments();

@@ -21,9 +21,9 @@ import java.util.List;
 
 public class HabitListAdapter extends ArrayAdapter<Habit> {
 
-    Context context;
-    int layoutResourceId;
-    List<Habit> habitList;
+    private int layoutResourceId;
+    private List<Habit> habitList;
+    private Context context;
 
     public HabitListAdapter(final Context context, final int layoutResourceId, final ArrayList<Habit> data) {
         super(context, layoutResourceId, data);
@@ -39,7 +39,7 @@ public class HabitListAdapter extends ArrayAdapter<Habit> {
         final Habit habit = habitList.get(position);
 
         if (row == null) {
-            LayoutInflater inflater = ((Activity) context).getLayoutInflater();
+            final LayoutInflater inflater = ((Activity) context).getLayoutInflater();
             row = inflater.inflate(layoutResourceId, parent, false);
 
             holder = new ProgramHolder();

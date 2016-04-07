@@ -11,10 +11,10 @@ import com.habit_track.R;
 public class StatisticsFragment extends Fragment {
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
+                             final Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View result = inflater.inflate(R.layout.fragment_stats, container, false);
+        final View result = inflater.inflate(R.layout.fragment_stats, container, false);
         return result;
     }
 

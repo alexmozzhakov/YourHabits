@@ -29,13 +29,13 @@ public class ProgramsFragment extends Fragment {
     private JSONObject jsonObject;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
+                             final Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View result = inflater.inflate(R.layout.fragment_programs, container, false);
 
         //Create array of programs
-        Program program_data[] = new Program[3];
+        final Program program_data[] = new Program[3];
 
         //Create request
         final StringRequest stringRequest = new StringRequest(Request.Method.GET, AppController.URL_PROGRAMS_API,
@@ -88,7 +88,7 @@ public class ProgramsFragment extends Fragment {
                             }
                         }
                     } catch (JSONException e) {
-                        e.printStackTrace();
+                        Log.e("JSONException", "response error", e);
                     } finally {
                         //Use adapter for array of non-top programs
                         if (program_data[0] != null) {
@@ -107,7 +107,7 @@ public class ProgramsFragment extends Fragment {
         return result;
     }
 
-    public void top(View view) {
+    public void top(final View view) {
         try {
             final Bundle bundle = new Bundle();
             bundle.putString("title", jsonObject.getJSONObject("1").getString("name"));
