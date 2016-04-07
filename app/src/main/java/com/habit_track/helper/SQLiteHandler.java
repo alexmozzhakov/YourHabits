@@ -13,6 +13,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class SQLiteHandler extends SQLiteOpenHelper {
 
@@ -80,12 +81,12 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     /**
      * Getting user data from database
      * */
-    public HashMap<String, String> getUserDetails() {
+    public Map<String, String> getUserDetails() {
         final HashMap<String, String> user = new HashMap<>();
         final String selectQuery = "SELECT  * FROM " + TABLE_USER;
 
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
+        final SQLiteDatabase database = this.getReadableDatabase();
+        final Cursor cursor = database.rawQuery(selectQuery, null);
         // Move to first row
         cursor.moveToFirst();
         if (cursor.getCount() > 0) {
@@ -94,7 +95,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
             user.put("created_at", cursor.getString(3));
         }
         cursor.close();
-        db.close();
+        database.close();
         // return user
         Log.d(TAG, "Fetching user from Sqlite: " + user.toString());
 
@@ -105,10 +106,10 @@ public class SQLiteHandler extends SQLiteOpenHelper {
      * Re crate database Delete all tables and create them again
      * */
     public void deleteUsers() {
-        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase database = this.getWritableDatabase();
         // Delete All Rows
-        db.delete(TABLE_USER, null, null);
-        db.close();
+        database.delete(TABLE_USER, null, null);
+        database.close();
 
         Log.d(TAG, "Deleted all user info from sqlite");
     }
