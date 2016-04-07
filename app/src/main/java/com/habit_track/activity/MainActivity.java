@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         transaction.replace(R.id.content_frame, lastFragment).commit();
 
         // Fetching user details from SQLite
-        Map<String, String> user = database.getUserDetails();
+        final Map<String, String> user = database.getUserDetails();
 
         final TextView nav_name = (TextView) navigationView.getHeaderView(0).findViewById(R.id.name_info);
         final TextView nav_email = (TextView) navigationView.getHeaderView(0).findViewById(R.id.email_info);
@@ -145,7 +145,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         transaction.commit();
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer != null) {
             drawer.closeDrawer(GravityCompat.START);
         }

@@ -78,8 +78,12 @@ public class HabitDBHandler extends SQLiteOpenHelper {
         values.put(KEY_UPDATED_YEAR, upd.get(Calendar.YEAR)); // Updated
 
         // doneMarker
-        if (done) values.put(KEY_DONE, 1);
-        else values.put(KEY_DONE, 0);
+        if (done) {
+            values.put(KEY_DONE, 1);
+        }
+        else {
+            values.put(KEY_DONE, 0);
+        }
 
         // Inserting Row
         long id = db.insert(TABLE_HABIT, null, values);
@@ -137,7 +141,7 @@ public class HabitDBHandler extends SQLiteOpenHelper {
         Log.d(TAG, "Deleted all habits from sqlite");
     }
 
-    public void deleteHabit(int id) {
+    public void deleteHabit(final int id) {
         SQLiteDatabase db = this.getWritableDatabase();
         // Delete All Rows
         db.execSQL("DELETE FROM " + TABLE_HABIT + " WHERE " + KEY_ID + " = " + id);
@@ -148,7 +152,7 @@ public class HabitDBHandler extends SQLiteOpenHelper {
         // Log.d(TAG, "Deleted habit with id" + id);
     }
 
-    public void updateHabit(int id) {
+    public void updateHabit(final int id) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         db.execSQL("UPDATE " + TABLE_HABIT + " SET " + KEY_DONE + " =  1 WHERE " + KEY_ID + " = " + id);

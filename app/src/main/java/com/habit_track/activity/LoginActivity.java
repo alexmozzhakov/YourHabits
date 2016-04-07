@@ -30,7 +30,7 @@ public class LoginActivity extends Activity {
     private static final String TAG = RegisterActivity.class.getSimpleName();
     private ProgressDialog pDialog;
     private SessionManager session;
-    private SQLiteHandler db;
+    private SQLiteHandler database;
     private static final String TAG_STRING = "req_login";
 
     @Override
@@ -53,7 +53,7 @@ public class LoginActivity extends Activity {
         pDialog.setCancelable(false);
 
         // SQLite database handler
-        db = new SQLiteHandler(getApplicationContext());
+        database = new SQLiteHandler(getApplicationContext());
 
         // Session manager
         session = new SessionManager(getApplicationContext());
@@ -61,12 +61,12 @@ public class LoginActivity extends Activity {
         // Check if user is already logged in or not
         if (session.isLoggedIn()) {
             // User is already logged in. Take him to main activity
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            final Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);
             finish();
         }
 
-        inputPassword.setOnKeyListener((final View v, final int keyCode, final KeyEvent event) -> {
+        inputPassword.setOnKeyListener((final View view, final int keyCode, final KeyEvent event) -> {
             // If the event is a key-down event on the "enter" button
             if (event.getAction() == KeyEvent.ACTION_DOWN &&
                     keyCode == KeyEvent.KEYCODE_ENTER) {
@@ -74,16 +74,8 @@ public class LoginActivity extends Activity {
                 final String password = inputPassword.getText().toString().trim();
 
                 // Check for empty data in the form
-                if (!email.isEmpty() && !password.isEmpty()) {
-                    // login user
-                    checkLogin(email, password);
-                } else {
-                    // Prompt user to enter credentials
-                    Toast.makeText(getApplicationContext(),
-                            "Please enter the credentials!", Toast.LENGTH_LONG)
-                            .show();
+                checkInput(email,password);
 
-                }
                 return true;
             }
             return false;
@@ -95,15 +87,7 @@ public class LoginActivity extends Activity {
             final String password = inputPassword.getText().toString().trim();
 
             // Check for empty data in the form
-            if (!email.isEmpty() && !password.isEmpty()) {
-                // login user
-                checkLogin(email, password);
-            } else {
-                // Prompt user to enter credentials
-                Toast.makeText(getApplicationContext(),
-                        "Please enter the credentials!", Toast.LENGTH_LONG)
-                        .show();
-            }
+            checkInput(email,password);
         });
 
         // Link to Register Screen
@@ -146,7 +130,7 @@ public class LoginActivity extends Activity {
                             .getString("created_at");
 
                     // Inserting row in users table
-                    db.addUser(name, email1, created_at);
+                    database.addUser(name, email1, created_at);
 
                     // Launch main activity
                     final Intent intent = new Intent(LoginActivity.this,
@@ -195,6 +179,18 @@ public class LoginActivity extends Activity {
     private void hideDialog() {
         if (pDialog.isShowing())
             pDialog.dismiss();
+    }
+    private void checkInput(String email, String password){
+        // Check for empty data in the form
+        if (email.isEmpty() || password.isEmpty()) {
+            // Prompt user to enter credentials
+            Toast.makeText(getApplicationContext(),
+                    "Please enter the credentials!", Toast.LENGTH_LONG)
+                    .show();
+        } else {
+            // login user
+            checkLogin(email, password);
+        }
     }
 
     public void forgotPass(final View view) {

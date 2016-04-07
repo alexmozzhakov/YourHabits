@@ -88,9 +88,9 @@ public class RegisterActivity extends Activity {
                 if (isValidPattern(name, NAME_PATTERN)) {
                     if (isValidPattern(email, EMAIL_PATTERN)) {
                         registerUser(name, email, password);
-                    } else
+                    } else {
                         Toast.makeText(RegisterActivity.this, "Invalid Email Address", Toast.LENGTH_SHORT).show();
-
+                    }
                 } else {
                     Toast.makeText(RegisterActivity.this, "Invalid Name", Toast.LENGTH_SHORT).show();
                 }
