@@ -67,9 +67,9 @@ public class HabitDBHandler extends SQLiteOpenHelper {
      * Storing user details in database
      */
     public long addHabit(final String name, final String description, final int time, final boolean done, final Calendar upd) {
-        SQLiteDatabase db = this.getWritableDatabase();
+        final SQLiteDatabase db = this.getWritableDatabase();
 
-        ContentValues values = new ContentValues();
+        final ContentValues values = new ContentValues();
         values.put(KEY_NAME, name); // Title
         values.put(KEY_DESCRIPTION, description); // Description
         values.put(KEY_TIME, time); // Time
@@ -95,11 +95,11 @@ public class HabitDBHandler extends SQLiteOpenHelper {
 
     public ArrayList<Habit> getHabitDetailsAsArrayList() {
 
-        String selectQuery = "SELECT  * FROM " + TABLE_HABIT;
+        final String selectQuery = "SELECT  * FROM " + TABLE_HABIT;
 
         final SQLiteDatabase database = this.getReadableDatabase();
-        Cursor cursor = database.rawQuery(selectQuery, null);
-        ArrayList<Habit> hab = new ArrayList<>();
+        final Cursor cursor = database.rawQuery(selectQuery, null);
+        final ArrayList<Habit> hab = new ArrayList<>();
 
         // Move to first row
         cursor.moveToFirst();

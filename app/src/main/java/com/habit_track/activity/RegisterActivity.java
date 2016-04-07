@@ -62,7 +62,7 @@ public class RegisterActivity extends Activity {
         pDialog.setCancelable(false);
 
         // Session manager
-        SessionManager session = new SessionManager(getApplicationContext());
+        final SessionManager session = new SessionManager(getApplicationContext());
 
         // SQLite database handler
         database = new SQLiteHandler(getApplicationContext());
@@ -79,8 +79,8 @@ public class RegisterActivity extends Activity {
         // Register Button Click event
         btnRegister.setOnClickListener(view -> {
             String name = inputFullName.getText().toString().trim();
-            String email = inputEmail.getText().toString().trim();
-            String password = inputPassword.getText().toString().trim();
+            final String email = inputEmail.getText().toString().trim();
+            final String password = inputPassword.getText().toString().trim();
             if (name.isEmpty()) {
                 name = "Anonymous";
             }

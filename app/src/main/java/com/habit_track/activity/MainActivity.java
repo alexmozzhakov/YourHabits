@@ -26,7 +26,7 @@ import com.habit_track.helper.SQLiteHandler;
 import com.habit_track.helper.SessionManager;
 
 import java.util.Calendar;
-import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         transaction.replace(R.id.content_frame, lastFragment).commit();
 
         // Fetching user details from SQLite
-        HashMap<String, String> user = database.getUserDetails();
+        Map<String, String> user = database.getUserDetails();
 
         final TextView nav_name = (TextView) navigationView.getHeaderView(0).findViewById(R.id.name_info);
         final TextView nav_email = (TextView) navigationView.getHeaderView(0).findViewById(R.id.email_info);
@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(final MenuItem item) {
         // Handle navigation view item clicks here.
-        int id = item.getItemId();
+        final int id = item.getItemId();
 
         transaction = getFragmentManager().beginTransaction();
         if (id == R.id.nav_home) {
@@ -155,7 +155,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer != null && drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
