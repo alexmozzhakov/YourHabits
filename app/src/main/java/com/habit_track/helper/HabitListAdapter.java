@@ -15,17 +15,16 @@ import com.habit_track.R;
 import com.habit_track.app.Habit;
 import com.habit_track.fragments.ListFragment;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 public class HabitListAdapter extends ArrayAdapter<Habit> {
 
-    private int layoutResourceId;
-    private List<Habit> habitList;
-    private Context context;
+    final private int layoutResourceId;
+    final private List<Habit> habitList;
+    final private Context context;
 
-    public HabitListAdapter(final Context context, final int layoutResourceId, final ArrayList<Habit> data) {
+    public HabitListAdapter(final Context context, final int layoutResourceId, final List<Habit> data) {
         super(context, layoutResourceId, data);
         this.layoutResourceId = layoutResourceId;
         this.context = context;
@@ -77,7 +76,7 @@ public class HabitListAdapter extends ArrayAdapter<Habit> {
     }
 
     static class ProgramHolder {
-        TextView txtTitle;
-        CheckBox checkBox;
+        private TextView txtTitle;
+        private CheckBox checkBox;
     }
 }

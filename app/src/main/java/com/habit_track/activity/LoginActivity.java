@@ -145,7 +145,7 @@ public class LoginActivity extends Activity {
                 }
             } catch (JSONException e) {
                 // JSON error
-                e.printStackTrace();
+                Log.e("JSONException", "response error", e);
                 Toast.makeText(getApplicationContext(), "Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
             }
         }, (Response.ErrorListener) error -> {
@@ -180,7 +180,7 @@ public class LoginActivity extends Activity {
         if (pDialog.isShowing())
             pDialog.dismiss();
     }
-    private void checkInput(String email, String password){
+    private void checkInput(final String email, final String password){
         // Check for empty data in the form
         if (email.isEmpty() || password.isEmpty()) {
             // Prompt user to enter credentials

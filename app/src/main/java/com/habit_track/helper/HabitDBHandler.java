@@ -11,6 +11,7 @@ import com.habit_track.app.Habit;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 public class HabitDBHandler extends SQLiteOpenHelper {
 
@@ -97,13 +98,13 @@ public class HabitDBHandler extends SQLiteOpenHelper {
      * Getting habit data from database
      */
 
-    public ArrayList<Habit> getHabitDetailsAsArrayList() {
+    public List<Habit> getHabitDetailsAsArrayList() {
 
         final String selectQuery = "SELECT  * FROM " + TABLE_HABIT;
 
         final SQLiteDatabase database = this.getReadableDatabase();
         final Cursor cursor = database.rawQuery(selectQuery, null);
-        final ArrayList<Habit> hab = new ArrayList<>();
+        final List<Habit> hab = new ArrayList<>();
 
         // Move to first row
         cursor.moveToFirst();

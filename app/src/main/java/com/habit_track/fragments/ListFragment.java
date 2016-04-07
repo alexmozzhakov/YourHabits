@@ -11,7 +11,7 @@ import com.habit_track.app.Habit;
 import com.habit_track.helper.HabitDBHandler;
 import com.habit_track.helper.HabitListAdapter;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class ListFragment extends android.app.ListFragment {
     public static HabitDBHandler habitsDatabase;
@@ -25,7 +25,7 @@ public class ListFragment extends android.app.ListFragment {
         habitsDatabase = new HabitDBHandler(this.getActivity());
 
         //if (habitList == null)
-        final ArrayList<Habit> habitList = habitsDatabase.getHabitDetailsAsArrayList();
+        final List<Habit> habitList = habitsDatabase.getHabitDetailsAsArrayList();
 
         final HabitListAdapter adapter = new HabitListAdapter(getActivity(),
                 R.layout.habit_listitem, habitList);

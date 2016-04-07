@@ -161,7 +161,7 @@ public class RegisterActivity extends Activity {
                             errorMsg, Toast.LENGTH_LONG).show();
                 }
             } catch (JSONException e) {
-                e.printStackTrace();
+                Log.e("JSONException", "response error", e);
             }
 
         }, (Response.ErrorListener) error -> {
