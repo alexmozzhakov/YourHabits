@@ -19,7 +19,7 @@ public class ProgramListAdapter extends ArrayAdapter<Program>{
     int layoutResourceId;
     Program progList[];
 
-    public ProgramListAdapter(Context context, int layoutResourceId, Program[] data) {
+    public ProgramListAdapter(final Context context, final int layoutResourceId, final Program[] data) {
         super(context, layoutResourceId, data);
         this.layoutResourceId = layoutResourceId;
         this.context = context;
@@ -27,13 +27,13 @@ public class ProgramListAdapter extends ArrayAdapter<Program>{
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, final View convertView, final ViewGroup parent) {
         View row = convertView;
         ProgramHolder holder;
 
         if(row == null)
         {
-            LayoutInflater inflater = ((Activity)context).getLayoutInflater();
+            final LayoutInflater inflater = ((Activity)context).getLayoutInflater();
             row = inflater.inflate(layoutResourceId, parent, false);
 
             holder = new ProgramHolder();
@@ -47,7 +47,7 @@ public class ProgramListAdapter extends ArrayAdapter<Program>{
             holder = (ProgramHolder)row.getTag();
         }
 
-        Program program = progList[position];
+        final Program program = progList[position];
 
         final Typeface face = Typeface.createFromAsset(getContext().getAssets(), "fonts/Montserrat-Regular.ttf");
         final Typeface faceLight = Typeface.createFromAsset(getContext().getAssets(), "fonts/Montserrat-Light.otf");

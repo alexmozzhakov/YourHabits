@@ -33,18 +33,18 @@ public class LoginActivity extends Activity {
     private SQLiteHandler db;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        TextInputEditText inputEmail = (TextInputEditText) findViewById(R.id.email);
-        TextInputEditText inputPassword = (TextInputEditText) findViewById(R.id.password);
-        Typeface face = Typeface.createFromAsset(getAssets(), "fonts/Montserrat-Regular.ttf");
+        final TextInputEditText inputEmail = (TextInputEditText) findViewById(R.id.email);
+        final TextInputEditText inputPassword = (TextInputEditText) findViewById(R.id.password);
+        final Typeface face = Typeface.createFromAsset(getAssets(), "fonts/Montserrat-Regular.ttf");
         inputEmail.setTypeface(face);
         inputPassword.setTypeface(face);
 
-        Button btnLogin = (Button) findViewById(R.id.btnLogin);
-        Button btnLinkToRegister = (Button) findViewById(R.id.btnLinkToRegisterScreen);
+        final Button btnLogin = (Button) findViewById(R.id.btnLogin);
+        final Button btnLinkToRegister = (Button) findViewById(R.id.btnLinkToRegisterScreen);
         inputPassword.setImeActionLabel("Login", KeyEvent.KEYCODE_ENTER);
 
         // Progress dialog
@@ -65,12 +65,12 @@ public class LoginActivity extends Activity {
             finish();
         }
 
-        inputPassword.setOnKeyListener((View v, int keyCode, KeyEvent event) -> {
+        inputPassword.setOnKeyListener((final View v, final int keyCode, final KeyEvent event) -> {
             // If the event is a key-down event on the "enter" button
             if (event.getAction() == KeyEvent.ACTION_DOWN &&
                     keyCode == KeyEvent.KEYCODE_ENTER) {
-                String email = inputEmail.getText().toString().trim();
-                String password = inputPassword.getText().toString().trim();
+                final String email = inputEmail.getText().toString().trim();
+                final String password = inputPassword.getText().toString().trim();
 
                 // Check for empty data in the form
                 if (!email.isEmpty() && !password.isEmpty()) {
@@ -90,8 +90,8 @@ public class LoginActivity extends Activity {
 
         // Login button Click Event
         btnLogin.setOnClickListener(view -> {
-            String email = inputEmail.getText().toString().trim();
-            String password = inputPassword.getText().toString().trim();
+            final String email = inputEmail.getText().toString().trim();
+            final String password = inputPassword.getText().toString().trim();
 
             // Check for empty data in the form
             if (!email.isEmpty() && !password.isEmpty()) {
@@ -120,11 +120,11 @@ public class LoginActivity extends Activity {
      */
     protected void checkLogin(final String email, final String password) {
         // Tag used to cancel the request
-        String tag_string_req = "req_login";
+        final String tag_string_req = "req_login";
         pDialog.setMessage("Logging in ...");
         showDialog();
 
-        StringRequest strReq = new StringRequest(Method.POST,
+        final StringRequest strReq = new StringRequest(Method.POST,
                 AppController.URL_LOGIN, (Response.Listener<String>) response -> {
             Log.d(TAG, "Login Response: " + response);
             hideDialog();
@@ -139,17 +139,17 @@ public class LoginActivity extends Activity {
                     // Create login session
                     session.setLogin(true);
 
-                    JSONObject user = jObj.getJSONObject("user");
-                    String name = user.getString("name");
-                    String email1 = user.getString("email");
-                    String created_at = user
+                    final JSONObject user = jObj.getJSONObject("user");
+                    final String name = user.getString("name");
+                    final String email1 = user.getString("email");
+                    final String created_at = user
                             .getString("created_at");
 
                     // Inserting row in users table
                     db.addUser(name, email1, created_at);
 
                     // Launch main activity
-                    Intent intent = new Intent(LoginActivity.this,
+                    final Intent intent = new Intent(LoginActivity.this,
                             MainActivity.class);
                     startActivity(intent);
                     finish();
@@ -174,7 +174,7 @@ public class LoginActivity extends Activity {
             @Override
             protected Map<String, String> getParams() {
                 // Posting parameters to login url
-                Map<String, String> params = new HashMap<>();
+                final Map<String, String> params = new HashMap<>();
                 params.put("email", email);
                 params.put("password", password);
 
@@ -197,7 +197,7 @@ public class LoginActivity extends Activity {
             pDialog.dismiss();
     }
 
-    public void forgotPass(View view) {
+    public void forgotPass(final View view) {
 
     }
 }

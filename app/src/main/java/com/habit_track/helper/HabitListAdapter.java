@@ -25,7 +25,7 @@ public class HabitListAdapter extends ArrayAdapter<Habit> {
     int layoutResourceId;
     List<Habit> habitList;
 
-    public HabitListAdapter(Context context, int layoutResourceId, ArrayList<Habit> data) {
+    public HabitListAdapter(final Context context, final int layoutResourceId, final ArrayList<Habit> data) {
         super(context, layoutResourceId, data);
         this.layoutResourceId = layoutResourceId;
         this.context = context;
@@ -33,10 +33,10 @@ public class HabitListAdapter extends ArrayAdapter<Habit> {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, final View convertView, final ViewGroup parent) {
         View row = convertView;
         ProgramHolder holder;
-        Habit habit = habitList.get(position);
+        final Habit habit = habitList.get(position);
 
         if (row == null) {
             LayoutInflater inflater = ((Activity) context).getLayoutInflater();
@@ -45,7 +45,7 @@ public class HabitListAdapter extends ArrayAdapter<Habit> {
             holder = new ProgramHolder();
             holder.txtTitle = (TextView) row.findViewById(R.id.habit_title);
             holder.checkBox = (CheckBox) row.findViewById(R.id.checkBox);
-      //      holder.checkBox.setChecked(ListFragment.habitList.get(position).doneMarker);
+            //      holder.checkBox.setChecked(ListFragment.habitList.get(position).doneMarker);
             holder.checkBox.setOnClickListener(v -> {
                 if (holder.checkBox.isChecked()) {
                     Log.i("****", "captured " + (position + 1));
@@ -68,10 +68,10 @@ public class HabitListAdapter extends ArrayAdapter<Habit> {
         // final Typeface face = Typeface.createFromAsset(getContext().getAssets(), "fonts/Montserrat-Regular.ttf");
         //final Typeface faceLight = Typeface.createFromAsset(getContext().getAssets(), "fonts/Montserrat-Light.otf");
 
-        Calendar cal = Calendar.getInstance();
+        final Calendar calendar = Calendar.getInstance();
 
         holder.txtTitle.setText(habit.title);
-        holder.checkBox.setChecked(habit.isDone(cal.get(Calendar.DATE),cal.get(Calendar.MONTH),cal.get(Calendar.YEAR)));
+        holder.checkBox.setChecked(habit.isDone(calendar.get(Calendar.DATE), calendar.get(Calendar.MONTH), calendar.get(Calendar.YEAR)));
 
         return row;
     }
