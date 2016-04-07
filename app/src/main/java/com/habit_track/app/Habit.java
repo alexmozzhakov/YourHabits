@@ -23,15 +23,15 @@ public class Habit {
 
     public void setDoneMarker(final boolean doneMarker) {
         this.doneMarker = doneMarker;
-        Calendar cal = Calendar.getInstance();
+        final Calendar calendar = Calendar.getInstance();
         //cal.setTime(date);
         //Calendar.get(Calendar.MONTH);
 
 
         //Log.i("cal ", ""+cal.get(Calendar.DATE));
-        this.markerUpdatedDay = cal.get(Calendar.DATE);
-        this.markerUpdatedMonth = cal.get(Calendar.MONTH);
-        this.markerUpdatedYear = cal.get(Calendar.YEAR);
+        this.markerUpdatedDay = calendar.get(Calendar.DATE);
+        this.markerUpdatedMonth = calendar.get(Calendar.MONTH);
+        this.markerUpdatedYear = calendar.get(Calendar.YEAR);
         Log.i("doneMarker ", toString());
     }
 

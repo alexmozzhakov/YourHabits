@@ -42,7 +42,7 @@ public class RegisterActivity extends Activity {
             "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
                     + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
 
-    protected static boolean isValidPattern(String str, Pattern pattern) {
+    protected static boolean isValidPattern(final String str, final Pattern pattern) {
         return pattern.matcher(str).matches();
     }
 
@@ -70,7 +70,7 @@ public class RegisterActivity extends Activity {
         // Check if user is already logged in or not
         if (session.isLoggedIn()) {
             // User is already logged in. Take him to main activity
-            Intent intent = new Intent(RegisterActivity.this,
+            final Intent intent = new Intent(RegisterActivity.this,
                     MainActivity.class);
             startActivity(intent);
             finish();
@@ -104,9 +104,9 @@ public class RegisterActivity extends Activity {
 
         // Link to Login Screen
         btnLinkToLogin.setOnClickListener(view -> {
-            Intent i = new Intent(getApplicationContext(),
+            final Intent intent = new Intent(getApplicationContext(),
                     LoginActivity.class);
-            startActivity(i);
+            startActivity(intent);
             finish();
         });
     }

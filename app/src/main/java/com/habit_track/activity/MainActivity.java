@@ -174,7 +174,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         finish();
     }
 
-    public void toCreateFragment(View view) {
+    public void toCreateFragment(final View view) {
         navigationView.getMenu().getItem(0).setChecked(false);
         lastFragment = new CreateFragment();
         getFragmentManager().beginTransaction().replace(R.id.content_frame, lastFragment).commit();
