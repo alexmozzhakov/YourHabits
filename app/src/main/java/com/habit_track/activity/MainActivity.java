@@ -80,8 +80,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Fetching user details from SQLite
         HashMap<String, String> user = database.getUserDetails();
 
-        TextView nav_name = (TextView) navigationView.getHeaderView(0).findViewById(R.id.name_info);
-        TextView nav_email = (TextView) navigationView.getHeaderView(0).findViewById(R.id.email_info);
+        final TextView nav_name = (TextView) navigationView.getHeaderView(0).findViewById(R.id.name_info);
+        final TextView nav_email = (TextView) navigationView.getHeaderView(0).findViewById(R.id.email_info);
         nav_name.setText(user.get("name"));
         nav_email.setText(user.get("email"));
 

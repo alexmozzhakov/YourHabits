@@ -25,11 +25,11 @@ public class ListFragment extends android.app.ListFragment {
         habitsDatabase = new HabitDBHandler(this.getActivity());
 
         //if (habitList == null)
-        ArrayList<Habit> habitList = habitsDatabase.getHabitDetailsAsArrayList();
+        final ArrayList<Habit> habitList = habitsDatabase.getHabitDetailsAsArrayList();
 
-        HabitListAdapter adapter = new HabitListAdapter(getActivity(),
+        final HabitListAdapter adapter = new HabitListAdapter(getActivity(),
                 R.layout.habit_listitem, habitList);
-        ListView listView = (ListView) result.findViewById(android.R.id.list);
+        final ListView listView = (ListView) result.findViewById(android.R.id.list);
 
         listView.setAdapter(adapter);
 

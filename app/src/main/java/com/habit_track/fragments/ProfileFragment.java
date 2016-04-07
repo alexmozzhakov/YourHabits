@@ -21,11 +21,11 @@ public class ProfileFragment extends Fragment {
         View result = inflater.inflate(R.layout.fragment_profile, container, false);
 
         // SqLite database handler
-        SQLiteHandler db = new SQLiteHandler(getActivity().getApplicationContext());
-        HashMap<String, String> user = db.getUserDetails();
+        final SQLiteHandler db = new SQLiteHandler(getActivity().getApplicationContext());
+        final HashMap<String, String> user = db.getUserDetails();
 
-        TextView nav_name = (TextView) result.findViewById(R.id.name);
-        TextView nav_email = (TextView) result.findViewById(R.id.email);
+        final TextView nav_name = (TextView) result.findViewById(R.id.name);
+        final TextView nav_email = (TextView) result.findViewById(R.id.email);
         nav_name.setText(user.get("name"));
         nav_email.setText(user.get("email"));
 

@@ -15,11 +15,11 @@ public class ProgramFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View result = inflater.inflate(R.layout.fragment_program, container, false);
-        Bundle bundle = getArguments();
+        final View result = inflater.inflate(R.layout.fragment_program, container, false);
+        final Bundle bundle = getArguments();
         if (bundle != null) {
-            String receiveTitle = bundle.getString("title");
-            String receiveInfo = bundle.getString("description");
+            final String receiveTitle = bundle.getString("title");
+            final String receiveInfo = bundle.getString("description");
 
             ((TextView) result.findViewById(R.id.title)).setText(receiveTitle);
             ((TextView) result.findViewById(R.id.description)).setText(receiveInfo);

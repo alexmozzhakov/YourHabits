@@ -32,7 +32,7 @@ public class ProgramsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View result = inflater.inflate(R.layout.fragment_programs, container, false);
+        final View result = inflater.inflate(R.layout.fragment_programs, container, false);
 
         //Create array of programs
         Program program_data[] = new Program[3];
@@ -72,7 +72,7 @@ public class ProgramsFragment extends Fragment {
                                 //Style title
                                 final TextView titleTop = ((TextView) result.findViewById(R.id.titleTop));
                                 titleTop.setText(program.getString("name"));
-                                titleTop.setTextColor(Color.parseColor("#ffffff"));
+                                titleTop.setTextColor(Color.WHITE);
                                 titleTop.setTypeface(faceLight);
                                 titleTop.setOnClickListener(this::top);
 
@@ -92,9 +92,9 @@ public class ProgramsFragment extends Fragment {
                     } finally {
                         //Use adapter for array of non-top programs
                         if (program_data[0] != null) {
-                            ProgramListAdapter adapter = new ProgramListAdapter(getActivity(),
+                            final ProgramListAdapter adapter = new ProgramListAdapter(getActivity(),
                                     R.layout.prog_listitem, program_data);
-                            ListView listView = (ListView) result.findViewById(R.id.mainListView);
+                            final ListView listView = (ListView) result.findViewById(R.id.mainListView);
                             listView.setAdapter(adapter);
                         }
 
