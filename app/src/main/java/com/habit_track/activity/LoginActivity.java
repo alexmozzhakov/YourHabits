@@ -31,6 +31,7 @@ public class LoginActivity extends Activity {
     private ProgressDialog pDialog;
     private SessionManager session;
     private SQLiteHandler db;
+    private static final String TAG_STRING = "req_login";
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -120,7 +121,6 @@ public class LoginActivity extends Activity {
      */
     protected void checkLogin(final String email, final String password) {
         // Tag used to cancel the request
-        final String tag_string_req = "req_login";
         pDialog.setMessage("Logging in ...");
         showDialog();
 
@@ -183,7 +183,7 @@ public class LoginActivity extends Activity {
         };
 
         // Adding request to request queue
-        AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
+        AppController.getInstance().addToRequestQueue(strReq, TAG_STRING);
     }
 
     private void showDialog() {

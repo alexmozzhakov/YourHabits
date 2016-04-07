@@ -36,13 +36,13 @@ public class HabitDBHandler extends SQLiteOpenHelper {
     private static final String KEY_TIME = "time";
     private static final String KEY_DONE = "done";
 
-    public HabitDBHandler(Context context) {
+    public HabitDBHandler(final Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     // Creating Tables
     @Override
-    public void onCreate(SQLiteDatabase db) {
+    public void onCreate(final SQLiteDatabase db) {
         String CREATE_LOGIN_TABLE = "CREATE TABLE " + TABLE_HABIT + "("
                 + KEY_ID + " INTEGER PRIMARY KEY," + KEY_NAME + " TEXT,"
                 + KEY_DESCRIPTION + " TEXT," + KEY_TIME + " INTEGER,"
@@ -66,7 +66,7 @@ public class HabitDBHandler extends SQLiteOpenHelper {
     /**
      * Storing user details in database
      */
-    public long addHabit(String name, String description, int time, boolean done, Calendar upd) {
+    public long addHabit(final String name, final String description, final int time, final boolean done, final Calendar upd) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -97,8 +97,8 @@ public class HabitDBHandler extends SQLiteOpenHelper {
 
         String selectQuery = "SELECT  * FROM " + TABLE_HABIT;
 
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
+        final SQLiteDatabase database = this.getReadableDatabase();
+        Cursor cursor = database.rawQuery(selectQuery, null);
         ArrayList<Habit> hab = new ArrayList<>();
 
         // Move to first row
@@ -118,7 +118,7 @@ public class HabitDBHandler extends SQLiteOpenHelper {
         }
 
         cursor.close();
-        db.close();
+        database.close();
         // return habit
         //  Log.d(TAG, "Fetching habits from Sqlite: " + Arrays.toString(habits));
 

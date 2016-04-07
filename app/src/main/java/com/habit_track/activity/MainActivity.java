@@ -169,7 +169,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         database.deleteUsers();
 
         // Launching the login activity
-        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+        final Intent intent = new Intent(MainActivity.this, LoginActivity.class);
         startActivity(intent);
         finish();
     }
@@ -182,15 +182,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
     public void onCreate(final View view) {
-        EditText editTitle = (EditText) findViewById(R.id.editTitle);
-        EditText editDescription = (EditText) findViewById(R.id.editDescription);
+        final EditText editTitle = (EditText) findViewById(R.id.editTitle);
+        final EditText editDescription = (EditText) findViewById(R.id.editDescription);
 
         if (editDescription != null && editTitle != null) {
             ListFragment.habitsDatabase.addHabit(editTitle.getText().toString(), editDescription.getText().toString(), 60, false, Calendar.getInstance());
         }
 
 
-        InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+        final InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
 
         lastFragment = new ListFragment();
