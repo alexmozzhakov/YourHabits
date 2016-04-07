@@ -20,7 +20,7 @@ public class ListFragment extends android.app.ListFragment {
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              final Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View result = inflater.inflate(R.layout.fragment_list, container, false);
+        final View result = inflater.inflate(R.layout.fragment_list, container, false);
 
         habitsDatabase = new HabitDBHandler(this.getActivity());
 

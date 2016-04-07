@@ -10,9 +10,9 @@ public class SessionManager {
 	// LogCat tag
 
 	// Shared Preferences
-	private SharedPreferences pref;
+    private final SharedPreferences pref;
 
-	private Editor editor;
+    private final Editor editor;
 
 	private static final String TAG = SessionManager.class.getSimpleName();
 	// Shared preferences file name

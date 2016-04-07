@@ -118,7 +118,7 @@ public class ProgramsFragment extends Fragment {
             getFragmentManager().beginTransaction().replace(R.id.content_frame, MainActivity.lastFragment).commit();
 
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e("JSONException", "response error", e);
         }
     }
 }

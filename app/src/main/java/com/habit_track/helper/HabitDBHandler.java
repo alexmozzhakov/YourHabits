@@ -43,25 +43,25 @@ public class HabitDBHandler extends SQLiteOpenHelper {
 
     // Creating Tables
     @Override
-    public void onCreate(final SQLiteDatabase db) {
-        String CREATE_LOGIN_TABLE = "CREATE TABLE " + TABLE_HABIT + "("
+    public void onCreate(final SQLiteDatabase database) {
+        final String CREATE_LOGIN_TABLE = "CREATE TABLE " + TABLE_HABIT + "("
                 + KEY_ID + " INTEGER PRIMARY KEY," + KEY_NAME + " TEXT,"
                 + KEY_DESCRIPTION + " TEXT," + KEY_TIME + " INTEGER,"
                 + KEY_UPDATED_DATE + " INTEGER," + KEY_UPDATED_MONTH + " INTEGER,"
                 + KEY_UPDATED_YEAR + " INTEGER," + KEY_DONE + " INTEGER" + ")";
-        db.execSQL(CREATE_LOGIN_TABLE);
+        database.execSQL(CREATE_LOGIN_TABLE);
 
         Log.d(TAG, "Database tables created");
     }
 
     // Upgrading database
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+    public void onUpgrade(final SQLiteDatabase database,final int oldVersion,final int newVersion) {
         // Drop older table if existed
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_HABIT);
+        database.execSQL("DROP TABLE IF EXISTS " + TABLE_HABIT);
 
         // Create tables again
-        onCreate(db);
+        onCreate(database);
     }
 
     /**
@@ -87,7 +87,7 @@ public class HabitDBHandler extends SQLiteOpenHelper {
         }
 
         // Inserting Row
-        long id = db.insert(TABLE_HABIT, null, values);
+        final long id = db.insert(TABLE_HABIT, null, values);
         db.close(); // Closing database connection
 
         Log.d(TAG, "New habit inserted into sqlite: " + id);
@@ -134,36 +134,36 @@ public class HabitDBHandler extends SQLiteOpenHelper {
      * Re crate database Delete all tables and create them again
      */
     public void deleteHabits() {
-        SQLiteDatabase db = this.getWritableDatabase();
+        final SQLiteDatabase database = this.getWritableDatabase();
         // Delete All Rows
-        db.delete(TABLE_HABIT, null, null);
-        db.close();
+        database.delete(TABLE_HABIT, null, null);
+        database.close();
 
         Log.d(TAG, "Deleted all habits from sqlite");
     }
 
     public void deleteHabit(final int id) {
-        SQLiteDatabase db = this.getWritableDatabase();
+        final SQLiteDatabase database = this.getWritableDatabase();
         // Delete All Rows
-        db.execSQL("DELETE FROM " + TABLE_HABIT + " WHERE " + KEY_ID + " = " + id);
+        database.execSQL("DELETE FROM " + TABLE_HABIT + " WHERE " + KEY_ID + " = " + id);
         Log.i("SQL done", "DELETE FROM " + TABLE_HABIT + " WHERE " + KEY_ID + " = " + id);
         //db.delete(TABLE_HABIT, null, null);
-        db.close();
+        database.close();
 
         // Log.d(TAG, "Deleted habit with id" + id);
     }
 
     public void updateHabit(final int id) {
-        SQLiteDatabase db = this.getWritableDatabase();
+        final SQLiteDatabase database = this.getWritableDatabase();
 
-        db.execSQL("UPDATE " + TABLE_HABIT + " SET " + KEY_DONE + " =  1 WHERE " + KEY_ID + " = " + id);
+        database.execSQL("UPDATE " + TABLE_HABIT + " SET " + KEY_DONE + " =  1 WHERE " + KEY_ID + " = " + id);
         Log.i("SQL done", "UPDATE " + TABLE_HABIT + " SET " + KEY_DONE + " = 1 WHERE " + KEY_ID + " = " + id);
     }
 
     public void updateHabit(int id, int day, int month, int year) {
-        SQLiteDatabase db = this.getWritableDatabase();
+        final SQLiteDatabase database = this.getWritableDatabase();
 
-        db.execSQL("UPDATE " + TABLE_HABIT + " SET " + KEY_DONE + " =  1, " + KEY_UPDATED_DATE + "," + KEY_UPDATED_MONTH + " = " + month + "," + KEY_UPDATED_YEAR + " = " + year + " WHERE " + KEY_ID + " = " + id);
+        database.execSQL("UPDATE " + TABLE_HABIT + " SET " + KEY_DONE + " =  1, " + KEY_UPDATED_DATE + "," + KEY_UPDATED_MONTH + " = " + month + "," + KEY_UPDATED_YEAR + " = " + year + " WHERE " + KEY_ID + " = " + id);
         Log.i("SQL done", "UPDATE " + TABLE_HABIT + " SET " + KEY_DONE + " =  1, " + KEY_UPDATED_DATE + "," + KEY_UPDATED_MONTH + " = " + month + "," + KEY_UPDATED_YEAR + " = " + year + " WHERE " + KEY_ID + " = " + id);
     }
 }

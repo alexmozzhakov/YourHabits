@@ -17,9 +17,9 @@ import java.util.Arrays;
 
 public class ProgramListAdapter extends ArrayAdapter<Program>{
 
-    Context context;
-    final int layoutResourceId;
-    Program programsList[];
+    private Context context;
+    private final int layoutResourceId;
+    private Program programsList[];
 
     public ProgramListAdapter(final Context context, final int layoutResourceId, final Program[] data) {
         super(context, layoutResourceId, data);
@@ -64,7 +64,7 @@ public class ProgramListAdapter extends ArrayAdapter<Program>{
     }
 
     static class ProgramHolder {
-        TextView txtTitle;
-        TextView txtPercent;
+        private TextView txtTitle;
+        private TextView txtPercent;
     }
 }
