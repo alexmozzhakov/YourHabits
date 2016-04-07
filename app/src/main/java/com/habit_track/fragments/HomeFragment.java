@@ -23,21 +23,20 @@ import org.json.JSONObject;
 
 public class HomeFragment extends Fragment {
 
-    View view;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_home, container, false);
-        TextView weatherBot = (TextView) view.findViewById(R.id.weatherBot);
+        final View view = inflater.inflate(R.layout.fragment_home, container, false);
+        final TextView weatherBot = (TextView) view.findViewById(R.id.weatherBot);
 
         final TextView weather = (TextView) view.findViewById(R.id.weather);
 
         final SharedPreferences sharedPreferences = this.getActivity().getSharedPreferences("pref", Context.MODE_PRIVATE);
 
-        RequestQueue rq = Volley.newRequestQueue(getActivity().getApplicationContext());
+        final RequestQueue rq = Volley.newRequestQueue(getActivity().getApplicationContext());
 
-        TabLayout tabLayout = (TabLayout) view.findViewById(R.id.sliding_tabs);
+        final TabLayout tabLayout = (TabLayout) view.findViewById(R.id.sliding_tabs);
         if (tabLayout != null) {
             tabLayout.addTab(tabLayout.newTab().setText("Tab One"));
             tabLayout.addTab(tabLayout.newTab().setText("Tab Two"));
@@ -45,7 +44,7 @@ public class HomeFragment extends Fragment {
         }
 
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, AppController.URL_WEATHER_API,
+        final StringRequest stringRequest = new StringRequest(Request.Method.GET, AppController.URL_WEATHER_API,
                 response -> {
                     try {
                         JSONObject o = new JSONObject(response);

@@ -14,14 +14,14 @@ public class Habit {
     public int time;
     public int id;
 
-    public Habit(String title) {
+    public Habit(final String title) {
         super();
         this.title = title;
         this.doneMarker = false;
         this.time = 60;
     }
 
-    public void setDoneMarker(boolean doneMarker) {
+    public void setDoneMarker(final boolean doneMarker) {
         this.doneMarker = doneMarker;
         Calendar cal = Calendar.getInstance();
         //cal.setTime(date);
@@ -35,7 +35,7 @@ public class Habit {
         Log.i("doneMarker ", toString());
     }
 
-    public boolean isDone(int markerUpdatedDay, int markerUpdatedMonth, int markerUpdatedYear) {
+    public boolean isDone(final int markerUpdatedDay, final int markerUpdatedMonth, final int markerUpdatedYear) {
         return markerUpdatedDay == this.markerUpdatedDay &&
                 markerUpdatedMonth == this.markerUpdatedMonth &&
                 markerUpdatedYear == this.markerUpdatedYear &&

@@ -13,17 +13,19 @@ import android.widget.TextView;
 import com.habit_track.R;
 import com.habit_track.app.Program;
 
+import java.util.Arrays;
+
 public class ProgramListAdapter extends ArrayAdapter<Program>{
 
     Context context;
-    int layoutResourceId;
-    Program progList[];
+    final int layoutResourceId;
+    Program programsList[];
 
     public ProgramListAdapter(final Context context, final int layoutResourceId, final Program[] data) {
         super(context, layoutResourceId, data);
         this.layoutResourceId = layoutResourceId;
         this.context = context;
-        this.progList = data;
+        this.programsList = Arrays.copyOf(data, data.length);
     }
 
     @Override
@@ -47,7 +49,7 @@ public class ProgramListAdapter extends ArrayAdapter<Program>{
             holder = (ProgramHolder)row.getTag();
         }
 
-        final Program program = progList[position];
+        final Program program = programsList[position];
 
         final Typeface face = Typeface.createFromAsset(getContext().getAssets(), "fonts/Montserrat-Regular.ttf");
         final Typeface faceLight = Typeface.createFromAsset(getContext().getAssets(), "fonts/Montserrat-Light.otf");

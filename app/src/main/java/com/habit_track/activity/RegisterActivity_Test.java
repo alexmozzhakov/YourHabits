@@ -15,22 +15,22 @@ public class RegisterActivity_Test {
     @Test
     public void validator() {
         //Emails check
-        String[] valid = {"test@yahoo.com",
+        final String[] valid = {"test@yahoo.com",
                 "test-100@yahoo.com", "test.100@yahoo.com",
                 "test111@test.com", "test-100@test.net",
                 "test.100@test.com.au", "test@1.com",
                 "test@gmail.com.com", "test+100@gmail.com",
                 "test-100@yahoo-test.com"};
-        String[] invalid = {"test", "test@.com.my",
+        final String[] invalid = {"test", "test@.com.my",
                 "test123@gmail.a", "test123@.com", "test123@.com.com",
                 ".mkyong@test.com", "test()*@gmail.com", "test@%*.com",
                 "test..2002@gmail.com", "test.@gmail.com",
                 "test@test@gmail.com", "test@gmail.com.1a"};
 
-        for (String email : valid) {
+        for (final String email : valid) {
             assertThat(RegisterActivity.isValidPattern(email, EMAIL_PATTERN), is(true));
         }
-        for (String email : invalid) {
+        for (final String email : invalid) {
             assertThat(RegisterActivity.isValidPattern(email, EMAIL_PATTERN), is(false));
         }
 

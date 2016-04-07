@@ -8,26 +8,28 @@ import android.util.Log;
 
 public class SessionManager {
 	// LogCat tag
-	private static String TAG = SessionManager.class.getSimpleName();
 
 	// Shared Preferences
 	private SharedPreferences pref;
 
 	private Editor editor;
 
+	private static final String TAG = SessionManager.class.getSimpleName();
 	// Shared preferences file name
 	private static final String PREF_NAME = "Login";
-	
+
 	private static final String KEY_IS_LOGGED_IN = "isLoggedIn";
 
+	private static final int PRIVATE_MODE = 0;
+
+
 	@SuppressLint("CommitPrefEdits")
-	public SessionManager(Context context) {
-		int PRIVATE_MODE = 0;
+	public SessionManager(final Context context) {
 		pref = context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
 		editor = pref.edit();
 	}
 
-	public void setLogin(boolean isLoggedIn) {
+	public void setLogin(final boolean isLoggedIn) {
 
 		editor.putBoolean(KEY_IS_LOGGED_IN, isLoggedIn);
 

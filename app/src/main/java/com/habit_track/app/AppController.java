@@ -10,13 +10,13 @@ import com.android.volley.toolbox.Volley;
 public class AppController extends Application {
 
 	// Server user login url
-	public static String URL_LOGIN = "http://habbitsapp.esy.es/android_login_api/login.php";
+	public static final String URL_LOGIN = "http://habbitsapp.esy.es/android_login_api/login.php";
 	// Server user register url
-	public static String URL_REGISTER = "http://habbitsapp.esy.es/android_login_api/register.php";
+	public static final String URL_REGISTER = "http://habbitsapp.esy.es/android_login_api/register.php";
 	// Server weather api
-	public static String URL_WEATHER_API = "http://habbitsapp.esy.es/weather_api.php";
+	public static final String URL_WEATHER_API = "http://habbitsapp.esy.es/weather_api.php";
 	//Server programs api
-	public static String URL_PROGRAMS_API = "http://habbitsapp.esy.es/programs_api.php";
+	public static final String URL_PROGRAMS_API = "http://habbitsapp.esy.es/programs_api.php";
 
 	public static final String TAG = AppController.class.getSimpleName();
 
@@ -42,7 +42,7 @@ public class AppController extends Application {
 		return mRequestQueue;
 	}
 
-	public <T> void addToRequestQueue(Request<T> req, String tag) {
+	public <T> void addToRequestQueue(final Request<T> req, final String tag) {
 		req.setTag(TextUtils.isEmpty(tag) ? TAG : tag);
 		getRequestQueue().add(req);
 	}
