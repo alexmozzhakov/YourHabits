@@ -1,8 +1,8 @@
 package com.habit_track.activity;
 
 
-import android.app.Activity;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -11,6 +11,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -22,6 +23,7 @@ import com.habit_track.fragments.CreateFragment;
 import com.habit_track.fragments.HomeFragment;
 import com.habit_track.fragments.ListFragment;
 import com.habit_track.fragments.ProgramsFragment;
+import com.habit_track.helper.HabitDBHandler;
 import com.habit_track.helper.SQLiteHandler;
 import com.habit_track.helper.SessionManager;
 
@@ -36,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private SessionManager session;
     private Toolbar toolbar;
     public static NavigationView navigationView;
+    private static boolean closedIMM = false;
 
     @SuppressWarnings("CommitTransaction")
     @Override
@@ -145,6 +148,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         transaction.commit();
 
+        final View view = this.getCurrentFocus();
+
+        if (view != null && !closedIMM) {
+            final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            closedIMM = imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            Log.i("IMM", "Closed imm");
+        }
+
         final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer != null) {
             drawer.closeDrawer(GravityCompat.START);
@@ -184,14 +195,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void onCreate(final View view) {
         final EditText editTitle = (EditText) findViewById(R.id.editTitle);
         final EditText editDescription = (EditText) findViewById(R.id.editDescription);
+        final EditText editTime = (EditText) findViewById(R.id.editTime);
 
-        if (editDescription != null && editTitle != null) {
-            ListFragment.habitsDatabase.addHabit(editTitle.getText().toString(), editDescription.getText().toString(), 60, false, Calendar.getInstance());
+
+        if (editDescription != null && editTitle != null && editTime != null) {
+            if (ListFragment.habitsDatabase == null) {
+                ListFragment.habitsDatabase = new HabitDBHandler(this);
+            }
+
+            ListFragment.habitsDatabase.addHabit(
+                    editTitle.getText().toString(),
+                    editDescription.getText().toString(),
+                    Integer.valueOf(editTime.getText().toString()),
+                    false,
+                    Calendar.getInstance());
         }
 
-
-        final InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+        if (view != null && !closedIMM) {
+            final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            closedIMM = imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            Log.i("IMM", "Closed imm");
+        }
 
         lastFragment = new ListFragment();
         getFragmentManager().beginTransaction().replace(R.id.content_frame, lastFragment).commit();

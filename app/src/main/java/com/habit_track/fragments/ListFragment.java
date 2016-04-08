@@ -22,7 +22,9 @@ public class ListFragment extends android.app.ListFragment {
         // Inflate the layout for this fragment
         final View result = inflater.inflate(R.layout.fragment_list, container, false);
 
-        habitsDatabase = new HabitDBHandler(this.getActivity());
+        if (habitsDatabase == null) {
+            habitsDatabase = new HabitDBHandler(this.getActivity());
+        }
 
         //if (habitList == null)
         final List<Habit> habitList = habitsDatabase.getHabitDetailsAsArrayList();

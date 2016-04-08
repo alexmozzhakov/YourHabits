@@ -1,47 +1,62 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:layout_marginTop="?android:attr/actionBarSize"
-              android:orientation="horizontal"
+              android:orientation="vertical"
               tools:context=".fragments.CreateFragment">
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Title"
+        android:paddingTop="10dp"
+        android:textColorHint="@color/input_login_hint">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/editTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </android.support.design.widget.TextInputLayout>
+
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Description"
+        android:paddingTop="10dp"
+        android:textColorHint="@color/input_login_hint">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/editDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Time needed"
+        android:paddingTop="10dp"
+        android:textColorHint="@color/input_login_hint">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/editTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"/>
+    </android.support.design.widget.TextInputLayout>
 
     <Button
         android:id="@+id/btnRegister"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:layout_marginTop="20dip"
+        android:layout_marginTop="20dp"
         android:background="@color/colorAccent"
-        android:text="Create"
         android:onClick="onCreate"
+        android:text="Create"
         android:textColor="@color/white"/>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Enter title"
-        android:textSize="25sp"/>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Enter description"
-        android:textSize="25sp"
-        android:layout_marginTop="140dp"
-        android:layout_gravity="center_horizontal|top"/>
-
-    <EditText
-        android:id="@+id/editTitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal|top"
-        android:layout_marginTop="40dp"/>
-
-    <EditText
-        android:id="@+id/editDescription"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal|top"
-        android:layout_marginTop="180dp"/>
-</FrameLayout>
+</LinearLayout>

@@ -53,9 +53,10 @@ public class HabitListAdapter extends ArrayAdapter<Habit> {
 
                     habitList.get(position).setDoneMarker(true);
                     ListFragment.habitsDatabase.updateHabit(habit.id, habit.markerUpdatedDay, habit.markerUpdatedMonth, habit.markerUpdatedYear);
-                    holder.txtTitle.setTextColor(Color.parseColor("#c7c7c7"));
-                } else
-                    holder.txtTitle.setTextColor(Color.parseColor("#000000"));
+                    holder.txtTitle.setTextColor(Color.GRAY);
+                } else {
+                    holder.txtTitle.setTextColor(Color.BLACK);
+                }
             });
 
             row.setTag(holder);
@@ -63,14 +64,14 @@ public class HabitListAdapter extends ArrayAdapter<Habit> {
             holder = (ProgramHolder) row.getTag();
         }
 
-
-        // final Typeface face = Typeface.createFromAsset(getContext().getAssets(), "fonts/Montserrat-Regular.ttf");
-        //final Typeface faceLight = Typeface.createFromAsset(getContext().getAssets(), "fonts/Montserrat-Light.otf");
-
         final Calendar calendar = Calendar.getInstance();
 
         holder.txtTitle.setText(habit.title);
-        holder.checkBox.setChecked(habit.isDone(calendar.get(Calendar.DATE), calendar.get(Calendar.MONTH), calendar.get(Calendar.YEAR)));
+        boolean checked = habit.isDone(calendar.get(Calendar.DATE), calendar.get(Calendar.MONTH), calendar.get(Calendar.YEAR));
+        if(checked) {
+            holder.checkBox.setChecked(true);
+            holder.txtTitle.setTextColor(Color.GRAY);
+        }
 
         return row;
     }
