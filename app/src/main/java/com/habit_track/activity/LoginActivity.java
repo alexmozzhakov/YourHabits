@@ -74,7 +74,7 @@ public class LoginActivity extends Activity {
                 final String password = inputPassword.getText().toString().trim();
 
                 // Check for empty data in the form
-                checkInput(email,password);
+                checkInput(email, password);
 
                 return true;
             }
@@ -87,7 +87,7 @@ public class LoginActivity extends Activity {
             final String password = inputPassword.getText().toString().trim();
 
             // Check for empty data in the form
-            checkInput(email,password);
+            checkInput(email, password);
         });
 
         // Link to Register Screen
@@ -180,7 +180,8 @@ public class LoginActivity extends Activity {
         if (pDialog.isShowing())
             pDialog.dismiss();
     }
-    private void checkInput(final String email, final String password){
+
+    private void checkInput(final String email, final String password) {
         // Check for empty data in the form
         if (email.isEmpty() || password.isEmpty()) {
             // Prompt user to enter credentials
