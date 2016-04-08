@@ -67,8 +67,8 @@ public class HabitListAdapter extends ArrayAdapter<Habit> {
         final Calendar calendar = Calendar.getInstance();
 
         holder.txtTitle.setText(habit.title);
-        boolean checked = habit.isDone(calendar.get(Calendar.DATE), calendar.get(Calendar.MONTH), calendar.get(Calendar.YEAR));
-        if(checked) {
+
+        if(habit.isDone(calendar.get(Calendar.DATE), calendar.get(Calendar.MONTH), calendar.get(Calendar.YEAR))) {
             holder.checkBox.setChecked(true);
             holder.txtTitle.setTextColor(Color.GRAY);
         }
