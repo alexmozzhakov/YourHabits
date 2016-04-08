@@ -17,9 +17,9 @@ import java.util.Arrays;
 
 public class ProgramListAdapter extends ArrayAdapter<Program>{
 
-    private Context context;
+    private final Context context;
     private final int layoutResourceId;
-    private Program programsList[];
+    private final Program programsList[];
 
     public ProgramListAdapter(final Context context, final int layoutResourceId, final Program[] data) {
         super(context, layoutResourceId, data);

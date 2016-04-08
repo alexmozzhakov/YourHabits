@@ -154,7 +154,7 @@ public class HabitDBHandler extends SQLiteOpenHelper {
         // Log.d(TAG, "Deleted habit with id" + id);
     }
 
-    public void updateHabit(int id, int day, int month, int year) {
+    public void updateHabit(final int id, final int day, final int month, final int year) {
         final SQLiteDatabase database = this.getWritableDatabase();
 
         database.execSQL("UPDATE " + TABLE_HABIT + " SET " + KEY_DONE + " =  1, " + KEY_UPDATED_DATE + " = " + day + "," + KEY_UPDATED_MONTH + " = " + month + "," + KEY_UPDATED_YEAR + " = " + year + " WHERE " + KEY_ID + " = " + id);

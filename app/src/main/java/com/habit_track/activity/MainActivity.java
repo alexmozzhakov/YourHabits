@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private SessionManager session;
     private Toolbar toolbar;
     public static NavigationView navigationView;
-    private static boolean closedIMM = false;
+    private static boolean closedIMM;
 
     @SuppressWarnings("CommitTransaction")
     @Override
@@ -98,13 +98,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         final int id = item.getItemId();
 
         transaction = getFragmentManager().beginTransaction();
-        if (id == R.id.nav_home) {
-            if (!(lastFragment instanceof HomeFragment)) {
-                lastFragment = new HomeFragment();
-                transaction.replace(R.id.content_frame, lastFragment);
-                toolbar.setTitle("Home");
-                navigationView.getMenu().findItem(id).setChecked(true);
-            }
+        if (id == R.id.nav_home && !(lastFragment instanceof HomeFragment)) {
+            lastFragment = new HomeFragment();
+            transaction.replace(R.id.content_frame, lastFragment);
+            toolbar.setTitle("Home");
+            navigationView.getMenu().findItem(id).setChecked(true);
+
         } /*else if (id == R.id.nav_calendar) {
             if (!(lastFragment instanceof CalendarFragment)) {
                 lastFragment = new CalendarFragment();
@@ -117,20 +116,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 transaction.replace(R.id.content_frame, lastFragment);
                 toolbar.setTitle("Statistics");
             }
-        } */ else if (id == R.id.nav_programs) {
-            if (!(lastFragment instanceof ProgramsFragment)) {
-                lastFragment = new ProgramsFragment();
-                transaction.replace(R.id.content_frame, lastFragment);
-                toolbar.setTitle("Programs");
-                navigationView.getMenu().findItem(id).setChecked(true);
-            }
-        } else if (id == R.id.nav_lists) {
-            if (!(lastFragment instanceof ListFragment)) {
-                lastFragment = new ListFragment();
-                transaction.replace(R.id.content_frame, lastFragment);
-                toolbar.setTitle("List");
-                navigationView.getMenu().findItem(id).setChecked(true);
-            }
+        } */ else if (id == R.id.nav_programs && !(lastFragment instanceof ProgramsFragment)) {
+            lastFragment = new ProgramsFragment();
+            transaction.replace(R.id.content_frame, lastFragment);
+            toolbar.setTitle("Programs");
+            navigationView.getMenu().findItem(id).setChecked(true);
+
+        } else if (id == R.id.nav_lists && !(lastFragment instanceof ListFragment)) {
+            lastFragment = new ListFragment();
+            transaction.replace(R.id.content_frame, lastFragment);
+            toolbar.setTitle("List");
+            navigationView.getMenu().findItem(id).setChecked(true);
         } /*else if (id == R.id.nav_profile) {
             if (!(lastFragment instanceof ProfileFragment)) {
                 lastFragment = new ProfileFragment();
@@ -146,18 +142,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }*/ else if (id == R.id.nav_logout) {
             logoutUser();
         }
+
         transaction.commit();
 
         final View view = this.getCurrentFocus();
 
-        if (view != null && !closedIMM) {
+        if (view != null && !closedIMM)
+
+        {
             final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             closedIMM = imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             Log.i("IMM", "Closed imm");
         }
 
         final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer != null) {
+        if (drawer != null)
+
+        {
             drawer.closeDrawer(GravityCompat.START);
         }
 
@@ -179,7 +180,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         database.deleteUsers();
 
-        // Launching the login activity
+// Launching the login activity
         final Intent intent = new Intent(MainActivity.this, LoginActivity.class);
         startActivity(intent);
         finish();
