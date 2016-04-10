@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <com.vipul.hp_hp.timelineview.TimelineView
+    <com.habit_track.helper.TimelineView
         android:id="@+id/time_marker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
