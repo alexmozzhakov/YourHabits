@@ -14,6 +14,7 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
     private final List<Habit> mFeedList;
 
     public TimeLineAdapter(final List<Habit> feedList) {
+        super();
         mFeedList = feedList;
     }
 
@@ -24,14 +25,14 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
 
     @Override
     public TimeLineViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
-        View view = View.inflate(parent.getContext(), R.layout.habit_timeline_item, null);
+        final View view = View.inflate(parent.getContext(), R.layout.habit_timeline_item, null);
         return new TimeLineViewHolder(view, viewType);
     }
 
     @Override
     public void onBindViewHolder(final TimeLineViewHolder holder, final int position) {
 
-        Habit habit = mFeedList.get(position);
+        final Habit habit = mFeedList.get(position);
 
         holder.name.setText(habit.title);
 
