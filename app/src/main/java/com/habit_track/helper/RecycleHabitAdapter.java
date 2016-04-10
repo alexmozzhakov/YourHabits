@@ -10,14 +10,14 @@ import android.widget.TextView;
 
 import com.habit_track.R;
 import com.habit_track.app.Habit;
-import com.habit_track.app.ItemTouchHelperAdapter;
+import com.habit_track.app.MovableItem;
 import com.habit_track.fragments.ListFragment;
 
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
-public class RecycleHabitAdapter extends RecyclerView.Adapter implements ItemTouchHelperAdapter {
+public class RecycleHabitAdapter extends RecyclerView.Adapter implements MovableItem {
 
     final private List<Habit> habitList;
 
