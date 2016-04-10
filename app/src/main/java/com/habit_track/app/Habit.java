@@ -1,7 +1,5 @@
 package com.habit_track.app;
 
-import android.util.Log;
-
 import java.util.Calendar;
 
 public class Habit {
@@ -23,16 +21,12 @@ public class Habit {
 
     public void setDoneMarker(final boolean doneMarker) {
         this.doneMarker = doneMarker;
-        final Calendar calendar = Calendar.getInstance();
-        //cal.setTime(date);
-        //Calendar.get(Calendar.MONTH);
-
-
-        //Log.i("cal ", ""+cal.get(Calendar.DATE));
-        this.markerUpdatedDay = calendar.get(Calendar.DATE);
-        this.markerUpdatedMonth = calendar.get(Calendar.MONTH);
-        this.markerUpdatedYear = calendar.get(Calendar.YEAR);
-        Log.i("doneMarker ", toString());
+        if (doneMarker) {
+            final Calendar calendar = Calendar.getInstance();
+            this.markerUpdatedDay = calendar.get(Calendar.DATE);
+            this.markerUpdatedMonth = calendar.get(Calendar.MONTH);
+            this.markerUpdatedYear = calendar.get(Calendar.YEAR);
+        }
     }
 
     public boolean isDone(final int markerUpdatedDay, final int markerUpdatedMonth, final int markerUpdatedYear) {

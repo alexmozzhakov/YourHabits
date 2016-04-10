@@ -6,6 +6,8 @@ import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,9 +20,15 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.habit_track.R;
 import com.habit_track.app.AppController;
+import com.habit_track.app.Habit;
+import com.habit_track.helper.HabitDBHandler;
+import com.habit_track.helper.TimeLineAdapter;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Calendar;
+import java.util.List;
 
 public class HomeFragment extends Fragment {
 
@@ -70,9 +78,38 @@ public class HomeFragment extends Fragment {
                 error -> {
                 });
 
-
         rq.add(stringRequest);
+
+
+        if (ListFragment.habitsDatabase == null) {
+            ListFragment.habitsDatabase = new HabitDBHandler(this.getActivity());
+        }
+
+//        //if (habitList == null)
+        int counter = 0;
+        final List<Habit> habitList = ListFragment.habitsDatabase.getHabitDetailsAsArrayList();
+        final Calendar calendar = Calendar.getInstance();
+        final int date = calendar.get(Calendar.DATE);
+        final int month = calendar.get(Calendar.MONTH);
+        final int year = calendar.get(Calendar.YEAR);
+
+        for (Habit habit : habitList) {
+            if (!habit.isDone(date, month, year)) {
+                counter++;
+            }
+        }
+
+        TextView tasksDue = (TextView) view.findViewById(R.id.tasks_due);
+        tasksDue.setText(String.valueOf(counter));
+//
+
         // Inflate the layout for this fragment
+        RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this.getActivity());
+        mRecyclerView.setLayoutManager(linearLayoutManager);
+
+        TimeLineAdapter mTimeLineAdapter = new TimeLineAdapter(habitList);
+        mRecyclerView.setAdapter(mTimeLineAdapter);
         return view;
     }
 }

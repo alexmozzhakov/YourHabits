@@ -56,7 +56,7 @@ public class HabitDBHandler extends SQLiteOpenHelper {
 
     // Upgrading database
     @Override
-    public void onUpgrade(final SQLiteDatabase database,final int oldVersion,final int newVersion) {
+    public void onUpgrade(final SQLiteDatabase database, final int oldVersion, final int newVersion) {
         // Drop older table if existed
         database.execSQL("DROP TABLE IF EXISTS " + TABLE_HABIT);
 
@@ -67,7 +67,7 @@ public class HabitDBHandler extends SQLiteOpenHelper {
     /**
      * Storing user details in database
      */
-    public long addHabit(final String name, final String description,final int time, final boolean done, final Calendar upd) {
+    public long addHabit(final String name, final String description, final int time, final boolean done, final Calendar upd) {
         final SQLiteDatabase database = this.getWritableDatabase();
         //final int time,
         final ContentValues values = new ContentValues();
@@ -81,8 +81,7 @@ public class HabitDBHandler extends SQLiteOpenHelper {
         // doneMarker
         if (done) {
             values.put(KEY_DONE, 1);
-        }
-        else {
+        } else {
             values.put(KEY_DONE, 0);
         }
 
@@ -154,10 +153,10 @@ public class HabitDBHandler extends SQLiteOpenHelper {
         // Log.d(TAG, "Deleted habit with id" + id);
     }
 
-    public void updateHabit(final int id, final int day, final int month, final int year) {
+    public void updateHabit(final int id, final int day, final int month, final int year, final int done) {
         final SQLiteDatabase database = this.getWritableDatabase();
 
-        database.execSQL("UPDATE " + TABLE_HABIT + " SET " + KEY_DONE + " =  1, " + KEY_UPDATED_DATE + " = " + day + "," + KEY_UPDATED_MONTH + " = " + month + "," + KEY_UPDATED_YEAR + " = " + year + " WHERE " + KEY_ID + " = " + id);
-        Log.i("SQL done", "UPDATE " + TABLE_HABIT + " SET " + KEY_DONE + " =  1, " + KEY_UPDATED_DATE + " = " + day + "," + KEY_UPDATED_MONTH + " = " + month + "," + KEY_UPDATED_YEAR + " = " + year + " WHERE " + KEY_ID + " = " + id);
+        database.execSQL("UPDATE " + TABLE_HABIT + " SET " + KEY_DONE + " = " + done + ", " + KEY_UPDATED_DATE + " = " + day + "," + KEY_UPDATED_MONTH + " = " + month + "," + KEY_UPDATED_YEAR + " = " + year + " WHERE " + KEY_ID + " = " + id);
+        Log.i("SQL done", "UPDATE " + TABLE_HABIT + " SET " + KEY_DONE + " = " + done + ", " + KEY_UPDATED_DATE + " = " + day + "," + KEY_UPDATED_MONTH + " = " + month + "," + KEY_UPDATED_YEAR + " = " + year + " WHERE " + KEY_ID + " = " + id);
     }
 }

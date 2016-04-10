@@ -2,5 +2,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
-
+    <com.ruesga.timelinechart.TimelineChartView
+        xmlns:tlc="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/graph"
+        android:layout_width="match_parent"
+        android:layout_height="320dp"
+        android:background="@null"
+        tlc:tlcGraphBackground="@null"
+        tlc:tlcFooterBackground="@null"
+        tlc:tlcShowFooter="true"
+        tlc:tlcGraphMode="tlcBarsStack"
+        tlc:tlcPlaySelectionSoundEffect="false"
+        tlc:tlcAnimateCursorTransition="true"/>
 </LinearLayout>
