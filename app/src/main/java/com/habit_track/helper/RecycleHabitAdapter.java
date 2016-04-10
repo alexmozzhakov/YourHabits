@@ -46,14 +46,14 @@ public class RecycleHabitAdapter extends RecyclerView.Adapter implements ItemTou
     }
 
     public void remove(final Habit item) {
-        int position = habitList.indexOf(item);
+        final int position = habitList.indexOf(item);
         habitList.remove(position);
         notifyItemRemoved(position);
     }
 
     @Override
     public RecycleHabitAdapter.ViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.habit_list_item, parent, false);
+        final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.habit_list_item, parent, false);
         return new ViewHolder(view);
     }
 
@@ -90,7 +90,7 @@ public class RecycleHabitAdapter extends RecyclerView.Adapter implements ItemTou
             }
         });
 
-        Calendar calendar = Calendar.getInstance();
+        final Calendar calendar = Calendar.getInstance();
 
         holder.checkBox.setChecked(habit.isDone(
                 calendar.get(Calendar.DATE),

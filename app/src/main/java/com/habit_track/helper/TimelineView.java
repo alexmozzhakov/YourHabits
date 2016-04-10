@@ -5,6 +5,7 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -23,16 +24,14 @@ public class TimelineView extends View {
     private int mLineSize;
 
     private Rect mBounds;
-    private Context mContext;
 
 
-    public TimelineView(Context context, AttributeSet attrs) {
+    public TimelineView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
-        mContext = context;
         init(attrs);
     }
 
-    private void init(AttributeSet attrs) {
+    private void init(final AttributeSet attrs) {
         TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.timeline_style);
         mMarker = typedArray.getDrawable(R.styleable.timeline_style_marker);
         mStartLine = typedArray.getDrawable(R.styleable.timeline_style_line);
@@ -42,12 +41,12 @@ public class TimelineView extends View {
         typedArray.recycle();
 
         if(mMarker == null) {
-            mMarker = mContext.getResources().getDrawable(R.drawable.marker);
+            mMarker = ContextCompat.getDrawable(this.getContext(), R.drawable.marker);
         }
     }
 
     @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+    protected void onMeasure(final int widthMeasureSpec, final int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         //Width measurements of the width and height and the inside view of child controls
         int w = mMarkerSize + getPaddingLeft() + getPaddingRight();
