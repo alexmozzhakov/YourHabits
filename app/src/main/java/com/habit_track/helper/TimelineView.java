@@ -69,26 +69,26 @@ public class TimelineView extends View {
     }
 
     private void initDrawable() {
-        int pLeft = getPaddingLeft();
-        int pRight = getPaddingRight();
-        int pTop = getPaddingTop();
-        int pBottom = getPaddingBottom();
+        final int pLeft = getPaddingLeft();
+        final int pRight = getPaddingRight();
+        final int pTop = getPaddingTop();
+        final int pBottom = getPaddingBottom();
 
-        int width = getWidth();// Width of current custom view
-        int height = getHeight();
+        final int width = getWidth();// Width of current custom view
+        final int height = getHeight();
 
-        int cWidth = width - pLeft - pRight;// Circle width
-        int cHeight = height - pTop - pBottom;
+        final int cWidth = width - pLeft - pRight;// Circle width
+        final int cHeight = height - pTop - pBottom;
 
-        int markSize = Math.min(mMarkerSize, Math.min(cWidth, cHeight));
+        final int markSize = Math.min(mMarkerSize, Math.min(cWidth, cHeight));
 
         if(mMarker != null) {
             mMarker.setBounds(pLeft,pTop,pLeft + markSize,pTop + markSize);
             mBounds = mMarker.getBounds();
         }
 
-        int centerX = mBounds.centerX();
-        int lineLeft = centerX - (mLineSize >> 1);
+        final int centerX = mBounds.centerX();
+        final int lineLeft = centerX - (mLineSize >> 1);
         if(mStartLine != null) {
             mStartLine.setBounds(lineLeft, 0, mLineSize + lineLeft, mBounds.top);
         }
