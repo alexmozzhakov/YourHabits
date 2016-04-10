@@ -32,7 +32,7 @@ public class TimelineView extends View {
     }
 
     private void init(final AttributeSet attrs) {
-        TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.timeline_style);
+        final TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.timeline_style);
         mMarker = typedArray.getDrawable(R.styleable.timeline_style_marker);
         mStartLine = typedArray.getDrawable(R.styleable.timeline_style_line);
         mEndLine = typedArray.getDrawable(R.styleable.timeline_style_line);
@@ -49,19 +49,19 @@ public class TimelineView extends View {
     protected void onMeasure(final int widthMeasureSpec, final int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         //Width measurements of the width and height and the inside view of child controls
-        int w = mMarkerSize + getPaddingLeft() + getPaddingRight();
-        int h = mMarkerSize + getPaddingTop() + getPaddingBottom();
+        final int w = mMarkerSize + getPaddingLeft() + getPaddingRight();
+        final int h = mMarkerSize + getPaddingTop() + getPaddingBottom();
 
         // Width and height to determine the final view through a systematic approach to decision-making
-        int widthSize = resolveSizeAndState(w, widthMeasureSpec, 0);
-        int heightSize = resolveSizeAndState(h, heightMeasureSpec, 0);
+        final int widthSize = resolveSizeAndState(w, widthMeasureSpec, 0);
+        final int heightSize = resolveSizeAndState(h, heightMeasureSpec, 0);
 
         setMeasuredDimension(widthSize, heightSize);
         initDrawable();
     }
 
     @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+    protected void onSizeChanged(final int w, final int h, final int oldw, final int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         // When the view is displayed when the callback
         // Positioning Drawable coordinates, then draw

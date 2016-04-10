@@ -93,7 +93,7 @@ public class HomeFragment extends Fragment {
         final int month = calendar.get(Calendar.MONTH);
         final int year = calendar.get(Calendar.YEAR);
 
-        for (Habit habit : habitList) {
+        for (final Habit habit : habitList) {
             if (!habit.isDone(date, month, year)) {
                 counter++;
             }
