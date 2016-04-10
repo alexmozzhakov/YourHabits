@@ -3,13 +3,13 @@ package com.habit_track.helper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 
-import com.habit_track.app.ItemTouchHelperAdapter;
+import com.habit_track.app.MovableItem;
 
 public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
-    private final ItemTouchHelperAdapter mAdapter;
+    private final MovableItem mAdapter;
 
-    public SimpleItemTouchHelperCallback(final ItemTouchHelperAdapter adapter) {
+    public SimpleItemTouchHelperCallback(final MovableItem adapter) {
         super();
         mAdapter = adapter;
     }

@@ -100,7 +100,7 @@ public class TimelineView extends View {
     }
 
     @Override
-    protected void onDraw(Canvas canvas) {
+    protected void onDraw(final Canvas canvas) {
         super.onDraw(canvas);
         if(mMarker != null) {
             mMarker.draw(canvas);
@@ -114,32 +114,32 @@ public class TimelineView extends View {
         }
     }
 
-    public void setMarker(Drawable marker) {
+    public void setMarker(final Drawable marker) {
         mMarker = marker;
         initDrawable();
     }
 
-    public void setStartLine(Drawable startline) {
+    public void setStartLine(final Drawable startline) {
         mStartLine = startline;
         initDrawable();
     }
 
-    public void setEndLine(Drawable endLine) {
+    public void setEndLine(final Drawable endLine) {
         mEndLine = endLine;
         initDrawable();
     }
 
-    public void setMarkerSize(int markerSize) {
+    public void setMarkerSize(final int markerSize) {
         mMarkerSize = markerSize;
         initDrawable();
     }
 
-    public void setLineSize(int lineSize) {
+    public void setLineSize(final int lineSize) {
         mLineSize = lineSize;
         initDrawable();
     }
 
-    public void initLine(int viewType) {
+    public void initLine(final int viewType) {
 
         if(viewType == LineType.BEGIN) {
             setStartLine(null);
@@ -153,7 +153,7 @@ public class TimelineView extends View {
         initDrawable();
     }
 
-    public static int getTimeLineViewType(int position, int total_size) {
+    public static int getTimeLineViewType(final int position, final int total_size) {
         if(total_size == 1) {
             return LineType.ONLYONE;
         } else if(position == 0) {
