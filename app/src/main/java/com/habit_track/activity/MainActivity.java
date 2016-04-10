@@ -204,10 +204,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 ListFragment.habitsDatabase = new HabitDBHandler(this);
             }
 
+            int time;
+
+            if (!editTime.getText().toString().equals("")) {
+                time = Integer.valueOf(editTime.getText().toString());
+            } else {
+                time = 60;
+            }
+
             ListFragment.habitsDatabase.addHabit(
                     editTitle.getText().toString(),
                     editDescription.getText().toString(),
-                    Integer.valueOf(editTime.getText().toString()),
+                    time,
                     false,
                     Calendar.getInstance());
         }

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.vipul.hp_hp.timelineview.TimelineView
+        android:id="@+id/time_marker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="30dp"
+        android:paddingBottom="30dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        app:marker_size="25dp"
+        app:line_size="2dp"
+        app:line="@color/colorPrimary"/>
+
+    <TextView
+        android:id="@+id/habit_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start|center_vertical"
+        android:gravity="start"
+        android:paddingLeft="30dp"
+        android:text="@string/navigation_drawer_close"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        tools:ignore="RtlHardcoded,RtlSymmetry"/>
+
+</LinearLayout>
