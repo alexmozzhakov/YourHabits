@@ -95,6 +95,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(final MenuItem item) {
         // Handle navigation view item clicks here.
+
+        if (ProgramsFragment.fm != null){
+            ProgramsFragment.fm.beginTransaction().remove(lastFragment).commit();
+        }
+
         final int id = item.getItemId();
 
         transaction = getFragmentManager().beginTransaction();

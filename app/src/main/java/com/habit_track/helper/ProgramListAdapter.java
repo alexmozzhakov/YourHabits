@@ -39,8 +39,8 @@ public class ProgramListAdapter extends ArrayAdapter<Program>{
             row = inflater.inflate(layoutResourceId, parent, false);
 
             holder = new ProgramHolder();
-            holder.txtTitle = (TextView)row.findViewById(R.id.prog_title);
-            holder.txtPercent = (TextView)row.findViewById(R.id.prog_percent);
+            holder.txtTitle = (TextView)row.findViewById(R.id.program_title);
+            holder.txtPercent = (TextView)row.findViewById(R.id.program_percent);
 
             row.setTag(holder);
         }

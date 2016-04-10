@@ -2,12 +2,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="100dp"
-    android:id="@+id/prog_listitem"
     android:background="@null">
 
 
     <TextView
-        android:id="@+id/prog_title"
+        android:id="@+id/program_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="top|center_horizontal"
@@ -18,7 +17,7 @@
         android:textSize="26sp"/>
 
     <TextView
-        android:id="@+id/prog_percent"
+        android:id="@+id/program_percent"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:layout_gravity="bottom|center_horizontal"

@@ -1,6 +1,7 @@
 package com.habit_track.fragments;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -106,21 +107,31 @@ public class ProgramsFragment extends Fragment {
 
         return result;
     }
+    public static FragmentManager fm;
+    private static boolean isShowing;
 
     public void top(final View view) {
-        try {
-            final Bundle bundle = new Bundle();
-            bundle.putString("title", jsonObject.getJSONObject("1").getString("name"));
-            bundle.putString("description", jsonObject.getJSONObject("1").getString("description"));
-            MainActivity.lastFragment = new ProgramFragment();
-            MainActivity.lastFragment.setArguments(bundle);
-            MainActivity.navigationView.getMenu().getItem(1).setChecked(false);
-            getFragmentManager().beginTransaction().replace(R.id.content_frame, MainActivity.lastFragment).commit();
+        if(!isShowing) {
+            try {
+                final Bundle bundle = new Bundle();
+                final JSONObject program = jsonObject.getJSONObject("1");
+                bundle.putString("title", program.getString("name"));
+                bundle.putString("description", program.getString("description"));
 
-        } catch (JSONException e) {
-            Log.e("JSONException", "response error", e);
+                MainActivity.lastFragment = new ProgramFragment();
+                MainActivity.lastFragment.setArguments(bundle);
+                MainActivity.navigationView.getMenu().getItem(1).setChecked(false);
+
+                fm = getFragmentManager();
+                fm.beginTransaction().add(R.id.content_frame, MainActivity.lastFragment).commit();
+
+            } catch (JSONException e) {
+                Log.e("JSONException", "response error", e);
+            }
+            isShowing = true;
+        } else {
+            fm.beginTransaction().remove(MainActivity.lastFragment).commit();
+            isShowing = false;
         }
     }
 }
-
-

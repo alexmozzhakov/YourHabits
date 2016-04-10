@@ -44,7 +44,6 @@ dependencies {
     compile 'org.testng:testng:6.9.6'
     compile 'junit:junit:4.12'
     compile 'com.ruesga.timeline-chart-view:timeline-chart-view:0.0.6'
-    compile 'com.github.vipulasri:timelineview:1.0.2'
 
     compile 'com.squareup.picasso:picasso:2.5.2'
 }

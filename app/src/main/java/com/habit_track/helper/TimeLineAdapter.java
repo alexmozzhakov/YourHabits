@@ -6,7 +6,6 @@ import android.view.ViewGroup;
 
 import com.habit_track.R;
 import com.habit_track.app.Habit;
-import com.vipul.hp_hp.timelineview.TimelineView;
 
 import java.util.List;
 

@@ -5,7 +5,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.habit_track.R;
-import com.vipul.hp_hp.timelineview.TimelineView;
 
 public class TimeLineViewHolder extends RecyclerView.ViewHolder {
     public TextView name;
