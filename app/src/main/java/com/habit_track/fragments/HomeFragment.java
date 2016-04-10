@@ -99,16 +99,16 @@ public class HomeFragment extends Fragment {
             }
         }
 
-        TextView tasksDue = (TextView) view.findViewById(R.id.tasks_due);
+        final TextView tasksDue = (TextView) view.findViewById(R.id.tasks_due);
         tasksDue.setText(String.valueOf(counter));
 //
 
         // Inflate the layout for this fragment
-        RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this.getActivity());
+        final RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this.getActivity());
         mRecyclerView.setLayoutManager(linearLayoutManager);
 
-        TimeLineAdapter mTimeLineAdapter = new TimeLineAdapter(habitList);
+        final TimeLineAdapter mTimeLineAdapter = new TimeLineAdapter(habitList);
         mRecyclerView.setAdapter(mTimeLineAdapter);
         return view;
     }

@@ -21,8 +21,6 @@ public class RecycleHabitAdapter extends RecyclerView.Adapter implements ItemTou
 
     final private List<Habit> habitList;
 
-    private final static int FADE_DURATION = 1000; // in milliseconds
-
     public LayoutInflater inflater;
 
     public RecycleHabitAdapter(final List<Habit> data) {
@@ -32,38 +30,38 @@ public class RecycleHabitAdapter extends RecyclerView.Adapter implements ItemTou
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView txtTitle;
-        private CheckBox checkBox;
+        private final TextView txtTitle;
+        private final CheckBox checkBox;
 
-        public ViewHolder(View v) {
+        public ViewHolder(final View v) {
             super(v);
             txtTitle = (TextView) v.findViewById(R.id.habit_title);
             checkBox = (CheckBox) v.findViewById(R.id.checkBox);
         }
     }
 
-    public void add(int position, Habit item) {
+    public void add(final int position, final Habit item) {
         habitList.add(position, item);
         notifyItemInserted(position);
     }
 
-    public void remove(Habit item) {
+    public void remove(final Habit item) {
         int position = habitList.indexOf(item);
         habitList.remove(position);
         notifyItemRemoved(position);
     }
 
     @Override
-    public RecycleHabitAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.habit_list_item, parent, false);
-        return new ViewHolder(v);
+    public RecycleHabitAdapter.ViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.habit_list_item, parent, false);
+        return new ViewHolder(view);
     }
 
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder rholder, int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder rholder, final int position) {
 
-        ViewHolder holder = (ViewHolder) rholder;
+        final ViewHolder holder = (ViewHolder) rholder;
         holder.txtTitle.setText(habitList.get(position).title);
         final Habit habit = habitList.get(position);
         holder.checkBox.setOnClickListener(v -> {
@@ -107,13 +105,13 @@ public class RecycleHabitAdapter extends RecyclerView.Adapter implements ItemTou
     }
 
     @Override
-    public void onItemDismiss(int position) {
+    public void onItemDismiss(final int position) {
         habitList.remove(position);
         notifyItemRemoved(position);
     }
 
     @Override
-    public void onItemMove(int fromPosition, int toPosition) {
+    public void onItemMove(final int fromPosition, final int toPosition) {
         if (fromPosition < toPosition) {
             for (int i = fromPosition; i < toPosition; i++) {
                 Collections.swap(habitList, i, i + 1);

@@ -28,6 +28,9 @@ import org.json.JSONObject;
 
 public class ProgramsFragment extends Fragment {
     private JSONObject jsonObject;
+    public static FragmentManager fm;
+    private static boolean isShowing;
+
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
@@ -37,6 +40,7 @@ public class ProgramsFragment extends Fragment {
 
         //Create array of programs
         final Program program_data[] = new Program[3];
+
 
         //Create request
         final StringRequest stringRequest = new StringRequest(Request.Method.GET, AppController.URL_PROGRAMS_API,
@@ -107,8 +111,6 @@ public class ProgramsFragment extends Fragment {
 
         return result;
     }
-    public static FragmentManager fm;
-    private static boolean isShowing;
 
     public void top(final View view) {
         if(!isShowing) {
