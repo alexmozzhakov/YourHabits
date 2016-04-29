@@ -24,10 +24,10 @@ public class HabitDBHandler extends SQLiteOpenHelper {
     // Database Name
     private static final String DATABASE_NAME = "habits";
 
-    // Login table name
+    // Habit table name
     private static final String TABLE_HABIT = "habit";
 
-    // Login Table Columns names
+    // Habit Table Columns names
     private static final String KEY_ID = "id";
     private static final String KEY_NAME = "title";
     private static final String KEY_DESCRIPTION = "description";
@@ -36,6 +36,7 @@ public class HabitDBHandler extends SQLiteOpenHelper {
     private static final String KEY_UPDATED_YEAR = "upd_y";
     private static final String KEY_TIME = "time";
     private static final String KEY_DONE = "done";
+    private static final String KEY_POSITION = "position";
 
     public HabitDBHandler(final Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -48,7 +49,8 @@ public class HabitDBHandler extends SQLiteOpenHelper {
                 + KEY_ID + " INTEGER PRIMARY KEY," + KEY_NAME + " TEXT,"
                 + KEY_DESCRIPTION + " TEXT," + KEY_TIME + " INTEGER,"
                 + KEY_UPDATED_DATE + " INTEGER," + KEY_UPDATED_MONTH + " INTEGER,"
-                + KEY_UPDATED_YEAR + " INTEGER," + KEY_DONE + " INTEGER" + ")";
+                + KEY_UPDATED_YEAR + " INTEGER,"+ KEY_POSITION + " INTEGER,"
+                + KEY_DONE + " INTEGER" + ")";
         database.execSQL(CREATE_LOGIN_TABLE);
 
         Log.d(TAG, "Database tables created");
@@ -67,7 +69,9 @@ public class HabitDBHandler extends SQLiteOpenHelper {
     /**
      * Storing user details in database
      */
-    public long addHabit(final String name, final String description, final int time, final boolean done, final Calendar upd) {
+    public long addHabit(final String name, final String description, final int time,
+                         final boolean done, final Calendar upd, final int position) {
+
         final SQLiteDatabase database = this.getWritableDatabase();
         //final int time,
         final ContentValues values = new ContentValues();
@@ -77,6 +81,8 @@ public class HabitDBHandler extends SQLiteOpenHelper {
         values.put(KEY_UPDATED_DATE, upd.get(Calendar.DATE)); // Updated
         values.put(KEY_UPDATED_MONTH, upd.get(Calendar.MONTH)); // Updated
         values.put(KEY_UPDATED_YEAR, upd.get(Calendar.YEAR)); // Updated
+        values.put(KEY_POSITION, position); // position in list
+
 
         // doneMarker
         if (done) {
@@ -109,7 +115,7 @@ public class HabitDBHandler extends SQLiteOpenHelper {
         cursor.moveToFirst();
         Habit temp;
         for (int i = 0; i < cursor.getCount(); i++) {
-            temp = new Habit(cursor.getString(cursor.getColumnIndex(KEY_NAME)));
+            temp = new Habit(cursor.getString(cursor.getColumnIndex(KEY_NAME)), i);
             temp.doneMarker = cursor.getInt(cursor.getColumnIndex(KEY_DONE)) == 1;
             temp.id = cursor.getInt(cursor.getColumnIndex(KEY_ID));
             temp.markerUpdatedDay = cursor.getInt(cursor.getColumnIndex(KEY_UPDATED_DATE));
@@ -130,18 +136,6 @@ public class HabitDBHandler extends SQLiteOpenHelper {
         return hab;
     }
 
-    /**
-     * Re crate database Delete all tables and create them again
-     */
-    public void deleteHabits() {
-        final SQLiteDatabase database = this.getWritableDatabase();
-        // Delete All Rows
-        database.delete(TABLE_HABIT, null, null);
-        database.close();
-
-        Log.d(TAG, "Deleted all habits from sqlite");
-    }
-
     public void deleteHabit(final int id) {
         final SQLiteDatabase database = this.getWritableDatabase();
         // Delete All Rows
@@ -158,5 +152,19 @@ public class HabitDBHandler extends SQLiteOpenHelper {
 
         database.execSQL("UPDATE " + TABLE_HABIT + " SET " + KEY_DONE + " = " + done + ", " + KEY_UPDATED_DATE + " = " + day + "," + KEY_UPDATED_MONTH + " = " + month + "," + KEY_UPDATED_YEAR + " = " + year + " WHERE " + KEY_ID + " = " + id);
         Log.i("SQL done", "UPDATE " + TABLE_HABIT + " SET " + KEY_DONE + " = " + done + ", " + KEY_UPDATED_DATE + " = " + day + "," + KEY_UPDATED_MONTH + " = " + month + "," + KEY_UPDATED_YEAR + " = " + year + " WHERE " + KEY_ID + " = " + id);
+    }
+
+    public void move(final int id, int fromPosition, int toPosition) {
+        final SQLiteDatabase database = this.getWritableDatabase();
+
+        database.execSQL("UPDATE " + TABLE_HABIT + " SET " + KEY_POSITION + " = " + toPosition + " WHERE " + KEY_ID + " = " + id);
+        database.execSQL("UPDATE " + TABLE_HABIT + " SET " + KEY_POSITION + " = " + KEY_POSITION + " + 1 WHERE " + KEY_ID + " > " + (fromPosition-1));
+        Log.i("SQL done", "UPDATE " + TABLE_HABIT + " SET " + KEY_POSITION + " = " + toPosition + " WHERE " + KEY_ID + " = " + id);
+        Log.i("SQL done", "UPDATE " + TABLE_HABIT + " SET " + KEY_POSITION + " = " + KEY_POSITION + " + 1 WHERE " + KEY_ID + " > " + (fromPosition-1));
+
+    }
+
+    public int getCount(){
+        return 1;
     }
 }

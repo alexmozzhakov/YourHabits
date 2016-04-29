@@ -41,7 +41,6 @@ public class RecycleHabitAdapter extends RecyclerView.Adapter implements Movable
     }
 
     public void add(final int position, final Habit item) {
-        habitList.add(position, item);
         notifyItemInserted(position);
     }
 
@@ -68,7 +67,7 @@ public class RecycleHabitAdapter extends RecyclerView.Adapter implements Movable
             if (holder.checkBox.isChecked()) {
                 habitList.get(position).setDoneMarker(true);
 
-                ListFragment.habitsDatabase.updateHabit(
+                ListFragment.mHabitsDatabase.updateHabit(
                         habit.id,
                         habit.markerUpdatedDay,
                         habit.markerUpdatedMonth,
@@ -78,7 +77,7 @@ public class RecycleHabitAdapter extends RecyclerView.Adapter implements Movable
                 holder.txtTitle.setTextColor(Color.GRAY);
             } else {
 
-                ListFragment.habitsDatabase.updateHabit(
+                ListFragment.mHabitsDatabase.updateHabit(
                         habit.id,
                         habit.markerUpdatedDay,
                         habit.markerUpdatedMonth,
@@ -121,6 +120,7 @@ public class RecycleHabitAdapter extends RecyclerView.Adapter implements Movable
                 Collections.swap(habitList, i, i - 1);
             }
         }
+        ListFragment.mHabitsDatabase.move(habitList.get(fromPosition).id, fromPosition, toPosition);
         notifyItemMoved(fromPosition, toPosition);
     }
 }

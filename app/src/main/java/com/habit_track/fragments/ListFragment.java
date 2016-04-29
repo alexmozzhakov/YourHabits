@@ -18,19 +18,19 @@ import com.habit_track.helper.SimpleItemTouchHelperCallback;
 import java.util.List;
 
 public class ListFragment extends Fragment {
-    public static HabitDBHandler habitsDatabase;
+    public static HabitDBHandler mHabitsDatabase;
 
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              final Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View result = inflater.inflate(R.layout.fragment_list, container, false);
 
-        if (habitsDatabase == null) {
-            habitsDatabase = new HabitDBHandler(this.getActivity());
+        if (mHabitsDatabase == null) {
+            mHabitsDatabase = new HabitDBHandler(this.getActivity());
         }
 
         // if (habitList == null)
-        final List<Habit> habitList = habitsDatabase.getHabitDetailsAsArrayList();
+        final List<Habit> habitList = mHabitsDatabase.getHabitDetailsAsArrayList();
 
         final RecyclerView recyclerView = (RecyclerView) result.findViewById(R.id.rv);
         recyclerView.setHasFixedSize(true);
