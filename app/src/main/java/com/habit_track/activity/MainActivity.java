@@ -34,11 +34,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public static android.app.Fragment lastFragment;
     private FragmentTransaction transaction;
-    private SQLiteHandler database;
+    private SQLiteHandler mUserDatabase;
     private SessionManager session;
     private Toolbar toolbar;
     public static NavigationView navigationView;
-    private static boolean closedIMM;
+    public static boolean immOpened;
 
     @SuppressWarnings("CommitTransaction")
     @Override
@@ -50,13 +50,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             toolbar.setTitle("Home");
         }
 
-
         setSupportActionBar(toolbar);
         lastFragment = new HomeFragment();
 
-
-        // SqLite database handler
-        database = new SQLiteHandler(getApplicationContext());
+        // SqLite mUserDatabase handler
+        mUserDatabase = new SQLiteHandler(getApplicationContext());
 
         // session manager
         session = new SessionManager(getApplicationContext());
@@ -72,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         toggle.syncState();
 
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.navigationView);
         if (navigationView != null) {
             navigationView.setNavigationItemSelectedListener(this);
         }
@@ -81,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         transaction.replace(R.id.content_frame, lastFragment).commit();
 
         // Fetching user details from SQLite
-        final Map<String, String> user = database.getUserDetails();
+        final Map<String, String> user = mUserDatabase.getUserDetails();
 
         final TextView nav_name = (TextView) navigationView.getHeaderView(0).findViewById(R.id.name_info);
         final TextView nav_email = (TextView) navigationView.getHeaderView(0).findViewById(R.id.email_info);
@@ -96,10 +94,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(final MenuItem item) {
         // Handle navigation view item clicks here.
 
-        if (ProgramsFragment.fm != null){
-            ProgramsFragment.fm.beginTransaction().remove(lastFragment).commit();
-        }
-
         final int id = item.getItemId();
 
         transaction = getFragmentManager().beginTransaction();
@@ -109,19 +103,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             toolbar.setTitle("Home");
             navigationView.getMenu().findItem(id).setChecked(true);
 
-        } /*else if (id == R.id.nav_calendar) {
-            if (!(lastFragment instanceof CalendarFragment)) {
-                lastFragment = new CalendarFragment();
-                transaction.replace(R.id.content_frame, lastFragment);
-                toolbar.setTitle("Calendar");
-            }
-        } else if (id == R.id.nav_stats) {
-            if (!(lastFragment instanceof StatisticsFragment)) {
-                lastFragment = new StatisticsFragment();
-                transaction.replace(R.id.content_frame, lastFragment);
-                toolbar.setTitle("Statistics");
-            }
-        } */ else if (id == R.id.nav_programs && !(lastFragment instanceof ProgramsFragment)) {
+        } else if (id == R.id.nav_programs && !(lastFragment instanceof ProgramsFragment)) {
             lastFragment = new ProgramsFragment();
             transaction.replace(R.id.content_frame, lastFragment);
             toolbar.setTitle("Programs");
@@ -132,38 +114,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             transaction.replace(R.id.content_frame, lastFragment);
             toolbar.setTitle("List");
             navigationView.getMenu().findItem(id).setChecked(true);
-        } /*else if (id == R.id.nav_profile) {
-            if (!(lastFragment instanceof ProfileFragment)) {
-                lastFragment = new ProfileFragment();
-                transaction.replace(R.id.content_frame, lastFragment);
-                toolbar.setTitle("Profile");
-            }
-        } else if (id == R.id.nav_settings) {
-            if (!(lastFragment instanceof SettingsFragment)) {
-                lastFragment = new SettingsFragment();
-                transaction.replace(R.id.content_frame, lastFragment);
-                toolbar.setTitle("Settings");
-            }
-        }*/ else if (id == R.id.nav_logout) {
+        } else if (id == R.id.nav_logout) {
             logoutUser();
+        }
+
+        final View view = getCurrentFocus();
+
+        if (view != null && immOpened) {
+            final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            Log.i("IMM", "Closed imm");
         }
 
         transaction.commit();
 
-        final View view = this.getCurrentFocus();
-
-        if (view != null && !closedIMM)
-
-        {
-            final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            closedIMM = imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-            Log.i("IMM", "Closed imm");
-        }
-
         final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer != null)
-
-        {
+        if (drawer != null) {
             drawer.closeDrawer(GravityCompat.START);
         }
 
@@ -183,9 +149,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void logoutUser() {
         session.setLogin(false);
 
-        database.deleteUsers();
+        // Deletes user from users mUserDatabase
+        mUserDatabase.deleteUsers();
 
-// Launching the login activity
+        // Launching the login activity
         final Intent intent = new Intent(MainActivity.this, LoginActivity.class);
         startActivity(intent);
         finish();
@@ -203,34 +170,36 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         final EditText editDescription = (EditText) findViewById(R.id.editDescription);
         final EditText editTime = (EditText) findViewById(R.id.editTime);
 
-
+        // Checks what data was entered and adds habit to mUserDatabase
         if (editDescription != null && editTitle != null && editTime != null) {
-            if (ListFragment.habitsDatabase == null) {
-                ListFragment.habitsDatabase = new HabitDBHandler(this);
+            if (ListFragment.mHabitsDatabase == null) {
+                ListFragment.mHabitsDatabase = new HabitDBHandler(this);
             }
 
             int time;
-
             if (!editTime.getText().toString().equals("")) {
                 time = Integer.valueOf(editTime.getText().toString());
             } else {
                 time = 60;
             }
 
-            ListFragment.habitsDatabase.addHabit(
+            ListFragment.mHabitsDatabase.addHabit(
                     editTitle.getText().toString(),
                     editDescription.getText().toString(),
                     time,
                     false,
-                    Calendar.getInstance());
+                    Calendar.getInstance(),
+                    (ListFragment.mHabitsDatabase.getCount() + 1));
         }
 
-        if (view != null && !closedIMM) {
+        // Closes keyboard if created new habit
+        if (immOpened) {
             final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            closedIMM = imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             Log.i("IMM", "Closed imm");
         }
 
+        // Creates new ListFragment and replaces CreateFragment
         lastFragment = new ListFragment();
         getFragmentManager().beginTransaction().replace(R.id.content_frame, lastFragment).commit();
     }

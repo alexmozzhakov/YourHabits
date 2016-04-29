@@ -31,11 +31,7 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
 
     @Override
     public void onBindViewHolder(final TimeLineViewHolder holder, final int position) {
-
-        final Habit habit = mFeedList.get(position);
-
-        holder.name.setText(habit.title);
-
+        holder.name.setText(mFeedList.get(position).title);
     }
 
     @Override

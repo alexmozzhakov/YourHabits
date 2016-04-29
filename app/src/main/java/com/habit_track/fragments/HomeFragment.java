@@ -15,7 +15,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.habit_track.R;
@@ -32,84 +31,86 @@ import java.util.List;
 
 public class HomeFragment extends Fragment {
 
-
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              final Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_home, container, false);
-        final TextView weatherBot = (TextView) view.findViewById(R.id.weatherBot);
 
         final TextView weather = (TextView) view.findViewById(R.id.weather);
+        final TextView weatherBot = (TextView) view.findViewById(R.id.weatherBot);
+
+        final TabLayout mTabLayout = (TabLayout) view.findViewById(R.id.sliding_tabs);
+
+        if (mTabLayout != null) {
+            for (int i = 0; i < 7; i++) {
+                mTabLayout.addTab(mTabLayout.newTab().setText("Tab " + i));
+            }
+        }
 
         final SharedPreferences sharedPreferences = this.getActivity().getSharedPreferences("pref", Context.MODE_PRIVATE);
 
-        final RequestQueue rq = Volley.newRequestQueue(getActivity().getApplicationContext());
+        if (sharedPreferences.getString("celsius", null) != null) {
+            weather.setText(sharedPreferences.getString("celsius", "18"));
+            weatherBot.setText(sharedPreferences.getString("location", "Error"));
+        }
+        
+        Volley.newRequestQueue(getActivity().getApplicationContext()).add(
+                new StringRequest(Request.Method.GET, AppController.URL_WEATHER_API,
+                        response -> {
+                            try {
+                                JSONObject o = new JSONObject(response);
+                                final SharedPreferences.Editor editor = sharedPreferences.edit();
 
-        final TabLayout tabLayout = (TabLayout) view.findViewById(R.id.sliding_tabs);
-        if (tabLayout != null) {
-            tabLayout.addTab(tabLayout.newTab().setText("Tab One"));
-            tabLayout.addTab(tabLayout.newTab().setText("Tab Two"));
-            tabLayout.addTab(tabLayout.newTab().setText("Tab Three"));
+                                editor.putString("celsius", o.getString("celsius").concat("˚C")).apply();
+                                editor.putString("location", o.getString("location")).apply();
+
+                                weather.setText(o.getString("celsius") + "˚C");
+
+                                if (this.getActivity() != null) {
+                                    Typeface face = Typeface.createFromAsset(this.getActivity().getAssets(), "fonts/Montserrat-Regular.ttf");
+                                    weatherBot.setTypeface(face);
+                                }
+                                weatherBot.setText(o.getString("location"));
+
+                            } catch (JSONException e) {
+                                Log.e("JSONException", "response error", e);
+                            }
+
+                        },
+                        error -> Log.e("StringRequest error", error.toString()))
+        );
+
+
+        if (ListFragment.mHabitsDatabase == null) {
+            ListFragment.mHabitsDatabase = new HabitDBHandler(this.getActivity());
         }
 
+        final List<Habit> mHabitList = ListFragment.mHabitsDatabase.getHabitDetailsAsArrayList();
+        final Calendar mCalendar = Calendar.getInstance();
+        final int date = mCalendar.get(Calendar.DATE);
+        final int month = mCalendar.get(Calendar.MONTH);
+        final int year = mCalendar.get(Calendar.YEAR);
 
-        final StringRequest stringRequest = new StringRequest(Request.Method.GET, AppController.URL_WEATHER_API,
-                response -> {
-                    try {
-                        JSONObject o = new JSONObject(response);
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-
-                        editor.putString("celsius", o.getString("celsius")).apply();
-                        editor.putString("location", o.getString("location")).apply();
-
-                        weather.setText(o.getString("celsius") + "˚C");
-
-                        if (this.getActivity() != null) {
-                            Typeface face = Typeface.createFromAsset(this.getActivity().getAssets(), "fonts/Montserrat-Regular.ttf");
-                            weatherBot.setTypeface(face);
-                        }
-                        weatherBot.setText(o.getString("location"));
-
-                    } catch (JSONException e) {
-                        Log.e("JSONException", "response error", e);
-                    }
-
-                },
-                error -> {
-                });
-
-        rq.add(stringRequest);
-
-
-        if (ListFragment.habitsDatabase == null) {
-            ListFragment.habitsDatabase = new HabitDBHandler(this.getActivity());
-        }
-
-//        //if (habitList == null)
         int counter = 0;
-        final List<Habit> habitList = ListFragment.habitsDatabase.getHabitDetailsAsArrayList();
-        final Calendar calendar = Calendar.getInstance();
-        final int date = calendar.get(Calendar.DATE);
-        final int month = calendar.get(Calendar.MONTH);
-        final int year = calendar.get(Calendar.YEAR);
-
-        for (final Habit habit : habitList) {
+        for (final Habit habit : mHabitList) {
             if (!habit.isDone(date, month, year)) {
                 counter++;
             }
         }
 
-        final TextView tasksDue = (TextView) view.findViewById(R.id.tasks_due);
-        tasksDue.setText(String.valueOf(counter));
-//
+        final TextView mTasksDue = (TextView) view.findViewById(R.id.tasks_due);
+        mTasksDue.setText(String.valueOf(counter));
+
 
         // Inflate the layout for this fragment
         final RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this.getActivity());
-        mRecyclerView.setLayoutManager(linearLayoutManager);
+        final LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(this.getActivity());
+        mRecyclerView.setLayoutManager(mLinearLayoutManager);
 
-        final TimeLineAdapter mTimeLineAdapter = new TimeLineAdapter(habitList);
+        final TimeLineAdapter mTimeLineAdapter = new TimeLineAdapter(mHabitList);
         mRecyclerView.setAdapter(mTimeLineAdapter);
         return view;
+
     }
+
 }

@@ -33,16 +33,16 @@ public class RegisterActivity extends Activity {
 
     private static final String TAG = RegisterActivity.class.getSimpleName();
     private ProgressDialog pDialog;
-    private SQLiteHandler database;
+    private SQLiteHandler mDatabase;
     private static final String TAG_STRING = "req_register";
 
-    protected static final Pattern NAME_PATTERN = Pattern.compile("^[a-zA-Z \\-\\.']*$");
+    public static final Pattern NAME_PATTERN = Pattern.compile("^[a-zA-Z \\-\\.']*$");
     // protected static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,10}$", Pattern.CASE_INSENSITIVE);
-    protected static final Pattern EMAIL_PATTERN = Pattern.compile(
+    public static final Pattern EMAIL_PATTERN = Pattern.compile(
             "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
                     + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
 
-    protected static boolean isValidPattern(final String str, final Pattern pattern) {
+    public static boolean isValidPattern(final String str, final Pattern pattern) {
         return pattern.matcher(str).matches();
     }
 
@@ -51,9 +51,9 @@ public class RegisterActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        final EditText inputFullName = (EditText) findViewById(R.id.fullname);
-        final EditText inputEmail = (EditText) findViewById(R.id.email);
-        final EditText inputPassword = (EditText) findViewById(R.id.password);
+        final EditText mInputFullName = (EditText) findViewById(R.id.fullname);
+        final EditText mInputEmail = (EditText) findViewById(R.id.email);
+        final EditText mInputPassword = (EditText) findViewById(R.id.password);
         final Button btnRegister = (Button) findViewById(R.id.btnRegister);
         final Button btnLinkToLogin = (Button) findViewById(R.id.btnLinkToLoginScreen);
 
@@ -65,7 +65,7 @@ public class RegisterActivity extends Activity {
         final SessionManager session = new SessionManager(getApplicationContext());
 
         // SQLite database handler
-        database = new SQLiteHandler(getApplicationContext());
+        mDatabase = new SQLiteHandler(getApplicationContext());
 
         // Check if user is already logged in or not
         if (session.isLoggedIn()) {
@@ -78,9 +78,9 @@ public class RegisterActivity extends Activity {
 
         // Register Button Click event
         btnRegister.setOnClickListener(view -> {
-            String name = inputFullName.getText().toString().trim();
-            final String email = inputEmail.getText().toString().trim();
-            final String password = inputPassword.getText().toString().trim();
+            String name = mInputFullName.getText().toString().trim();
+            final String email = mInputEmail.getText().toString().trim();
+            final String password = mInputPassword.getText().toString().trim();
             if (name.isEmpty()) {
                 name = "Anonymous";
             }
@@ -136,14 +136,13 @@ public class RegisterActivity extends Activity {
                     //String id = jObj.getString("id");
 
                     JSONObject user = jObj.getJSONObject("user");
-                    final String name1 = user.getString("name");
-                    final String email1 = user.getString("email");
-                    final String created_at = user.getString("created_at");
 
                     // Inserting row in users table
-                    database.addUser(name1, email1, created_at);
+                    mDatabase.addUser(user.getString("name"),
+                            user.getString("email"), user.getString("created_at"));
 
-                    Toast.makeText(getApplicationContext(), "User successfully registered. Try login now!",
+                    Toast.makeText(getApplicationContext(),
+                            "User successfully registered. Try login now!",
                             Toast.LENGTH_LONG).show();
 
                     // Launch login activity
@@ -153,9 +152,9 @@ public class RegisterActivity extends Activity {
                     startActivity(intent);
                     finish();
                 } else {
+                    // Error occurred in registration.
+                    // Get the error message
 
-                    // Error occurred in registration. Get the error
-                    // message
                     final String errorMsg = jObj.getString("error_msg");
                     Toast.makeText(getApplicationContext(),
                             errorMsg, Toast.LENGTH_LONG).show();

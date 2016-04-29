@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
+import com.firebase.client.Firebase;
 
 public class AppController extends Application {
 
@@ -16,7 +17,7 @@ public class AppController extends Application {
     // Server weather api
     public static final String URL_WEATHER_API = "http://habbitsapp.esy.es/weather_api.php";
     //Server programs api
-    public static final String URL_PROGRAMS_API = "http://habbitsapp.esy.es/programs_api.php";
+    public static final String URL_PROGRAMS_API = "https://fiery-torch-2910.firebaseio.com/";
 
     public static final String TAG = AppController.class.getSimpleName();
 
@@ -28,6 +29,7 @@ public class AppController extends Application {
     public void onCreate() {
         super.onCreate();
         mInstance = this;
+        Firebase.setAndroidContext(this);
     }
 
     public static synchronized AppController getInstance() {

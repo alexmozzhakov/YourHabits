@@ -11,12 +11,13 @@ public class Habit {
     public int markerUpdatedYear;
     public int time;
     public int id;
+    public int position;
 
-    public Habit(final String title) {
+    public Habit(final String title, int position) {
         super();
         this.title = title;
         this.doneMarker = false;
-        this.time = 60;
+        this.position = position;
     }
 
     public void setDoneMarker(final boolean doneMarker) {
@@ -46,6 +47,8 @@ public class Habit {
                 ", markerUpdatedMonth=" + markerUpdatedMonth +
                 ", markerUpdatedYear=" + markerUpdatedYear +
                 ", time=" + time +
+                ", id=" + id +
+                ", position=" + position +
                 '}';
     }
 }

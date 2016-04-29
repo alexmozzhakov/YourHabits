@@ -177,21 +177,26 @@ public class LoginActivity extends Activity {
     }
 
     private void hideDialog() {
-        if (pDialog.isShowing())
+        if (pDialog.isShowing()) {
             pDialog.dismiss();
+        }
     }
 
-    private void checkInput(final String email, final String password) {
+    public boolean checkInput(final String email, final String password) {
         // Check for empty data in the form
         if (email.isEmpty() || password.isEmpty()) {
             // Prompt user to enter credentials
             Toast.makeText(getApplicationContext(),
                     "Please enter the credentials!", Toast.LENGTH_LONG)
                     .show();
+            return false;
+
         } else {
             // login user
             checkLogin(email, password);
         }
+
+        return true;
     }
 
     public void forgotPass(final View view) {
