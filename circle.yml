@@ -8,7 +8,7 @@ general:
 
 machine:
     environment:
-        ANDROID_HOME: /usr/local/android-sdk-linux
+        ANDROID_HOME: /home/ubuntu/android
 
 dependencies:
     override:
