@@ -29,7 +29,6 @@
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/ekrfoper"
             android:hint="@string/hint_email"
             android:textColorHint="@color/input_login_hint">
 
@@ -53,7 +52,6 @@
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/refkoperkfepr"
             android:hint="@string/hint_password"
             android:textColorHint="@color/input_login_hint">
 

@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
     <com.ruesga.timelinechart.TimelineChartView
         xmlns:tlc="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/graph"
         android:layout_width="match_parent"
         android:layout_height="320dp"
         android:background="@null"
-        tlc:tlcGraphBackground="@null"
+        tlc:tlcAnimateCursorTransition="true"
         tlc:tlcFooterBackground="@null"
-        tlc:tlcShowFooter="true"
+        tlc:tlcGraphBackground="@null"
         tlc:tlcGraphMode="tlcBarsStack"
         tlc:tlcPlaySelectionSoundEffect="false"
-        tlc:tlcAnimateCursorTransition="true"/>
+        tlc:tlcShowFooter="true"/>
 </LinearLayout>

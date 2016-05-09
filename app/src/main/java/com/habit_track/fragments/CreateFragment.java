@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import com.habit_track.R;
 import com.habit_track.activity.MainActivity;
+import com.habit_track.helper.HabitDBHandler;
 
 public class CreateFragment extends Fragment {
 

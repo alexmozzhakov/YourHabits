@@ -1,0 +1,108 @@
+TASK com.habit_track id=697
+  ACTIVITY com.habit_track/.activity.MainActivity a9d64bb pid=7069
+    Local FragmentActivity 2cf7a5b State:
+      mCreated=truemResumed=true mStopped=false mReallyStopped=false
+      mLoadersStarted=true
+    FragmentManager misc state:
+      mHost=android.support.v4.app.FragmentActivity$HostCallbacks@a1aa8e5
+      mContainer=android.support.v4.app.FragmentActivity$HostCallbacks@a1aa8e5
+      mCurState=5 mStateSaved=false mDestroyed=false
+    View Hierarchy:
+      com.android.internal.policy.PhoneWindow$DecorView{2eddfba V.E..... ... 0,0-720,1280}
+        android.widget.LinearLayout{d4f1e6b V.E..... ... 0,0-720,1184}
+          android.view.ViewStub{7b6bdc8 G.E..... ... 0,0-0,0 #10203ab android:id/action_mode_bar_stub}
+          android.widget.FrameLayout{751ee61 V.E..... ... 0,0-720,1184}
+            android.support.v7.widget.FitWindowsLinearLayout{48a3d86 V.E..... ... 0,0-720,1184 #7f0c0058 app:id/action_bar_root}
+              android.support.v7.widget.ViewStubCompat{93f3647 G.E..... ... 0,0-0,0 #7f0c0059 app:id/action_mode_bar_stub}
+              android.support.v7.widget.ContentFrameLayout{45dee74 V.E..... ... 0,0-720,1184 #1020002 android:id/content}
+                android.support.v4.widget.DrawerLayout{c5e0f9d VFED.... ... 0,0-720,1184 #7f0c0070 app:id/drawer_layout}
+                  android.support.design.widget.CoordinatorLayout{d3cac12 V.ED.... ... 0,0-720,1184}
+                    android.support.design.widget.AppBarLayout{72eefe3 V.E..... ... 0,48-720,160}
+                      android.support.v7.widget.Toolbar{8a57de0 V.E..... ... 0,0-720,112 #7f0c0076 app:id/toolbar}
+                        android.widget.TextView{6110899 V.ED.... ... 120,29-227,83}
+                        android.widget.ImageButton{535775e VFED..C. ... 0,0-112,112}
+                        android.support.v7.widget.ActionMenuView{2d6a73f V.E..... ... 720,0-720,112}
+                  android.widget.FrameLayout{614980c V.E..... ... 0,48-720,1184 #7f0c0071 app:id/content_frame}
+                    android.widget.FrameLayout{2609555 V.E..... ... 0,112-720,1136}
+                      android.support.design.widget.TabLayout{55dab6a VFED.... ... 0,0-720,96 #7f0c008d app:id/sliding_tabs}
+                        android.support.design.widget.TabLayout$SlidingTabStrip{118785b V.ED.... ... 0,0-1218,96}
+                          android.support.design.widget.TabLayout$TabView{d7928f8 VFE...C. .S. 0,0-164,96}
+                            android.support.v7.widget.AppCompatImageView{ee231d1 G.ED.... .S. 0,0-0,0}
+                            android.support.v7.widget.AppCompatTextView{a231436 V.ED.... .S. 24,29-140,67}
+                          android.support.design.widget.TabLayout$TabView{8dc3f37 VFE...C. ... 164,0-332,96}
+                            android.support.v7.widget.AppCompatImageView{c93dca4 G.ED.... ... 0,0-0,0}
+                            android.support.v7.widget.AppCompatTextView{3071a0d V.ED.... ... 24,29-144,67}
+                          android.support.design.widget.TabLayout$TabView{7043dc2 VFE...C. ... 332,0-544,96}
+                            android.support.v7.widget.AppCompatImageView{dab97d3 G.ED.... ... 0,0-0,0}
+                            android.support.v7.widget.AppCompatTextView{a841f10 V.ED.... ... 24,29-188,67}
+                          android.support.design.widget.TabLayout$TabView{2184a09 VFE...C. ... 544,0-733,96}
+                            android.support.v7.widget.AppCompatImageView{6dc740e G.ED.... ... 0,0-0,0}
+                            android.support.v7.widget.AppCompatTextView{80dde2f V.ED.... ... 24,29-165,67}
+                          android.support.design.widget.TabLayout$TabView{ef41c3c VFE...C. ... 733,0-877,96}
+                            android.support.v7.widget.AppCompatImageView{f27dc5 G.ED.... ... 0,0-0,0}
+                            android.support.v7.widget.AppCompatTextView{4efc31a V.ED.... ... 26,29-118,67}
+                          android.support.design.widget.TabLayout$TabView{7a42e4b VFE...C. ... 877,0-1063,96}
+                            android.support.v7.widget.AppCompatImageView{4c028 G.ED.... ... 0,0-0,0}
+                            android.support.v7.widget.AppCompatTextView{b823141 V.ED.... ... 24,29-162,67}
+                          android.support.design.widget.TabLayout$TabView{ab6f6e6 VFE...C. ... 1063,0-1218,96}
+                            android.support.v7.widget.AppCompatImageView{b056427 G.ED.... ... 0,0-0,0}
+                            android.support.v7.widget.AppCompatTextView{2f9b6d4 V.ED.... ... 24,29-131,67}
+                      android.support.v4.view.ViewPager{5ffa07d VFED.... ... 0,0-720,1024}
+                      android.view.View{e6b9b72 V.ED.... ... 0,96-720,98}
+                      android.view.View{95a1bc3 V.ED.... ... 0,96-720,286}
+                      android.view.View{ba56c40 V.ED.... ... 0,286-720,288}
+                      android.widget.LinearLayout{5eac779 V.E..... ... 0,96-720,276}
+                        android.widget.FrameLayout{e53fcbe V.E..... ... 0,0-360,180}
+                          android.support.v7.widget.AppCompatTextView{9b8b11f V.ED.... ... 0,0-360,140 #7f0c008e app:id/tasks_due}
+                          android.support.v7.widget.AppCompatTextView{6950c6c V.ED.... ... 0,140-360,180}
+                        android.widget.FrameLayout{ec76235 V.E..... ... 360,0-720,180}
+                          android.support.v7.widget.AppCompatTextView{4cf26ca V.ED.... ... 0,0-360,140 #7f0c008f app:id/weather}
+                          android.support.v7.widget.AppCompatTextView{441403b V.ED.... ... 0,140-360,180 #7f0c0090 app:id/weatherBot}
+                      android.support.v7.widget.RecyclerView{9fc8358 VFED.... F.. 0,286-720,1024 #7f0c0091 app:id/recyclerView}
+                        android.widget.LinearLayout{e98ecb1 V.E..... ... 0,-135-720,35}
+                          android.support.v7.widget.AppCompatTextView{120e596 V.ED.... ... 0,58-335,112 #7f0c00a0 app:id/habit_title_left}
+                          com.habit_track.helper.TimelineView{8f9a517 V.ED.... ... 335,0-385,170 #7f0c00a1 app:id/time_marker}
+                          android.support.v7.widget.AppCompatTextView{9627d04 V.ED.... ... 385,58-720,112 #7f0c00a2 app:id/habit_title_right}
+                        android.widget.LinearLayout{61ea2ed V.E..... ... 0,35-720,205}
+                          android.support.v7.widget.AppCompatTextView{fdc522 V.ED.... ... 0,58-335,112 #7f0c00a0 app:id/habit_title_left}
+                          com.habit_track.helper.TimelineView{8697bb3 V.ED.... ... 335,0-385,170 #7f0c00a1 app:id/time_marker}
+                          android.support.v7.widget.AppCompatTextView{80c6570 V.ED.... ... 385,58-720,112 #7f0c00a2 app:id/habit_title_right}
+                        android.widget.LinearLayout{8cf80e9 V.E..... ... 0,205-720,375}
+                          android.support.v7.widget.AppCompatTextView{6d7116e V.ED.... ... 0,58-335,112 #7f0c00a0 app:id/habit_title_left}
+                          com.habit_track.helper.TimelineView{9f6200f V.ED.... ... 335,0-385,170 #7f0c00a1 app:id/time_marker}
+                          android.support.v7.widget.AppCompatTextView{62a689c V.ED.... ... 385,58-720,112 #7f0c00a2 app:id/habit_title_right}
+                        android.widget.LinearLayout{9642a5 V.E..... ... 0,375-720,545}
+                          android.support.v7.widget.AppCompatTextView{8e6d67a V.ED.... ... 0,58-335,112 #7f0c00a0 app:id/habit_title_left}
+                          com.habit_track.helper.TimelineView{bfeae2b V.ED.... ... 335,0-385,170 #7f0c00a1 app:id/time_marker}
+                          android.support.v7.widget.AppCompatTextView{4c37288 V.ED.... ... 385,58-720,112 #7f0c00a2 app:id/habit_title_right}
+                        android.widget.LinearLayout{14d6421 V.E..... ... 0,545-720,715}
+                          android.support.v7.widget.AppCompatTextView{4fbe046 V.ED.... ... 0,58-335,112 #7f0c00a0 app:id/habit_title_left}
+                          com.habit_track.helper.TimelineView{9b80207 V.ED.... ... 335,0-385,170 #7f0c00a1 app:id/time_marker}
+                          android.support.v7.widget.AppCompatTextView{c612f34 V.ED.... ... 385,58-720,112 #7f0c00a2 app:id/habit_title_right}
+                        android.widget.LinearLayout{7fb215d V.E..... ... 0,715-720,885}
+                          android.support.v7.widget.AppCompatTextView{505bad2 V.ED.... ... 0,58-335,112 #7f0c00a0 app:id/habit_title_left}
+                          com.habit_track.helper.TimelineView{2c8b7a3 V.ED.... ... 335,0-385,170 #7f0c00a1 app:id/time_marker}
+                          android.support.v7.widget.AppCompatTextView{27c0aa0 V.ED.... ... 385,58-720,112 #7f0c00a2 app:id/habit_title_right}
+                      android.support.design.widget.FloatingActionButton{1cd7659 VFED..C. ... 576,880-688,992}
+                  android.support.design.widget.NavigationView{60b21e I.E..... ... -560,0-0,1184 #7f0c0072 app:id/navigationView}
+                    android.support.design.internal.NavigationMenuView{a52aff VFED.V.. ... 0,0-560,1184 #7f0c007c app:id/design_navigation_view}
+                      android.widget.LinearLayout{9a730cc V.E..... ... 0,0-560,316 #7f0c007b app:id/navigation_header_container}
+                        android.widget.LinearLayout{6d61f15 V.E..... ... 0,0-560,300}
+                          android.support.v7.widget.AppCompatTextView{5e1d22a V.ED..C. ... 32,155-528,230 #7f0c00a3 app:id/name_info}
+                          android.support.v7.widget.AppCompatTextView{5ab781b V.ED.... ... 32,230-528,268 #7f0c00a4 app:id/email_info}
+                      android.support.design.internal.NavigationMenuItemView{87c8db8 VFED..C. ... 0,316-560,412}
+                        android.support.v7.widget.AppCompatCheckedTextView{4869791 V.ED.... ... 32,0-528,96 #7f0c007d app:id/design_menu_item_text}
+                        android.widget.FrameLayout{aa2e6f6 V.E..... ... 528,0-528,96 #7f0c007f app:id/design_menu_item_action_area}
+                      android.support.design.internal.NavigationMenuItemView{1ff7af7 VFED..C. ... 0,412-560,508}
+                        android.support.v7.widget.AppCompatCheckedTextView{348cd64 V.ED.... ... 32,0-528,96 #7f0c007d app:id/design_menu_item_text}
+                        android.widget.FrameLayout{3ec1bcd V.E..... ... 528,0-528,96 #7f0c007f app:id/design_menu_item_action_area}
+                      android.support.design.internal.NavigationMenuItemView{98e7c82 VFED..C. ... 0,508-560,604}
+                        android.support.v7.widget.AppCompatCheckedTextView{a26cf93 V.ED.... ... 32,0-528,96 #7f0c007d app:id/design_menu_item_text}
+                        android.widget.FrameLayout{4775bd0 V.E..... ... 528,0-528,96 #7f0c007f app:id/design_menu_item_action_area}
+                      android.widget.FrameLayout{7aba7c9 V.E..... ... 0,604-560,638}
+                        android.view.View{fabdece V.ED.... ... 0,16-560,18}
+                      android.support.design.internal.NavigationMenuItemView{b64d1ef VFED..C. ... 0,638-560,734}
+                        android.support.v7.widget.AppCompatCheckedTextView{fbe64fc V.ED.... ... 32,0-528,96 #7f0c007d app:id/design_menu_item_text}
+                        android.widget.FrameLayout{dbdf785 V.E..... ... 528,0-528,96 #7f0c007f app:id/design_menu_item_action_area}
+        android.view.View{12b19da V.ED.... ... 0,1184-720,1280 #1020030 android:id/navigationBarBackground}
+        android.view.View{9d69e0b V.ED.... ... 0,0-720,48 #102002f android:id/statusBarBackground}

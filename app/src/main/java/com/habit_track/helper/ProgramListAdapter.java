@@ -15,11 +15,11 @@ import com.habit_track.app.Program;
 
 import java.util.List;
 
-public class ProgramListAdapter extends ArrayAdapter<Program>{
+public class ProgramListAdapter extends ArrayAdapter<Program> {
 
     private final Context context;
     private final int layoutResourceId;
-    private final List<Program>  programsList;
+    private final List<Program> programsList;
 
     public ProgramListAdapter(final Context context, final int layoutResourceId, final List<Program> data) {
         super(context, layoutResourceId, data);
@@ -33,20 +33,17 @@ public class ProgramListAdapter extends ArrayAdapter<Program>{
         View row = convertView;
         ProgramHolder holder;
 
-        if(row == null)
-        {
-            final LayoutInflater inflater = ((Activity)context).getLayoutInflater();
+        if (row == null) {
+            final LayoutInflater inflater = ((Activity) context).getLayoutInflater();
             row = inflater.inflate(layoutResourceId, parent, false);
 
             holder = new ProgramHolder();
-            holder.txtTitle = (TextView)row.findViewById(R.id.program_title);
-            holder.txtPercent = (TextView)row.findViewById(R.id.program_percent);
+            holder.txtTitle = (TextView) row.findViewById(R.id.program_title);
+            holder.txtPercent = (TextView) row.findViewById(R.id.program_percent);
 
             row.setTag(holder);
-        }
-        else
-        {
-            holder = (ProgramHolder)row.getTag();
+        } else {
+            holder = (ProgramHolder) row.getTag();
         }
 
         final Program program = programsList.get(position);

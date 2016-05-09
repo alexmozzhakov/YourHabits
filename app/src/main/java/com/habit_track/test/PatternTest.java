@@ -1,4 +1,4 @@
-package test;
+package com.habit_track.test;
 
 import com.habit_track.activity.RegisterActivity;
 
@@ -15,27 +15,28 @@ public class PatternTest {
     @Test
     public void emailValidCheck() {
 
-        final String[] valid = {"test@yahoo.com",
-                "test-100@yahoo.com", "test.100@yahoo.com",
+        final String[] valid = {"test@test.com",
+                "test-100@test.com", "test.100@test.com",
                 "test111@test.com", "test-100@test.net",
                 "test.100@test.com.au", "test@1.com",
-                "test@gmail.com.com", "test+100@gmail.com",
-                "test-100@yahoo-test.com"};
+                "test@test.com.com", "test+100@test.com",
+                "test-100@test-test.com"};
 
         for (final String email : valid) {
             Assert.assertTrue(RegisterActivity.isValidPattern(email, EMAIL_PATTERN));
         }
+
 
     }
 
     @Test
     public void emailInvalidCheck() {
 
-        final String[] invalid = {"test", "test@.com.my",
-                "test123@gmail.a", "test123@.com", "test123@.com.com",
-                ".mkyong@test.com", "test()*@gmail.com", "test@%*.com",
-                "test..2002@gmail.com", "test.@gmail.com",
-                "test@test@gmail.com", "test@gmail.com.1a"};
+        final String[] invalid = {"test", "test@.com.test",
+                "test123@test.a", "test123@.com", "test123@.com.com",
+                ".mkyong@test.com", "test()*@test.com", "test@%*.com",
+                "test..2002@test.com", "test.@test.com",
+                "test@test@test.com", "test@test.com.1a"};
 
         for (final String email : invalid) {
             Assert.assertFalse(RegisterActivity.isValidPattern(email, EMAIL_PATTERN));
@@ -59,7 +60,7 @@ public class PatternTest {
     public void invalidNamesCheck() {
 
         Assert.assertFalse(RegisterActivity.isValidPattern("test1", NAME_PATTERN));
-        Assert.assertFalse(RegisterActivity.isValidPattern("12 test", NAME_PATTERN));
+        Assert.assertFalse(RegisterActivity.isValidPattern("12 com.habit_track.test", NAME_PATTERN));
 
     }
 

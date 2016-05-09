@@ -20,20 +20,18 @@ public class AppController extends Application {
     public static final String URL_PROGRAMS_API = "https://fiery-torch-2910.firebaseio.com/";
 
     public static final String TAG = AppController.class.getSimpleName();
-
+    private static AppController mInstance;
     private RequestQueue mRequestQueue;
 
-    private static AppController mInstance;
+    public static synchronized AppController getInstance() {
+        return mInstance;
+    }
 
     @Override
     public void onCreate() {
         super.onCreate();
         mInstance = this;
         Firebase.setAndroidContext(this);
-    }
-
-    public static synchronized AppController getInstance() {
-        return mInstance;
     }
 
     public RequestQueue getRequestQueue() {

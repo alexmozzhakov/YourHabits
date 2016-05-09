@@ -7,39 +7,35 @@ import android.content.SharedPreferences.Editor;
 import android.util.Log;
 
 public class SessionManager {
-	// LogCat tag
+    // LogCat tag
 
-	// Shared Preferences
+    private static final String TAG = SessionManager.class.getSimpleName();
+    // Shared preferences file name
+    private static final String PREF_NAME = "Login";
+    private static final String KEY_IS_LOGGED_IN = "isLoggedIn";
+    private static final int PRIVATE_MODE = 0;
+    // Shared Preferences
     private final SharedPreferences pref;
-
     private final Editor editor;
 
-	private static final String TAG = SessionManager.class.getSimpleName();
-	// Shared preferences file name
-	private static final String PREF_NAME = "Login";
 
-	private static final String KEY_IS_LOGGED_IN = "isLoggedIn";
+    @SuppressLint("CommitPrefEdits")
+    public SessionManager(final Context context) {
+        pref = context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
+        editor = pref.edit();
+    }
 
-	private static final int PRIVATE_MODE = 0;
+    public void setLogin(final boolean isLoggedIn) {
 
+        editor.putBoolean(KEY_IS_LOGGED_IN, isLoggedIn);
 
-	@SuppressLint("CommitPrefEdits")
-	public SessionManager(final Context context) {
-		pref = context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
-		editor = pref.edit();
-	}
+        // commit changes
+        editor.commit();
 
-	public void setLogin(final boolean isLoggedIn) {
+        Log.d(TAG, "User login session modified!");
+    }
 
-		editor.putBoolean(KEY_IS_LOGGED_IN, isLoggedIn);
-
-		// commit changes
-		editor.commit();
-
-		Log.d(TAG, "User login session modified!");
-	}
-	
-	public boolean isLoggedIn(){
-		return pref.getBoolean(KEY_IS_LOGGED_IN, false);
-	}
+    public boolean isLoggedIn() {
+        return pref.getBoolean(KEY_IS_LOGGED_IN, false);
+    }
 }

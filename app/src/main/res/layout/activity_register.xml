@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="bottom"
-    android:orientation="vertical"
-    android:weightSum="1">
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:gravity="bottom"
+              android:orientation="vertical"
+              android:weightSum="1">
 
     <TextView
         android:layout_width="match_parent"
@@ -13,7 +13,7 @@
         android:gravity="center"
         android:text="@string/btn_link_to_register"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@color/white" />
+        android:textColor="@color/white"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -41,13 +41,13 @@
             android:singleLine="true"
             android:textColor="@color/input_login"
             android:textColorHint="@color/input_login_hint"
-            android:textSize="20sp" />
+            android:textSize="20sp"/>
 
         <EditText
+            android:id="@+id/email"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:id="@+id/email"
             android:background="@drawable/border_top_and_bottom"
             android:hint="@string/hint_email"
             android:inputType="textEmailAddress"
@@ -58,7 +58,7 @@
             android:singleLine="true"
             android:textColor="@color/input_login"
             android:textColorHint="@color/input_login_hint"
-            android:textSize="20sp" />
+            android:textSize="20sp"/>
 
 
         <EditText
@@ -75,7 +75,7 @@
             android:singleLine="true"
             android:textColor="@color/input_login"
             android:textColorHint="@color/input_login_hint"
-            android:textSize="20sp" />
+            android:textSize="20sp"/>
 
         <Button
             android:id="@+id/btnRegister"
@@ -84,7 +84,7 @@
             android:layout_marginTop="20dip"
             android:background="@color/colorAccent"
             android:text="@string/btn_register"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"/>
 
 
         <LinearLayout
@@ -103,7 +103,7 @@
                 android:paddingStart="10dp"
                 android:text="@string/btn_terms_and_conditions"
                 android:textColor="@color/input_login_hint"
-                android:textSize="12sp" />
+                android:textSize="12sp"/>
 
             <!-- Link to Login Screen -->
 
@@ -119,7 +119,7 @@
                 android:paddingStart="10dp"
                 android:text="@string/btn_link_to_login"
                 android:textColor="@color/colorAccent"
-                android:textSize="12sp" />
+                android:textSize="12sp"/>
 
         </LinearLayout>
     </LinearLayout>

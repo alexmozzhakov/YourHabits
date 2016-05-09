@@ -19,6 +19,7 @@ import java.util.List;
 
 public class ListFragment extends Fragment {
     public static HabitDBHandler mHabitsDatabase;
+    public static List<Habit> mHabitsList;
 
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              final Bundle savedInstanceState) {
@@ -29,20 +30,23 @@ public class ListFragment extends Fragment {
             mHabitsDatabase = new HabitDBHandler(this.getActivity());
         }
 
-        // if (habitList == null)
-        final List<Habit> habitList = mHabitsDatabase.getHabitDetailsAsArrayList();
+        if (mHabitsDatabase.notSame() || mHabitsList == null) {
+            mHabitsList = mHabitsDatabase.getHabitDetailsAsArrayList();
+        }
 
-        final RecyclerView recyclerView = (RecyclerView) result.findViewById(R.id.rv);
-        recyclerView.setHasFixedSize(true);
+        final RecyclerView mRecyclerView = (RecyclerView) result.findViewById(R.id.rv);
+        mRecyclerView.setHasFixedSize(true);
+
         final LinearLayoutManager llm = new LinearLayoutManager(getActivity());
-        recyclerView.setLayoutManager(llm);
-        final RecycleHabitAdapter adapter = new RecycleHabitAdapter(habitList);
-        recyclerView.setAdapter(adapter);
+        mRecyclerView.setLayoutManager(llm);
+
+        final RecycleHabitAdapter mRecycleAdapter = new RecycleHabitAdapter(mHabitsList);
+        mRecyclerView.setAdapter(mRecycleAdapter);
 
         final ItemTouchHelper.Callback callback =
-                new SimpleItemTouchHelperCallback(adapter);
+                new SimpleItemTouchHelperCallback(mRecycleAdapter);
         final ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
-        touchHelper.attachToRecyclerView(recyclerView);
+        touchHelper.attachToRecyclerView(mRecyclerView);
 
         return result;
     }
