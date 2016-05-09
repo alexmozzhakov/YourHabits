@@ -1,6 +1,7 @@
 package com.habit_track.helper;
 
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -20,18 +21,26 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
 
     @Override
     public int getItemViewType(final int position) {
-        return TimelineView.getTimeLineViewType(position, getItemCount());
+        return TimeLineView.getTimeLineViewType(position, getItemCount());
     }
 
     @Override
     public TimeLineViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
-        final View view = View.inflate(parent.getContext(), R.layout.habit_timeline_item, null);
+        final View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.habit_timeline_item, parent, false);
+
         return new TimeLineViewHolder(view, viewType);
     }
 
+
     @Override
     public void onBindViewHolder(final TimeLineViewHolder holder, final int position) {
-        holder.name.setText(mFeedList.get(position).title);
+        if (position % 2 == 0) {
+            holder.nameLeft.setText(mFeedList.get(position).title);
+        } else {
+            holder.nameRight.setText(mFeedList.get(position).title);
+        }
+
     }
 
     @Override

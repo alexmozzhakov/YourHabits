@@ -28,10 +28,10 @@ import java.util.Map;
 
 public class LoginActivity extends Activity {
     private static final String TAG = RegisterActivity.class.getSimpleName();
+    private static final String TAG_STRING = "req_login";
     private ProgressDialog pDialog;
     private SessionManager session;
     private SQLiteHandler database;
-    private static final String TAG_STRING = "req_login";
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -73,7 +73,6 @@ public class LoginActivity extends Activity {
                 final String email = inputEmail.getText().toString().trim();
                 final String password = inputPassword.getText().toString().trim();
 
-                // Check for empty data in the form
                 checkInput(email, password);
 
                 return true;
@@ -124,13 +123,9 @@ public class LoginActivity extends Activity {
                     session.setLogin(true);
 
                     final JSONObject user = jObj.getJSONObject("user");
-                    final String name = user.getString("name");
-                    final String email1 = user.getString("email");
-                    final String created_at = user
-                            .getString("created_at");
-
                     // Inserting row in users table
-                    database.addUser(name, email1, created_at);
+                    database.addUser(user.getString("name"), user.getString("email"),
+                            user.getString("created_at"));
 
                     // Launch main activity
                     final Intent intent = new Intent(LoginActivity.this,

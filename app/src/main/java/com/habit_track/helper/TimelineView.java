@@ -11,11 +11,7 @@ import android.view.View;
 
 import com.habit_track.R;
 
-
-/**
- * Created by HP-HP on 05-12-2015.
- */
-public class TimelineView extends View {
+public class TimeLineView extends View {
 
     private Drawable mMarker;
     private Drawable mStartLine;
@@ -26,9 +22,21 @@ public class TimelineView extends View {
     private Rect mBounds;
 
 
-    public TimelineView(final Context context, final AttributeSet attrs) {
+    public TimeLineView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         init(attrs);
+    }
+
+    public static int getTimeLineViewType(final int position, final int total_size) {
+        if (total_size == 1) {
+            return LineType.ONLY_ONE;
+        } else if (position == 0) {
+            return LineType.BEGIN;
+        } else if (position == total_size - 1) {
+            return LineType.END;
+        } else {
+            return LineType.NORMAL;
+        }
     }
 
     private void init(final AttributeSet attrs) {
@@ -40,7 +48,7 @@ public class TimelineView extends View {
         mLineSize = typedArray.getDimensionPixelSize(R.styleable.timeline_style_line_size, 2);
         typedArray.recycle();
 
-        if(mMarker == null) {
+        if (mMarker == null) {
             mMarker = ContextCompat.getDrawable(this.getContext(), R.drawable.marker);
         }
     }
@@ -82,18 +90,18 @@ public class TimelineView extends View {
 
         final int markSize = Math.min(mMarkerSize, Math.min(cWidth, cHeight));
 
-        if(mMarker != null) {
-            mMarker.setBounds(pLeft,pTop,pLeft + markSize,pTop + markSize);
+        if (mMarker != null) {
+            mMarker.setBounds(pLeft, pTop, pLeft + markSize, pTop + markSize);
             mBounds = mMarker.getBounds();
         }
 
         final int centerX = mBounds.centerX();
         final int lineLeft = centerX - (mLineSize >> 1);
-        if(mStartLine != null) {
+        if (mStartLine != null) {
             mStartLine.setBounds(lineLeft, 0, mLineSize + lineLeft, mBounds.top);
         }
 
-        if(mEndLine != null) {
+        if (mEndLine != null) {
             mEndLine.setBounds(lineLeft, mBounds.bottom, mLineSize + lineLeft, height);
         }
 
@@ -102,14 +110,14 @@ public class TimelineView extends View {
     @Override
     protected void onDraw(final Canvas canvas) {
         super.onDraw(canvas);
-        if(mMarker != null) {
+        if (mMarker != null) {
             mMarker.draw(canvas);
         }
 
-        if(mStartLine != null) {
+        if (mStartLine != null) {
             mStartLine.draw(canvas);
         }
-        if(mEndLine != null) {
+        if (mEndLine != null) {
             mEndLine.draw(canvas);
         }
     }
@@ -119,8 +127,8 @@ public class TimelineView extends View {
         initDrawable();
     }
 
-    public void setStartLine(final Drawable startline) {
-        mStartLine = startline;
+    public void setStartLine(final Drawable startLine) {
+        mStartLine = startLine;
         initDrawable();
     }
 
@@ -141,27 +149,15 @@ public class TimelineView extends View {
 
     public void initLine(final int viewType) {
 
-        if(viewType == LineType.BEGIN) {
+        if (viewType == LineType.BEGIN) {
             setStartLine(null);
-        } else if(viewType == LineType.END) {
+        } else if (viewType == LineType.END) {
             setEndLine(null);
-        } else if(viewType == LineType.ONLYONE) {
+        } else if (viewType == LineType.ONLY_ONE) {
             setStartLine(null);
             setEndLine(null);
         }
 
         initDrawable();
-    }
-
-    public static int getTimeLineViewType(final int position, final int total_size) {
-        if(total_size == 1) {
-            return LineType.ONLYONE;
-        } else if(position == 0) {
-            return LineType.BEGIN;
-        } else if(position == total_size - 1) {
-            return LineType.END;
-        } else {
-            return LineType.NORMAL;
-        }
     }
 }

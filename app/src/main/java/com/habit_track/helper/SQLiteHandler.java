@@ -62,7 +62,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
 
     /**
      * Storing user details in database
-     * */
+     */
     public void addUser(final String name, final String email, final String created_at) {
         final SQLiteDatabase database = this.getWritableDatabase();
 
@@ -80,13 +80,14 @@ public class SQLiteHandler extends SQLiteOpenHelper {
 
     /**
      * Getting user data from database
-     * */
+     */
     public Map<String, String> getUserDetails() {
         final HashMap<String, String> user = new HashMap<>();
         final String selectQuery = "SELECT  * FROM " + TABLE_USER;
 
         final SQLiteDatabase database = this.getReadableDatabase();
         final Cursor cursor = database.rawQuery(selectQuery, null);
+
         // Move to first row
         cursor.moveToFirst();
         if (cursor.getCount() > 0) {
@@ -104,7 +105,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
 
     /**
      * Re crate database Delete all tables and create them again
-     * */
+     */
     public void deleteUsers() {
         final SQLiteDatabase database = this.getWritableDatabase();
         // Delete All Rows

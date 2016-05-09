@@ -31,16 +31,15 @@ import java.util.regex.Pattern;
 
 public class RegisterActivity extends Activity {
 
-    private static final String TAG = RegisterActivity.class.getSimpleName();
-    private ProgressDialog pDialog;
-    private SQLiteHandler mDatabase;
-    private static final String TAG_STRING = "req_register";
-
     public static final Pattern NAME_PATTERN = Pattern.compile("^[a-zA-Z \\-\\.']*$");
     // protected static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,10}$", Pattern.CASE_INSENSITIVE);
     public static final Pattern EMAIL_PATTERN = Pattern.compile(
             "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
                     + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
+    private static final String TAG = RegisterActivity.class.getSimpleName();
+    private static final String TAG_STRING = "req_register";
+    private ProgressDialog pDialog;
+    private SQLiteHandler mDatabase;
 
     public static boolean isValidPattern(final String str, final Pattern pattern) {
         return pattern.matcher(str).matches();

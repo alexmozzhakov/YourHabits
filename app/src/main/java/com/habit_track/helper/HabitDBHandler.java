@@ -36,7 +36,7 @@ public class HabitDBHandler extends SQLiteOpenHelper {
     private static final String KEY_UPDATED_YEAR = "upd_y";
     private static final String KEY_TIME = "time";
     private static final String KEY_DONE = "done";
-    private static final String KEY_POSITION = "position";
+    public static boolean isChecked = false;
 
     public HabitDBHandler(final Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -49,8 +49,7 @@ public class HabitDBHandler extends SQLiteOpenHelper {
                 + KEY_ID + " INTEGER PRIMARY KEY," + KEY_NAME + " TEXT,"
                 + KEY_DESCRIPTION + " TEXT," + KEY_TIME + " INTEGER,"
                 + KEY_UPDATED_DATE + " INTEGER," + KEY_UPDATED_MONTH + " INTEGER,"
-                + KEY_UPDATED_YEAR + " INTEGER,"+ KEY_POSITION + " INTEGER,"
-                + KEY_DONE + " INTEGER" + ")";
+                + KEY_UPDATED_YEAR + " INTEGER," + KEY_DONE + " INTEGER" + ")";
         database.execSQL(CREATE_LOGIN_TABLE);
 
         Log.d(TAG, "Database tables created");
@@ -70,7 +69,7 @@ public class HabitDBHandler extends SQLiteOpenHelper {
      * Storing user details in database
      */
     public long addHabit(final String name, final String description, final int time,
-                         final boolean done, final Calendar upd, final int position) {
+                         final boolean done, final Calendar upd) {
 
         final SQLiteDatabase database = this.getWritableDatabase();
         //final int time,
@@ -81,7 +80,6 @@ public class HabitDBHandler extends SQLiteOpenHelper {
         values.put(KEY_UPDATED_DATE, upd.get(Calendar.DATE)); // Updated
         values.put(KEY_UPDATED_MONTH, upd.get(Calendar.MONTH)); // Updated
         values.put(KEY_UPDATED_YEAR, upd.get(Calendar.YEAR)); // Updated
-        values.put(KEY_POSITION, position); // position in list
 
 
         // doneMarker
@@ -124,47 +122,73 @@ public class HabitDBHandler extends SQLiteOpenHelper {
             temp.time = cursor.getInt(cursor.getColumnIndex(KEY_TIME));
 
             hab.add(temp);
-            Log.d(TAG, hab.get(i).toString());
+            Log.d(TAG, temp.toString());
             cursor.moveToNext();
         }
 
         cursor.close();
         database.close();
-        // return habit
-        //  Log.d(TAG, "Fetching habits from Sqlite: " + Arrays.toString(habits));
+        isChecked = true;
 
         return hab;
     }
 
-    public void deleteHabit(final int id) {
+    public void delete(final int id) {
         final SQLiteDatabase database = this.getWritableDatabase();
-        // Delete All Rows
         database.execSQL("DELETE FROM " + TABLE_HABIT + " WHERE " + KEY_ID + " = " + id);
         Log.i("SQL done", "DELETE FROM " + TABLE_HABIT + " WHERE " + KEY_ID + " = " + id);
-        //db.delete(TABLE_HABIT, null, null);
         database.close();
-
-        // Log.d(TAG, "Deleted habit with id" + id);
     }
 
-    public void updateHabit(final int id, final int day, final int month, final int year, final int done) {
+
+    public void updateHabit(final int id, final int done,
+                            final int day, final int month, final int year) {
+
         final SQLiteDatabase database = this.getWritableDatabase();
 
         database.execSQL("UPDATE " + TABLE_HABIT + " SET " + KEY_DONE + " = " + done + ", " + KEY_UPDATED_DATE + " = " + day + "," + KEY_UPDATED_MONTH + " = " + month + "," + KEY_UPDATED_YEAR + " = " + year + " WHERE " + KEY_ID + " = " + id);
         Log.i("SQL done", "UPDATE " + TABLE_HABIT + " SET " + KEY_DONE + " = " + done + ", " + KEY_UPDATED_DATE + " = " + day + "," + KEY_UPDATED_MONTH + " = " + month + "," + KEY_UPDATED_YEAR + " = " + year + " WHERE " + KEY_ID + " = " + id);
     }
 
-    public void move(final int id, int fromPosition, int toPosition) {
+    public void move(int fromPosition, int toPosition) {
         final SQLiteDatabase database = this.getWritableDatabase();
+        fromPosition++;
+        toPosition++;
 
-        database.execSQL("UPDATE " + TABLE_HABIT + " SET " + KEY_POSITION + " = " + toPosition + " WHERE " + KEY_ID + " = " + id);
-        database.execSQL("UPDATE " + TABLE_HABIT + " SET " + KEY_POSITION + " = " + KEY_POSITION + " + 1 WHERE " + KEY_ID + " > " + (fromPosition-1));
-        Log.i("SQL done", "UPDATE " + TABLE_HABIT + " SET " + KEY_POSITION + " = " + toPosition + " WHERE " + KEY_ID + " = " + id);
-        Log.i("SQL done", "UPDATE " + TABLE_HABIT + " SET " + KEY_POSITION + " = " + KEY_POSITION + " + 1 WHERE " + KEY_ID + " > " + (fromPosition-1));
+        database.execSQL("UPDATE " + TABLE_HABIT +
+                " SET " + KEY_ID + " = -" + fromPosition +
+                " WHERE " + KEY_ID + " = " + fromPosition);
 
+        Log.i("SQL done", "UPDATE " + TABLE_HABIT +
+                " SET " + KEY_ID + " = -" + fromPosition +
+                " WHERE " + KEY_ID + " = " + fromPosition);
+
+        database.execSQL("UPDATE " + TABLE_HABIT +
+                " SET " + KEY_ID + " = " + fromPosition +
+                " WHERE " + KEY_ID + " = " + toPosition);
+
+        Log.i("SQL done", "UPDATE " + TABLE_HABIT +
+                " SET " + KEY_ID + " = " + fromPosition +
+                " WHERE " + KEY_ID + " = " + toPosition);
+
+        database.execSQL("UPDATE " + TABLE_HABIT +
+                " SET " + KEY_ID + " = " + toPosition +
+                " WHERE " + KEY_ID + " = -" + fromPosition);
+
+        Log.i("SQL done", "UPDATE " + TABLE_HABIT +
+                " SET " + KEY_ID + " = " + toPosition +
+                " WHERE " + KEY_ID + " = -" + fromPosition);
+
+        isChecked = false;
     }
 
-    public int getCount(){
-        return 1;
+    public boolean notSame() {
+        Log.i(TAG, "Database changed: " + !isChecked);
+        if (isChecked) {
+            return false;
+        }
+        isChecked = true;
+        return true;
     }
+
 }

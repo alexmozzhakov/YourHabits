@@ -51,6 +51,7 @@ public class ProgramsFragment extends Fragment {
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              final Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        // TODO: 08/05/2016 make load faster!
         final View result = inflater.inflate(R.layout.fragment_programs, container, false);
 
         mProgramData = new ArrayList<>();
@@ -120,9 +121,11 @@ public class ProgramsFragment extends Fragment {
                 final String imageLink = "http://habbitsapp.esy.es/img_progs/"
                         + snapshot.child("image").getValue(String.class) + ".jpg";
                 Log.v("IMG_URL", imageLink);
-                Picasso.with(getActivity().getApplicationContext())
-                        .load(imageLink)
-                        .into(mImageTop);
+                if (getActivity() != null) {
+                    Picasso.with(getActivity().getApplicationContext())
+                            .load(imageLink)
+                            .into(mImageTop);
+                }
                 mTitleTop.setTypeface(faceLight);
                 mTitleTop.setOnClickListener(this::top);
 
@@ -140,7 +143,7 @@ public class ProgramsFragment extends Fragment {
                 if (!isShowing) {
                     isShowing = true;
                 } else {
-                    getFragmentManager().beginTransaction().remove(MainActivity.lastFragment).commit();
+                    getFragmentManager().beginTransaction().remove(MainActivity.mLastFragment).commit();
                     isShowing = false;
                 }
             }

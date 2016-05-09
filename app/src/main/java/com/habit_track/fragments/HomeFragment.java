@@ -3,7 +3,6 @@ package com.habit_track.fragments;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -27,7 +26,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Calendar;
-import java.util.List;
 
 public class HomeFragment extends Fragment {
 
@@ -38,12 +36,21 @@ public class HomeFragment extends Fragment {
 
         final TextView weather = (TextView) view.findViewById(R.id.weather);
         final TextView weatherBot = (TextView) view.findViewById(R.id.weatherBot);
+        final TabLayout tabLayout = (TabLayout) view.findViewById(R.id.sliding_tabs);
 
-        final TabLayout mTabLayout = (TabLayout) view.findViewById(R.id.sliding_tabs);
+        if (tabLayout != null) {
+            final String[] daysOfWeek = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
 
-        if (mTabLayout != null) {
+            final int dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1;
             for (int i = 0; i < 7; i++) {
-                mTabLayout.addTab(mTabLayout.newTab().setText("Tab " + i));
+                tabLayout.addTab(tabLayout.newTab().setText(daysOfWeek[(dayOfWeek + i) % 7]));
+            }
+
+            tabLayout.setSmoothScrollingEnabled(true);
+            tabLayout.setScrollPosition(0, 0f, true);
+            TabLayout.Tab tab = tabLayout.getTabAt(0);
+            if (tab != null) {
+                tab.select();
             }
         }
 
@@ -51,25 +58,20 @@ public class HomeFragment extends Fragment {
 
         if (sharedPreferences.getString("celsius", null) != null) {
             weather.setText(sharedPreferences.getString("celsius", "18"));
-            weatherBot.setText(sharedPreferences.getString("location", "Error"));
+            weatherBot.setText(sharedPreferences.getString("location", "Error getting\n location"));
         }
-        
+
         Volley.newRequestQueue(getActivity().getApplicationContext()).add(
                 new StringRequest(Request.Method.GET, AppController.URL_WEATHER_API,
                         response -> {
                             try {
-                                JSONObject o = new JSONObject(response);
+                                final JSONObject o = new JSONObject(response);
                                 final SharedPreferences.Editor editor = sharedPreferences.edit();
 
                                 editor.putString("celsius", o.getString("celsius").concat("˚C")).apply();
                                 editor.putString("location", o.getString("location")).apply();
 
                                 weather.setText(o.getString("celsius") + "˚C");
-
-                                if (this.getActivity() != null) {
-                                    Typeface face = Typeface.createFromAsset(this.getActivity().getAssets(), "fonts/Montserrat-Regular.ttf");
-                                    weatherBot.setTypeface(face);
-                                }
                                 weatherBot.setText(o.getString("location"));
 
                             } catch (JSONException e) {
@@ -85,30 +87,34 @@ public class HomeFragment extends Fragment {
             ListFragment.mHabitsDatabase = new HabitDBHandler(this.getActivity());
         }
 
-        final List<Habit> mHabitList = ListFragment.mHabitsDatabase.getHabitDetailsAsArrayList();
-        final Calendar mCalendar = Calendar.getInstance();
-        final int date = mCalendar.get(Calendar.DATE);
-        final int month = mCalendar.get(Calendar.MONTH);
-        final int year = mCalendar.get(Calendar.YEAR);
+        Log.i("some", "onCreateView");
+        if (ListFragment.mHabitsDatabase.notSame() || ListFragment.mHabitsList == null) {
+            ListFragment.mHabitsList = ListFragment.mHabitsDatabase.getHabitDetailsAsArrayList();
+        }
+
+        final Calendar calendar = Calendar.getInstance();
+        final int date = calendar.get(Calendar.DATE);
+        final int month = calendar.get(Calendar.MONTH);
+        final int year = calendar.get(Calendar.YEAR);
 
         int counter = 0;
-        for (final Habit habit : mHabitList) {
+        for (final Habit habit : ListFragment.mHabitsList) {
             if (!habit.isDone(date, month, year)) {
                 counter++;
             }
         }
 
-        final TextView mTasksDue = (TextView) view.findViewById(R.id.tasks_due);
-        mTasksDue.setText(String.valueOf(counter));
+        final TextView tasksDue = (TextView) view.findViewById(R.id.tasks_due);
+        tasksDue.setText(String.valueOf(counter));
 
 
         // Inflate the layout for this fragment
-        final RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-        final LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(this.getActivity());
-        mRecyclerView.setLayoutManager(mLinearLayoutManager);
+        final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this.getActivity());
+        recyclerView.setLayoutManager(linearLayoutManager);
 
-        final TimeLineAdapter mTimeLineAdapter = new TimeLineAdapter(mHabitList);
-        mRecyclerView.setAdapter(mTimeLineAdapter);
+        final TimeLineAdapter timeLineAdapter = new TimeLineAdapter(ListFragment.mHabitsList);
+        recyclerView.setAdapter(timeLineAdapter);
         return view;
 
     }

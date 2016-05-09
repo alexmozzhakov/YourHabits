@@ -2,6 +2,7 @@ package com.habit_track.helper;
 
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,35 +20,13 @@ import java.util.List;
 
 public class RecycleHabitAdapter extends RecyclerView.Adapter implements MovableItem {
 
-    final private List<Habit> habitList;
+    final private List<Habit> mHabitList;
 
     public LayoutInflater inflater;
 
     public RecycleHabitAdapter(final List<Habit> data) {
         super();
-        this.habitList = data;
-    }
-
-    public class ViewHolder extends RecyclerView.ViewHolder {
-
-        private final TextView txtTitle;
-        private final CheckBox checkBox;
-
-        public ViewHolder(final View v) {
-            super(v);
-            txtTitle = (TextView) v.findViewById(R.id.habit_title);
-            checkBox = (CheckBox) v.findViewById(R.id.checkBox);
-        }
-    }
-
-    public void add(final int position, final Habit item) {
-        notifyItemInserted(position);
-    }
-
-    public void remove(final Habit item) {
-        final int position = habitList.indexOf(item);
-        habitList.remove(position);
-        notifyItemRemoved(position);
+        this.mHabitList = data;
     }
 
     @Override
@@ -56,16 +35,15 @@ public class RecycleHabitAdapter extends RecyclerView.Adapter implements Movable
         return new ViewHolder(view);
     }
 
-
     @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder rholder, final int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder recyclerHolder, final int position) {
 
-        final ViewHolder holder = (ViewHolder) rholder;
-        holder.txtTitle.setText(habitList.get(position).title);
-        final Habit habit = habitList.get(position);
+        final ViewHolder holder = (ViewHolder) recyclerHolder;
+        final Habit habit = mHabitList.get(position);
+        holder.txtTitle.setText(habit.title);
         holder.checkBox.setOnClickListener(v -> {
             if (holder.checkBox.isChecked()) {
-                habitList.get(position).setDoneMarker(true);
+                mHabitList.get(position).setDoneMarker(true);
 
                 ListFragment.mHabitsDatabase.updateHabit(
                         habit.id,
@@ -85,7 +63,7 @@ public class RecycleHabitAdapter extends RecyclerView.Adapter implements Movable
                         0);
 
                 holder.txtTitle.setTextColor(Color.BLACK);
-                habitList.get(position).setDoneMarker(false);
+                mHabitList.get(position).setDoneMarker(false);
             }
         });
 
@@ -100,27 +78,42 @@ public class RecycleHabitAdapter extends RecyclerView.Adapter implements Movable
 
     @Override
     public int getItemCount() {
-        return habitList.size();
+        return mHabitList.size();
     }
 
     @Override
     public void onItemDismiss(final int position) {
-        habitList.remove(position);
+        ListFragment.mHabitsDatabase.delete(mHabitList.get(position).id);
+        mHabitList.remove(position);
         notifyItemRemoved(position);
     }
 
     @Override
     public void onItemMove(final int fromPosition, final int toPosition) {
+
         if (fromPosition < toPosition) {
             for (int i = fromPosition; i < toPosition; i++) {
-                Collections.swap(habitList, i, i + 1);
+                Collections.swap(mHabitList, i, i + 1);
             }
         } else {
             for (int i = fromPosition; i > toPosition; i--) {
-                Collections.swap(habitList, i, i - 1);
+                Collections.swap(mHabitList, i, i - 1);
             }
         }
-        ListFragment.mHabitsDatabase.move(habitList.get(fromPosition).id, fromPosition, toPosition);
+        Log.i("kek", "onItemMove: " + (mHabitList.get(fromPosition).id + 1));
+        ListFragment.mHabitsDatabase.move(fromPosition, toPosition);
         notifyItemMoved(fromPosition, toPosition);
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+
+        private final TextView txtTitle;
+        private final CheckBox checkBox;
+
+        public ViewHolder(final View v) {
+            super(v);
+            txtTitle = (TextView) v.findViewById(R.id.habit_title);
+            checkBox = (CheckBox) v.findViewById(R.id.checkBox);
+        }
     }
 }
