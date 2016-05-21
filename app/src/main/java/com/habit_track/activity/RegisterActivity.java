@@ -1,8 +1,3 @@
-/**
- * Author: Ravi Tamada
- * URL: www.androidhive.info
- * twitter: http://twitter.com/ravitamada
- */
 package com.habit_track.activity;
 
 import android.app.Activity;
@@ -15,11 +10,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.android.volley.Request.Method;
-import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
 import com.habit_track.R;
-import com.habit_track.app.AppController;
-import com.habit_track.helper.SQLiteHandler;
+import com.habit_track.database.UserDBHandler;
+import com.habit_track.helper.AppController;
 import com.habit_track.helper.SessionManager;
 
 import org.json.JSONException;
@@ -39,7 +33,7 @@ public class RegisterActivity extends Activity {
     private static final String TAG = RegisterActivity.class.getSimpleName();
     private static final String TAG_STRING = "req_register";
     private ProgressDialog pDialog;
-    private SQLiteHandler mDatabase;
+    private UserDBHandler mDatabase;
 
     public static boolean isValidPattern(final String str, final Pattern pattern) {
         return pattern.matcher(str).matches();
@@ -50,7 +44,7 @@ public class RegisterActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        final EditText mInputFullName = (EditText) findViewById(R.id.fullname);
+        final EditText mInputFullName = (EditText) findViewById(R.id.full_name);
         final EditText mInputEmail = (EditText) findViewById(R.id.email);
         final EditText mInputPassword = (EditText) findViewById(R.id.password);
         final Button btnRegister = (Button) findViewById(R.id.btnRegister);
@@ -64,7 +58,7 @@ public class RegisterActivity extends Activity {
         final SessionManager session = new SessionManager(getApplicationContext());
 
         // SQLite database handler
-        mDatabase = new SQLiteHandler(getApplicationContext());
+        mDatabase = new UserDBHandler(getApplicationContext());
 
         // Check if user is already logged in or not
         if (session.isLoggedIn()) {
@@ -122,7 +116,7 @@ public class RegisterActivity extends Activity {
         showDialog();
 
         final StringRequest strReq = new StringRequest(Method.POST,
-                AppController.URL_REGISTER, (Response.Listener<String>) response -> {
+                AppController.URL_REGISTER, response -> {
             Log.d(TAG, "Register Response: " + response);
             hideDialog();
 
@@ -145,7 +139,7 @@ public class RegisterActivity extends Activity {
                             Toast.LENGTH_LONG).show();
 
                     // Launch login activity
-                    final Intent intent = new Intent(
+                    Intent intent = new Intent(
                             RegisterActivity.this,
                             LoginActivity.class);
                     startActivity(intent);
@@ -162,7 +156,7 @@ public class RegisterActivity extends Activity {
                 Log.e("JSONException", "response error", e);
             }
 
-        }, (Response.ErrorListener) error -> {
+        }, error -> {
             Log.e(TAG, "Registration Error: " + error.getMessage());
             Toast.makeText(getApplicationContext(),
                     error.getMessage(), Toast.LENGTH_LONG).show();

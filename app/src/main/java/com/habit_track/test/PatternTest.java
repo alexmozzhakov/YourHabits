@@ -9,8 +9,8 @@ import java.util.regex.Pattern;
 
 public class PatternTest {
 
-    public final Pattern NAME_PATTERN = RegisterActivity.NAME_PATTERN;
-    public final Pattern EMAIL_PATTERN = RegisterActivity.EMAIL_PATTERN;
+    private final Pattern NAME_PATTERN = RegisterActivity.NAME_PATTERN;
+    private final Pattern EMAIL_PATTERN = RegisterActivity.EMAIL_PATTERN;
 
     @Test
     public void emailValidCheck() {

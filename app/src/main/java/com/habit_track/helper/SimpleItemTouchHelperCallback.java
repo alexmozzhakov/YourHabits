@@ -3,7 +3,7 @@ package com.habit_track.helper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 
-import com.habit_track.app.MovableItem;
+import com.habit_track.models.MovableItem;
 
 public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
 

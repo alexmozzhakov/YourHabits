@@ -1,6 +1,7 @@
 package com.habit_track.activity;
 
 
+import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
@@ -19,13 +20,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.habit_track.R;
+import com.habit_track.database.HabitDBHandler;
+import com.habit_track.database.UserDBHandler;
 import com.habit_track.fragments.CreateFragment;
 import com.habit_track.fragments.HomeFragment;
 import com.habit_track.fragments.ListFragment;
 import com.habit_track.fragments.ProfileFragment;
 import com.habit_track.fragments.ProgramsFragment;
-import com.habit_track.helper.HabitDBHandler;
-import com.habit_track.helper.SQLiteHandler;
 import com.habit_track.helper.SessionManager;
 
 import java.util.Calendar;
@@ -33,11 +34,11 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    public static android.app.Fragment mLastFragment;
-    public static NavigationView mNavigationView;
+    public Fragment mLastFragment;
     public static boolean immOpened;
     public static Map<String, String> mUser;
-    private SQLiteHandler mUserDatabase;
+    private NavigationView mNavigationView;
+    private UserDBHandler mUserDatabase;
     private FragmentTransaction mTransaction;
     private SessionManager mSession;
     private Toolbar mToolbar;
@@ -48,6 +49,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if (getActionBar() != null) {
+            getActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         if (mToolbar != null) {
             mToolbar.setTitle("Home");
@@ -57,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mLastFragment = new HomeFragment();
 
         // SqLite mUserDatabase handler
-        mUserDatabase = new SQLiteHandler(getApplicationContext());
+        mUserDatabase = new UserDBHandler(getApplicationContext());
 
         // mSession manager
         mSession = new SessionManager(getApplicationContext());
@@ -103,18 +109,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         mTransaction = getFragmentManager().beginTransaction();
         if (id == R.id.nav_home && !(mLastFragment instanceof HomeFragment)) {
+            mTransaction.remove(mLastFragment);
             mLastFragment = new HomeFragment();
             mTransaction.replace(R.id.content_frame, mLastFragment);
             mToolbar.setTitle("Home");
             mNavigationView.getMenu().findItem(id).setChecked(true);
 
         } else if (id == R.id.nav_programs && !(mLastFragment instanceof ProgramsFragment)) {
+            mTransaction.remove(mLastFragment);
             mLastFragment = new ProgramsFragment();
             mTransaction.replace(R.id.content_frame, mLastFragment);
             mToolbar.setTitle("Programs");
             mNavigationView.getMenu().findItem(id).setChecked(true);
 
         } else if (id == R.id.nav_lists && !(mLastFragment instanceof ListFragment)) {
+            mTransaction.remove(mLastFragment);
             mLastFragment = new ListFragment();
             mTransaction.replace(R.id.content_frame, mLastFragment);
             mToolbar.setTitle("List");
@@ -130,6 +139,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             Log.i("IMM", "Closed imm");
         }
+
+        ProgramsFragment.isShowing = false;
 
         mTransaction.commit();
 
@@ -192,7 +203,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     editDescription.getText().toString(),
                     time,
                     false,
-                    Calendar.getInstance()
+                    Calendar.getInstance(),
+                    0, 0, 0
             );
         }
 
@@ -206,7 +218,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         HabitDBHandler.isChecked = false;
         // Creates new ListFragment and replaces CreateFragment
         mLastFragment = new ListFragment();
-        getFragmentManager().beginTransaction().replace(R.id.content_frame, mLastFragment).commit();
+        getFragmentManager().beginTransaction().replace(R.id.content_frame, mLastFragment)
+                .addToBackStack(null).commit();
     }
 
     public void toProfile(View view) {
@@ -221,6 +234,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         mLastFragment = new ProfileFragment();
+
         getFragmentManager().beginTransaction().replace(R.id.content_frame, mLastFragment).commit();
 
     }
