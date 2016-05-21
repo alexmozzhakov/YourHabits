@@ -10,6 +10,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.habit_track.R;
+import com.habit_track.models.LineType;
 
 public class TimeLineView extends View {
 

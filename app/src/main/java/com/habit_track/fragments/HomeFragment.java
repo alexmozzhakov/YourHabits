@@ -17,10 +17,10 @@ import com.android.volley.Request;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.habit_track.R;
-import com.habit_track.app.AppController;
-import com.habit_track.app.Habit;
-import com.habit_track.helper.HabitDBHandler;
-import com.habit_track.helper.TimeLineAdapter;
+import com.habit_track.adapter.TimeLineAdapter;
+import com.habit_track.database.HabitDBHandler;
+import com.habit_track.helper.AppController;
+import com.habit_track.models.Habit;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -54,7 +54,8 @@ public class HomeFragment extends Fragment {
             }
         }
 
-        final SharedPreferences sharedPreferences = this.getActivity().getSharedPreferences("pref", Context.MODE_PRIVATE);
+        final SharedPreferences sharedPreferences = this.getActivity()
+                .getSharedPreferences("pref", Context.MODE_PRIVATE);
 
         if (sharedPreferences.getString("celsius", null) != null) {
             weather.setText(sharedPreferences.getString("celsius", "18"));
@@ -66,16 +67,23 @@ public class HomeFragment extends Fragment {
                         response -> {
                             try {
                                 final JSONObject o = new JSONObject(response);
-                                final SharedPreferences.Editor editor = sharedPreferences.edit();
 
-                                editor.putString("celsius", o.getString("celsius").concat("˚C")).apply();
-                                editor.putString("location", o.getString("location")).apply();
+                                if (!o.has("error")) {
+                                    sharedPreferences.edit().putString("celsius",
+                                            o.getString("celsius").concat("˚C")).apply();
 
-                                weather.setText(o.getString("celsius") + "˚C");
-                                weatherBot.setText(o.getString("location"));
+                                    sharedPreferences.edit().putString("location",
+                                            o.getString("location")).apply();
+
+                                    weather.setText(o.getString("celsius") + "˚C");
+                                    weatherBot.setText(o.getString("location"));
+                                } else {
+                                    Log.e("JSONException", "Response got: " + o.getString("error"));
+                                }
 
                             } catch (JSONException e) {
-                                Log.e("JSONException", "response error", e);
+                                Log.e("JSONException", "Response got: " + response, e);
+
                             }
 
                         },
@@ -90,6 +98,7 @@ public class HomeFragment extends Fragment {
         Log.i("some", "onCreateView");
         if (ListFragment.mHabitsDatabase.notSame() || ListFragment.mHabitsList == null) {
             ListFragment.mHabitsList = ListFragment.mHabitsDatabase.getHabitDetailsAsArrayList();
+
         }
 
         final Calendar calendar = Calendar.getInstance();
@@ -106,7 +115,10 @@ public class HomeFragment extends Fragment {
 
         final TextView tasksDue = (TextView) view.findViewById(R.id.tasks_due);
         tasksDue.setText(String.valueOf(counter));
-
+//        if (weather.getText().equals("")) {
+//           weather.setText(ListFragment.mHabitsList.size());
+//           weatherBot.setText("Tasks total");
+//        }
 
         // Inflate the layout for this fragment
         final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
@@ -114,9 +126,9 @@ public class HomeFragment extends Fragment {
         recyclerView.setLayoutManager(linearLayoutManager);
 
         final TimeLineAdapter timeLineAdapter = new TimeLineAdapter(ListFragment.mHabitsList);
+        timeLineAdapter.setHasStableIds(true);
         recyclerView.setAdapter(timeLineAdapter);
         return view;
 
     }
-
 }

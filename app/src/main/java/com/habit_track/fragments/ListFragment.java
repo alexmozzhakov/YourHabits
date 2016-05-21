@@ -10,16 +10,16 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.habit_track.R;
-import com.habit_track.app.Habit;
-import com.habit_track.helper.HabitDBHandler;
-import com.habit_track.helper.RecycleHabitAdapter;
+import com.habit_track.adapter.HabitRecycleAdapter;
+import com.habit_track.database.HabitDBHandler;
 import com.habit_track.helper.SimpleItemTouchHelperCallback;
+import com.habit_track.models.Habit;
 
 import java.util.List;
 
 public class ListFragment extends Fragment {
     public static HabitDBHandler mHabitsDatabase;
-    public static List<Habit> mHabitsList;
+    static List<Habit> mHabitsList;
 
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              final Bundle savedInstanceState) {
@@ -40,7 +40,7 @@ public class ListFragment extends Fragment {
         final LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(llm);
 
-        final RecycleHabitAdapter mRecycleAdapter = new RecycleHabitAdapter(mHabitsList);
+        final HabitRecycleAdapter mRecycleAdapter = new HabitRecycleAdapter(mHabitsList);
         mRecyclerView.setAdapter(mRecycleAdapter);
 
         final ItemTouchHelper.Callback callback =
