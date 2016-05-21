@@ -1,10 +1,9 @@
 apply plugin: 'com.android.application'
 apply plugin: 'me.tatarka.retrolambda'
 
-
 android {
     compileSdkVersion 23
-    buildToolsVersion '23.0.2'
+    buildToolsVersion '24.0.0 rc4'
 
     defaultConfig {
         applicationId "com.habit_track"
@@ -15,8 +14,8 @@ android {
     }
 
     compileOptions {
-        targetCompatibility 1.8
-        sourceCompatibility 1.8
+        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_1_8
     }
 
     packagingOptions {
@@ -24,23 +23,30 @@ android {
         exclude 'META-INF/LICENSE-FIREBASE.txt'
         exclude 'META-INF/NOTICE'
     }
+
+    dexOptions {
+        javaMaxHeapSize "3g"
+    }
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
+    //compile fileTree(include: ['*.jar'], dir: 'libs')
+    testCompile 'junit:junit:4.12'
+    compile 'junit:junit:4.12'
 
-    testCompile 'junit:junit:4.10'
+    compile 'com.android.support:design:23.4.0'
+    compile 'com.android.support:recyclerview-v7:23.4.0'
+    compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha1'
 
-    compile 'com.android.support:design:23.2.1'
-    compile 'com.android.support:recyclerview-v7:23.2.1'
-
-    compile 'com.firebase:firebase-client-android:2.3.1'
-    compile 'com.firebaseui:firebase-ui:0.3.1'
+    compile 'com.google.firebase:firebase-core:9.0.0'
+    compile 'com.google.firebase:firebase-database:9.0.0'
+    compile 'com.google.firebase:firebase-messaging:9.0.0'
+    compile 'com.google.firebase:firebase-auth:9.0.0'
 
     compile 'com.mcxiaoke.volley:library-aar:1.0.0'
 
     compile 'com.ruesga.timeline-chart-view:timeline-chart-view:0.0.6'
     compile 'com.squareup.picasso:picasso:2.5.2'
-
-    compile 'org.testng:testng:6.9.6'
 }
+
+apply plugin: 'com.google.gms.google-services'

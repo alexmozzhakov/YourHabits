@@ -13,3 +13,5 @@ app/app.iml
 import-summary.txt
 
 *.hprof
+
+captures/*.txt

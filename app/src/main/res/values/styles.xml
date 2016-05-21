@@ -8,9 +8,21 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="EditTextTheme">
+        <item name="android:maxLines">1</item>
+        <item name="colorControlNormal">#80cbc4</item>
+        <item name="colorControlActivated">#80cbc4</item>
+        <item name="colorControlHighlight">#80cbc4</item>
+    </style>
+
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.Auth" parent="AppTheme.NoActionBar">
+        <item name="colorAccent">#80cbc4</item>
+        <item name="colorPrimaryDark">#5d6694</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>

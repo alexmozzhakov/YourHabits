@@ -3,120 +3,90 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:gravity="bottom"
               android:orientation="vertical">
 
     <ImageView
+        android:id="@+id/imageView"
         android:layout_width="match_parent"
-        android:layout_height="130dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
         android:background="@drawable/bg_img"
-        android:gravity="center"
         android:scaleType="centerCrop"
         android:textAppearance="?android:attr/textAppearanceLarge"
         tools:ignore="ContentDescription"/>
 
-    <LinearLayout
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="bottom"
-        android:background="@color/white"
-        android:orientation="vertical"
-        android:paddingBottom="60dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/hint_email"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        android:paddingTop="20dp">
+        android:textColorHint="@color/input_login_hint"
+        android:weightSum="1">
 
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/email"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/hint_email"
-            android:textColorHint="@color/input_login_hint">
-
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/email"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:inputType="textEmailAddress"
-                android:paddingBottom="15dp"
-                android:paddingEnd="3dp"
-                android:paddingStart="3dp"
-                android:paddingTop="5dp"
-                android:singleLine="true"
-                android:textColor="@color/input_login"
-                android:textColorHint="@color/input_login_hint"
-                android:textSize="20sp"/>
-        </android.support.design.widget.TextInputLayout>
+            android:layout_marginBottom="10dp"
+            android:inputType="textEmailAddress"
+            android:paddingBottom="15dp"
+            android:paddingTop="5dp"
+            android:textColor="@color/input_login"
+            android:textColorHint="@color/input_login_hint"
+            android:textSize="20sp"
+            android:theme="@style/EditTextTheme"/>
+    </android.support.design.widget.TextInputLayout>
 
 
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/hint_password"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:textColorHint="@color/input_login_hint">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/password"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/hint_password"
-            android:textColorHint="@color/input_login_hint">
+            android:inputType="textPassword"
+            android:paddingBottom="15dp"
+            android:paddingLeft="3dp"
+            android:paddingRight="3dp"
+            android:paddingTop="5dp"
+            android:textColor="@color/input_login"
+            android:textColorHint="@color/input_login_hint"
+            android:textSize="20sp"
+            android:theme="@style/EditTextTheme"/>
+    </android.support.design.widget.TextInputLayout>
 
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/password"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPassword"
-                android:paddingBottom="15dp"
-                android:paddingLeft="3dp"
-                android:paddingRight="3dp"
-                android:paddingTop="5dp"
-                android:textColor="@color/input_login"
-                android:textColorHint="@color/input_login_hint"
-                android:textSize="20sp"/>
-        </android.support.design.widget.TextInputLayout>
+    <!-- Login Button -->
+    <Button
+        android:id="@+id/btnLogin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dip"
+        android:background="@color/colorAccent"
+        android:text="@string/btn_login"
+        android:textColor="@color/white"/>
 
-        <!-- Login Button -->
-        <Button
-            android:id="@+id/btnLogin"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dip"
-            android:background="@color/colorAccent"
-            android:text="@string/btn_login"
-            android:textColor="@color/white"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <!-- Link to Register Screen -->
-
-            <Button
-                android:id="@+id/btnLinkToRegisterScreen"
-                style="?android:buttonBarButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_weight=".5"
-                android:background="@null"
-                android:gravity="start|center_vertical"
-                android:paddingEnd="10dp"
-                android:paddingLeft="10dp"
-                android:paddingStart="10dp"
-                android:text="@string/btn_register"
-                android:textColor="@color/input_login_hint"
-                android:textSize="12sp"/>
-
-            <!-- Link to Password Recovery Screen -->
-
-            <Button
-                style="?android:buttonBarButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_weight=".5"
-                android:background="@null"
-                android:gravity="end|center_vertical"
-                android:onClick="forgotPass"
-                android:paddingEnd="10dp"
-                android:paddingRight="10dp"
-                android:paddingStart="10dp"
-                android:text="@string/forgot"
-                android:textColor="@color/colorAccent"
-                android:textSize="12sp"/>
-
-        </LinearLayout>
-    </LinearLayout>
+    <Button
+        android:id="@+id/btnLinkToRegisterScreen"
+        style="?android:buttonBarButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@null"
+        android:gravity="start|center_vertical"
+        android:paddingLeft="10dp"
+        android:paddingStart="10dp"
+        android:text="@string/btn_register"
+        android:textColor="@color/input_login_hint"
+        android:textSize="12sp"
+        tools:ignore="RtlSymmetry"/>
 </LinearLayout>

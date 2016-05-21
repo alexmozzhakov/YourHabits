@@ -13,11 +13,10 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.android.volley.Request.Method;
-import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
 import com.habit_track.R;
-import com.habit_track.app.AppController;
-import com.habit_track.helper.SQLiteHandler;
+import com.habit_track.database.UserDBHandler;
+import com.habit_track.helper.AppController;
 import com.habit_track.helper.SessionManager;
 
 import org.json.JSONException;
@@ -31,7 +30,7 @@ public class LoginActivity extends Activity {
     private static final String TAG_STRING = "req_login";
     private ProgressDialog pDialog;
     private SessionManager session;
-    private SQLiteHandler database;
+    private UserDBHandler database;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -53,7 +52,7 @@ public class LoginActivity extends Activity {
         pDialog.setCancelable(false);
 
         // SQLite database handler
-        database = new SQLiteHandler(getApplicationContext());
+        database = new UserDBHandler(getApplicationContext());
 
         // Session manager
         session = new SessionManager(getApplicationContext());
@@ -102,13 +101,13 @@ public class LoginActivity extends Activity {
     /**
      * function to verify login details in mysql db
      */
-    protected void checkLogin(final String email, final String password) {
+    private void checkLogin(final String email, final String password) {
         // Tag used to cancel the request
         pDialog.setMessage("Logging in ...");
         showDialog();
 
         final StringRequest strReq = new StringRequest(Method.POST,
-                AppController.URL_LOGIN, (Response.Listener<String>) response -> {
+                AppController.URL_LOGIN, response -> {
             Log.d(TAG, "Login Response: " + response);
             hideDialog();
 
@@ -143,7 +142,7 @@ public class LoginActivity extends Activity {
                 Log.e("JSONException", "response error", e);
                 Toast.makeText(getApplicationContext(), "Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
             }
-        }, (Response.ErrorListener) error -> {
+        }, error -> {
             Log.e(TAG, "Login Error: " + error.getMessage());
             Toast.makeText(getApplicationContext(),
                     error.getMessage(), Toast.LENGTH_LONG).show();
@@ -177,24 +176,16 @@ public class LoginActivity extends Activity {
         }
     }
 
-    public boolean checkInput(final String email, final String password) {
+    private void checkInput(final String email, final String password) {
         // Check for empty data in the form
         if (email.isEmpty() || password.isEmpty()) {
             // Prompt user to enter credentials
             Toast.makeText(getApplicationContext(),
                     "Please enter the credentials!", Toast.LENGTH_LONG)
                     .show();
-            return false;
-
         } else {
             // login user
             checkLogin(email, password);
         }
-
-        return true;
-    }
-
-    public void forgotPass(final View view) {
-
     }
 }

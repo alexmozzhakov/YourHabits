@@ -8,7 +8,6 @@
     <string name="btn_link_to_register">Registration</string>
     <string name="btn_link_to_login">Login</string>
     <string name="btn_terms_and_conditions">Terms &amp; Conditions</string>
-    <string name="forgot">forgot password?</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
