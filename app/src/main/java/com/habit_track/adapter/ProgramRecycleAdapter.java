@@ -50,7 +50,6 @@ public class ProgramRecycleAdapter extends RecyclerView.Adapter {
         final ProgramViewHolder holder = (ProgramViewHolder) recyclerHolder;
         final ProgramView program = mProgramList.get(position);
 
-
         holder.txtTitle.setText(program.title);
         holder.txtPercent.setText(program.percent);
     }

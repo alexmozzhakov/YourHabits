@@ -56,13 +56,17 @@ public class Habit {
     @Override
     public String toString() {
         return "Habit{" +
-                "title='" + title + '\'' +
+                "id=" + id +
+                ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", doneMarker=" + doneMarker +
                 ", markerUpdatedDay=" + markerUpdatedDay +
                 ", markerUpdatedMonth=" + markerUpdatedMonth +
                 ", markerUpdatedYear=" + markerUpdatedYear +
                 ", time=" + time +
+                ", daysFollowing=" + daysFollowing +
+                ", cost=" + cost +
+                ", frequency=" + frequency +
                 '}';
     }
 }

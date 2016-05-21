@@ -1,28 +1,52 @@
-<?xml version="1.0"  ?>
-<FrameLayout
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="60dp"
-    android:background="@drawable/border_top_and_bottom">
+    android:background="@drawable/border_top_and_bottom"
+    tools:layout_editor_absoluteX="0dp"
+    tools:layout_editor_absoluteY="81dp">
 
     <TextView
         android:id="@+id/habit_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="start|center_vertical"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
         android:gravity="start"
-        android:paddingLeft="90dp"
         android:text="@string/navigation_drawer_close"
         android:textColor="@color/black"
         android:textSize="20sp"
-        tools:ignore="RtlHardcoded,RtlSymmetry"/>
+        app:layout_constraintBottom_toBottomOf="@+id/constraintLayout"
+        app:layout_constraintLeft_toRightOf="@+id/checkBox"
+        app:layout_constraintTop_toTopOf="@+id/constraintLayout"
+        tools:ignore="RtlHardcoded,RtlSymmetry"
+        tools:layout_constraintBottom_creator="0"
+        tools:layout_constraintLeft_creator="0"
+        tools:layout_constraintTop_creator="0"
+        tools:layout_editor_absoluteX="56dp"
+        tools:layout_editor_absoluteY="18dp"/>
 
     <CheckBox
         android:id="@+id/checkBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="start|center_vertical"
-        android:layout_margin="15dp"/>
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/constraintLayout"
+        app:layout_constraintLeft_toLeftOf="@+id/constraintLayout"
+        app:layout_constraintTop_toTopOf="@+id/constraintLayout"
+        tools:layout_constraintBottom_creator="0"
+        tools:layout_constraintLeft_creator="0"
+        tools:layout_constraintTop_creator="0"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="14dp"/>
 
-</FrameLayout>
+</android.support.constraint.ConstraintLayout>

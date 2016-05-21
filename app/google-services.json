@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "527613782872",
+    "firebase_url": "https://fiery-torch-2910.firebaseio.com",
+    "project_id": "fiery-torch-2910",
+    "storage_bucket": "fiery-torch-2910.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:527613782872:android:94f7b1d99397146b",
+        "android_client_info": {
+          "package_name": "com.habit_track"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "527613782872-avdsc1as74mtlc09ge4s7vcnobc9d2lv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCunDjEgXuXDRCukrj34-cMcWnp9-8gRew"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

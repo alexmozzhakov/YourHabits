@@ -218,8 +218,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         HabitDBHandler.isChecked = false;
         // Creates new ListFragment and replaces CreateFragment
         mLastFragment = new ListFragment();
-        getFragmentManager().beginTransaction().replace(R.id.content_frame, mLastFragment)
-                .addToBackStack(null).commit();
+        getFragmentManager().beginTransaction().replace(R.id.content_frame, mLastFragment).commit();
     }
 
     public void toProfile(View view) {

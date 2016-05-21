@@ -33,6 +33,7 @@ import java.util.Calendar;
 import java.util.List;
 
 public class ProgramsFragment extends Fragment {
+    private static final String TAG = ProgramsFragment.class.getSimpleName();
     public static boolean isShowing;
     private ProgramRecycleAdapter mAdapter;
     private List<ProgramView> mProgramData;
@@ -117,13 +118,18 @@ public class ProgramsFragment extends Fragment {
         mImageTop = (ImageView) result.findViewById(R.id.imageViewTop);
         mTitleTop = (TextView) result.findViewById(R.id.titleTop);
 
+        ((Runnable) this::updateAdapter).run();
+
         return result;
     }
 
     @Override
     public void onStart() {
         super.onStart();
+    }
 
+
+    private void updateAdapter() {
         DatabaseReference programRef = mRootRef.child("programs");
 
         programRef.addChildEventListener(new ChildEventListener() {
@@ -131,6 +137,7 @@ public class ProgramsFragment extends Fragment {
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 final int position = Integer.parseInt(dataSnapshot.getKey());
 
+                Log.i(TAG, "onChildAdded:()");
                 if (position == 0) {
                     generateTopProgram();
                 } else {
@@ -142,6 +149,7 @@ public class ProgramsFragment extends Fragment {
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                Log.i(TAG, "onChildChanged: ()");
                 int position = Integer.parseInt(dataSnapshot.getKey()) - 1;
 
                 if (position >= 0) {
@@ -154,15 +162,18 @@ public class ProgramsFragment extends Fragment {
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
+                Log.i(TAG, "onChildRemoved()");
                 int position = Integer.parseInt(dataSnapshot.getKey()) - 1;
-                mProgramData.remove(position);
+                if (position >= 0) {
+                    mProgramData.remove(position);
+                }
                 mAdapter.notifyItemRemoved(position);
             }
 
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {
                 // mAdapter.notifyItemMoved();
-                mAdapter.notifyDataSetChanged();
+                Log.i(TAG, "onChildMoved: ()");
             }
 
             @Override
@@ -191,7 +202,7 @@ public class ProgramsFragment extends Fragment {
                 }
                 mTitleTop.setTypeface(mFaceLight);
 
-                MainActivity activity = ((MainActivity) getActivity());
+                final MainActivity activity = ((MainActivity) getActivity());
 
                 if (isShowing && activity != null) {
                     createProgramApplyFragment(activity, snapshot);

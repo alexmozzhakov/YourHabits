@@ -5,38 +5,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:weightSum="1">
-
-    <TextView
-        android:id="@+id/habit_title_left"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start|center_vertical"
-        android:layout_weight=".5"
-        android:gravity="end"
-        android:paddingRight="10dp"
-        android:textColor="@color/black"
-        android:textSize="20sp"
-        tools:ignore="RtlHardcoded,RtlSymmetry"/>
+    android:orientation="horizontal">
 
     <com.habit_track.helper.TimeLineView
         android:id="@+id/time_marker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingBottom="30dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:paddingTop="30dp"
         app:line="@color/colorPrimary"
         app:line_size="2dp"
         app:marker_size="25dp"/>
 
     <TextView
-        android:id="@+id/habit_title_right"
-        android:layout_width="0dp"
+        android:id="@+id/habit_title"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="start|center_vertical"
-        android:layout_weight=".5"
         android:gravity="start"
-        android:paddingLeft="10dp"
+        android:paddingLeft="30dp"
+        android:text="@string/navigation_drawer_close"
         android:textColor="@color/black"
         android:textSize="20sp"
         tools:ignore="RtlHardcoded,RtlSymmetry"/>

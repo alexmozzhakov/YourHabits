@@ -4,11 +4,9 @@
           package="com.habit_track">
 
     <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
     <application
-        android:name=".app.AppController"
+        android:name=".helper.AppController"
         android:allowBackup="true"
         android:configChanges="orientation"
         android:fullBackupContent="true"
@@ -17,16 +15,24 @@
         android:screenOrientation="landscape"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+
+        <service
+            android:name=".helper.MyFirebaseMessagingService"
+            android:permission="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+
         <activity
             android:name=".activity.LoginActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
             android:launchMode="singleTop"
-            android:theme="@style/Theme.AppCompat"
+            android:theme="@style/AppTheme.Auth"
             android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
@@ -34,13 +40,17 @@
             android:name=".activity.RegisterActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop"
-            android:theme="@style/Theme.AppCompat"
+            android:theme="@style/AppTheme.Auth"
             android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".activity.MainActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar"/>
+
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value=".activity.MainActivity"/>
     </application>
 
 </manifest>
