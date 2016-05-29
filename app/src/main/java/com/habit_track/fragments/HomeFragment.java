@@ -16,10 +16,10 @@ import android.widget.TextView;
 import com.android.volley.Request;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.firebase.crash.FirebaseCrash;
 import com.habit_track.R;
 import com.habit_track.adapter.TimeLineAdapter;
 import com.habit_track.database.HabitDBHandler;
-import com.habit_track.helper.AppController;
 import com.habit_track.models.Habit;
 
 import org.json.JSONException;
@@ -27,7 +27,11 @@ import org.json.JSONObject;
 
 import java.util.Calendar;
 
+import static com.habit_track.helper.AppManager.mHabitsDatabase;
+
 public class HomeFragment extends Fragment {
+
+    public static final String URL_WEATHER_API = "http://habbitsapp.esy.es/weather_api.php";
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
@@ -63,7 +67,7 @@ public class HomeFragment extends Fragment {
         }
 
         Volley.newRequestQueue(getActivity().getApplicationContext()).add(
-                new StringRequest(Request.Method.GET, AppController.URL_WEATHER_API,
+                new StringRequest(Request.Method.GET, URL_WEATHER_API,
                         response -> {
                             try {
                                 final JSONObject o = new JSONObject(response);
@@ -79,25 +83,29 @@ public class HomeFragment extends Fragment {
                                     weatherBot.setText(o.getString("location"));
                                 } else {
                                     Log.e("JSONException", "Response got: " + o.getString("error"));
+                                    FirebaseCrash.report(new Exception(o.getString("error")));
                                 }
 
                             } catch (JSONException e) {
                                 Log.e("JSONException", "Response got: " + response, e);
-
+                                FirebaseCrash.report(e);
                             }
 
                         },
-                        error -> Log.e("StringRequest error", error.toString()))
+                        error -> {
+                            Log.e("StringRequest error", error.toString());
+                            FirebaseCrash.report(error);
+                        })
         );
 
 
-        if (ListFragment.mHabitsDatabase == null) {
-            ListFragment.mHabitsDatabase = new HabitDBHandler(this.getActivity());
+        if (mHabitsDatabase == null) {
+            mHabitsDatabase = new HabitDBHandler(this.getActivity());
         }
 
         Log.i("some", "onCreateView");
-        if (ListFragment.mHabitsDatabase.notSame() || ListFragment.mHabitsList == null) {
-            ListFragment.mHabitsList = ListFragment.mHabitsDatabase.getHabitDetailsAsArrayList();
+        if (mHabitsDatabase.notSame() || ListFragment.mHabitsList == null) {
+            ListFragment.mHabitsList = mHabitsDatabase.getHabitDetailsAsArrayList();
 
         }
 

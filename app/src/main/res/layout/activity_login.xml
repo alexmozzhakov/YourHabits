@@ -22,7 +22,9 @@
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
         android:textColorHint="@color/input_login_hint"
-        android:weightSum="1">
+        android:weightSum="1"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp">
 
         <android.support.design.widget.TextInputEditText
             android:id="@+id/email"
@@ -45,7 +47,9 @@
         android:hint="@string/hint_password"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        android:textColorHint="@color/input_login_hint">
+        android:textColorHint="@color/input_login_hint"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp">
 
         <android.support.design.widget.TextInputEditText
             android:id="@+id/password"
@@ -59,7 +63,9 @@
             android:textColor="@color/input_login"
             android:textColorHint="@color/input_login_hint"
             android:textSize="20sp"
-            android:theme="@style/EditTextTheme"/>
+            android:theme="@style/EditTextTheme"
+            android:paddingStart="3dp"
+            android:paddingEnd="3dp"/>
     </android.support.design.widget.TextInputLayout>
 
     <!-- Login Button -->
@@ -72,7 +78,9 @@
         android:layout_marginTop="20dip"
         android:background="@color/colorAccent"
         android:text="@string/btn_login"
-        android:textColor="@color/white"/>
+        android:textColor="@color/white"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"/>
 
     <Button
         android:id="@+id/btnLinkToRegisterScreen"
@@ -88,5 +96,7 @@
         android:text="@string/btn_register"
         android:textColor="@color/input_login_hint"
         android:textSize="12sp"
-        tools:ignore="RtlSymmetry"/>
+        tools:ignore="RtlSymmetry"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"/>
 </LinearLayout>

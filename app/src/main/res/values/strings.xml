@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">YourHabits</string>
+    <string name="app_name" translatable="false">YourHabits</string>
     <string name="hint_email">Email</string>
     <string name="hint_password">Password</string>
     <string name="hint_name">Full name</string>
@@ -14,5 +14,6 @@
 
     <string name="loading">Loading…</string>
     <string name="tasks_due">Tasks due</string>
+    <string name="search_hint">Search</string>
 
 </resources>

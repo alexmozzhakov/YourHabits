@@ -1,7 +1,6 @@
 package com.habit_track.activity;
 
 
-import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
@@ -19,28 +18,27 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.habit_track.R;
 import com.habit_track.database.HabitDBHandler;
-import com.habit_track.database.UserDBHandler;
 import com.habit_track.fragments.CreateFragment;
 import com.habit_track.fragments.HomeFragment;
 import com.habit_track.fragments.ListFragment;
 import com.habit_track.fragments.ProfileFragment;
 import com.habit_track.fragments.ProgramsFragment;
-import com.habit_track.helper.SessionManager;
 
 import java.util.Calendar;
-import java.util.Map;
+
+import static com.habit_track.helper.AppManager.mHabitsDatabase;
+import static com.habit_track.helper.AppManager.mLastFragment;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    public Fragment mLastFragment;
     public static boolean immOpened;
-    public static Map<String, String> mUser;
     private NavigationView mNavigationView;
-    private UserDBHandler mUserDatabase;
     private FragmentTransaction mTransaction;
-    private SessionManager mSession;
     private Toolbar mToolbar;
     private DrawerLayout mDrawerLayout;
 
@@ -62,16 +60,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setSupportActionBar(mToolbar);
         mLastFragment = new HomeFragment();
 
-        // SqLite mUserDatabase handler
-        mUserDatabase = new UserDBHandler(getApplicationContext());
-
-        // mSession manager
-        mSession = new SessionManager(getApplicationContext());
-
-        if (!mSession.isLoggedIn()) {
-            logoutUser();
-        }
-
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         final ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -90,13 +78,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mTransaction = getFragmentManager().beginTransaction();
         mTransaction.replace(R.id.content_frame, mLastFragment).commit();
 
-        // Fetching user details from SQLite
-        mUser = mUserDatabase.getUserDetails();
-
         final TextView navName = (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.name_info);
         final TextView navEmail = (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.email_info);
-        navName.setText(mUser.get("name"));
-        navEmail.setText(mUser.get("email"));
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (user != null) {
+            navEmail.setText(user.getEmail());
+            UserProfileChangeRequest.Builder changeRequest = new UserProfileChangeRequest.Builder();
+            changeRequest.setDisplayName("some");
+            user.updateProfile(changeRequest.build());
+            navName.setText(user.getDisplayName());
+        }
 
     }
 
@@ -161,10 +154,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void logoutUser() {
-        mSession.setLogin(false);
-
-        // Deletes user from users mUserDatabase
-        mUserDatabase.deleteUsers();
+        // Sign out from account manager
+        FirebaseAuth.getInstance().signOut();
 
         // Launching the login activity
         final Intent intent = new Intent(MainActivity.this, LoginActivity.class);
@@ -187,8 +178,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // Checks what data was entered and adds habit to mUserDatabase
         if (editDescription != null && editTitle != null && editTime != null) {
-            if (ListFragment.mHabitsDatabase == null) {
-                ListFragment.mHabitsDatabase = new HabitDBHandler(this);
+            if (mHabitsDatabase == null) {
+                mHabitsDatabase = new HabitDBHandler(this);
             }
 
             int time;
@@ -198,7 +189,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 time = 60;
             }
 
-            ListFragment.mHabitsDatabase.addHabit(
+            mHabitsDatabase.addHabit(
                     editTitle.getText().toString(),
                     editDescription.getText().toString(),
                     time,
@@ -235,6 +226,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mLastFragment = new ProfileFragment();
 
         getFragmentManager().beginTransaction().replace(R.id.content_frame, mLastFragment).commit();
-
     }
+
 }
