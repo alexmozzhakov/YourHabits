@@ -1,6 +1,7 @@
 package com.habit_track.fragments;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -14,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -21,7 +23,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.habit_track.R;
-import com.habit_track.activity.MainActivity;
 import com.habit_track.adapter.ProgramRecycleAdapter;
 import com.habit_track.models.Achievement;
 import com.habit_track.models.Program;
@@ -31,6 +32,9 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+
+import static com.habit_track.helper.AppManager.mHabitsDatabase;
+import static com.habit_track.helper.AppManager.mLastFragment;
 
 public class ProgramsFragment extends Fragment {
     private static final String TAG = ProgramsFragment.class.getSimpleName();
@@ -42,8 +46,7 @@ public class ProgramsFragment extends Fragment {
     private Typeface mFaceLight;
     private Typeface mFace;
     private ImageView mImageTop;
-
-    private DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
+    private DatabaseReference mRootRef;
 
     private static ProgramView createProgramView(DataSnapshot dataSnapshot) {
         return new ProgramView(
@@ -52,8 +55,8 @@ public class ProgramsFragment extends Fragment {
                 dataSnapshot.child("habit").child("description").getValue(String.class));
     }
 
-    public static Program onProgramApply(DataSnapshot dataSnapshot) {
-        long habitId = ListFragment.mHabitsDatabase.addHabit(
+    static Program onProgramApply(DataSnapshot dataSnapshot) {
+        long habitId = mHabitsDatabase.addHabit(
                 dataSnapshot.child("habit").child("title").getValue(String.class),
                 dataSnapshot.child("habit").child("description").getValue(String.class),
                 dataSnapshot.child("habit").child("time").getValue(Integer.class),
@@ -118,19 +121,14 @@ public class ProgramsFragment extends Fragment {
         mImageTop = (ImageView) result.findViewById(R.id.imageViewTop);
         mTitleTop = (TextView) result.findViewById(R.id.titleTop);
 
-        ((Runnable) this::updateAdapter).run();
+        updateAdapter();
 
         return result;
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-
     private void updateAdapter() {
-        DatabaseReference programRef = mRootRef.child("programs");
+        mRootRef = FirebaseDatabase.getInstance().getReference();
+        final DatabaseReference programRef = mRootRef.child("programs");
 
         programRef.addChildEventListener(new ChildEventListener() {
             @Override
@@ -202,14 +200,10 @@ public class ProgramsFragment extends Fragment {
                 }
                 mTitleTop.setTypeface(mFaceLight);
 
-                final MainActivity activity = ((MainActivity) getActivity());
-
-                if (isShowing && activity != null) {
-                    createProgramApplyFragment(activity, snapshot);
+                if (isShowing) {
+                    createProgramApplyFragment(snapshot);
                 }
-
-                mTitleTop.setOnClickListener((view) ->
-                        onClick(activity, snapshot));
+                mTitleTop.setOnClickListener((view) -> onClick(snapshot));
 
                 //Style percent view
                 mSuccessTop.setText(snapshot.child("success").getValue(String.class));
@@ -219,41 +213,45 @@ public class ProgramsFragment extends Fragment {
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.e("FirebaseError", databaseError.toString());
+                FirebaseCrash.report(databaseError.toException());
             }
         });
     }
 
-    private static void onClick(MainActivity activity, DataSnapshot snapshot) {
+    private void onClick(DataSnapshot snapshot) {
         if (!isShowing) {
-            createProgramApplyFragment(activity, snapshot);
+            createProgramApplyFragment(snapshot);
         } else {
-            activity.getFragmentManager()
+            getActivity().getFragmentManager()
                     .beginTransaction()
-                    .remove(activity.mLastFragment)
+                    .remove(mLastFragment)
                     .commit();
             isShowing = false;
         }
     }
 
-    private static void createProgramApplyFragment(MainActivity activity, DataSnapshot snapshot) {
+    private void createProgramApplyFragment(DataSnapshot snapshot) {
 
         // delete previous fragment if showing
+        FragmentManager fragmentManager = getActivity().getFragmentManager();
         if (isShowing) {
-            activity.getFragmentManager()
+            fragmentManager
                     .beginTransaction()
-                    .remove(activity.mLastFragment)
+                    .remove(mLastFragment)
                     .commit();
+            isShowing = false;
+        } else {
+            ProgramFragment programFragment = new ProgramFragment();
+            programFragment.snapshot = snapshot;
+            mLastFragment = programFragment;
+
+            fragmentManager
+                    .beginTransaction()
+                    .replace(R.id.recyclerLayout, mLastFragment)
+                    .commit();
+
+            isShowing = true;
         }
-
-        activity.mLastFragment = new ProgramFragment();
-        ((ProgramFragment) activity.mLastFragment).snapshot = snapshot;
-
-        activity.getFragmentManager()
-                .beginTransaction()
-                .replace(R.id.recyclerLayout, activity.mLastFragment)
-                .commit();
-
-        isShowing = true;
     }
 
 }

@@ -23,7 +23,9 @@
         android:orientation="vertical"
         android:paddingBottom="60dp"
         android:paddingLeft="20dp"
-        android:paddingRight="20dp">
+        android:paddingRight="20dp"
+        android:paddingEnd="20dp"
+        android:paddingStart="20dp">
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
@@ -44,7 +46,9 @@
                 android:textColor="@color/input_login"
                 android:textColorHint="@color/input_login_hint"
                 android:textSize="20sp"
-                android:theme="@style/EditTextTheme"/>
+                android:theme="@style/EditTextTheme"
+                android:paddingEnd="3dp"
+                android:paddingStart="3dp"/>
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -87,7 +91,9 @@
                 android:textColor="@color/input_login"
                 android:textColorHint="@color/input_login_hint"
                 android:textSize="20sp"
-                android:theme="@style/EditTextTheme"/>
+                android:theme="@style/EditTextTheme"
+                android:paddingStart="3dp"
+                android:paddingEnd="3dp"/>
         </android.support.design.widget.TextInputLayout>
 
         <Button

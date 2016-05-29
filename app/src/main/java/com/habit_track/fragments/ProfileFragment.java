@@ -9,8 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.habit_track.R;
-import com.habit_track.activity.MainActivity;
 
 public class ProfileFragment extends Fragment {
 
@@ -22,8 +23,13 @@ public class ProfileFragment extends Fragment {
 
         final TextView name = (TextView) result.findViewById(R.id.name);
         final TextView email = (TextView) result.findViewById(R.id.email);
-        name.setText(MainActivity.mUser.get("name"));
-        email.setText(MainActivity.mUser.get("email"));
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (user != null) {
+            email.setText(user.getEmail());
+            name.setText(user.getDisplayName());
+        }
 
         final SharedPreferences sharedPreferences = getActivity().getSharedPreferences("pref",
                 Context.MODE_PRIVATE);

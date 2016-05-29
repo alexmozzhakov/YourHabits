@@ -17,7 +17,9 @@
         android:paddingTop="30dp"
         app:line="@color/colorPrimary"
         app:line_size="2dp"
-        app:marker_size="25dp"/>
+        app:marker_size="25dp"
+        android:paddingEnd="10dp"
+        android:paddingStart="10dp"/>
 
     <TextView
         android:id="@+id/habit_title"
@@ -29,6 +31,7 @@
         android:text="@string/navigation_drawer_close"
         android:textColor="@color/black"
         android:textSize="20sp"
-        tools:ignore="RtlHardcoded,RtlSymmetry"/>
+        tools:ignore="RtlHardcoded,RtlSymmetry"
+        android:paddingStart="30dp"/>
 
 </LinearLayout>

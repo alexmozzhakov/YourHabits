@@ -2,24 +2,25 @@ package com.habit_track.adapter;
 
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.habit_track.R;
-import com.habit_track.fragments.ListFragment;
 import com.habit_track.models.Habit;
 import com.habit_track.models.MovableItem;
 import com.habit_track.viewholder.HabitViewHolder;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
+import static com.habit_track.helper.AppManager.mHabitsDatabase;
+
 public class HabitRecycleAdapter extends RecyclerView.Adapter implements MovableItem {
 
-    final private List<Habit> mHabitList;
+    private List<Habit> mHabitList;
 
     public HabitRecycleAdapter(final List<Habit> data) {
         super();
@@ -42,7 +43,7 @@ public class HabitRecycleAdapter extends RecyclerView.Adapter implements Movable
             if (holder.checkBox.isChecked()) {
                 mHabitList.get(position).setDoneMarker(true);
 
-                ListFragment.mHabitsDatabase.updateHabit(
+                mHabitsDatabase.updateHabit(
                         position,
                         habit.markerUpdatedDay,
                         habit.markerUpdatedMonth,
@@ -52,7 +53,7 @@ public class HabitRecycleAdapter extends RecyclerView.Adapter implements Movable
                 holder.txtTitle.setTextColor(Color.GRAY);
             } else {
 
-                ListFragment.mHabitsDatabase.updateHabit(
+                mHabitsDatabase.updateHabit(
                         position,
                         habit.markerUpdatedDay,
                         habit.markerUpdatedMonth,
@@ -80,7 +81,7 @@ public class HabitRecycleAdapter extends RecyclerView.Adapter implements Movable
 
     @Override
     public void onItemDismiss(final int position) {
-        ListFragment.mHabitsDatabase.delete(mHabitList.get(position).id);
+        mHabitsDatabase.delete(mHabitList.get(position).id);
         mHabitList.remove(position);
         notifyItemRemoved(position);
     }
@@ -97,8 +98,13 @@ public class HabitRecycleAdapter extends RecyclerView.Adapter implements Movable
                 Collections.swap(mHabitList, i, i - 1);
             }
         }
-        Log.i("kek", "onItemMove: " + (fromPosition + 1));
-        ListFragment.mHabitsDatabase.move(fromPosition, toPosition);
+        mHabitsDatabase.move(fromPosition, toPosition);
         notifyItemMoved(fromPosition, toPosition);
+    }
+
+    public void setFilter(List<Habit> countryModels) {
+        mHabitList = new ArrayList<>();
+        mHabitList.addAll(countryModels);
+        notifyDataSetChanged();
     }
 }

@@ -58,4 +58,5 @@ public class ProgramRecycleAdapter extends RecyclerView.Adapter {
     public int getItemCount() {
         return mProgramList.size();
     }
+
 }
