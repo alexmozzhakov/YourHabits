@@ -14,6 +14,6 @@
 
     <string name="loading">Loading…</string>
     <string name="tasks_due">Tasks due</string>
-    <string name="search_hint">Search</string>
+    <string name="recover_password">Recover password</string>
 
 </resources>

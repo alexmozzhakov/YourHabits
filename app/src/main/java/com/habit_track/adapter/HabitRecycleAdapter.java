@@ -1,5 +1,6 @@
 package com.habit_track.adapter;
 
+import android.app.Activity;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -7,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.habit_track.R;
+import com.habit_track.database.HabitDBHandler;
 import com.habit_track.models.Habit;
 import com.habit_track.models.MovableItem;
 import com.habit_track.viewholder.HabitViewHolder;
@@ -16,14 +18,14 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
-import static com.habit_track.helper.AppManager.mHabitsDatabase;
-
 public class HabitRecycleAdapter extends RecyclerView.Adapter implements MovableItem {
 
     private List<Habit> mHabitList;
+    private HabitDBHandler mHabitsDatabase;
 
-    public HabitRecycleAdapter(final List<Habit> data) {
+    public HabitRecycleAdapter(final List<Habit> data, Activity activity) {
         super();
+        mHabitsDatabase = HabitDBHandler.getInstance(activity.getApplicationContext());
         this.mHabitList = data;
     }
 
