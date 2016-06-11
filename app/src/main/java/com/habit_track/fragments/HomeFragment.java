@@ -27,15 +27,14 @@ import org.json.JSONObject;
 
 import java.util.Calendar;
 
-import static com.habit_track.helper.AppManager.mHabitsDatabase;
-
 public class HomeFragment extends Fragment {
 
-    public static final String URL_WEATHER_API = "http://habbitsapp.esy.es/weather_api.php";
+    private static final String URL_WEATHER_API = "http://habbitsapp.esy.es/weather_api.php";
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              final Bundle savedInstanceState) {
+        HabitDBHandler mHabitsDatabase = HabitDBHandler.getInstance(getActivity().getApplicationContext());
         final View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         final TextView weather = (TextView) view.findViewById(R.id.weather);

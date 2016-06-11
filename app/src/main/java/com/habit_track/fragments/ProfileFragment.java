@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import com.habit_track.R;
 
 public class ProfileFragment extends Fragment {
 
+
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              final Bundle savedInstanceState) {
@@ -23,8 +25,10 @@ public class ProfileFragment extends Fragment {
 
         final TextView name = (TextView) result.findViewById(R.id.name);
         final TextView email = (TextView) result.findViewById(R.id.email);
+        FloatingActionButton fab = (FloatingActionButton) result.findViewById(R.id.fab);
+        fab.setOnClickListener(view -> editProfile());
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
         if (user != null) {
             email.setText(user.getEmail());
@@ -41,5 +45,10 @@ public class ProfileFragment extends Fragment {
         return result;
     }
 
-
+    private void editProfile() {
+        getActivity()
+                .getFragmentManager().beginTransaction()
+                .add(R.id.userInfo, new ProfileEditFragment())
+                .commit();
+    }
 }

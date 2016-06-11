@@ -1,19 +1,20 @@
 package com.habit_track.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.habit_track.R;
 
 import java.util.regex.Pattern;
 
-public class RegisterActivity extends Activity {
+public class RegisterActivity extends AppCompatActivity {
 
     public static final Pattern NAME_PATTERN = Pattern.compile("^[a-zA-Z \\-\\.']*$");
     public static final Pattern EMAIL_PATTERN = Pattern.compile(
@@ -22,6 +23,10 @@ public class RegisterActivity extends Activity {
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
+
+    public static boolean isValidPattern(final String str, final Pattern pattern) {
+        return pattern.matcher(str).matches();
+    }
 
     @Override
     public void onStart() {
@@ -34,9 +39,9 @@ public class RegisterActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        final EditText mInputFullName = (EditText) findViewById(R.id.full_name);
-        final EditText mInputEmail = (EditText) findViewById(R.id.email);
-        final EditText mInputPassword = (EditText) findViewById(R.id.password);
+        final EditText inputFullName = (EditText) findViewById(R.id.full_name);
+        final EditText inputEmail = (EditText) findViewById(R.id.email);
+        final EditText inputPassword = (EditText) findViewById(R.id.password);
         final Button btnRegister = (Button) findViewById(R.id.btnRegister);
         final Button btnLinkToLogin = (Button) findViewById(R.id.btnLinkToLoginScreen);
 
@@ -53,13 +58,11 @@ public class RegisterActivity extends Activity {
 
         // Register Button Click event
         btnRegister.setOnClickListener(view -> {
-            String name = mInputFullName.getText().toString().trim();
-            final String email = mInputEmail.getText().toString().trim();
-            final String password = mInputPassword.getText().toString().trim();
-            if (name.isEmpty()) {
-                name = "Anonymous";
-            }
-            if (!email.isEmpty() && !password.isEmpty()) {
+            final String name = inputFullName.getText().toString().trim();
+            final String email = inputEmail.getText().toString().trim();
+            final String password = inputPassword.getText().toString().trim();
+
+            if (!email.isEmpty() && !password.isEmpty() && !name.isEmpty()) {
                 if (isValidPattern(name, NAME_PATTERN)) {
                     if (isValidPattern(email, EMAIL_PATTERN)) {
                         mAuth.createUserWithEmailAndPassword(email, password)
@@ -69,7 +72,7 @@ public class RegisterActivity extends Activity {
                                         Toast.makeText(RegisterActivity.this, "Authentication failed.",
                                                 Toast.LENGTH_SHORT).show();
                                     } else {
-                                        // Launch login activity
+                                        setUserName(name);
                                         toLoginActivity();
                                     }
                                 });
@@ -88,9 +91,7 @@ public class RegisterActivity extends Activity {
         });
 
         // Link to Login Screen
-        btnLinkToLogin.setOnClickListener(view -> {
-            toLoginActivity();
-        });
+        btnLinkToLogin.setOnClickListener(view -> toLoginActivity());
     }
 
     private void toLoginActivity() {
@@ -100,8 +101,14 @@ public class RegisterActivity extends Activity {
         finish();
     }
 
-    public static boolean isValidPattern(final String str, final Pattern pattern) {
-        return pattern.matcher(str).matches();
+    private void setUserName(String name) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            UserProfileChangeRequest.Builder changeRequest =
+                    new UserProfileChangeRequest.Builder();
+            changeRequest.setDisplayName(name);
+            user.updateProfile(changeRequest.build());
+        }
     }
 
     @Override

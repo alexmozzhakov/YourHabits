@@ -1,10 +1,10 @@
 package com.habit_track.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
+import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -14,7 +14,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.habit_track.R;
 
-public class LoginActivity extends Activity {
+public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
@@ -40,16 +40,32 @@ public class LoginActivity extends Activity {
         final TextInputEditText inputEmail = (TextInputEditText) findViewById(R.id.email);
         final TextInputEditText inputPassword = (TextInputEditText) findViewById(R.id.password);
         final Typeface face = Typeface.createFromAsset(getAssets(), "fonts/Montserrat-Regular.ttf");
-        inputEmail.setTypeface(face);
-        inputPassword.setTypeface(face);
+        if (inputEmail != null && inputPassword != null) {
+            inputEmail.setTypeface(face);
+            inputPassword.setTypeface(face);
+            inputPassword.setImeActionLabel("Login", KeyEvent.KEYCODE_ENTER);
+            inputPassword.setOnKeyListener((final View view, final int keyCode, final KeyEvent event) -> {
+                // If the event is a key-down event on the "enter" button
+                if (event.getAction() == KeyEvent.ACTION_DOWN &&
+                        keyCode == KeyEvent.KEYCODE_ENTER) {
+                    final String email = inputEmail.getText().toString().trim();
+                    final String password = inputPassword.getText().toString().trim();
 
-        final Button btnLogin = (Button) findViewById(R.id.btnLogin);
+                    checkInput(email, password);
+
+                    return true;
+                }
+                return false;
+            });
+        }
+
+        final Button btnLogin = (Button) findViewById(R.id.btn_login);
+        final Button btnRecovery = (Button) findViewById(R.id.btn_recovery);
         final Button btnLinkToRegister = (Button) findViewById(R.id.btnLinkToRegisterScreen);
-        inputPassword.setImeActionLabel("Login", KeyEvent.KEYCODE_ENTER);
 
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = firebaseAuth -> {
-            FirebaseUser user = firebaseAuth.getCurrentUser();
+            final FirebaseUser user = firebaseAuth.getCurrentUser();
             if (user != null) {
                 // User is signed in
                 final Intent intent = new Intent(this, MainActivity.class);
@@ -57,20 +73,6 @@ public class LoginActivity extends Activity {
                 finish();
             }
         };
-
-        inputPassword.setOnKeyListener((final View view, final int keyCode, final KeyEvent event) -> {
-            // If the event is a key-down event on the "enter" button
-            if (event.getAction() == KeyEvent.ACTION_DOWN &&
-                    keyCode == KeyEvent.KEYCODE_ENTER) {
-                final String email = inputEmail.getText().toString().trim();
-                final String password = inputPassword.getText().toString().trim();
-
-                checkInput(email, password);
-
-                return true;
-            }
-            return false;
-        });
 
         // Login button Click Event
         btnLogin.setOnClickListener(view -> {
@@ -83,9 +85,16 @@ public class LoginActivity extends Activity {
 
         // Link to Register Screen
         btnLinkToRegister.setOnClickListener(view -> {
-            final Intent i = new Intent(getApplicationContext(),
+            final Intent intent = new Intent(getApplicationContext(),
                     RegisterActivity.class);
-            startActivity(i);
+            startActivity(intent);
+            finish();
+        });
+
+        btnRecovery.setOnClickListener(view -> {
+            final Intent intent = new Intent(getApplicationContext(),
+                    PasswordRecoveryActivity.class);
+            startActivity(intent);
             finish();
         });
 

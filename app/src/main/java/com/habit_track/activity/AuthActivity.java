@@ -8,7 +8,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.habit_track.R;
 
-public class DecideActivity extends AppCompatActivity {
+public class AuthActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
@@ -28,12 +28,13 @@ public class DecideActivity extends AppCompatActivity {
             FirebaseUser user = firebaseAuth.getCurrentUser();
             if (user != null) {
                 // User is signed in
-                final Intent intent = new Intent(DecideActivity.this, MainActivity.class);
+                final Intent intent = new Intent(AuthActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();
             } else {
                 // User isn't signed in
-                final Intent intent = new Intent(DecideActivity.this, LoginActivity.class);
+                // getFragmentManager().beginTransaction().addToBackStack("auth").replace().commit();
+                final Intent intent = new Intent(AuthActivity.this, LoginActivity.class);
                 startActivity(intent);
                 finish();
             }

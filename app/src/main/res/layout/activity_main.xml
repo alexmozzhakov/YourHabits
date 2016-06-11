@@ -9,7 +9,6 @@
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
-
     <FrameLayout
         android:id="@+id/content_frame"
         android:layout_width="match_parent"

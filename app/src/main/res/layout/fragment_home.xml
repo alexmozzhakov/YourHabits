@@ -38,7 +38,6 @@
         android:orientation="horizontal">
 
         <FrameLayout
-            android:id="@+id/panel_left"
             android:layout_width="match_parent"
             android:layout_height="90dp"
             android:layout_weight=".5"
@@ -55,7 +54,6 @@
                 android:textSize="44sp"/>
 
             <TextView
-                android:id="@+id/tasks_due_bot"
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
                 android:layout_gravity="bottom|center_horizontal"
@@ -66,7 +64,6 @@
         </FrameLayout>
 
         <FrameLayout
-            android:id="@+id/some"
             android:layout_width="match_parent"
             android:layout_height="90dp"
             android:layout_weight=".5"

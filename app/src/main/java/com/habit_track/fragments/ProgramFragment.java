@@ -3,6 +3,7 @@ package com.habit_track.fragments;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,14 +14,10 @@ import com.google.firebase.database.DataSnapshot;
 import com.habit_track.R;
 import com.habit_track.models.Program;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class ProgramFragment extends Fragment {
 
-    public static Map<Integer, Program> programHashMap = new HashMap<>();
-    public FloatingActionButton mFab;
-    public DataSnapshot snapshot;
+    private static SparseArray<Program> programHashMap = new SparseArray<>();
+    DataSnapshot snapshot;
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
@@ -28,20 +25,18 @@ public class ProgramFragment extends Fragment {
         // Inflate the layout for this fragment
         final View result = inflater.inflate(R.layout.fragment_program, container, false);
 
-        mFab = (FloatingActionButton) result.findViewById(R.id.fab);
+        FloatingActionButton fab = (FloatingActionButton) result.findViewById(R.id.fab);
 
-        final TextView title = (TextView) result.findViewById(R.id.title);
         final TextView description = (TextView) result.findViewById(R.id.description);
 
-        title.setText(snapshot.child("name").getValue(String.class));
         description.setText(snapshot.child("habit").child("description").getValue(String.class));
 
-        if (mFab != null) {
-            mFab.setOnClickListener(v -> {
+        if (fab != null) {
+            fab.setOnClickListener(view -> {
                 int id = Integer.valueOf(snapshot.getKey());
 
-                if (!programHashMap.containsKey(id)) {
-                    final Program program = ProgramsFragment.onProgramApply(snapshot);
+                if (programHashMap.get(id) == null) {
+                    final Program program = ProgramsFragment.onProgramApply(snapshot, getActivity());
                     programHashMap.put(id, program);
                     Toast.makeText(getActivity(), "New program added", Toast.LENGTH_SHORT).show();
                 } else {
@@ -53,6 +48,5 @@ public class ProgramFragment extends Fragment {
 
         return result;
     }
-
 
 }

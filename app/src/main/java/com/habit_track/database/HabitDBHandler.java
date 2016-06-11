@@ -16,6 +16,7 @@ import java.util.List;
 public class HabitDBHandler extends SQLiteOpenHelper {
 
     private static final String TAG = HabitDBHandler.class.getSimpleName();
+    public static HabitDBHandler dbHandler = null;
 
     // All Static variables
     // Database Version
@@ -43,6 +44,13 @@ public class HabitDBHandler extends SQLiteOpenHelper {
 
     public HabitDBHandler(final Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    }
+
+    public static HabitDBHandler getInstance(final Context context) {
+        if (dbHandler == null) {
+            dbHandler = new HabitDBHandler(context);
+        }
+        return dbHandler;
     }
 
     // Creating Tables

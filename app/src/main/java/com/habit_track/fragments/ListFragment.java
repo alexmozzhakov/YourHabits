@@ -23,16 +23,16 @@ import com.habit_track.models.Habit;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.habit_track.helper.AppManager.mHabitsDatabase;
-
 public class ListFragment extends Fragment implements SearchView.OnQueryTextListener {
     static List<Habit> mHabitsList;
+
     private static HabitRecycleAdapter mRecycleAdapter;
 
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              final Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View result = inflater.inflate(R.layout.fragment_list, container, false);
+        HabitDBHandler mHabitsDatabase = HabitDBHandler.getInstance(getActivity().getApplicationContext());
 
         if (mHabitsDatabase == null) {
             mHabitsDatabase = new HabitDBHandler(this.getActivity());
@@ -48,7 +48,7 @@ public class ListFragment extends Fragment implements SearchView.OnQueryTextList
         final LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(llm);
 
-        mRecycleAdapter = new HabitRecycleAdapter(mHabitsList);
+        mRecycleAdapter = new HabitRecycleAdapter(mHabitsList, getActivity());
         mRecyclerView.setAdapter(mRecycleAdapter);
 
         final ItemTouchHelper.Callback callback =
