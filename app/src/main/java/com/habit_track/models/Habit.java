@@ -14,10 +14,10 @@ public class Habit {
     public int markerUpdatedDay;
     public int markerUpdatedMonth;
     public int markerUpdatedYear;
-    public int time;
-    private int daysFollowing;
-    private int cost;
-    private int frequency;
+    private final int time;
+    private final int daysFollowing;
+    private final int cost;
+    private final int frequency;
 
     public Habit(int id, String title, String description, boolean doneMarker, int markerUpdatedDay,
                  int markerUpdatedMonth, int markerUpdatedYear, int time,

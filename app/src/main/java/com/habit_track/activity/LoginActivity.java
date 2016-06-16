@@ -75,28 +75,34 @@ public class LoginActivity extends AppCompatActivity {
         };
 
         // Login button Click Event
-        btnLogin.setOnClickListener(view -> {
-            final String email = inputEmail.getText().toString().trim();
-            final String password = inputPassword.getText().toString().trim();
+        if (btnLogin != null) {
+            btnLogin.setOnClickListener(view -> {
+                final String email = inputEmail != null ? inputEmail.getText().toString().trim() : null;
+                final String password = inputPassword != null ? inputPassword.getText().toString().trim() : null;
 
-            // Check for empty data in the form
-            checkInput(email, password);
-        });
+                // Check for empty data in the form
+                checkInput(email, password);
+            });
+        }
 
         // Link to Register Screen
-        btnLinkToRegister.setOnClickListener(view -> {
-            final Intent intent = new Intent(getApplicationContext(),
-                    RegisterActivity.class);
-            startActivity(intent);
-            finish();
-        });
+        if (btnLinkToRegister != null) {
+            btnLinkToRegister.setOnClickListener(view -> {
+                final Intent intent = new Intent(getApplicationContext(),
+                        RegisterActivity.class);
+                startActivity(intent);
+                finish();
+            });
+        }
 
-        btnRecovery.setOnClickListener(view -> {
-            final Intent intent = new Intent(getApplicationContext(),
-                    PasswordRecoveryActivity.class);
-            startActivity(intent);
-            finish();
-        });
+        if (btnRecovery != null) {
+            btnRecovery.setOnClickListener(view -> {
+                final Intent intent = new Intent(getApplicationContext(),
+                        PasswordRecoveryActivity.class);
+                startActivity(intent);
+                finish();
+            });
+        }
 
     }
 

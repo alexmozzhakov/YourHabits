@@ -31,8 +31,8 @@ public class ProfileFragment extends Fragment {
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
         if (user != null) {
-            email.setText(user.getEmail());
             name.setText(user.getDisplayName());
+            email.setText(user.getEmail());
         }
 
         final SharedPreferences sharedPreferences = getActivity().getSharedPreferences("pref",
