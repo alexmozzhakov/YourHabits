@@ -55,7 +55,6 @@
         android:layout_gravity="bottom"
         android:layout_marginTop="20dp"
         android:background="@color/colorAccent"
-        android:onClick="onCreate"
         android:text="Create"
         android:textColor="@color/white"/>
 

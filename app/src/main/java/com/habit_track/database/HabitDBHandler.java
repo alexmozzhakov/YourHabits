@@ -16,7 +16,8 @@ import java.util.List;
 public class HabitDBHandler extends SQLiteOpenHelper {
 
     private static final String TAG = HabitDBHandler.class.getSimpleName();
-    public static HabitDBHandler dbHandler = null;
+
+    private static HabitDBHandler dbHandler = null;
 
     // All Static variables
     // Database Version

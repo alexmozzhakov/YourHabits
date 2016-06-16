@@ -41,6 +41,7 @@ public class HomeFragment extends Fragment {
         final TextView weatherBot = (TextView) view.findViewById(R.id.weatherBot);
         final TabLayout tabLayout = (TabLayout) view.findViewById(R.id.sliding_tabs);
 
+        // TODO: 16/06/2016 add mon/tue/wed fragments
         if (tabLayout != null) {
             final String[] daysOfWeek = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
 
@@ -138,4 +139,5 @@ public class HomeFragment extends Fragment {
         return view;
 
     }
-}
+
+ }

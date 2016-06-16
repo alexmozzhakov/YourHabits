@@ -128,12 +128,12 @@ public class TimeLineView extends View {
         initDrawable();
     }
 
-    public void setStartLine(final Drawable startLine) {
+    private void setStartLine(final Drawable startLine) {
         mStartLine = startLine;
         initDrawable();
     }
 
-    public void setEndLine(final Drawable endLine) {
+    private void setEndLine(final Drawable endLine) {
         mEndLine = endLine;
         initDrawable();
     }

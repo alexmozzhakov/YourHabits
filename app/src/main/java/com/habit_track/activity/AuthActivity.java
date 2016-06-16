@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.habit_track.R;
 
 public class AuthActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
@@ -21,7 +20,6 @@ public class AuthActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_decide);
 
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = firebaseAuth -> {

@@ -57,41 +57,45 @@ public class RegisterActivity extends AppCompatActivity {
         };
 
         // Register Button Click event
-        btnRegister.setOnClickListener(view -> {
-            final String name = inputFullName.getText().toString().trim();
-            final String email = inputEmail.getText().toString().trim();
-            final String password = inputPassword.getText().toString().trim();
+        if (btnRegister != null) {
+            btnRegister.setOnClickListener(view -> {
+                final String name = inputFullName.getText().toString().trim();
+                final String email = inputEmail.getText().toString().trim();
+                final String password = inputPassword.getText().toString().trim();
 
-            if (!email.isEmpty() && !password.isEmpty() && !name.isEmpty()) {
-                if (isValidPattern(name, NAME_PATTERN)) {
-                    if (isValidPattern(email, EMAIL_PATTERN)) {
-                        mAuth.createUserWithEmailAndPassword(email, password)
-                                .addOnCompleteListener(this, task -> {
-                                    if (!task.isSuccessful()) {
-                                        // Sign in failed.
-                                        Toast.makeText(RegisterActivity.this, "Authentication failed.",
-                                                Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        setUserName(name);
-                                        toLoginActivity();
-                                    }
-                                });
+                if (!email.isEmpty() && !password.isEmpty() && !name.isEmpty()) {
+                    if (isValidPattern(name, NAME_PATTERN)) {
+                        if (isValidPattern(email, EMAIL_PATTERN)) {
+                            mAuth.createUserWithEmailAndPassword(email, password)
+                                    .addOnCompleteListener(this, task -> {
+                                        if (!task.isSuccessful()) {
+                                            // Sign in failed.
+                                            Toast.makeText(RegisterActivity.this, "Authentication failed.",
+                                                    Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            setUserName(name);
+                                            toLoginActivity();
+                                        }
+                                    });
+                        } else {
+                            Toast.makeText(RegisterActivity.this, "Invalid Email Address", Toast.LENGTH_SHORT).show();
+                        }
                     } else {
-                        Toast.makeText(RegisterActivity.this, "Invalid Email Address", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RegisterActivity.this, "Invalid Name", Toast.LENGTH_SHORT).show();
                     }
-                } else {
-                    Toast.makeText(RegisterActivity.this, "Invalid Name", Toast.LENGTH_SHORT).show();
-                }
 
-            } else {
-                Toast.makeText(getApplicationContext(),
-                        "Please enter your details!", Toast.LENGTH_LONG)
-                        .show();
-            }
-        });
+                } else {
+                    Toast.makeText(getApplicationContext(),
+                            "Please enter your details!", Toast.LENGTH_LONG)
+                            .show();
+                }
+            });
+        }
 
         // Link to Login Screen
-        btnLinkToLogin.setOnClickListener(view -> toLoginActivity());
+        if (btnLinkToLogin != null) {
+            btnLinkToLogin.setOnClickListener(view -> toLoginActivity());
+        }
     }
 
     private void toLoginActivity() {

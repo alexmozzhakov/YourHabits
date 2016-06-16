@@ -10,7 +10,7 @@ public class ImmManager {
     private boolean immOpened;
 
     public static ImmManager getInstance() {
-        if(ourInstance == null) {
+        if (ourInstance == null) {
             ourInstance = new ImmManager();
         }
         return ourInstance;
@@ -23,14 +23,15 @@ public class ImmManager {
         return immOpened;
     }
 
-    public void closeImm(Activity activity){
+    public void closeImm(Activity activity) {
         final InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-        if(activity.getCurrentFocus() != null){
+        if (activity.getCurrentFocus() != null) {
             imm.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
         }
         setImmClosed();
         Log.i("IMM", "Closed imm");
     }
+
     public void setImmOpened() {
         this.immOpened = true;
     }
