@@ -1,13 +1,10 @@
 package com.habit_track.fragments;
 
-import android.app.Fragment;
-import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import com.habit_track.R;
@@ -72,21 +69,7 @@ public class CreateFragment extends Fragment {
 
     @Override
     public void onPause() {
-        final View view = getActivity().getWindow().getDecorView();
-
-        if (view != null && ImmManager.getInstance().isImmOpened()) {
-            final InputMethodManager imm = (InputMethodManager)
-                    getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-            Log.i("IMM", "Closed imm");
-        } else {
-            try {
-                throw new Exception("Error getting imm and setting it closed");
-            } catch (Exception e) {
-                Log.e("IMM", e.getMessage());
-            }
-        }
+        ImmManager.getInstance().closeImm(getActivity());
         super.onPause();
     }
 }

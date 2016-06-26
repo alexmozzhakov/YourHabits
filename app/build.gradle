@@ -2,33 +2,29 @@ apply plugin: 'com.android.application'
 apply plugin: 'me.tatarka.retrolambda'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion '23.0.3'
-
+    compileSdkVersion 24
+    buildToolsVersion '24.0.0'
     defaultConfig {
         applicationId "com.habit_track"
         minSdkVersion 16
+        //noinspection OldTargetApi
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
     }
-
     compileOptions {
         targetCompatibility JavaVersion.VERSION_1_8
         sourceCompatibility JavaVersion.VERSION_1_8
     }
-
     dexOptions {
         javaMaxHeapSize "3g"
     }
 }
 dependencies {
-
-    // 3.06 mb
-
-    compile 'com.android.support:design:23.4.0'
-    compile 'com.android.support:recyclerview-v7:23.4.0'
-    compile 'com.android.support:appcompat-v7:23.4.0'
+    compile 'com.android.support:design:24.0.0'
+    compile 'com.android.support:recyclerview-v7:24.0.0'
+    compile 'com.android.support:appcompat-v7:24.0.0'
+    compile 'com.android.support:support-v4:24.0.0'
     compile 'com.google.firebase:firebase-database:9.0.2'
     compile 'com.google.firebase:firebase-auth:9.0.2'
     compile 'com.google.firebase:firebase-crash:9.0.2'
@@ -36,7 +32,6 @@ dependencies {
     compile 'com.ruesga.timeline-chart-view:timeline-chart-view:0.0.8'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha3'
-
     testCompile 'junit:junit:4.12'
 }
 

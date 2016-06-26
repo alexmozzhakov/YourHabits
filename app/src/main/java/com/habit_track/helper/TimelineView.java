@@ -128,13 +128,13 @@ public class TimeLineView extends View {
         initDrawable();
     }
 
-    private void setStartLine(final Drawable startLine) {
-        mStartLine = startLine;
+    private void removeStartLine() {
+        mStartLine = null;
         initDrawable();
     }
 
-    private void setEndLine(final Drawable endLine) {
-        mEndLine = endLine;
+    private void removeEndLine() {
+        mEndLine = null;
         initDrawable();
     }
 
@@ -151,12 +151,12 @@ public class TimeLineView extends View {
     public void initLine(final int viewType) {
 
         if (viewType == LineType.BEGIN) {
-            setStartLine(null);
+            removeStartLine();
         } else if (viewType == LineType.END) {
-            setEndLine(null);
+            removeEndLine();
         } else if (viewType == LineType.ONLY_ONE) {
-            setStartLine(null);
-            setEndLine(null);
+            removeStartLine();
+            removeEndLine();
         }
 
         initDrawable();

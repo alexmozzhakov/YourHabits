@@ -1,9 +1,10 @@
 package com.habit_track.activity;
 
 
-import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -11,12 +12,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.habit_track.R;
-import com.habit_track.database.HabitDBHandler;
 import com.habit_track.fragments.CreateFragment;
 import com.habit_track.fragments.HomeFragment;
 import com.habit_track.fragments.ListFragment;
@@ -26,13 +23,11 @@ import com.habit_track.helper.AccountManager;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    // TODO: 16/06/2016 move logic to another class
+    // TODO: 16/06/2016 move navigation logic to another class
     private int lastFragment = -1;
     private NavigationView mNavigationView;
-    private FragmentTransaction mTransaction;
     private Toolbar mToolbar;
     private DrawerLayout mDrawerLayout;
-    private HabitDBHandler mHabitsDatabase;
 
     @SuppressWarnings("CommitTransaction")
     @Override
@@ -40,7 +35,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mHabitsDatabase = HabitDBHandler.getInstance(getApplicationContext());
         if (getActionBar() != null) {
             getActionBar().setDisplayHomeAsUpEnabled(true);
         }
@@ -67,18 +61,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             mNavigationView.getMenu().getItem(0).setChecked(true);
         }
 
-        mTransaction = getFragmentManager().beginTransaction();
-        mTransaction.replace(R.id.content_frame, new HomeFragment()).commit();
 
-        final TextView navName = (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.name_info);
-        final TextView navEmail = (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.email_info);
-
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-        if (user != null) {
-            navName.setText(user.getDisplayName());
-            navEmail.setText(user.getEmail());
+        Fragment fragment = getSupportFragmentManager().
+                findFragmentById(R.id.content_frame);
+        if (fragment == null) {
+            fragment = new HomeFragment();
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.content_frame, fragment)
+                    .commit();
         }
+
+//        mTransaction = getSupportFragmentManager().beginTransaction();
+//        mTransaction.replace(R.id.content_frame, new HomeFragment()).commit();
+
+//        final TextView navName = (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.name_info);
+//        final TextView navEmail = (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.email_info);
+//
+//        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+//
+//        if (user != null && navName != null && navEmail != null) {
+//            navName.setText(user.getDisplayName());
+//            navEmail.setText(user.getEmail());
+//        }
 
     }
 
@@ -89,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         final int id = item.getItemId();
 
-        mTransaction = getFragmentManager().beginTransaction();
+        FragmentTransaction mTransaction = getSupportFragmentManager().beginTransaction();
         if (id == R.id.nav_home) {
             mTransaction.replace(R.id.content_frame, new HomeFragment());
             mToolbar.setTitle("Home");
@@ -138,10 +143,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void toCreateFragment(final View view) {
         mNavigationView.getMenu().getItem(0).setChecked(false);
-        getFragmentManager().beginTransaction().replace(R.id.content_frame, new CreateFragment()).commit();
+
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.content_frame, new CreateFragment())
+                .commit();
+
     }
 
-    public void toProfile(View view) {
+    public void toProfile(final View view) {
         mDrawerLayout.closeDrawers();
         mToolbar.setTitle("Profile");
 
@@ -149,7 +159,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             mNavigationView.getMenu().getItem(lastFragment).setChecked(false);
         }
 
-        getFragmentManager().beginTransaction().replace(R.id.content_frame, new ProfileFragment()).commit();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.content_frame, new ProfileFragment())
+                .commit();
     }
 
 }

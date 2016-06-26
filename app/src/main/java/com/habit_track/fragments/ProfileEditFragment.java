@@ -1,9 +1,9 @@
 package com.habit_track.fragments;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,7 +59,7 @@ public class ProfileEditFragment extends Fragment {
 
 
                                     // TODO: 16/06/2016 change name and email in menu
-                                    ((TextView) navigationView.getHeaderView(0)
+                                    ((TextView) result.getRootView().findViewById(R.id.navigationView)
                                             .findViewById(R.id.name_info))
                                             .setText(user.getDisplayName());
 
@@ -93,7 +93,7 @@ public class ProfileEditFragment extends Fragment {
                     Log.i(TAG, "Email is same or empty");
                 }
 
-                getFragmentManager().beginTransaction().remove(this).commit();
+                getChildFragmentManager().beginTransaction().remove(this).commit();
 
             } else {
                 Log.e(TAG, "User is null");

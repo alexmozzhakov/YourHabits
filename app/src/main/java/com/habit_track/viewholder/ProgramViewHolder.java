@@ -7,8 +7,8 @@ import android.widget.TextView;
 import com.habit_track.R;
 
 public class ProgramViewHolder extends RecyclerView.ViewHolder {
-    public TextView txtTitle;
-    public TextView txtPercent;
+    public final TextView txtTitle;
+    public final TextView txtPercent;
 
     public ProgramViewHolder(View itemView) {
         super(itemView);
