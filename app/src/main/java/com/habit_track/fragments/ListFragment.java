@@ -1,7 +1,7 @@
 package com.habit_track.fragments;
 
-import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -11,25 +11,15 @@ import android.view.ViewGroup;
 
 import com.habit_track.R;
 import com.habit_track.adapter.HabitRecycleAdapter;
-import com.habit_track.database.HabitDBHandler;
+import com.habit_track.helper.HabitListManager;
 import com.habit_track.helper.SimpleItemTouchHelperCallback;
-import com.habit_track.models.Habit;
-
-import java.util.List;
 
 public class ListFragment extends Fragment {
-    static List<Habit> mHabitsList = null;
 
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              final Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View result = inflater.inflate(R.layout.fragment_list, container, false);
-        HabitDBHandler mHabitsDatabase = HabitDBHandler
-                .getInstance(getActivity().getApplicationContext());
-
-        if (mHabitsDatabase.notSame() || mHabitsList == null) {
-            mHabitsList = mHabitsDatabase.getHabitDetailsAsArrayList();
-        }
 
         final RecyclerView mRecyclerView = (RecyclerView) result.findViewById(R.id.rv);
         mRecyclerView.setHasFixedSize(true);
@@ -38,7 +28,8 @@ public class ListFragment extends Fragment {
         mRecyclerView.setLayoutManager(llm);
 
         final HabitRecycleAdapter mRecycleAdapter =
-                new HabitRecycleAdapter(mHabitsList, getActivity());
+                new HabitRecycleAdapter(HabitListManager.getInstance(getContext()).getHabitsList(),
+                        getActivity());
         mRecyclerView.setAdapter(mRecycleAdapter);
 
         final ItemTouchHelper.Callback callback =

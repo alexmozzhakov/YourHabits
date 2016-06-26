@@ -13,11 +13,20 @@ import java.util.List;
 
 public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
 
-    private final List<Habit> mFeedList;
+    private List<Habit> mFeedList;
 
     public TimeLineAdapter(final List<Habit> feedList) {
         super();
         mFeedList = feedList;
+    }
+
+    public void silentUpdateList(List<Habit> data) {
+        mFeedList = data;
+    }
+
+    public void updateList(List<Habit> data) {
+        mFeedList = data;
+        notifyDataSetChanged();
     }
 
     @Override

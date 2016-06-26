@@ -18,7 +18,7 @@
             android:id="@+id/edit_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:lines="1"
+            android:inputType="textCapWords"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textColor="#212121"/>
     </android.support.design.widget.TextInputLayout>
@@ -38,7 +38,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
-            android:lines="1"
+            android:inputType="textEmailAddress"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textColor="#212121"/>
     </android.support.design.widget.TextInputLayout>

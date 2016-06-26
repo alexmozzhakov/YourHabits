@@ -14,7 +14,6 @@
         android:screenOrientation="landscape"
         android:supportsRtl="true"
         tools:ignore="GoogleAppIndexingWarning">
-
         <activity
             android:name=".activity.AuthActivity"
             android:theme="@style/AppTheme.NoActionBar">
@@ -24,30 +23,30 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-
         <activity
             android:name=".activity.LoginActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/AppTheme.Auth"
             android:windowSoftInputMode="adjustPan">
         </activity>
-
         <activity
             android:name=".activity.RegisterActivity"
             android:theme="@style/AppTheme.Auth"
             android:windowSoftInputMode="adjustPan"/>
-
         <activity
             android:name=".activity.MainActivity"
+            android:launchMode="standard"
             android:theme="@style/AppTheme.NoActionBar"/>
-
         <activity
             android:name=".activity.PasswordRecoveryActivity"
             android:theme="@style/AppTheme.Auth"/>
+        <activity
+            android:name=".activity.BlankActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <meta-data
             android:name="android.support.PARENT_ACTIVITY"
             android:value=".activity.MainActivity"/>
-    </application>
 
+    </application>
 </manifest>

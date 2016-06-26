@@ -1,10 +1,10 @@
 package com.habit_track.fragments;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +26,11 @@ public class ProfileFragment extends Fragment {
         final TextView name = (TextView) result.findViewById(R.id.name);
         final TextView email = (TextView) result.findViewById(R.id.email);
         FloatingActionButton fab = (FloatingActionButton) result.findViewById(R.id.fab);
-        fab.setOnClickListener(view -> editProfile());
+        fab.setOnClickListener(view ->
+                getChildFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.userInfo, new ProfileEditFragment())
+                        .commit());
 
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -35,7 +39,7 @@ public class ProfileFragment extends Fragment {
             email.setText(user.getEmail());
         }
 
-        final SharedPreferences sharedPreferences = getActivity().getSharedPreferences("pref",
+        final SharedPreferences sharedPreferences = getContext().getSharedPreferences("pref",
                 Context.MODE_PRIVATE);
 
         if (sharedPreferences.getString("celsius", null) != null) {
@@ -43,12 +47,5 @@ public class ProfileFragment extends Fragment {
             address.setText(sharedPreferences.getString("location", "Error"));
         }
         return result;
-    }
-
-    private void editProfile() {
-        getActivity()
-                .getFragmentManager().beginTransaction()
-                .add(R.id.userInfo, new ProfileEditFragment())
-                .commit();
     }
 }

@@ -1,10 +1,10 @@
 package com.habit_track.fragments;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -19,8 +19,8 @@ import com.android.volley.toolbox.Volley;
 import com.google.firebase.crash.FirebaseCrash;
 import com.habit_track.R;
 import com.habit_track.adapter.TimeLineAdapter;
-import com.habit_track.database.HabitDBHandler;
-import com.habit_track.models.Habit;
+import com.habit_track.helper.HabitListManager;
+import com.habit_track.helper.HomeDayManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,29 +34,11 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              final Bundle savedInstanceState) {
-        HabitDBHandler mHabitsDatabase = HabitDBHandler.getInstance(getActivity().getApplicationContext());
         final View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         final TextView weather = (TextView) view.findViewById(R.id.weather);
         final TextView weatherBot = (TextView) view.findViewById(R.id.weatherBot);
         final TabLayout tabLayout = (TabLayout) view.findViewById(R.id.sliding_tabs);
-
-        // TODO: 16/06/2016 add mon/tue/wed fragments
-        if (tabLayout != null) {
-            final String[] daysOfWeek = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
-
-            final int dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1;
-            for (int i = 0; i < 7; i++) {
-                tabLayout.addTab(tabLayout.newTab().setText(daysOfWeek[(dayOfWeek + i) % 7]));
-            }
-
-            tabLayout.setSmoothScrollingEnabled(true);
-            tabLayout.setScrollPosition(0, 0f, true);
-            TabLayout.Tab tab = tabLayout.getTabAt(0);
-            if (tab != null) {
-                tab.select();
-            }
-        }
 
         final SharedPreferences sharedPreferences = this.getActivity()
                 .getSharedPreferences("pref", Context.MODE_PRIVATE);
@@ -79,7 +61,7 @@ public class HomeFragment extends Fragment {
                                     sharedPreferences.edit().putString("location",
                                             o.getString("location")).apply();
 
-                                    weather.setText(o.getString("celsius") + "˚C");
+                                    weather.setText(o.getString("celsius").concat("˚C"));
                                     weatherBot.setText(o.getString("location"));
                                 } else {
                                     Log.e("JSONException", "Response got: " + o.getString("error"));
@@ -99,45 +81,90 @@ public class HomeFragment extends Fragment {
         );
 
 
-        if (mHabitsDatabase == null) {
-            mHabitsDatabase = new HabitDBHandler(this.getActivity());
-        }
-
-        Log.i("some", "onCreateView");
-        if (mHabitsDatabase.notSame() || ListFragment.mHabitsList == null) {
-            ListFragment.mHabitsList = mHabitsDatabase.getHabitDetailsAsArrayList();
-
-        }
-
-        final Calendar calendar = Calendar.getInstance();
-        final int date = calendar.get(Calendar.DATE);
-        final int month = calendar.get(Calendar.MONTH);
-        final int year = calendar.get(Calendar.YEAR);
-
-        int counter = 0;
-        for (final Habit habit : ListFragment.mHabitsList) {
-            if (!habit.isDone(date, month, year)) {
-                counter++;
-            }
-        }
-
         final TextView tasksDue = (TextView) view.findViewById(R.id.tasks_due);
-        tasksDue.setText(String.valueOf(counter));
-//        if (weather.getText().equals("")) {
-//           weather.setText(ListFragment.mHabitsList.size());
-//           weatherBot.setText("Tasks total");
-//        }
+        tasksDue.setText(String.valueOf(HabitListManager.getInstance(getContext()).getDueCount()));
 
         // Inflate the layout for this fragment
         final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this.getActivity());
+        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        final TimeLineAdapter timeLineAdapter = new TimeLineAdapter(ListFragment.mHabitsList);
+        final TimeLineAdapter timeLineAdapter =
+                new TimeLineAdapter(HabitListManager.getInstance(getContext()).getHabitsList());
         timeLineAdapter.setHasStableIds(true);
         recyclerView.setAdapter(timeLineAdapter);
+        initDaysTabs(tabLayout, timeLineAdapter);
         return view;
 
     }
 
- }
+    private void initDaysTabs(final TabLayout tabLayout, final TimeLineAdapter timeLineAdapter) {
+        if (tabLayout != null) {
+            final String[] daysOfWeek =
+                    {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
+
+            final int dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1;
+            Log.i("HomeFragment", "dayOfWeek = " + daysOfWeek[dayOfWeek]);
+            for (int i = 0; i < 7; i++) {
+                tabLayout.addTab(tabLayout.newTab().setText(daysOfWeek[(dayOfWeek + i) % 7]));
+            }
+
+            tabLayout.setSmoothScrollingEnabled(true);
+            tabLayout.setScrollPosition(0, 0f, true);
+            final TabLayout.Tab tab = tabLayout.getTabAt(0);
+
+            if (tab != null) {
+                tab.select();
+            }
+
+            final HomeDayManager homeDayManager =
+                    new HomeDayManager(HabitListManager.getInstance(getContext()).getHabitsList());
+
+            tabLayout.addOnTabSelectedListener(
+                    new TabLayout.OnTabSelectedListener() {
+                        @Override
+                        public void onTabSelected(TabLayout.Tab tab) {
+                            if (tab.getPosition() != 0) {
+                                int day = (dayOfWeek + tab.getPosition()) % 7;
+                                Log.i("HomeFragment", "Day = " + day);
+                                switch (day) {
+                                    case 0:
+                                        timeLineAdapter.updateList(homeDayManager.sun());
+                                        break;
+                                    case 1:
+                                        timeLineAdapter.updateList(homeDayManager.mon());
+                                        break;
+                                    case 2:
+                                        timeLineAdapter.updateList(homeDayManager.tue());
+                                        break;
+                                    case 3:
+                                        timeLineAdapter.updateList(homeDayManager.wed());
+                                        break;
+                                    case 4:
+                                        timeLineAdapter.updateList(homeDayManager.thu());
+                                        break;
+                                    case 5:
+                                        timeLineAdapter.updateList(homeDayManager.fri());
+                                        break;
+                                    case 6:
+                                        homeDayManager.updateListForSat(timeLineAdapter);
+                                        break;
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onTabUnselected(TabLayout.Tab tab) {
+
+                        }
+
+                        @Override
+                        public void onTabReselected(TabLayout.Tab tab) {
+
+                        }
+                    }
+
+            );
+        }
+    }
+}

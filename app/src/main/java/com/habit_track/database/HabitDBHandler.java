@@ -44,12 +44,12 @@ public class HabitDBHandler extends SQLiteOpenHelper {
     public static boolean isChecked = false;
 
     public HabitDBHandler(final Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        super(context.getApplicationContext(), DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     public static HabitDBHandler getInstance(final Context context) {
         if (dbHandler == null) {
-            dbHandler = new HabitDBHandler(context);
+            dbHandler = new HabitDBHandler(context.getApplicationContext());
         }
         return dbHandler;
     }

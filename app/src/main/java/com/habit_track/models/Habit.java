@@ -36,6 +36,10 @@ public class Habit {
         this.frequency = frequency;
     }
 
+    public int getFrequency() {
+        return frequency;
+    }
+
     public void setDoneMarker(final boolean doneMarker) {
         this.doneMarker = doneMarker;
         if (doneMarker) {

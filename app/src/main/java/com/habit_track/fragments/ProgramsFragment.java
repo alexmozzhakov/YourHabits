@@ -1,11 +1,12 @@
 package com.habit_track.fragments;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -93,8 +94,8 @@ public class ProgramsFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        mFace = Typeface.createFromAsset(context.getAssets(), "fonts/Montserrat-Regular.ttf");
         mFaceLight = Typeface.createFromAsset(context.getAssets(), "fonts/Montserrat-Light.otf");
+        mFace = Typeface.createFromAsset(context.getAssets(), "fonts/Montserrat-Regular.ttf");
     }
 
     @Override
@@ -215,9 +216,9 @@ public class ProgramsFragment extends Fragment {
         if (!isShowing) {
             createProgramApplyFragment(snapshot);
         } else {
-            getActivity().getFragmentManager()
-                    .beginTransaction()
-                    .remove(getFragmentManager().findFragmentById(R.id.recyclerLayout))
+            final FragmentManager fm = getChildFragmentManager();
+            fm.beginTransaction()
+                    .remove(fm.findFragmentById(R.id.recyclerLayout))
                     .commit();
             isShowing = false;
         }
@@ -226,17 +227,17 @@ public class ProgramsFragment extends Fragment {
     private void createProgramApplyFragment(DataSnapshot snapshot) {
 
         // delete previous fragment if showing
+        final FragmentManager fm = getChildFragmentManager();
         if (isShowing) {
-            getActivity().getFragmentManager()
-                    .beginTransaction()
-                    .remove(getFragmentManager().findFragmentById(R.id.recyclerLayout))
+            fm.beginTransaction()
+                    .remove(fm.findFragmentById(R.id.recyclerLayout))
                     .commit();
         }
+
         final ProgramFragment programFragment = new ProgramFragment();
         programFragment.snapshot = snapshot;
 
-        getActivity().getFragmentManager()
-                .beginTransaction()
+        fm.beginTransaction()
                 .replace(R.id.recyclerLayout, programFragment)
                 .commit();
 

@@ -91,13 +91,9 @@
         </FrameLayout>
     </LinearLayout>
 
-    <android.support.v7.widget.RecyclerView
+    <include
         android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="143dp"
-        android:background="@null"
-        android:scrollbars="vertical"/>
+        layout="@layout/timeline"/>
 
     <android.support.design.widget.FloatingActionButton
         android:layout_width="wrap_content"
@@ -110,8 +106,9 @@
         android:src="@drawable/ic_plus"/>
 
     <android.support.v4.view.ViewPager
+        android:id="@+id/pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true"/>
+        android:layout_height="fill_parent"
+        android:layout_marginTop="48dp"/>
 
 </FrameLayout>
