@@ -2,7 +2,6 @@ package com.habit_track.fragments;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -46,6 +45,11 @@ public class ProfileEditFragment extends Fragment {
                 final String name =
                         String.valueOf(((EditText) result.findViewById(R.id.edit_name)).getText());
 
+                final TextView nameView =
+                        (TextView) getActivity().findViewById(R.id.name);
+                final TextView emailView =
+                        (TextView) getActivity().findViewById(R.id.email);
+
                 UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                         .setDisplayName(name)
                         .build();
@@ -54,23 +58,19 @@ public class ProfileEditFragment extends Fragment {
                     user.updateProfile(profileUpdates)
                             .addOnCompleteListener(task -> {
                                 if (task.isSuccessful()) {
-                                    NavigationView navigationView =
-                                            (NavigationView) result.findViewById(R.id.navigationView);
+//                                    NavigationView navigationView =
+//                                            (NavigationView) result.findViewById(R.id.navigationView);
 
 
-                                    // TODO: 16/06/2016 change name and email in menu
-                                    ((TextView) result.getRootView().findViewById(R.id.navigationView)
-                                            .findViewById(R.id.name_info))
-                                            .setText(user.getDisplayName());
+//                                    // TODO: 16/06/2016 change name and email in menu
+//                                    ((TextView) result.getRootView().findViewById(R.id.navigationView)
+//                                            .findViewById(R.id.name_info))
+//                                            .setText(user.getDisplayName());
+//
+//                                    ((TextView) navigationView
+//                                            .getHeaderView(0).findViewById(R.id.email_info))
+//                                            .setText(user.getEmail());
 
-                                    ((TextView) navigationView
-                                            .getHeaderView(0).findViewById(R.id.email_info))
-                                            .setText(user.getEmail());
-
-                                    final TextView nameView =
-                                            (TextView) result.findViewById(R.id.name);
-                                    final TextView emailView =
-                                            (TextView) result.findViewById(R.id.email);
 
                                     nameView.setText(user.getDisplayName());
                                     emailView.setText(user.getEmail());
@@ -93,7 +93,8 @@ public class ProfileEditFragment extends Fragment {
                     Log.i(TAG, "Email is same or empty");
                 }
 
-                getChildFragmentManager().beginTransaction().remove(this).commit();
+                ProfileFragment.editorOpened[0] = false;
+                getFragmentManager().beginTransaction().remove(this).commit();
 
             } else {
                 Log.e(TAG, "User is null");

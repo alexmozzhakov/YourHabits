@@ -118,7 +118,7 @@ public class HomeFragment extends Fragment {
             }
 
             final HomeDayManager homeDayManager =
-                    new HomeDayManager(HabitListManager.getInstance(getContext()).getHabitsList());
+                    new HomeDayManager(timeLineAdapter);
 
             tabLayout.addOnTabSelectedListener(
                     new TabLayout.OnTabSelectedListener() {
@@ -126,28 +126,42 @@ public class HomeFragment extends Fragment {
                         public void onTabSelected(TabLayout.Tab tab) {
                             if (tab.getPosition() != 0) {
                                 int day = (dayOfWeek + tab.getPosition()) % 7;
-                                Log.i("HomeFragment", "Day = " + day);
+                                Log.i("HomeFragment", "Day = " + daysOfWeek[day]);
                                 switch (day) {
                                     case 0:
-                                        timeLineAdapter.updateList(homeDayManager.sun());
+                                        homeDayManager.updateListForSat(
+                                                HabitListManager.getInstance(getContext())
+                                                        .getHabitsList());
                                         break;
                                     case 1:
-                                        timeLineAdapter.updateList(homeDayManager.mon());
+                                        homeDayManager.updateListForSat(
+                                                HabitListManager.getInstance(getContext())
+                                                        .getHabitsList());
                                         break;
                                     case 2:
-                                        timeLineAdapter.updateList(homeDayManager.tue());
+                                        homeDayManager.updateListForSat(
+                                                HabitListManager.getInstance(getContext())
+                                                        .getHabitsList());
                                         break;
                                     case 3:
-                                        timeLineAdapter.updateList(homeDayManager.wed());
+                                        homeDayManager.updateListForSat(
+                                                HabitListManager.getInstance(getContext())
+                                                        .getHabitsList());
                                         break;
                                     case 4:
-                                        timeLineAdapter.updateList(homeDayManager.thu());
+                                        homeDayManager.updateListForSat(
+                                                HabitListManager.getInstance(getContext())
+                                                        .getHabitsList());
                                         break;
                                     case 5:
-                                        timeLineAdapter.updateList(homeDayManager.fri());
+                                        homeDayManager.updateListForSat(
+                                                HabitListManager.getInstance(getContext())
+                                                        .getHabitsList());
                                         break;
                                     case 6:
-                                        homeDayManager.updateListForSat(timeLineAdapter);
+                                        homeDayManager.updateListForSat(
+                                                HabitListManager.getInstance(getContext())
+                                                        .getHabitsList());
                                         break;
                                 }
                             }

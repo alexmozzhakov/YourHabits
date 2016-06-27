@@ -15,5 +15,6 @@
     <string name="loading">Loading…</string>
     <string name="tasks_due">Tasks due</string>
     <string name="recover_password">Recover password</string>
+    <string name="log_in_anonymously">Log in anonymously</string>
 
 </resources>

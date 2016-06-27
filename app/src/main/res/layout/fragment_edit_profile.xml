@@ -7,8 +7,8 @@
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="42dp"
-        android:layout_marginStart="42dp"
+        android:layout_marginLeft="36dp"
+        android:layout_marginStart="36dp"
         android:background="@color/white"
         android:hint="@string/hint_name"
         android:textColorHint="@color/input_login_hint"

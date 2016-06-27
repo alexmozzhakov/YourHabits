@@ -15,22 +15,26 @@ import com.google.firebase.auth.FirebaseUser;
 import com.habit_track.R;
 
 public class ProfileFragment extends Fragment {
-
+    static boolean[] editorOpened;
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              final Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View result = inflater.inflate(R.layout.fragment_profile, container, false);
-
+        editorOpened = new boolean[]{false};
         final TextView name = (TextView) result.findViewById(R.id.name);
         final TextView email = (TextView) result.findViewById(R.id.email);
         FloatingActionButton fab = (FloatingActionButton) result.findViewById(R.id.fab);
-        fab.setOnClickListener(view ->
+        fab.setOnClickListener(view -> {
+            if (!editorOpened[0]) {
                 getChildFragmentManager()
                         .beginTransaction()
                         .replace(R.id.userInfo, new ProfileEditFragment())
-                        .commit());
+                        .commit();
+                editorOpened[0] = true;
+            }
+        });
 
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
