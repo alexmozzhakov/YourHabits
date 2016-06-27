@@ -8,16 +8,16 @@ public class Habit {
     public final int id;
     public final String title;
     private final String description;
+    private final int time;
+    private final int cost;
+    private final int frequency;
 
     // Changeable Habit values
     private boolean doneMarker;
     public int markerUpdatedDay;
     public int markerUpdatedMonth;
     public int markerUpdatedYear;
-    private final int time;
     private final int daysFollowing;
-    private final int cost;
-    private final int frequency;
 
     public Habit(int id, String title, String description, boolean doneMarker, int markerUpdatedDay,
                  int markerUpdatedMonth, int markerUpdatedYear, int time,

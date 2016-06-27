@@ -107,7 +107,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
-     * function to verify login details in mysql db
+     * function to verify login detail and log in
      */
 
     private void checkInput(final String email, final String password) {
@@ -129,5 +129,11 @@ public class LoginActivity extends AppCompatActivity {
             final FirebaseAuth auth = FirebaseAuth.getInstance();
             auth.signInWithEmailAndPassword(email, password);
         }
+    }
+
+    public void anonymousLogin(View view) {
+        final FirebaseAuth auth = FirebaseAuth.getInstance();
+        auth.signInAnonymously();
+
     }
 }

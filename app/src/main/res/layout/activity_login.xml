@@ -120,4 +120,13 @@
             android:textSize="12sp"/>
 
     </LinearLayout>
+
+    <Button
+        android:text="@string/log_in_anonymously"
+        style="?android:buttonBarButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:onClick="anonymousLogin"
+        android:id="@+id/button"/>
 </LinearLayout>

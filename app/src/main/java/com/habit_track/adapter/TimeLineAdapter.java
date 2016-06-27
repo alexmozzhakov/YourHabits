@@ -20,8 +20,8 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
         mFeedList = feedList;
     }
 
-    public void silentUpdateList(List<Habit> data) {
-        mFeedList = data;
+    public List<Habit> getList() {
+        return mFeedList;
     }
 
     public void updateList(List<Habit> data) {
