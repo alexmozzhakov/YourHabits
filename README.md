@@ -1,3 +1,3 @@
-# YourHabits
-Android YourHabits app
-[![Codacy Badge](https://api.codacy.com/project/badge/grade/0876ef76040c4e05a99485ab10e0f534)](https://www.codacy.com/app/alex12-07-2000/YourHabits)
+# doHabit
+Android doHabit app
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/56dc928b8cc346eba668c48c860a0e0c)](https://www.codacy.com/app/alex1207/YourHabits?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=alexmozzhakov/YourHabits&amp;utm_campaign=Badge_Grade)
