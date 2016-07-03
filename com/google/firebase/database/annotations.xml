@@ -1,0 +1,10 @@
+<root>
+  <item
+      name='com.google.firebase.database.DataSnapshot com.google.firebase.database.DataSnapshot child(java.lang.String) 0'>
+    <annotation name='org.jetbrains.annotations.NonNls'/>
+  </item>
+  <item
+      name='com.google.firebase.database.DatabaseReference com.google.firebase.database.DatabaseReference child(java.lang.String) 0'>
+    <annotation name='org.jetbrains.annotations.NonNls'/>
+  </item>
+</root>

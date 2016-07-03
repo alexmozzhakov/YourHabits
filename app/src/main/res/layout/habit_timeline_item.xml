@@ -7,7 +7,7 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal">
 
-    <com.habit_track.helper.TimeLineView
+    <com.dohabit.helper.TimeLineView
         android:id="@+id/time_marker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -5,12 +5,13 @@ android {
     compileSdkVersion 24
     buildToolsVersion '24.0.0'
     defaultConfig {
-        applicationId "com.habit_track"
+        applicationId "com.dohabit"
         minSdkVersion 16
         //noinspection OldTargetApi
         targetSdkVersion 23
         versionCode 1
-        versionName "1.0"
+        versionName "0.4.6"
+        multiDexEnabled true
     }
     compileOptions {
         targetCompatibility JavaVersion.VERSION_1_8
@@ -19,16 +20,28 @@ android {
     dexOptions {
         javaMaxHeapSize "3g"
     }
+    dataBinding {
+        enabled = true
+    }
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'),
+                    'proguard-rules.pro'
+        }
+    }
 }
+
 dependencies {
+
     compile 'com.android.support:design:24.0.0'
     compile 'com.android.support:recyclerview-v7:24.0.0'
     compile 'com.android.support:appcompat-v7:24.0.0'
     compile 'com.android.support:support-v4:24.0.0'
-    compile 'com.google.firebase:firebase-database:9.0.2'
-    compile 'com.google.firebase:firebase-auth:9.0.2'
-    compile 'com.google.firebase:firebase-crash:9.0.2'
-    compile 'com.mcxiaoke.volley:library-aar:1.0.0'
+    compile 'com.google.firebase:firebase-database:9.2.0'
+    compile 'com.google.firebase:firebase-auth:9.2.0'
+    compile 'com.google.firebase:firebase-crash:9.2.0'
+    compile 'com.mcxiaoke.volley:library-aar:1.0.1'
     compile 'com.ruesga.timeline-chart-view:timeline-chart-view:0.0.8'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha3'

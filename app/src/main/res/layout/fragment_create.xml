@@ -14,24 +14,28 @@
         android:textColorHint="@color/input_login_hint">
 
         <android.support.design.widget.TextInputEditText
-            android:id="@+id/editTitle"
+            android:id="@+id/edit_title"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:inputType="textAutoComplete"
+            android:maxLines="1"
+            android:imeOptions="actionNext"/>
 
     </android.support.design.widget.TextInputLayout>
-
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Description"
+        android:hint="Question"
         android:paddingTop="10dp"
         android:textColorHint="@color/input_login_hint">
 
         <android.support.design.widget.TextInputEditText
-            android:id="@+id/editDescription"
+            android:id="@+id/edit_question"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:inputType="textAutoComplete"
+            android:imeOptions="actionNext"/>
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
@@ -42,7 +46,7 @@
         android:textColorHint="@color/input_login_hint">
 
         <android.support.design.widget.TextInputEditText
-            android:id="@+id/editTime"
+            android:id="@+id/edit_time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="number"/>

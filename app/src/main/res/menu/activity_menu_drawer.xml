@@ -10,14 +10,6 @@
             android:id="@+id/nav_home"
             android:icon="@drawable/ic_home"
             android:title="Home"/>
-        <!--<item-->
-        <!--android:id="@+id/nav_calendar"-->
-        <!--android:icon="@drawable/group"-->
-        <!--android:title="Calendar"/>-->
-        <!--<item-->
-        <!--android:id="@+id/nav_stats"-->
-        <!--android:icon="@drawable/overview"-->
-        <!--android:title="Statistics"/>-->
         <item
             android:id="@+id/nav_programs"
             android:icon="@drawable/ic_groups"
