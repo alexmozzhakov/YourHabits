@@ -15,7 +15,7 @@
         android:layout_height="200dp"
         android:adjustViewBounds="true"
         android:scaleType="centerCrop"
-        android:src="@drawable/google_thumb"
+        android:src="@drawable/bg_img"
         app:layout_constraintLeft_toLeftOf="@+id/constraintLayout3"
         app:layout_constraintRight_toRightOf="@+id/constraintLayout3"
         app:layout_constraintTop_toTopOf="@+id/constraintLayout3"
@@ -89,9 +89,9 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="64dp"
             android:background="?attr/selectableItemBackground"
             android:clickable="true"
-            android:layout_marginTop="64dp"
             android:padding="@dimen/activity_horizontal_margin"
             tools:layout_editor_absoluteX="16dp"
             tools:layout_editor_absoluteY="79dp">
@@ -131,9 +131,9 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="128dp"
             android:background="?attr/selectableItemBackground"
             android:clickable="true"
-            android:layout_marginTop="128dp"
             android:padding="@dimen/activity_horizontal_margin"
             tools:layout_editor_absoluteX="16dp"
             tools:layout_editor_absoluteY="142dp">
@@ -162,4 +162,21 @@
                 tools:layout_editor_absoluteY="16dp"/>
         </RelativeLayout>
     </FrameLayout>
+
+    <!-- Delete user Button -->
+    <Button
+        android:id="@+id/btn_delete_user"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/colorRed"
+        android:text="@string/delete_user"
+        android:textColor="@color/white"
+        app:layout_constraintLeft_toLeftOf="@+id/constraintLayout3"
+        app:layout_constraintRight_toRightOf="@+id/constraintLayout3"
+        app:layout_constraintTop_toBottomOf="@+id/userInfo"/>
 </android.support.constraint.ConstraintLayout>

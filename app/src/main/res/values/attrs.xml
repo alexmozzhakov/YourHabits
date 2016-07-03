@@ -9,4 +9,8 @@
         <attr name="marker_size" format="dimension"/>
         <attr name="line_size" format="dimension"/>
     </declare-styleable>
+
+    <attr name="highContrastTextColor" format="reference"/>
+    <attr name="mediumContrastTextColor" format="reference"/>
+    <attr name="lowContrastTextColor" format="reference"/>
 </resources>

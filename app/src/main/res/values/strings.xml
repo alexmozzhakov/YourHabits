@@ -16,5 +16,34 @@
     <string name="tasks_due">Tasks due</string>
     <string name="recover_password">Recover password</string>
     <string name="log_in_anonymously">Log in anonymously</string>
+    <string name="time_needed">Time needed</string>
+    <string name="description">Description</string>
+    <string name="title">Title</string>
+    <string name="no_habits_available">There\'s no habits to show</string>
+    <string name="no_connection_available">This function requires active Internet connection</string>
+    <string name="repeat">Repeat</string>
+    <string name="times_every">times every</string>
+    <string name="days">days</string>
+    <string name="last_entered_email"/>
+    <string name="delete_user">Delete user</string>
 
+    <string-array name="types_array">
+        <item>Every</item>
+        <item>Once</item>
+        <item>For </item>
+        <item>Custom</item>
+    </string-array>
+
+    <string-array name="days_of_week_array">
+        <item>Sunday</item>
+        <item>Monday</item>
+        <item>Tuesday</item>
+        <item>Wednesday</item>
+        <item>Thursday</item>
+        <item>Friday</item>
+        <item>Saturday</item>
+    </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

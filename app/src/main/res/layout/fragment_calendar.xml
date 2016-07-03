@@ -3,7 +3,7 @@
              android:layout_width="match_parent"
              android:layout_height="match_parent"
              android:layout_marginTop="?android:attr/actionBarSize"
-             tools:context="com.habit_track.fragments.CalendarFragment">
+             tools:context="com.dohabit.fragments.CalendarFragment">
 
     <CalendarView
         android:layout_width="match_parent"

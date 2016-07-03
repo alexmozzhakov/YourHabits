@@ -1,0 +1,8 @@
+<root>
+  <item name='org.json.JSONObject boolean has(java.lang.String) 0'>
+    <annotation name='org.jetbrains.annotations.NonNls'/>
+  </item>
+  <item name='org.json.JSONObject java.lang.String getString(java.lang.String) 0'>
+    <annotation name='org.jetbrains.annotations.NonNls'/>
+  </item>
+</root>

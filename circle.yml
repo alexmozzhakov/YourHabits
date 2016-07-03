@@ -14,7 +14,7 @@ dependencies:
     override:
         - echo y | android update sdk --no-ui --all --filter tools,platform-tools,build-tools-23.0.2,android-23,extra-google-m2repository,extra-google-google_play_services,extra-android-support
 
-com.habit_track.test:
+doHabit.test:
     override:
         - (./gradlew assemble):
             timeout: 360

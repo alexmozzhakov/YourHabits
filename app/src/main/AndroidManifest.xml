@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools"
-          package="com.habit_track">
+          package="com.dohabit">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
         android:allowBackup="true"
@@ -15,7 +18,15 @@
         android:supportsRtl="true"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name=".activity.AuthActivity"
+            android:name="com.dohabit.activity.AuthActivity"
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/AppTheme.Auth"
+            android:windowSoftInputMode="stateVisible|adjustResize"
+            />
+        <activity
+            android:name="com.dohabit.activity.MainActivity"
+            android:launchMode="standard"
+            android:windowSoftInputMode="adjustResize"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -24,29 +35,14 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.LoginActivity"
-            android:configChanges="orientation|screenSize"
-            android:theme="@style/AppTheme.Auth"
-            android:windowSoftInputMode="adjustPan">
-        </activity>
-        <activity
-            android:name=".activity.RegisterActivity"
-            android:theme="@style/AppTheme.Auth"
-            android:windowSoftInputMode="adjustPan"/>
-        <activity
-            android:name=".activity.MainActivity"
-            android:launchMode="standard"
-            android:theme="@style/AppTheme.NoActionBar"/>
-        <activity
-            android:name=".activity.PasswordRecoveryActivity"
+            android:name="com.dohabit.activity.PasswordRecoveryActivity"
             android:theme="@style/AppTheme.Auth"/>
         <activity
-            android:name=".activity.BlankActivity"
+            android:name="com.dohabit.activity.BlankActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
 
         <meta-data
             android:name="android.support.PARENT_ACTIVITY"
-            android:value=".activity.MainActivity"/>
-
+            android:value="com.dohabit.activity.MainActivity"/>
     </application>
 </manifest>

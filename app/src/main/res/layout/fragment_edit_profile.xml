@@ -7,12 +7,11 @@
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="36dp"
-        android:layout_marginStart="36dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginStart="40dp"
         android:background="@color/white"
         android:hint="@string/hint_name"
-        android:textColorHint="@color/input_login_hint"
-        android:weightSum="1">
+        android:textColorHint="@color/input_login_hint">
 
         <android.support.design.widget.TextInputEditText
             android:id="@+id/edit_name"
@@ -26,12 +25,11 @@
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="36dp"
-        android:layout_marginStart="36dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginStart="40dp"
         android:background="@color/white"
         android:hint="@string/hint_email"
-        android:textColorHint="@color/input_login_hint"
-        android:weightSum="1">
+        android:textColorHint="@color/input_login_hint">
 
         <android.support.design.widget.TextInputEditText
             android:id="@+id/edit_email"
