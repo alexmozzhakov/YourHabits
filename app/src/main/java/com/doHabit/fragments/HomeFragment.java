@@ -89,15 +89,16 @@ public class HomeFragment extends Fragment {
         final TimeLineAdapter timeLineAdapter = new TimeLineAdapter(habitList);
         timeLineAdapter.setHasStableIds(true);
         recyclerView.setAdapter(timeLineAdapter);
-        initDaysTabs(tabLayout, timeLineAdapter);
+        final String[] daysOfWeek =
+                getActivity().getResources().getStringArray(R.array.days_of_week_array);
+        initDaysTabs(daysOfWeek, tabLayout, timeLineAdapter);
         return view;
 
     }
 
-    private static void initDaysTabs(final TabLayout tabLayout, final TimeLineAdapter timeLineAdapter) {
+    private static void initDaysTabs(final String[] daysOfWeek,
+                                     final TabLayout tabLayout, final TimeLineAdapter timeLineAdapter) {
         if (tabLayout != null) {
-            final String[] daysOfWeek =
-                    {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
 
             final int dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1;
             Log.i("HomeFragment", String.format("dayOfWeek = %s", daysOfWeek[dayOfWeek]));

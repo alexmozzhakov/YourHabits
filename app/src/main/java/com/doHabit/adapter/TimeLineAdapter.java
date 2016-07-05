@@ -5,19 +5,31 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.dohabit.R;
-import com.dohabit.helper.TimeLineView;
 import com.dohabit.models.Habit;
-import com.dohabit.models.Listable;
+import com.dohabit.models.HabitListProvider;
+import com.dohabit.models.LineType;
 import com.dohabit.viewholder.TimeLineViewHolder;
 
 import java.util.List;
 
-public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> implements Listable {
+public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> implements HabitListProvider {
 
     private List<Habit> mFeedList;
 
     public TimeLineAdapter(final List<Habit> feedList) {
         mFeedList = feedList;
+    }
+
+    private static int getTimeLineViewType(final int position, final int total_size) {
+        if (total_size == 1) {
+            return LineType.ONLY_ONE;
+        } else if (position == 0) {
+            return LineType.BEGIN;
+        } else if (position == total_size - 1) {
+            return LineType.END;
+        } else {
+            return LineType.NORMAL;
+        }
     }
 
     @Override
@@ -32,7 +44,7 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> im
 
     @Override
     public int getItemViewType(final int position) {
-        return TimeLineView.getTimeLineViewType(position, getItemCount());
+        return getTimeLineViewType(position, getItemCount());
     }
 
     @Override

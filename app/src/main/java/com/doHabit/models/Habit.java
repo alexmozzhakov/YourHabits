@@ -19,9 +19,9 @@ public class Habit {
     public int markerUpdatedYear;
     private final int daysFollowing;
 
-    public Habit(int id, String title, String question, boolean doneMarker, int markerUpdatedDay,
-                 int markerUpdatedMonth, int markerUpdatedYear, int time,
-                 int followingFrom, int cost, int frequency) {
+    public Habit(final int id, final String title, final String question, final boolean doneMarker,
+                 final int markerUpdatedDay, final int markerUpdatedMonth, final int markerUpdatedYear,
+                 final int time, final int followingFrom, final int cost, final int frequency) {
 
         this.id = id;
         this.title = title;
@@ -40,17 +40,17 @@ public class Habit {
         return frequency;
     }
 
-    public void setDoneMarker(boolean doneMarker) {
+    public void setDoneMarker(final boolean doneMarker) {
         this.doneMarker = doneMarker;
         if (doneMarker) {
-            Calendar calendar = Calendar.getInstance();
+            final Calendar calendar = Calendar.getInstance();
             markerUpdatedDay = calendar.get(Calendar.DATE);
             markerUpdatedMonth = calendar.get(Calendar.MONTH);
             markerUpdatedYear = calendar.get(Calendar.YEAR);
         }
     }
 
-    public boolean isDone(int markerUpdatedDay, int markerUpdatedMonth, int markerUpdatedYear) {
+    public boolean isDone(final int markerUpdatedDay, final int markerUpdatedMonth, final int markerUpdatedYear) {
         return markerUpdatedDay == this.markerUpdatedDay &&
                 markerUpdatedMonth == this.markerUpdatedMonth &&
                 markerUpdatedYear == this.markerUpdatedYear &&
@@ -59,18 +59,6 @@ public class Habit {
 
     @Override
     public String toString() {
-        return "Habit{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", question='" + question + '\'' +
-                ", time=" + time +
-                ", cost=" + cost +
-                ", frequency=" + frequency +
-                ", doneMarker=" + doneMarker +
-                ", markerUpdatedDay=" + markerUpdatedDay +
-                ", markerUpdatedMonth=" + markerUpdatedMonth +
-                ", markerUpdatedYear=" + markerUpdatedYear +
-                ", daysFollowing=" + daysFollowing +
-                '}';
+        return String.format("Habit{id=%d, title='%s', question='%s', time=%d, cost=%d, frequency=%d, doneMarker=%s, markerUpdatedDay=%d, markerUpdatedMonth=%d, markerUpdatedYear=%d, daysFollowing=%d}", id, title, question, time, cost, frequency, doneMarker, markerUpdatedDay, markerUpdatedMonth, markerUpdatedYear, daysFollowing);
     }
 }

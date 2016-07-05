@@ -23,28 +23,28 @@ public class HomeDayManager {
     }
 
     @SuppressWarnings({"CallToStringEquals", "LocalVariableOfConcreteClass"})
-    void filterListByDay(final Iterable<Habit> satHabits, final String dayOfWeek) {
+    static void filterListByDay(final Iterable<Habit> satHabits, final String dayOfWeek) {
         final Iterator<Habit> habitIterator = satHabits.iterator();
         while (habitIterator.hasNext()) {
             final Habit habit = habitIterator.next();
-            if (habit.getFrequency() != 0) {
+            if (habit.getFrequency() == 0) {
+                Log.w("filterListByDay()", "frequency not set");
+            } else {
                 final String[] freq = String.valueOf(habit.getFrequency()).split("0");
                 if (!("1".equals(freq[0]) && freq.length > 2) && // once type
                         habit.getFrequency() != 101) { // every day
 
-                    boolean notToday= true;
+                    boolean today = false;
                     for (int j = 0; j < freq.length - 1; j++) {
                         if (freq[j].equals(dayOfWeek)) {
-                            notToday = false;
+                            today = true;
                             break;
                         }
                     }
-                    if (notToday) {
+                    if (!today) {
                         habitIterator.remove();
                     }
                 }
-            } else {
-                Log.w("filterListByDay()", "frequency not set");
             }
         }
     }

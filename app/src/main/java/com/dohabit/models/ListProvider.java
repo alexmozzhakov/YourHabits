@@ -2,6 +2,6 @@ package com.dohabit.models;
 
 import java.util.List;
 
-public interface Listable {
+public interface ListProvider {
     List<?> getList();
 }
