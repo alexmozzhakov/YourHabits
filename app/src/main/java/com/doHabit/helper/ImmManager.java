@@ -23,8 +23,8 @@ public class ImmManager {
         return immOpened;
     }
 
-    public void closeImm(Activity activity) {
-        InputMethodManager imm = (InputMethodManager) activity.getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+    public void closeImm(final Activity activity) {
+        final InputMethodManager imm = (InputMethodManager) activity.getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         if (activity.getCurrentFocus() != null) {
             imm.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
         }

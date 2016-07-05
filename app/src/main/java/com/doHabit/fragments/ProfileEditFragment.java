@@ -14,12 +14,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.dohabit.R;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserInfo;
 import com.google.firebase.auth.UserProfileChangeRequest;
-import com.dohabit.R;
 
 public class ProfileEditFragment extends Fragment {
 
@@ -27,37 +28,36 @@ public class ProfileEditFragment extends Fragment {
     private static final String TAG = ProfileEditFragment.class.getSimpleName();
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
+                             final Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View result = inflater.inflate(R.layout.fragment_edit_profile, container, false);
+        final View result = inflater.inflate(R.layout.fragment_edit_profile, container, false);
         getPasswordFromUser();
-        FloatingActionButton fab = (FloatingActionButton) result.findViewById(R.id.fab);
+        final FloatingActionButton fab = (FloatingActionButton) result.findViewById(R.id.fab);
 
         fab.setOnClickListener(view -> {
-            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
             if (user != null && user.getEmail() != null) {
 
-                String email =
-                        String.valueOf(((EditText) result.findViewById(R.id.edit_email)).getText()).toLowerCase();
-                String name =
-                        String.valueOf(((EditText) result.findViewById(R.id.edit_name)).getText());
+                final String email =
+                        String.valueOf(((TextView) result.findViewById(R.id.edit_email)).getText()).toLowerCase();
+                final String name =
+                        String.valueOf(((TextView) result.findViewById(R.id.edit_name)).getText());
 
-                if ((name.isEmpty() || name.equals(user.getDisplayName())) // name same
-                        && (email.isEmpty() || email.equals(user.getEmail()))) { // email same)
+                if (isUpdated(user, email, name)) { // email same)
                     ProfileFragment.editorOpened[0] = false;
                     getFragmentManager().beginTransaction().remove(this).commit();
                     return;
                 }
                 if (inputPassword.isEmpty()) { // entered password empty
-                    Toast.makeText(getContext(), "Please enter correct password", Toast.LENGTH_SHORT)
+                    Toast.makeText(getContext().getApplicationContext(), "Please enter correct password", Toast.LENGTH_SHORT)
                             .show();
                     getPasswordFromUser();
                     return;
                 }
 
-                AuthCredential credential = EmailAuthProvider
+                final AuthCredential credential = EmailAuthProvider
                         .getCredential(user.getEmail(), inputPassword);
 
                 // Prompt the user to re-provide their sign-in credentials
@@ -65,20 +65,21 @@ public class ProfileEditFragment extends Fragment {
                         .addOnCompleteListener(task -> Log.d(TAG, "User re-authenticated."));
 
 
-                TextView nameView =
+                final TextView nameView =
                         (TextView) getActivity().findViewById(R.id.name);
-                TextView emailView =
+                final TextView emailView =
                         (TextView) getActivity().findViewById(R.id.email);
 
-                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                        .setDisplayName(name)
-                        .build();
+                final UserProfileChangeRequest profileUpdates =
+                        new UserProfileChangeRequest.Builder()
+                                .setDisplayName(name)
+                                .build();
 
                 if (!name.isEmpty() && !name.equals(user.getDisplayName())) {
                     user.updateProfile(profileUpdates)
                             .addOnCompleteListener(task -> {
                                 if (task.isSuccessful()) {
-                                    NavigationView navigationView =
+                                    final NavigationView navigationView =
                                             (NavigationView) getParentFragment()
                                                     .getActivity()
                                                     .findViewById(R.id.navigationView);
@@ -125,12 +126,18 @@ public class ProfileEditFragment extends Fragment {
         return result;
     }
 
+    private static boolean isUpdated(final UserInfo user, final String email, final String name) {
+        final boolean nameUpdated = !name.isEmpty() && !name.equals(user.getDisplayName());
+        final boolean emailUpdated = !email.isEmpty() && !email.equals(user.getEmail());
+        return nameUpdated && emailUpdated;
+    }
+
     private void getPasswordFromUser() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Please re-enter your password");
 
         // Set up the input
-        EditText input = new EditText(getActivity());
+        final EditText input = new EditText(getActivity());
         // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
         input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         builder.setView(input);
