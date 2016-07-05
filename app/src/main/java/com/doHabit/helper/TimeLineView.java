@@ -5,6 +5,7 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
@@ -14,8 +15,11 @@ import com.dohabit.models.LineType;
 
 public class TimeLineView extends View {
 
+    private static final int MARKER_SIZE = 25;
     private Drawable mMarker;
+    @Nullable
     private Drawable mStartLine;
+    @Nullable
     private Drawable mEndLine;
     private int mMarkerSize;
     private int mLineSize;
@@ -23,29 +27,18 @@ public class TimeLineView extends View {
     private Rect mBounds;
 
 
-    public TimeLineView(Context context, AttributeSet attrs) {
+    public TimeLineView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         init(attrs);
     }
 
-    public static int getTimeLineViewType(int position, int total_size) {
-        if (total_size == 1) {
-            return LineType.ONLY_ONE;
-        } else if (position == 0) {
-            return LineType.BEGIN;
-        } else if (position == total_size - 1) {
-            return LineType.END;
-        } else {
-            return LineType.NORMAL;
-        }
-    }
-
-    private void init(AttributeSet attrs) {
-        TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.timeline_style);
+    private void init(final AttributeSet attrs) {
+        final TypedArray typedArray =
+                getContext().obtainStyledAttributes(attrs, R.styleable.timeline_style);
         mMarker = typedArray.getDrawable(R.styleable.timeline_style_marker);
         mStartLine = typedArray.getDrawable(R.styleable.timeline_style_line);
         mEndLine = typedArray.getDrawable(R.styleable.timeline_style_line);
-        mMarkerSize = typedArray.getDimensionPixelSize(R.styleable.timeline_style_marker_size, 25);
+        mMarkerSize = typedArray.getDimensionPixelSize(R.styleable.timeline_style_marker_size, MARKER_SIZE);
         mLineSize = typedArray.getDimensionPixelSize(R.styleable.timeline_style_line_size, 2);
         typedArray.recycle();
 
@@ -55,22 +48,22 @@ public class TimeLineView extends View {
     }
 
     @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+    protected void onMeasure(final int widthMeasureSpec, final int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         //Width measurements of the width and height and the inside view of child controls
-        int w = mMarkerSize + getPaddingLeft() + getPaddingRight();
-        int h = mMarkerSize + getPaddingTop() + getPaddingBottom();
+        final int w = mMarkerSize + getPaddingLeft() + getPaddingRight();
+        final int h = mMarkerSize + getPaddingTop() + getPaddingBottom();
 
         // Width and height to determine the final view through a systematic approach to decision-making
-        int widthSize = View.resolveSizeAndState(w, widthMeasureSpec, 0);
-        int heightSize = View.resolveSizeAndState(h, heightMeasureSpec, 0);
+        final int widthSize = View.resolveSizeAndState(w, widthMeasureSpec, 0);
+        final int heightSize = View.resolveSizeAndState(h, heightMeasureSpec, 0);
 
         setMeasuredDimension(widthSize, heightSize);
         initDrawable();
     }
 
     @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+    protected void onSizeChanged(final int w, final int h, final int oldw, final int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         // When the view is displayed when the callback
         // Positioning Drawable coordinates, then draw
@@ -78,26 +71,26 @@ public class TimeLineView extends View {
     }
 
     private void initDrawable() {
-        int pLeft = getPaddingLeft();
-        int pRight = getPaddingRight();
-        int pTop = getPaddingTop();
-        int pBottom = getPaddingBottom();
+        final int pLeft = getPaddingLeft();
+        final int pRight = getPaddingRight();
+        final int pTop = getPaddingTop();
+        final int pBottom = getPaddingBottom();
 
-        int width = getWidth();// Width of current custom view
-        int height = getHeight();
+        final int width = getWidth();// Width of current custom view
+        final int height = getHeight();
 
-        int cWidth = width - pLeft - pRight;// Circle width
-        int cHeight = height - pTop - pBottom;
+        final int cWidth = width - pLeft - pRight;// Circle width
+        final int cHeight = height - pTop - pBottom;
 
-        int markSize = Math.min(mMarkerSize, Math.min(cWidth, cHeight));
+        final int markSize = Math.min(mMarkerSize, Math.min(cWidth, cHeight));
 
         if (mMarker != null) {
             mMarker.setBounds(pLeft, pTop, pLeft + markSize, pTop + markSize);
             mBounds = mMarker.getBounds();
         }
 
-        int centerX = mBounds.centerX();
-        int lineLeft = centerX - (mLineSize >> 1);
+        final int centerX = mBounds.centerX();
+        final int lineLeft = centerX - (mLineSize >> 1);
         if (mStartLine != null) {
             mStartLine.setBounds(lineLeft, 0, mLineSize + lineLeft, mBounds.top);
         }
@@ -109,7 +102,7 @@ public class TimeLineView extends View {
     }
 
     @Override
-    protected void onDraw(Canvas canvas) {
+    protected void onDraw(final Canvas canvas) {
         super.onDraw(canvas);
         if (mMarker != null) {
             mMarker.draw(canvas);
@@ -123,11 +116,6 @@ public class TimeLineView extends View {
         }
     }
 
-    public void setMarker(Drawable marker) {
-        mMarker = marker;
-        initDrawable();
-    }
-
     private void removeStartLine() {
         mStartLine = null;
         initDrawable();
@@ -138,17 +126,7 @@ public class TimeLineView extends View {
         initDrawable();
     }
 
-    public void setMarkerSize(int markerSize) {
-        mMarkerSize = markerSize;
-        initDrawable();
-    }
-
-    public void setLineSize(int lineSize) {
-        mLineSize = lineSize;
-        initDrawable();
-    }
-
-    public void initLine(int viewType) {
+    public void initLine(final int viewType) {
 
         if (viewType == LineType.BEGIN) {
             removeStartLine();

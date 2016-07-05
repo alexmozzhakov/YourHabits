@@ -2,6 +2,7 @@ package com.dohabit.helper;
 
 import com.dohabit.adapter.TimeLineAdapter;
 import com.dohabit.models.Habit;
+import com.dohabit.models.HabitListProvider;
 
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
@@ -10,7 +11,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-@SuppressWarnings({"HardCodedStringLiteral", "LocalVariableOfConcreteClass", "MessageMissingOnJUnitAssertion"})
+@SuppressWarnings({"HardCodedStringLiteral", "LocalVariableOfConcreteClass", "TypeMayBeWeakened"})
 public class HomeDayManagerTest {
     private static List<Habit> generateListOfHabits() {
         final List<Habit> list = new ArrayList<>(15);
@@ -38,14 +39,13 @@ public class HomeDayManagerTest {
     @Test
     public void filterListForSun() throws Exception {
         final List<Habit> list = generateListOfHabits();
-        final TimeLineAdapter adapter = new TimeLineAdapter(list);
-        final HomeDayManager manager = new HomeDayManager(adapter);
-        manager.filterListByDay(list, "1");
+        final HabitListProvider adapter = new TimeLineAdapter(list);
+        HomeDayManager.filterListByDay(list, "1");
         System.out.println("sun : {");
         for (final Habit habit : adapter.getList()) {
-            System.out.printf("  %s%n", habit.title);
-            Assert.assertThat(habit.title.contains("once") || habit.title.contains("sunday")
-                    || habit.title.contains("every day"), CoreMatchers.is(true));
+            Assert.assertThat(String.format("  %s%n", habit.title),
+                    habit.title.contains("once") || habit.title.contains("sunday")
+                            || habit.title.contains("every day"), CoreMatchers.is(true));
         }
         System.out.println("}");
     }
@@ -53,14 +53,13 @@ public class HomeDayManagerTest {
     @Test
     public void filterListForMon() throws Exception {
         final List<Habit> list = generateListOfHabits();
-        final TimeLineAdapter adapter = new TimeLineAdapter(list);
-        final HomeDayManager manager = new HomeDayManager(adapter);
-        manager.filterListByDay(list, "2");
+        final HabitListProvider adapter = new TimeLineAdapter(list);
+        HomeDayManager.filterListByDay(list, "2");
         System.out.println("mon : {");
         for (final Habit habit : adapter.getList()) {
-            System.out.printf("  %s%n", habit.title);
-            Assert.assertThat(habit.title.contains("once") || habit.title.contains("monday")
-                    || habit.title.contains("every day"), CoreMatchers.is(true));
+            Assert.assertThat(String.format("  %s%n", habit.title),
+                    habit.title.contains("once") || habit.title.contains("monday")
+                            || habit.title.contains("every day"), CoreMatchers.is(true));
         }
         System.out.println("}");
     }
@@ -68,14 +67,13 @@ public class HomeDayManagerTest {
     @Test
     public void filterListForTue() throws Exception {
         final List<Habit> list = generateListOfHabits();
-        final TimeLineAdapter adapter = new TimeLineAdapter(list);
-        final HomeDayManager manager = new HomeDayManager(adapter);
-        manager.filterListByDay(list, "3");
+        final HabitListProvider adapter = new TimeLineAdapter(list);
+        HomeDayManager.filterListByDay(list, "3");
         System.out.println("tue : {");
         for (final Habit habit : adapter.getList()) {
-            System.out.printf("  %s%n", habit.title);
-            Assert.assertThat(habit.title.contains("once") || habit.title.contains("tuesday")
-                    || habit.title.contains("every day"), CoreMatchers.is(true));
+            Assert.assertThat(String.format("  %s%n", habit.title),
+                    habit.title.contains("once") || habit.title.contains("tuesday")
+                            || habit.title.contains("every day"), CoreMatchers.is(true));
         }
         System.out.println("}");
     }
@@ -83,14 +81,13 @@ public class HomeDayManagerTest {
     @Test
     public void filterListForWed() throws Exception {
         final List<Habit> list = generateListOfHabits();
-        final TimeLineAdapter adapter = new TimeLineAdapter(list);
-        final HomeDayManager manager = new HomeDayManager(adapter);
-        manager.filterListByDay(list, "4");
+        final HabitListProvider adapter = new TimeLineAdapter(list);
+        HomeDayManager.filterListByDay(list, "4");
         System.out.println("wed : {");
         for (final Habit habit : adapter.getList()) {
-            System.out.printf("  %s%n", habit.title);
-            Assert.assertThat(habit.title.contains("once") || habit.title.contains("wednesday")
-                    || habit.title.contains("every day"), CoreMatchers.is(true));
+            Assert.assertThat(String.format("  %s%n", habit.title),
+                    habit.title.contains("once") || habit.title.contains("wednesday")
+                            || habit.title.contains("every day"), CoreMatchers.is(true));
         }
         System.out.println("}");
     }
@@ -98,14 +95,13 @@ public class HomeDayManagerTest {
     @Test
     public void filterListForThu() throws Exception {
         final List<Habit> list = generateListOfHabits();
-        final TimeLineAdapter adapter = new TimeLineAdapter(list);
-        final HomeDayManager manager = new HomeDayManager(adapter);
-        manager.filterListByDay(list, "5");
+        final HabitListProvider adapter = new TimeLineAdapter(list);
+        HomeDayManager.filterListByDay(list, "5");
         System.out.println("thu : {");
         for (final Habit habit : adapter.getList()) {
-            System.out.printf("  %s%n", habit.title);
-            Assert.assertThat(habit.title.contains("once") || habit.title.contains("thursday")
-                    || habit.title.contains("every day"), CoreMatchers.is(true));
+            Assert.assertThat(String.format("  %s%n", habit.title),
+                    habit.title.contains("once") || habit.title.contains("thursday")
+                            || habit.title.contains("every day"), CoreMatchers.is(true));
         }
         System.out.println("}");
     }
@@ -113,14 +109,13 @@ public class HomeDayManagerTest {
     @Test
     public void filterListForFri() throws Exception {
         final List<Habit> list = generateListOfHabits();
-        final TimeLineAdapter adapter = new TimeLineAdapter(list);
-        final HomeDayManager manager = new HomeDayManager(adapter);
-        manager.filterListByDay(list, "6");
+        final HabitListProvider adapter = new TimeLineAdapter(list);
+        HomeDayManager.filterListByDay(list, "6");
         System.out.println("fri : {");
         for (final Habit habit : adapter.getList()) {
-            System.out.printf("  %s%n", habit.title);
-            Assert.assertThat(habit.title.contains("once") || habit.title.contains("friday")
-                    || habit.title.contains("every day"), CoreMatchers.is(true));
+            Assert.assertThat(String.format("  %s%n", habit.title),
+                    habit.title.contains("once") || habit.title.contains("friday")
+                            || habit.title.contains("every day"), CoreMatchers.is(true));
         }
         System.out.println("}");
     }
@@ -128,14 +123,13 @@ public class HomeDayManagerTest {
     @Test
     public void filterListForSat() throws Exception {
         final List<Habit> list = generateListOfHabits();
-        final TimeLineAdapter adapter = new TimeLineAdapter(list);
-        final HomeDayManager manager = new HomeDayManager(adapter);
-        manager.filterListByDay(list, "7");
+        final HabitListProvider adapter = new TimeLineAdapter(list);
+        HomeDayManager.filterListByDay(list, "7");
         System.out.println("sat : {");
         for (final Habit habit : adapter.getList()) {
-            System.out.printf("  %s%n", habit.title);
-            Assert.assertThat(habit.title.contains("once") || habit.title.contains("saturday")
-                    || habit.title.contains("every day"), CoreMatchers.is(true));
+            Assert.assertThat(String.format("  %s%n", habit.title),
+                    habit.title.contains("once") || habit.title.contains("saturday")
+                            || habit.title.contains("every day"), CoreMatchers.is(true));
         }
         System.out.println("}");
     }
