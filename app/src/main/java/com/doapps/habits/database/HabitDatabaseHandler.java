@@ -191,6 +191,7 @@ public class HabitDatabaseHandler extends SQLiteOpenHelper implements HabitsData
 
         Log.i("SQL done", query);
 
+        database.close();
         isSame = false;
     }
 
@@ -223,6 +224,7 @@ public class HabitDatabaseHandler extends SQLiteOpenHelper implements HabitsData
                     TABLE_HABIT, KEY_ID, toPosition, KEY_ID));
         }
 
+        database.close();
         isSame = false;
     }
 

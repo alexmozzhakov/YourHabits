@@ -46,7 +46,7 @@ public class HabitRecycleAdapter extends RecyclerView.Adapter implements Movable
                 mHabitList.get(position).setDoneMarker(true);
 
                 mHabitsDatabase.updateHabit(
-                        position,
+                        habit.id,
                         habit.markerUpdatedDay,
                         habit.markerUpdatedMonth,
                         habit.markerUpdatedYear,
@@ -56,7 +56,7 @@ public class HabitRecycleAdapter extends RecyclerView.Adapter implements Movable
             } else {
 
                 mHabitsDatabase.updateHabit(
-                        position,
+                        habit.id,
                         habit.markerUpdatedDay,
                         habit.markerUpdatedMonth,
                         habit.markerUpdatedYear,
