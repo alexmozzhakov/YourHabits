@@ -51,12 +51,9 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
         user = FirebaseAuth.getInstance().getCurrentUser();
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        if (mToolbar != null) {
-            mToolbar.setTitle("Home");
-        }
+        mToolbar.setTitle("Home");
 
         if (savedInstanceState == null) {
-            Log.i("Main", "null == savedInstanceState");
             getSupportFragmentManager()
                     .beginTransaction()
                     .add(R.id.content_frame, new HomeFragment())
@@ -89,11 +86,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
     @SuppressWarnings("CommitTransaction")
     @Override
     public boolean onNavigationItemSelected(final MenuItem item) {
-
-
-        if (mDrawerLayout != null) {
-            mDrawerLayout.closeDrawer(GravityCompat.START);
-        }
+        mDrawerLayout.closeDrawer(GravityCompat.START);
 
         new Handler().postDelayed(() -> {
             final int id = item.getItemId();
@@ -182,6 +175,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
                 .beginTransaction()
                 .replace(R.id.content_frame, new ProfileFragment())
                 .commit();
+        mLastFragment = 3;
 
         mDrawerLayout.closeDrawers();
     }
@@ -195,6 +189,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
             if (user != null && user.isAnonymous()) {
                 Log.i("FirebaseAuth", "User is anonymous");
                 mNavigationView.getMenu().findItem(R.id.nav_logout).setTitle("Login");
+                mNavigationView.getHeaderView(0).setVisibility(View.INVISIBLE);
             } else if (user != null) {
                 mNavigationView.getMenu().findItem(R.id.nav_profile).setVisible(true);
                 Log.i("FirebaseAuth", "Regular user");
@@ -213,7 +208,8 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
                 avatar.setVisibility(View.VISIBLE);
             } else {
                 Log.w("FirebaseAuth", "User is null");
-                mNavigationView.getMenu().findItem(R.id.nav_logout).setTitle("Login");
+                mNavigationView.getMenu().findItem(R.id.nav_logout).setVisible(false);
+                mNavigationView.getHeaderView(0).setVisibility(View.INVISIBLE);
             }
         }
     }
@@ -227,8 +223,10 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
         if (user.isAnonymous()) {
             user.delete();
         } else {
-            FacebookSdk.sdkInitialize(getApplicationContext());
-            LoginManager.getInstance().logOut();
+            if (user.getPhotoUrl() != null && user.getPhotoUrl().toString().contains("facebook")) {
+                FacebookSdk.sdkInitialize(getApplicationContext());
+                LoginManager.getInstance().logOut();
+            }
 
             FirebaseAuth.getInstance().signOut();
             Log.i("FA", "user was signed out");

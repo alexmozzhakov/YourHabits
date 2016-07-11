@@ -33,12 +33,11 @@ import java.util.Arrays;
 
 public class ProfileFragment extends Fragment {
     static boolean[] editorOpened;
-    private String inputPassword = "";
     private static final String TAG = ProfileFragment.class.getName();
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
+                             final Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View result = inflater.inflate(R.layout.fragment_profile, container, false);
         editorOpened = new boolean[]{false};
@@ -79,7 +78,9 @@ public class ProfileFragment extends Fragment {
                                         FacebookAuthProvider.getCredential(result.getAccessToken().getToken());
                                 user.linkWithCredential(credential)
                                         .addOnCompleteListener(task -> {
-                                            Log.d("FA", "linkWithCredential:onComplete:" + task.isSuccessful());
+                                            if (BuildConfig.DEBUG) {
+                                                Log.d("FA", "linkWithCredential:onComplete:" + task.isSuccessful());
+                                            }
                                             if (task.isSuccessful()) {
                                                 Toast.makeText(getContext().getApplicationContext(),
                                                         "Successfully connected with Facebook",
@@ -135,7 +136,7 @@ public class ProfileFragment extends Fragment {
 
         // Set up the buttons
         builder.setPositiveButton("OK", (dialog, which) -> {
-            inputPassword = input.getText().toString();
+            final String inputPassword = input.getText().toString();
             if (!inputPassword.isEmpty() && user.getEmail() != null) {
                 final AuthCredential credential = EmailAuthProvider
                         .getCredential(user.getEmail(), inputPassword);

@@ -5,7 +5,7 @@ import java.util.Calendar;
 public class Habit {
 
     //Constant Habit values
-    public final int id;
+    public int id;
     public final String title;
     private final String question;
     private final int time;

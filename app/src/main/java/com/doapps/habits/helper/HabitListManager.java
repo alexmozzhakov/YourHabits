@@ -54,6 +54,9 @@ public class HabitListManager implements HabitDatabaseMovableListProvider {
                 Collections.swap(mHabitsList, i, i - 1);
             }
         }
+        final int fromPositionId = mHabitsList.get(fromPosition).id;
+        mHabitsList.get(fromPosition).id = mHabitsList.get(toPosition).id;
+        mHabitsList.get(toPosition).id = fromPositionId;
         mHabitsDatabase.move(mHabitsList.get(fromPosition).id, mHabitsList.get(toPosition).id);
     }
 
