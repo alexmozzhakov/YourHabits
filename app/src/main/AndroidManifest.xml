@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools"
-          package="com.dohabit">
+          package="com.doapps.habits">
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
@@ -17,17 +17,16 @@
         android:screenOrientation="landscape"
         android:supportsRtl="true"
         tools:ignore="GoogleAppIndexingWarning">
+
         <activity
-            android:name="com.dohabit.activity.AuthActivity"
+            android:name=".activity.AuthActivity"
             android:configChanges="orientation|screenSize"
-            android:theme="@style/AppTheme.Auth"
-            android:windowSoftInputMode="stateVisible|adjustResize"
-            />
+            android:theme="@style/AppTheme.Auth"/>
         <activity
-            android:name="com.dohabit.activity.MainActivity"
+            android:name=".activity.MainActivity"
             android:launchMode="standard"
-            android:windowSoftInputMode="adjustResize"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -35,14 +34,26 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.dohabit.activity.PasswordRecoveryActivity"
+            android:name=".activity.PasswordRecoveryActivity"
             android:theme="@style/AppTheme.Auth"/>
         <activity
-            android:name="com.dohabit.activity.BlankActivity"
+            android:name=".activity.BlankActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
+
+        <activity
+            android:name="com.facebook.FacebookActivity"
+            android:configChanges=
+                "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
 
         <meta-data
             android:name="android.support.PARENT_ACTIVITY"
-            android:value="com.dohabit.activity.MainActivity"/>
+            android:value=".activity.MainActivity"/>
+
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id"/>
+
     </application>
 </manifest>

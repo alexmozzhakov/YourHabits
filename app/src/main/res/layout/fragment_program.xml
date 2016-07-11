@@ -15,7 +15,8 @@
         android:layout_marginStart="5dp"
         android:layout_marginTop="30dp"
         android:gravity="center"
-        android:textSize="18sp"/>
+        android:textSize="18sp"
+        android:textIsSelectable="true"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"

@@ -21,6 +21,47 @@
         app:layout_constraintTop_toTopOf="@+id/constraintLayout3"
         tools:ignore="ContentDescription"/>
 
+    <ImageView
+        android:id="@+id/iconPerson"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="32dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:src="@drawable/ic_person_blue_24dp"
+        app:layout_constraintLeft_toLeftOf="@+id/constraintLayout3"
+        app:layout_constraintTop_toTopOf="@+id/userInfo"
+        tools:ignore="ContentDescription"/>
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:layout_toEndOf="@id/iconPerson"
+        android:layout_toRightOf="@id/iconPerson"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="#212121"
+        android:textIsSelectable="true"
+        app:layout_constraintLeft_toRightOf="@+id/iconPerson"
+        app:layout_constraintTop_toTopOf="@+id/userInfo"/>
+
+    <include
+        android:id="@+id/divider1"
+        layout="@layout/item_divider"
+        android:layout_width="0dp"
+        android:layout_height="7dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintLeft_toLeftOf="@+id/constraintLayout3"
+        app:layout_constraintRight_toRightOf="@+id/constraintLayout3"
+        app:layout_constraintTop_toBottomOf="@+id/iconPerson"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -33,150 +74,84 @@
         app:layout_constraintRight_toRightOf="@+id/constraintLayout3"
         app:layout_constraintTop_toBottomOf="@+id/imageView3"/>
 
-    <FrameLayout
-        android:id="@+id/userInfo"
-        android:layout_width="match_parent"
+
+    <ImageView
+        android:id="@+id/ivContactItem3"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="@dimen/activity_horizontal_margin"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="32dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/ic_email_blue_24dp"
+        app:layout_constraintLeft_toLeftOf="@+id/constraintLayout3"
+        app:layout_constraintTop_toBottomOf="@+id/divider1"
+        tools:ignore="ContentDescription"/>
+
+    <!-- Connect with facebook button -->
+    <Button
+        android:id="@+id/btn_connect_facebook"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/facebook"
+        android:drawableLeft="@drawable/ic_facebook_icon"
+        android:drawablePadding="-32dp"
+        android:gravity="center"
+        android:paddingBottom="14dp"
+        android:paddingLeft="16dp"
+        android:paddingTop="14dp"
+        android:text="@string/connect_with_facebook"
+        android:textColor="@color/white"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/btn_delete_user"
         app:layout_constraintLeft_toLeftOf="@+id/constraintLayout3"
         app:layout_constraintRight_toRightOf="@+id/constraintLayout3"
-        app:layout_constraintTop_toBottomOf="@+id/imageView3"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp"
-        tools:showIn="@layout/fragment_profile">
-
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:padding="@dimen/activity_horizontal_margin"
-            tools:layout_editor_absoluteX="16dp"
-            tools:layout_editor_absoluteY="16dp">
-
-            <ImageView
-                android:id="@+id/iconPerson"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:src="@drawable/ic_person_blue_24dp"
-                tools:ignore="ContentDescription"
-                tools:layout_editor_absoluteX="16dp"
-                tools:layout_editor_absoluteY="16dp"/>
-
-            <TextView
-                android:id="@+id/name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_toEndOf="@id/iconPerson"
-                android:layout_toRightOf="@id/iconPerson"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="#212121"
-                tools:layout_editor_absoluteX="40dp"
-                tools:layout_editor_absoluteY="16dp"/>
-
-        </RelativeLayout>
-
-        <include
-            layout="@layout/item_divider"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            tools:layout_editor_absoluteX="16dp"
-            tools:layout_editor_absoluteY="72dp"/>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="64dp"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:padding="@dimen/activity_horizontal_margin"
-            tools:layout_editor_absoluteX="16dp"
-            tools:layout_editor_absoluteY="79dp">
-
-            <ImageView
-                android:id="@+id/ivContactItem3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:src="@drawable/ic_email_blue_24dp"
-                tools:ignore="ContentDescription"
-                tools:layout_editor_absoluteX="16dp"
-                tools:layout_editor_absoluteY="16dp"/>
-
-            <TextView
-                android:id="@+id/email"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_toEndOf="@id/ivContactItem3"
-                android:layout_toRightOf="@id/ivContactItem3"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="#212121"
-                tools:layout_editor_absoluteX="40dp"
-                tools:layout_editor_absoluteY="16dp"/>
-
-        </RelativeLayout>
-
-        <include
-            layout="@layout/item_divider"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            tools:layout_editor_absoluteX="16dp"
-            tools:layout_editor_absoluteY="135dp"/>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="128dp"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:padding="@dimen/activity_horizontal_margin"
-            tools:layout_editor_absoluteX="16dp"
-            tools:layout_editor_absoluteY="142dp">
-
-            <ImageView
-                android:id="@+id/ivContactItem5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:src="@drawable/ic_location_blue_24dp"
-                tools:ignore="ContentDescription"
-                tools:layout_editor_absoluteX="16dp"
-                tools:layout_editor_absoluteY="16dp"/>
-
-            <TextView
-                android:id="@+id/address"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_toEndOf="@id/ivContactItem5"
-                android:layout_toRightOf="@id/ivContactItem5"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="#212121"
-                tools:layout_editor_absoluteX="40dp"
-                tools:layout_editor_absoluteY="16dp"/>
-        </RelativeLayout>
-    </FrameLayout>
+        tools:ignore="RtlSymmetry"/>
 
     <!-- Delete user Button -->
     <Button
         android:id="@+id/btn_delete_user"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
         android:background="@color/colorRed"
         android:text="@string/delete_user"
         android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/constraintLayout3"
+        app:layout_constraintHorizontal_bias="0.62"
+        app:layout_constraintLeft_toLeftOf="@+id/constraintLayout3"
+        app:layout_constraintRight_toRightOf="@+id/constraintLayout3"/>
+
+    <TextView
+        android:id="@+id/email"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_toEndOf="@id/ivContactItem3"
+        android:layout_toRightOf="@id/ivContactItem3"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="#212121"
+        android:textIsSelectable="true"
+        app:layout_constraintLeft_toRightOf="@+id/ivContactItem3"
+        app:layout_constraintTop_toBottomOf="@+id/divider1"/>
+
+    <FrameLayout
+        android:id="@+id/userInfo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/activity_horizontal_margin"
         app:layout_constraintLeft_toLeftOf="@+id/constraintLayout3"
         app:layout_constraintRight_toRightOf="@+id/constraintLayout3"
-        app:layout_constraintTop_toBottomOf="@+id/userInfo"/>
+        app:layout_constraintTop_toBottomOf="@+id/imageView3"
+        tools:showIn="@layout/fragment_profile"/>
+
 </android.support.constraint.ConstraintLayout>

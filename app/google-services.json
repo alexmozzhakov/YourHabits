@@ -67,6 +67,37 @@
           "status": 2
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:319206083040:android:c494961321cbed51",
+        "android_client_info": {
+          "package_name": "com.doapps.habit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "319206083040-c86k1lvmop6cioo71k7est3ingi591ps.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_Dc49Jiobxw6o8Kc6U4vY2qA_JU7LA5g"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
     }
   ],
   "configuration_version": "1"

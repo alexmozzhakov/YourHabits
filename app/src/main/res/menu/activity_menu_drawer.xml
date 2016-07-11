@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    >
 
     <group
-        android:id="@+id/mmn1"
+        android:id="@+id/up_menu"
         android:checkableBehavior="single">
 
         <item
@@ -20,17 +21,14 @@
             android:title="Lists"/>
         <item
             android:id="@+id/nav_profile"
-            android:icon="@drawable/profile"
-            android:title="Profile"/>
+            android:icon="@drawable/ic_profile"
+            android:title="Profile"
+            android:visible="false"/>
     </group>
 
     <group
-        android:id="@+id/lmlk2"
-        >
-        <!--<item-->
-        <!--android:id="@+id/nav_settings"-->
-        <!--android:icon="@drawable/settings"-->
-        <!--android:title="Settings"/>-->
+        android:id="@+id/down_menu">
+
         <item
             android:id="@+id/nav_logout"
             android:icon="@drawable/ic_logout"

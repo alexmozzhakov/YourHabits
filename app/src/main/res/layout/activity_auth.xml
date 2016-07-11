@@ -11,7 +11,8 @@
         android:background="@drawable/bg_img"
         android:gravity="center"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@color/white"/>
+        android:textColor="@color/white"
+        android:textIsSelectable="false"/>
 
     <FrameLayout
         android:id="@+id/frame_layout"
