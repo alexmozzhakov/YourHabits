@@ -8,6 +8,7 @@
     <string name="btn_link_to_register">Registration</string>
     <string name="btn_link_to_login">Login</string>
     <string name="btn_terms_and_conditions">Terms &amp; Conditions</string>
+    <string name="facebook_app_id">838204572968918</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -45,4 +46,5 @@
     </string-array>
 
     <string name="login_with_facebook">Login with facebook</string>
+    <string name="connect_with_facebook">Connect with Facebook</string>
 </resources>

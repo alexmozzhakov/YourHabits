@@ -1,0 +1,5 @@
+<root>
+  <item name='android.net.Uri'>
+    <annotation name='org.jetbrains.annotations.NonNls'/>
+  </item>
+</root>

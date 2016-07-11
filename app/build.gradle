@@ -5,7 +5,7 @@ android {
     compileSdkVersion 24
     buildToolsVersion '24.0.0'
     defaultConfig {
-        applicationId "com.dohabit"
+        applicationId "com.doapps.habit"
         minSdkVersion 16
         //noinspection OldTargetApi
         targetSdkVersion 23
@@ -42,11 +42,12 @@ dependencies {
     compile 'com.google.firebase:firebase-database:9.2.0'
     compile 'com.google.firebase:firebase-auth:9.2.0'
     compile 'com.google.firebase:firebase-crash:9.2.0'
+    compile 'com.facebook.android:facebook-android-sdk:4.13.2'
     compile 'com.mcxiaoke.volley:library-aar:1.0.1'
     compile 'com.ruesga.timeline-chart-view:timeline-chart-view:0.0.8'
     compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha3'
     testCompile 'junit:junit:4.12'
+    compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha3'
 }
 
 

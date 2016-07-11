@@ -20,19 +20,7 @@
         android:strokeWidth="2"/>
     <path
         android:fillColor="#00000000"
-        android:pathData="M20.32,12.3L44.16,12.3"
-        android:strokeColor="#1D1D26"
-        android:strokeLineCap="square"
-        android:strokeWidth="2"/>
-    <path
-        android:fillColor="#00000000"
-        android:pathData="M20.32,26.36L44.16,26.36"
-        android:strokeColor="#1D1D26"
-        android:strokeLineCap="square"
-        android:strokeWidth="2"/>
-    <path
-        android:fillColor="#00000000"
-        android:pathData="M20.32,39.58L44.16,39.58"
+        android:pathData="M20.32,12.3h23.84M20.32,26.36h23.84M20.32,39.58h23.84"
         android:strokeColor="#1D1D26"
         android:strokeLineCap="square"
         android:strokeWidth="2"/>
