@@ -35,11 +35,11 @@ public class HomeDayManager implements DayManager<Habit> {
     public static void filterListForToday(final Iterable<Habit> todayHabits, final String dayOfWeek) {
         final Iterator<Habit> habitIterator = todayHabits.iterator();
         while (habitIterator.hasNext()) {
-            final Habit habit = habitIterator.next();
-            if (habit.getFrequency() == 0) {
+            final int frequency = habitIterator.next().getFrequency();
+            if (frequency == 0) {
                 Log.w("filterListByDay()", "frequency not set");
             } else {
-                final String[] freq = String.valueOf(habit.getFrequency()).split("0");
+                final String[] freq = String.valueOf(frequency).split("0");
                 if (freq.length > 2) { // not once type
                     boolean today = false;
                     for (int j = 0; j < freq.length - 1; j++) {
@@ -61,11 +61,11 @@ public class HomeDayManager implements DayManager<Habit> {
     static void filterListByDay(final Iterable<Habit> dayHabits, final String dayOfWeek) {
         final Iterator<Habit> habitIterator = dayHabits.iterator();
         while (habitIterator.hasNext()) {
-            final Habit habit = habitIterator.next();
-            final String[] freq = String.valueOf(habit.getFrequency()).split("0");
-            if (habit.getFrequency() == 0) {
+            final int frequency = habitIterator.next().getFrequency();
+            final String[] freq = String.valueOf(frequency).split("0");
+            if (frequency == 0) {
                 Log.w("filterListByDay()", "frequency not set");
-            } else if (habit.getFrequency() != 101) {
+            } else if (frequency != 101) {
                 // if it's not every day
                 if (freq.length > 2) {
                     boolean today = false;

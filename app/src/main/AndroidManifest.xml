@@ -36,9 +36,6 @@
         <activity
             android:name=".activity.PasswordRecoveryActivity"
             android:theme="@style/AppTheme.Auth"/>
-        <activity
-            android:name=".activity.BlankActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity
             android:name="com.facebook.FacebookActivity"
