@@ -14,10 +14,6 @@ public class HabitListManager implements HabitDatabaseMovableListProvider {
     private static List<Habit> mHabitsList;
     private static HabitsDatabase mHabitsDatabase;
 
-    public HabitListManager(final HabitsDatabase mHabitsDatabase) {
-        HabitListManager.mHabitsDatabase = mHabitsDatabase;
-    }
-
     public HabitListManager(final Context context) {
         mHabitsDatabase = new HabitDatabaseHandler(context);
     }
@@ -31,6 +27,7 @@ public class HabitListManager implements HabitDatabaseMovableListProvider {
         return mHabitsList;
     }
 
+    @Override
     public boolean isEmpty() {
         // TODO: 11/07/2016 refactor to something more efficient
         return getList().isEmpty();

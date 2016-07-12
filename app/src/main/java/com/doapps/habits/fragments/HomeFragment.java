@@ -23,8 +23,10 @@ import com.doapps.habits.adapter.TimeLineAdapter;
 import com.doapps.habits.helper.ConnectionManager;
 import com.doapps.habits.helper.HabitListManager;
 import com.doapps.habits.helper.HomeDayManager;
+import com.doapps.habits.models.DayManager;
 import com.doapps.habits.models.Habit;
 import com.doapps.habits.models.HabitListProvider;
+import com.doapps.habits.models.UpdatableList;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -95,17 +97,18 @@ public class HomeFragment extends Fragment {
 
     }
 
-    private static void initDaysTabs(final String[] daysOfWeek, final int dayOfWeek,
-                                     final TabLayout tabLayout, final TimeLineAdapter timeLineAdapter
-            , final HabitListProvider habitListProvider) {
+    private static void initDaysTabs(final String[] daysOfWeek,
+                                     final int dayOfWeek,
+                                     final TabLayout tabLayout,
+                                     final UpdatableList<Habit> timeLineAdapter,
+                                     final HabitListProvider habitListProvider) {
         if (tabLayout != null) {
-
             Log.i("HomeFragment", String.format("dayOfWeek = %s", daysOfWeek[dayOfWeek]));
             for (int i = 0; i < 7; i++) {
                 tabLayout.addTab(tabLayout.newTab().setText(daysOfWeek[(dayOfWeek + i) % 7]));
             }
 
-            final HomeDayManager homeDayManager = new HomeDayManager(timeLineAdapter);
+            final DayManager<Habit> homeDayManager = new HomeDayManager(timeLineAdapter);
 
             tabLayout.setSmoothScrollingEnabled(true);
             tabLayout.setScrollPosition(0, 0.0f, true);
@@ -115,8 +118,7 @@ public class HomeFragment extends Fragment {
                         @Override
                         public void onTabSelected(final TabLayout.Tab tab) {
                             if (tab.getPosition() == 0) {
-                                homeDayManager.updateForToday(habitListProvider.getList(), dayOfWeek)
-                                ;
+                                homeDayManager.updateForToday(habitListProvider.getList(), dayOfWeek);
                             } else {
                                 final int day = (dayOfWeek + tab.getPosition()) % 7;
 
@@ -181,10 +183,5 @@ public class HomeFragment extends Fragment {
                         },
                         error -> Log.e("StringRequest error", error.toString()))
         );
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
     }
 }
