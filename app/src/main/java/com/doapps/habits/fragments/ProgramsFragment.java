@@ -49,7 +49,7 @@ public class ProgramsFragment extends Fragment {
     private Typeface mFaceLight;
     private Typeface mFace;
     private ImageView mImageTop;
-    private boolean isEmpty = false;
+    private boolean isEmpty;
     private DatabaseReference mRootRef;
 
     @Override
@@ -175,7 +175,7 @@ public class ProgramsFragment extends Fragment {
         );
 
         final List<Achievement> achievements =
-                createAchievementList(dataSnapshot);
+                createAchievementList(dataSnapshot.child("achievements"));
 
         return new Program(
                 Integer.valueOf(dataSnapshot.getKey()),
@@ -186,8 +186,7 @@ public class ProgramsFragment extends Fragment {
         );
     }
 
-    private static List<Achievement> createAchievementList(DataSnapshot dataSnapshot) {
-        dataSnapshot = dataSnapshot.child("achievements");
+    private static List<Achievement> createAchievementList(final DataSnapshot dataSnapshot) {
         final List<Achievement> achievements = new ArrayList<>((int) dataSnapshot.getChildrenCount());
         for (final DataSnapshot achievementSnapshot : dataSnapshot.getChildren()) {
             final List<String> templates =
@@ -270,7 +269,7 @@ public class ProgramsFragment extends Fragment {
         }
 
         final ProgramFragment programFragment = new ProgramFragment();
-        programFragment.snapshot = snapshot;
+        programFragment.setSnapshot(snapshot);
 
         fm.beginTransaction()
                 .replace(R.id.recyclerLayout, programFragment)

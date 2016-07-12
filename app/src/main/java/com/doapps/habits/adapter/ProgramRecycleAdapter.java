@@ -32,7 +32,6 @@ public class ProgramRecycleAdapter extends RecyclerView.Adapter {
     public ProgramRecycleAdapter(final List<ProgramViewProvider> data, final Context context,
                                  final FragmentManager fragmentManager,
                                  final ProgramsFragment programsFragment) {
-
         mProgramList = data;
         this.context = context;
         this.fragmentManager = fragmentManager;

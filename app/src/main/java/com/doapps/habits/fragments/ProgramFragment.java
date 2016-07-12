@@ -19,7 +19,7 @@ import com.google.firebase.database.DataSnapshot;
 public class ProgramFragment extends Fragment {
 
     private static final SparseArray<Program> programHashMap = new SparseArray<>();
-    DataSnapshot snapshot;
+    private DataSnapshot snapshot;
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
@@ -54,4 +54,7 @@ public class ProgramFragment extends Fragment {
         return result;
     }
 
+    void setSnapshot(final DataSnapshot snapshot) {
+        this.snapshot = snapshot;
+    }
 }

@@ -42,6 +42,7 @@ public class HabitDatabaseHandler extends SQLiteOpenHelper implements HabitsData
     private static final String KEY_FOLLOWING_FROM = "following_f";
     private static final String KEY_COST = "cost";
     private static final String KEY_FREQUENCY = "freq";
+    private static final String INTEGER = " INTEGER,";
     private static boolean isSame;
     //private static int size;
 
@@ -53,19 +54,20 @@ public class HabitDatabaseHandler extends SQLiteOpenHelper implements HabitsData
     @Override
     public void onCreate(final SQLiteDatabase sqLiteDatabase) {
 
-        final StringBuilder createLoginTable = new StringBuilder("CREATE TABLE ")
+        final StringBuilder createLoginTable = new StringBuilder(106)
+                .append("CREATE TABLE ")
                 .append(TABLE_HABIT)
                 .append('(')
                 .append(KEY_ID).append(" INTEGER PRIMARY KEY,")
                 .append(KEY_NAME).append(" TEXT,")
                 .append(KEY_QUESTION).append(" TEXT,")
-                .append(KEY_TIME).append(" INTEGER,")
-                .append(KEY_UPDATED_DATE).append(" INTEGER,")
-                .append(KEY_UPDATED_MONTH).append(" INTEGER,")
-                .append(KEY_FOLLOWING_FROM).append(" INTEGER,")
-                .append(KEY_COST).append(" INTEGER,")
-                .append(KEY_FREQUENCY).append(" INTEGER,")
-                .append(KEY_UPDATED_YEAR).append(" INTEGER,")
+                .append(KEY_TIME).append(INTEGER)
+                .append(KEY_UPDATED_DATE).append(INTEGER)
+                .append(KEY_UPDATED_MONTH).append(INTEGER)
+                .append(KEY_FOLLOWING_FROM).append(INTEGER)
+                .append(KEY_COST).append(INTEGER)
+                .append(KEY_FREQUENCY).append(INTEGER)
+                .append(KEY_UPDATED_YEAR).append(INTEGER)
                 .append(KEY_DONE).append(" INTEGER)");
 
         sqLiteDatabase.execSQL(createLoginTable.toString());
@@ -189,7 +191,7 @@ public class HabitDatabaseHandler extends SQLiteOpenHelper implements HabitsData
                 KEY_UPDATED_YEAR, year, KEY_ID, id);
         database.execSQL(query);
 
-        Log.i("SQL done", query);
+        Log.i(TAG, query);
 
         database.close();
         isSame = false;
@@ -204,7 +206,7 @@ public class HabitDatabaseHandler extends SQLiteOpenHelper implements HabitsData
         // KEY_POSITION
 
         if (BuildConfig.DEBUG) {
-            Log.i("SQL done", String.format("UPDATE %s SET %s = 0 WHERE %s = %d",
+            Log.i(TAG, String.format("UPDATE %s SET %s = 0 WHERE %s = %d",
                     TABLE_HABIT, KEY_ID, KEY_ID, fromPosition));
         }
 
@@ -212,7 +214,7 @@ public class HabitDatabaseHandler extends SQLiteOpenHelper implements HabitsData
                 TABLE_HABIT, KEY_ID, fromPosition, KEY_ID, toPosition));
 
         if (BuildConfig.DEBUG) {
-            Log.i("SQL done", String.format("UPDATE %s SET %s = %d WHERE %s = %d",
+            Log.i(TAG, String.format("UPDATE %s SET %s = %d WHERE %s = %d",
                     TABLE_HABIT, KEY_ID, fromPosition, KEY_ID, toPosition));
         }
 
@@ -220,7 +222,7 @@ public class HabitDatabaseHandler extends SQLiteOpenHelper implements HabitsData
                 TABLE_HABIT, KEY_ID, toPosition, KEY_ID));
 
         if (BuildConfig.DEBUG) {
-            Log.i("SQL done", String.format("UPDATE %s SET %s = %d WHERE %s = 0",
+            Log.i(TAG, String.format("UPDATE %s SET %s = %d WHERE %s = 0",
                     TABLE_HABIT, KEY_ID, toPosition, KEY_ID));
         }
 

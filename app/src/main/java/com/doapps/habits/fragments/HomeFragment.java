@@ -2,6 +2,7 @@ package com.doapps.habits.fragments;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -20,7 +21,6 @@ import com.android.volley.toolbox.Volley;
 import com.doapps.habits.BuildConfig;
 import com.doapps.habits.R;
 import com.doapps.habits.adapter.TimeLineAdapter;
-import com.doapps.habits.helper.ConnectionManager;
 import com.doapps.habits.helper.HabitListManager;
 import com.doapps.habits.helper.HomeDayManager;
 import com.doapps.habits.models.DayManager;
@@ -41,6 +41,13 @@ public class HomeFragment extends Fragment {
 
     @SuppressWarnings("HardCodedStringLiteral")
     private static final String URL_WEATHER_API = "http://habbitsapp.esy.es/weather_api.php";
+
+    public static boolean isConnected(final Context context) {
+        final ConnectivityManager connectivityManager
+                = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        final NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
@@ -71,7 +78,7 @@ public class HomeFragment extends Fragment {
         tasksDue.setText(getDueCount(habitList));
 
         // TODO: 06/07/2016 refactor this part
-        if (ConnectionManager.isConnected(getContext())) {
+        if (isConnected(getContext())) {
             getWeather();
         } else {
             weather.setText(String.valueOf(habitList.size()));
