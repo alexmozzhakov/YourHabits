@@ -6,14 +6,11 @@ import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 
 public class ImmManager {
-    private static ImmManager ourInstance;
+    private static final ImmManager INSTANCE = new ImmManager();
     private boolean immOpened;
 
     public static ImmManager getInstance() {
-        if (ourInstance == null) {
-            ourInstance = new ImmManager();
-        }
-        return ourInstance;
+        return INSTANCE;
     }
 
     private ImmManager() {

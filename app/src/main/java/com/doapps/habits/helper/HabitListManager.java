@@ -11,8 +11,8 @@ import java.util.Collections;
 import java.util.List;
 
 public class HabitListManager implements HabitDatabaseMovableListProvider {
-    private static List<Habit> mHabitsList;
-    private static HabitsDatabase mHabitsDatabase;
+    private List<Habit> mHabitsList;
+    private final HabitsDatabase mHabitsDatabase;
 
     public HabitListManager(final Context context) {
         mHabitsDatabase = new HabitDatabaseHandler(context);
