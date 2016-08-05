@@ -10,8 +10,8 @@ import java.util.regex.Pattern;
 
 public class PatternTest {
 
-    private final Pattern NAME_PATTERN = RegisterFragment.NAME_PATTERN;
-    private final Pattern EMAIL_PATTERN = RegisterFragment.EMAIL_PATTERN;
+    private static final Pattern NAME_PATTERN = RegisterFragment.NAME_PATTERN;
+    private static final Pattern EMAIL_PATTERN = RegisterFragment.EMAIL_PATTERN;
 
     @Test
     public void emailValidCheck() {

@@ -108,6 +108,7 @@
             android:paddingLeft="10dp"
             android:paddingStart="10dp"
             android:text="@string/btn_terms_and_conditions"
+            android:onClick="toTerms"
             android:textColor="@color/input_login_hint"
             android:textSize="12sp"/>
 

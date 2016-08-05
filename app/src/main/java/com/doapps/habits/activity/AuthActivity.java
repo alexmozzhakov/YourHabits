@@ -1,8 +1,10 @@
 package com.doapps.habits.activity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 
 import com.doapps.habits.R;
 import com.doapps.habits.fragments.LoginFragment;
@@ -45,12 +47,12 @@ public class AuthActivity extends AppCompatActivity {
                 // User is signed in
                 final Intent intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
-                finish();
             }
         };
 
         getSupportFragmentManager()
                 .beginTransaction()
+                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
                 .add(R.id.frame_layout, new LoginFragment())
                 .commit();
     }
@@ -71,5 +73,9 @@ public class AuthActivity extends AppCompatActivity {
         if (FacebookSdk.isInitialized()) {
             FacebookSdk.clearLoggingBehaviors();
         }
+    }
+
+    public void toTerms(final View view) {
+        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://habbitsapp.esy.es/terms.txt")));
     }
 }

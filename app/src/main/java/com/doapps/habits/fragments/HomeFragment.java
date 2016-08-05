@@ -5,7 +5,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -26,7 +25,7 @@ import com.doapps.habits.helper.HomeDayManager;
 import com.doapps.habits.models.DayManager;
 import com.doapps.habits.models.Habit;
 import com.doapps.habits.models.HabitListProvider;
-import com.doapps.habits.models.UpdatableList;
+import com.doapps.habits.models.StringSelector;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,9 +39,9 @@ public class HomeFragment extends Fragment {
     private TextView weatherBot;
 
     @SuppressWarnings("HardCodedStringLiteral")
-    private static final String URL_WEATHER_API = "http://habbitsapp.esy.es/weather_api.php";
+    private static final String URL_WEATHER_API = "http://habbitsapp.esy.es/weather.php";
 
-    public static boolean isConnected(final Context context) {
+    private static boolean isConnected(final Context context) {
         final ConnectivityManager connectivityManager
                 = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         final NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
@@ -55,31 +54,26 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        weather = (TextView) view.findViewById(R.id.weather);
-        weatherBot = (TextView) view.findViewById(R.id.weatherBot);
-        final TabLayout tabLayout = (TabLayout) view.findViewById(R.id.sliding_tabs);
+        final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.timeline);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         final HabitListProvider habitListManager =
-                new HabitListManager(getContext().getApplicationContext());
+                HabitListManager.getInstance(getContext());
 
         final List<Habit> habitList = new ArrayList<>(habitListManager.getList());
-        final TextView tasksDue = (TextView) view.findViewById(R.id.tasks_due);
-
-        final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-
-        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-        recyclerView.setLayoutManager(linearLayoutManager);
-
         // get day of week
-        final int dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+        final int dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK) + 1;
         // filter list for today
-        HomeDayManager.filterListForToday(habitList, String.valueOf(dayOfWeek));
+        HomeDayManager.filterListForToday(habitList, dayOfWeek + 1);
+
         // set due count of filtered list
+        final TextView tasksDue = (TextView) view.findViewById(R.id.tasks_due);
         tasksDue.setText(getDueCount(habitList));
 
-        // TODO: 06/07/2016 refactor this part
+        weather = (TextView) view.findViewById(R.id.weather);
+        weatherBot = (TextView) view.findViewById(R.id.weatherBot);
         if (isConnected(getContext())) {
-            getWeather();
+            getWeather(getContext());
         } else {
             weather.setText(String.valueOf(habitList.size()));
             weatherBot.setText("All tasks");
@@ -88,7 +82,7 @@ public class HomeFragment extends Fragment {
                 final ConnectivityManager conMan = (ConnectivityManager)
                         getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
                 Log.i("Lol", "addDefaultNetworkActiveListener");
-                conMan.addDefaultNetworkActiveListener(this::getWeather);
+                conMan.addDefaultNetworkActiveListener(() -> getWeather(getContext()));
             }
         }
 
@@ -97,60 +91,54 @@ public class HomeFragment extends Fragment {
         timeLineAdapter.setHasStableIds(true);
         recyclerView.setAdapter(timeLineAdapter);
 
-        final String[] daysOfWeek =
-                getActivity().getResources().getStringArray(R.array.days_of_week_array);
-        initDaysTabs(daysOfWeek, dayOfWeek, tabLayout, timeLineAdapter, new HabitListManager(getContext()));
+        final StringSelector swipeSelector = (StringSelector) view.findViewById(R.id.sliding_tabs);
+
+        swipeSelector.setItems(getDaysOfWeekFromToday(dayOfWeek));
+
+        initDaysTabs(
+                dayOfWeek,
+                swipeSelector,
+                HabitListManager.getInstance(getContext()),
+                new HomeDayManager(timeLineAdapter));
+
         return view;
 
     }
 
-    private static void initDaysTabs(final String[] daysOfWeek,
-                                     final int dayOfWeek,
-                                     final TabLayout tabLayout,
-                                     final UpdatableList<Habit> timeLineAdapter,
-                                     final HabitListProvider habitListProvider) {
-        if (tabLayout != null) {
-            Log.i("HomeFragment", String.format("dayOfWeek = %s", daysOfWeek[dayOfWeek]));
-            for (int i = 0; i < 7; i++) {
-                tabLayout.addTab(tabLayout.newTab().setText(daysOfWeek[(dayOfWeek + i) % 7]));
-            }
-
-            final DayManager<Habit> homeDayManager = new HomeDayManager(timeLineAdapter);
-
-            tabLayout.setSmoothScrollingEnabled(true);
-            tabLayout.setScrollPosition(0, 0.0f, true);
-
-            tabLayout.addOnTabSelectedListener(
-                    new TabLayout.OnTabSelectedListener() {
-                        @Override
-                        public void onTabSelected(final TabLayout.Tab tab) {
-                            if (tab.getPosition() == 0) {
-                                homeDayManager.updateForToday(habitListProvider.getList(), dayOfWeek);
-                            } else {
-                                final int day = (dayOfWeek + tab.getPosition()) % 7;
-
-                                if (BuildConfig.DEBUG) {
-                                    Log.i("HomeFragment", "Day = " + daysOfWeek[day] + ", num = " + day);
-                                }
-
-                                homeDayManager.updateListByDay(habitListProvider.getList(), day);
-                            }
-
-                        }
-
-                        @Override
-                        public void onTabUnselected(final TabLayout.Tab tab) {
-                            // ignored
-                        }
-
-                        @Override
-                        public void onTabReselected(final TabLayout.Tab tab) {
-                            // ignored
-                        }
-                    }
-
-            );
+    private String[] getDaysOfWeekFromToday(final int dayOfWeek) {
+        final String[] daysOfWeekNames = getActivity().getResources().getStringArray(R.array.days_of_week_array);
+        final String[] daysOfWeek = new String[7];
+        for (int i = 0; i < daysOfWeekNames.length; i++) {
+            daysOfWeek[i] = daysOfWeekNames[(dayOfWeek + i) % 7];
         }
+        return daysOfWeek;
+    }
+
+    private static void initDaysTabs(
+            final int dayOfWeek,
+            final StringSelector swipeStringSelector,
+            final HabitListProvider habitListProvider,
+            final DayManager<Habit> habitDayManager) {
+
+        swipeStringSelector.setOnItemSelectedListener(item -> {
+            final int value = swipeStringSelector.getAdapter().getCurrentPosition();
+            if (value == 0) {
+                habitDayManager.updateForToday(habitListProvider.getList(), dayOfWeek + 1);
+
+                if (BuildConfig.DEBUG) {
+                    Log.i("HomeFragment", "Selected day (today) = " + dayOfWeek);
+                }
+
+            } else {
+                final int day = (dayOfWeek + value) % 7;
+
+                if (BuildConfig.DEBUG) {
+                    Log.i("HomeFragment", "Selected day = " + day);
+                }
+
+                habitDayManager.updateListByDay(habitListProvider.getList(), day);
+            }
+        });
     }
 
     private static CharSequence getDueCount(final Iterable<Habit> habitsList) {
@@ -168,9 +156,8 @@ public class HomeFragment extends Fragment {
         return String.valueOf(counter);
     }
 
-    private void getWeather() {
-
-        Volley.newRequestQueue(getActivity().getApplicationContext()).add(
+    private void getWeather(final Context context) {
+        Volley.newRequestQueue(context.getApplicationContext()).add(
                 new StringRequest(Request.Method.GET, URL_WEATHER_API,
                         response -> {
                             try {
@@ -179,6 +166,14 @@ public class HomeFragment extends Fragment {
                                 if (o.has("error")) {
                                     Log.e("JSONException", "Response got: " + o.getString("error"));
                                 } else {
+                                    if (getActivity() != null) {
+                                        getActivity()
+                                                .getSharedPreferences("pref", Context.MODE_PRIVATE)
+                                                .edit()
+                                                .putString("location", o.getString("location"))
+                                                .apply();
+                                    }
+
                                     weather.setText(o.getString("celsius") + "˚C");
                                     weatherBot.setText(o.getString("location"));
                                 }

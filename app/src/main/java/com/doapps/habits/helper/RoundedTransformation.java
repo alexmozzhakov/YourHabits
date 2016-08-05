@@ -9,6 +9,8 @@ import android.graphics.Shader;
 import com.squareup.picasso.Transformation;
 
 public class RoundedTransformation implements Transformation {
+    private static final String CIRCLE = "circle";
+
     @Override
     public Bitmap transform(final Bitmap source) {
         final int size = Math.min(source.getWidth(), source.getHeight());
@@ -39,6 +41,6 @@ public class RoundedTransformation implements Transformation {
 
     @Override
     public String key() {
-        return "circle";
+        return CIRCLE;
     }
 }

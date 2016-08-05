@@ -3,7 +3,6 @@ package com.doapps.habits.fragments;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -21,27 +20,24 @@ import android.widget.TextView;
 
 import com.doapps.habits.R;
 import com.doapps.habits.adapter.ProgramRecycleAdapter;
-import com.doapps.habits.helper.FirebaseDatabaseManager;
-import com.doapps.habits.helper.HabitListManager;
-import com.doapps.habits.models.Achievement;
 import com.doapps.habits.models.FirebaseProgramView;
-import com.doapps.habits.models.HabitsDatabase;
-import com.doapps.habits.models.Program;
 import com.doapps.habits.models.ProgramViewProvider;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 public class ProgramsFragment extends Fragment {
     private static final String TAG = ProgramsFragment.class.getSimpleName();
     public static boolean isShowing;
+    private static boolean persistenceEnabled;
+    private static boolean isTop;
     private ProgramRecycleAdapter mAdapter;
     private List<ProgramViewProvider> mProgramData;
     private TextView mTitleTop;
@@ -66,8 +62,14 @@ public class ProgramsFragment extends Fragment {
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              final Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final View result = inflater.inflate(R.layout.fragment_programs, container, false);
-        mRootRef = FirebaseDatabaseManager.getInstance().getDatabase().child("programs");
+        final View result = inflater.inflate(R.layout.percent_fragment_programs, container, false);
+
+        if (!persistenceEnabled) {
+            FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+            persistenceEnabled = true;
+        }
+
+        mRootRef = FirebaseDatabase.getInstance().getReference().child("programs");
         final View emptyView = result.findViewById(R.id.empty_view);
         final RecyclerView recyclerView = (RecyclerView) result.findViewById(R.id.recyclerView);
 
@@ -102,6 +104,7 @@ public class ProgramsFragment extends Fragment {
 
         mSuccessTop = (TextView) result.findViewById(R.id.percentTop);
         mImageTop = (ImageView) result.findViewById(R.id.imageViewTop);
+        mImageTop.setMaxHeight(result.getHeight()/3);
         mTitleTop = (TextView) result.findViewById(R.id.titleTop);
 
 
@@ -162,46 +165,6 @@ public class ProgramsFragment extends Fragment {
         return result;
     }
 
-    static Program onProgramApply(final DataSnapshot dataSnapshot, final Context context) {
-        final HabitsDatabase habitsDatabase = new HabitListManager(context).getDatabase();
-        final long habitId = habitsDatabase.addHabit(
-                dataSnapshot.child("habit").child("title").getValue(String.class),
-                dataSnapshot.child("habit").child("question").getValue(String.class),
-                dataSnapshot.child("habit").child("time").getValue(Integer.class),
-                Calendar.getInstance(),
-                0,
-                dataSnapshot.child("habit").child("cost").getValue(Integer.class),
-                dataSnapshot.child("habit").child("frequency").getValue(Integer.class)
-        );
-
-        final List<Achievement> achievements =
-                createAchievementList(dataSnapshot.child("achievements"));
-
-        return new Program(
-                Integer.valueOf(dataSnapshot.getKey()),
-                dataSnapshot.child("name").getValue(String.class),
-                String.format("%s SUCCESS", dataSnapshot.child("success").getValue(String.class)),
-                habitId,
-                achievements
-        );
-    }
-
-    private static List<Achievement> createAchievementList(final DataSnapshot dataSnapshot) {
-        final List<Achievement> achievements = new ArrayList<>((int) dataSnapshot.getChildrenCount());
-        for (final DataSnapshot achievementSnapshot : dataSnapshot.getChildren()) {
-            final List<String> templates =
-                    new ArrayList<>((int) achievementSnapshot.getChildrenCount());
-            for (final DataSnapshot templatesSnapshot : achievementSnapshot.child("templates").getChildren()) {
-                templates.add(templatesSnapshot.child("name").getValue(String.class));
-            }
-            final Achievement achievement = new Achievement(
-                    achievementSnapshot.child("rating").getValue(Integer.class),
-                    templates);
-            achievements.add(achievement);
-        }
-        return achievements;
-    }
-
     private void generateTopProgram() {
         final DatabaseReference programRef = mRootRef.child("0");
 
@@ -210,7 +173,6 @@ public class ProgramsFragment extends Fragment {
             @Override
             public void onDataChange(final DataSnapshot dataSnapshot) {
                 mTitleTop.setText(dataSnapshot.child("name").getValue(String.class));
-                mTitleTop.setTextColor(Color.WHITE);
                 final String imageLink = String.format("http://habbitsapp.esy.es/img_progs/%s.jpg",
                         dataSnapshot.child("image").getValue(String.class));
                 Log.v("IMG_URL", imageLink);
@@ -227,10 +189,14 @@ public class ProgramsFragment extends Fragment {
                     createProgramApplyFragment(dataSnapshot, getChildFragmentManager());
                 }
 
-                mImageTop.setOnClickListener(view ->
-                        onClick(dataSnapshot, getChildFragmentManager()));
-                mTitleTop.setOnClickListener(view ->
-                        onClick(dataSnapshot, getChildFragmentManager()));
+                mImageTop.setOnClickListener(view -> {
+                    onClick(dataSnapshot, getChildFragmentManager());
+                    isTop = true;
+                });
+                mTitleTop.setOnClickListener(view -> {
+                    onClick(dataSnapshot, getChildFragmentManager());
+                    isTop = true;
+                });
 
                 //Style percent view
                 mSuccessTop.setVisibility(View.VISIBLE);
@@ -245,33 +211,36 @@ public class ProgramsFragment extends Fragment {
         });
     }
 
-    public void onClick(final DataSnapshot snapshot, final FragmentManager fm) {
+    public void onClick(final DataSnapshot dataSnapshot, final FragmentManager fragmentManager) {
         if (isShowing) {
-            generateTopProgram();
+            if (!isTop) {
+                generateTopProgram();
+            }
 
-            fm.beginTransaction()
-                    .remove(fm.findFragmentById(R.id.recyclerLayout))
+            fragmentManager.beginTransaction()
+                    .remove(fragmentManager.findFragmentById(R.id.recyclerLayout))
                     .commit();
             isShowing = false;
         } else {
-            createProgramApplyFragment(snapshot, fm);
+            createProgramApplyFragment(dataSnapshot, fragmentManager);
+            isTop = false;
         }
     }
 
-    private static void createProgramApplyFragment(final DataSnapshot snapshot,
-                                                   final FragmentManager fm) {
+    private static void createProgramApplyFragment(final DataSnapshot dataSnapshot,
+                                                   final FragmentManager fragmentManager) {
 
         // delete previous fragment if showing
         if (isShowing) {
-            fm.beginTransaction()
-                    .remove(fm.findFragmentById(R.id.recyclerLayout))
+            fragmentManager.beginTransaction()
+                    .remove(fragmentManager.findFragmentById(R.id.recyclerLayout))
                     .commit();
         }
 
         final ProgramFragment programFragment = new ProgramFragment();
-        programFragment.setSnapshot(snapshot);
+        programFragment.setSnapshot(dataSnapshot);
 
-        fm.beginTransaction()
+        fragmentManager.beginTransaction()
                 .replace(R.id.recyclerLayout, programFragment)
                 .commit();
 

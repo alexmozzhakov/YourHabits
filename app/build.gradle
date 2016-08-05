@@ -20,9 +20,6 @@ android {
     dexOptions {
         javaMaxHeapSize "3g"
     }
-    dataBinding {
-        enabled = true
-    }
     buildTypes {
         release {
             minifyEnabled true
@@ -32,23 +29,35 @@ android {
     }
 }
 
-dependencies {
-
-    compile 'com.android.support:design:24.0.0'
-    compile 'com.android.support:recyclerview-v7:24.0.0'
-    compile 'com.android.support:appcompat-v7:24.0.0'
-    compile 'com.android.support:support-v4:24.0.0'
-    compile 'com.android.support:percent:24.0.0'
-    compile 'com.google.firebase:firebase-database:9.2.0'
-    compile 'com.google.firebase:firebase-auth:9.2.0'
-    compile 'com.google.firebase:firebase-crash:9.2.0'
-    compile 'com.facebook.android:facebook-android-sdk:4.13.2'
-    compile 'com.mcxiaoke.volley:library-aar:1.0.1'
-    compile 'com.ruesga.timeline-chart-view:timeline-chart-view:0.0.8'
-    compile 'com.squareup.picasso:picasso:2.5.2'
-    testCompile 'junit:junit:4.12'
-    compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha3'
+repositories {
+    jcenter()
+    maven { url "https://jitpack.io" }
 }
 
+dependencies {
+    compile 'com.android.support:design:24.1.1'
+    compile 'com.android.support:recyclerview-v7:24.1.1'
+    compile 'com.android.support:appcompat-v7:24.1.1'
+    compile 'com.android.support:support-v4:24.1.1'
+    compile 'com.android.support:percent:24.1.1'
+    compile 'com.android.volley:volley:1.0.0'
+    compile 'com.google.firebase:firebase-database:9.2.1'
+    compile 'com.google.firebase:firebase-auth:9.2.1'
+    compile 'com.google.firebase:firebase-crash:9.2.1'
+    compile 'com.facebook.android:facebook-android-sdk:4.14.0'
+    compile 'com.ruesga.timeline-chart-view:timeline-chart-view:0.0.8'
+    compile 'org.apmem.tools:layouts:1.10@aar'
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    // Photo selector dependency
+    testCompile 'junit:junit:4.12'
+    //noinspection GradleDependency
+    compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha3'
+    compile project(path: ':imageselector')
+}
 
+tasks.whenTaskAdded { task ->
+    if (task.name.equals("lint")) {
+        task.enabled = false
+    }
+}
 apply plugin: 'com.google.gms.google-services'

@@ -88,6 +88,7 @@ public class LoginFragment extends Fragment {
         // Link to Register Screen
         btnLinkToRegister.setOnClickListener(view ->
                 getActivity().getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
                         .replace(R.id.frame_layout, new RegisterFragment()).commit());
 
 
@@ -95,7 +96,6 @@ public class LoginFragment extends Fragment {
             final Intent intent = new Intent(getActivity().getApplicationContext(),
                     PasswordRecoveryActivity.class);
             startActivity(intent);
-            getActivity().finish();
         });
 
         final CallbackManager callbackManager = ((AuthActivity) getActivity()).getCallbackManager();
@@ -113,13 +113,52 @@ public class LoginFragment extends Fragment {
                     @Override
                     public void onCancel() {
                         Log.d(TAG, "facebook:onCancel");
-                        // ...
                     }
 
                     @Override
                     public void onError(final FacebookException error) {
                         Log.d(TAG, "facebook:onError", error);
-                        // ...
+                    }
+
+                    private void handleFacebookAccessToken(final AccessToken token) {
+                        if (BuildConfig.DEBUG) {
+                            Log.d(TAG, "handleFacebookAccessToken:" + token);
+                        }
+
+                        final AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
+                        mAuth.signInWithCredential(credential)
+                                .addOnCompleteListener(task -> {
+                                    if (BuildConfig.DEBUG) {
+                                        Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
+                                    }
+
+                                    // If sign in fails, display a message to the user. If sign in succeeds
+                                    // the auth state listener will be notified and logic to handle the
+                                    // signed in user can be handled in the listener.
+                                    if (task.isSuccessful()) {
+                                        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+                                        if (user != null) {
+                                            final String userID = token.getUserId();
+
+                                            final UserProfileChangeRequest profileUpdates =
+                                                    new UserProfileChangeRequest.Builder()
+                                                            .setPhotoUri(Uri.parse(String.format("https://graph.facebook.com/%s/picture?type=large", userID)))
+                                                            .build();
+
+                                            user.updateProfile(profileUpdates)
+                                                    .addOnCompleteListener(update -> {
+                                                        if (update.isSuccessful()) {
+                                                            Log.d(TAG, "User photo set.");
+                                                        }
+                                                    });
+                                        }
+                                    } else {
+                                        Log.w(TAG, "signInWithCredential", task.getException());
+                                        Toast.makeText(getContext(), "Authentication failed.",
+                                                Toast.LENGTH_SHORT).show();
+                                    }
+                                });
                     }
                 });
         btnFacebook.setOnClickListener(view ->
@@ -127,6 +166,7 @@ public class LoginFragment extends Fragment {
                         logInWithReadPermissions(getActivity(),
                                 Arrays.asList("email", "public_profile")));
     }
+
 
     private void checkInput(final String email, final String password) {
         // Check for empty data in the form
@@ -169,8 +209,7 @@ public class LoginFragment extends Fragment {
         inputPassword.setImeActionLabel("Login", KeyEvent.KEYCODE_ENTER);
         inputPassword.setOnKeyListener((final View view, final int keyCode, final KeyEvent event) -> {
             // If the event is a key-down event on the "enter" button
-            if (event.getAction() == KeyEvent.ACTION_DOWN &&
-                    keyCode == KeyEvent.KEYCODE_ENTER) {
+            if (keyCode == KeyEvent.KEYCODE_ENTER) {
                 final String email = inputEmail.getText().toString().trim();
                 final String password = inputPassword.getText().toString().trim();
 
@@ -192,9 +231,12 @@ public class LoginFragment extends Fragment {
             // the auth state listener will be notified and logic to handle the
             // signed in user can be handled in the listener.
             if (task.isSuccessful()) {
-                final Intent intent = new Intent(getActivity(), MainActivity.class);
-                startActivity(intent);
-                getActivity().finish();
+                if (getActivity() != null) {
+                    final Intent intent = new Intent(getActivity(), MainActivity.class);
+                    startActivity(intent);
+                } else {
+                    Log.i("FA", "login page no longer exists");
+                }
             } else {
                 Log.w(TAG, "signInAnonymously", task.getException());
                 Toast.makeText(getContext().getApplicationContext(), "Authentication failed.",
@@ -203,46 +245,5 @@ public class LoginFragment extends Fragment {
 
             // ...
         });
-    }
-
-    private void handleFacebookAccessToken(final AccessToken token) {
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "handleFacebookAccessToken:" + token);
-        }
-
-        final AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(task -> {
-                    if (BuildConfig.DEBUG) {
-                        Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
-                    }
-
-                    // If sign in fails, display a message to the user. If sign in succeeds
-                    // the auth state listener will be notified and logic to handle the
-                    // signed in user can be handled in the listener.
-                    if (task.isSuccessful()) {
-                        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-                        if (user != null) {
-                            final String userID = token.getUserId();
-
-                            final UserProfileChangeRequest profileUpdates =
-                                    new UserProfileChangeRequest.Builder()
-                                            .setPhotoUri(Uri.parse(String.format("https://graph.facebook.com/%s/picture?type=large", userID)))
-                                            .build();
-
-                            user.updateProfile(profileUpdates)
-                                    .addOnCompleteListener(update -> {
-                                        if (update.isSuccessful()) {
-                                            Log.d(TAG, "User photo set.");
-                                        }
-                                    });
-                        }
-                    } else {
-                        Log.w(TAG, "signInWithCredential", task.getException());
-                        Toast.makeText(getContext(), "Authentication failed.",
-                                Toast.LENGTH_SHORT).show();
-                    }
-                });
     }
 }

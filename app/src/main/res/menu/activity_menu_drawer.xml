@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group
-        android:id="@+id/up_menu"
+        android:id="@+id/upMenu"
         android:checkableBehavior="single">
 
         <item
@@ -25,7 +25,7 @@
     </group>
 
     <group
-        android:id="@+id/down_menu">
+        android:id="@+id/downMenu">
 
         <item
             android:id="@+id/nav_logout"
