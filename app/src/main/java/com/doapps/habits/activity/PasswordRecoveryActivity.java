@@ -35,7 +35,6 @@ public class PasswordRecoveryActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Recovery mail sent", Toast.LENGTH_SHORT).show();
             final Intent intent = new Intent(getApplicationContext(), AuthActivity.class);
             startActivity(intent);
-            finish();
         } else {
             Toast.makeText(getApplicationContext(), "Recovery email isn't valid", Toast.LENGTH_SHORT).show();
         }

@@ -27,7 +27,7 @@ public class ListFragment extends Fragment {
         final RecyclerView recyclerView = (RecyclerView) result.findViewById(R.id.rv);
         recyclerView.setHasFixedSize(true);
         final TextView emptyView = (TextView) result.findViewById(R.id.empty_view);
-        final HabitDatabaseMovableListProvider habitListManager = new HabitListManager(getContext());
+        final HabitDatabaseMovableListProvider habitListManager = HabitListManager.getInstance(getContext());
 
         if (habitListManager.isEmpty()) {
             recyclerView.setVisibility(View.GONE);

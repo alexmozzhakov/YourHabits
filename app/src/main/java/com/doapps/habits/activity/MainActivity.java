@@ -23,7 +23,9 @@ import com.doapps.habits.fragments.HomeFragment;
 import com.doapps.habits.fragments.ListFragment;
 import com.doapps.habits.fragments.ProfileFragment;
 import com.doapps.habits.fragments.ProgramsFragment;
+import com.doapps.habits.helper.NameChangeListener;
 import com.doapps.habits.helper.RoundedTransformation;
+import com.doapps.habits.slider.swipeselector.PixelUtils;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
@@ -34,7 +36,6 @@ import com.squareup.picasso.Picasso;
 public class MainActivity extends FragmentActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final long INFLATE_DELAY = 200L;
-    // TODO: 16/06/2016 move navigation logic to another class
     private int mLastFragment = -1;
     private NavigationView mNavigationView;
     private FirebaseUser user;
@@ -43,7 +44,6 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
     private DrawerLayout mDrawerLayout;
     private final CallbackManager mCallbackManager = CallbackManager.Factory.create();
 
-    @SuppressWarnings("CommitTransaction")
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,6 +66,12 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
                     onSetupNavigationDrawer());
         } else {
             onSetupNavigationDrawer();
+            NameChangeListener.listener.
+                    addObserver((observable, o) -> {
+                        final TextView navName = (TextView)
+                                mNavigationView.getHeaderView(0).findViewById(R.id.name_info);
+                        navName.setText(user.getDisplayName());
+                    });
             if (user.getPhotoUrl() != null) {
                 Log.i("FA image url", String.valueOf(user.getPhotoUrl()));
 
@@ -76,21 +82,20 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         mDrawerLayout.addDrawerListener(mDrawerToggle);
 
-
         if (getActionBar() != null) {
-            getActionBar().setDisplayHomeAsUpEnabled(true);
             getActionBar().setHomeButtonEnabled(true);
         }
     }
 
-    @SuppressWarnings("CommitTransaction")
     @Override
     public boolean onNavigationItemSelected(final MenuItem item) {
         mDrawerLayout.closeDrawer(GravityCompat.START);
+        final int id = item.getItemId();
+        if (mLastFragment == 3 && id != R.id.nav_profile) {
+            findViewById(R.id.toolbar_shadow).setVisibility(View.VISIBLE);
+        }
 
         new Handler().postDelayed(() -> {
-            final int id = item.getItemId();
-
             if (id == R.id.nav_home && mLastFragment != 0) {
                 final FragmentTransaction transaction =
                         getSupportFragmentManager().beginTransaction();
@@ -159,25 +164,28 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
 
     }
 
-    public void toProfile(final View view) {
-        if (mLastFragment == 3 || user.isAnonymous()) {
+    private void toProfile(final View view) {
+        mDrawerLayout.closeDrawer(GravityCompat.START);
+
+        if (mLastFragment == 3) {
             return;
         }
+        new Handler().postDelayed(() -> {
+            mToolbar.setTitle("Profile");
 
-        mToolbar.setTitle("Profile");
+            if (mLastFragment != -1) {
+                mNavigationView.getMenu().getItem(mLastFragment).setChecked(false);
+            }
 
-        if (mLastFragment != -1) {
-            mNavigationView.getMenu().getItem(mLastFragment).setChecked(false);
-        }
-        mNavigationView.getMenu().getItem(3).setChecked(true);
+            mNavigationView.getMenu().getItem(3).setChecked(true);
 
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.content_frame, new ProfileFragment())
-                .commit();
-        mLastFragment = 3;
-
-        mDrawerLayout.closeDrawers();
+            findViewById(R.id.toolbar_shadow).setVisibility(View.GONE);
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.content_frame, new ProfileFragment())
+                    .commit();
+            mLastFragment = 3;
+        }, INFLATE_DELAY);
     }
 
     private void onSetupNavigationDrawer() {
@@ -189,7 +197,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
             if (user != null && user.isAnonymous()) {
                 Log.i("FirebaseAuth", "User is anonymous");
                 mNavigationView.getMenu().findItem(R.id.nav_logout).setTitle("Login");
-                mNavigationView.getHeaderView(0).setVisibility(View.INVISIBLE);
+                mNavigationView.getHeaderView(0).setVisibility(View.GONE);
             } else if (user != null) {
                 mNavigationView.getMenu().findItem(R.id.nav_profile).setVisible(true);
                 Log.i("FirebaseAuth", "Regular user");
@@ -197,15 +205,21 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
                         (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.name_info);
                 final TextView navEmail =
                         (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.email_info);
-                final ImageView avatar =
-                        (ImageView) mNavigationView.getHeaderView(0).findViewById(R.id.profile_photo);
                 navName.setText(user.getDisplayName());
                 navEmail.setText(user.getEmail());
-                Picasso.with(getApplicationContext())
-                        .load(user.getPhotoUrl())
-                        .transform(new RoundedTransformation())
-                        .into(avatar);
-                avatar.setVisibility(View.VISIBLE);
+                mNavigationView.getHeaderView(0).setOnClickListener(this::toProfile);
+                if (user.getPhotoUrl() != null) {
+                    mNavigationView.getHeaderView(0)
+                            .findViewById(R.id.fields_info).setPadding(
+                            (int) PixelUtils.dpToPixel(this, 73), 0, 0, 0);
+                    final ImageView avatar =
+                            (ImageView) mNavigationView.getHeaderView(0).findViewById(R.id.profile_photo);
+                    Picasso.with(getApplicationContext())
+                            .load(user.getPhotoUrl())
+                            .transform(new RoundedTransformation())
+                            .into(avatar);
+                    avatar.setVisibility(View.VISIBLE);
+                }
             } else {
                 Log.w("FirebaseAuth", "User is null");
                 mNavigationView.getMenu().findItem(R.id.nav_logout).setVisible(false);
@@ -235,7 +249,6 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
         // Launching the login activity
         final Intent intent = new Intent(this, AuthActivity.class);
         startActivity(intent);
-        finish();
     }
 
 

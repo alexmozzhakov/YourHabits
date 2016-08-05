@@ -1,7 +1,6 @@
 package com.doapps.habits.adapter;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
@@ -54,7 +53,6 @@ public class ProgramRecycleAdapter extends RecyclerView.Adapter {
 
         txtPercent.setTypeface(face);
         txtTitle.setTypeface(faceLight);
-        txtPercent.setTextColor(Color.parseColor("#801D1D26"));
 
         mTitleTop = (TextView) parent.getRootView().findViewById(R.id.titleTop);
         mImageTop = (ImageView) parent.getRootView().findViewById(R.id.imageViewTop);
@@ -70,19 +68,17 @@ public class ProgramRecycleAdapter extends RecyclerView.Adapter {
         final ProgramViewHolder programViewHolder = (ProgramViewHolder) holder;
         final ProgramViewProvider program = mProgramList.get(position);
 
-        programViewHolder.txtTitle.setText(program.getTitle());
-        programViewHolder.txtPercent.setText(program.getPercent());
-        programViewHolder.txtTitle.setOnClickListener(v -> {
+        programViewHolder.getTitleTextView().setText(program.getTitle());
+        programViewHolder.getPercentTextView().setText(program.getPercent());
+        programViewHolder.getTitleTextView().setOnClickListener(v -> {
             Picasso.with(context.getApplicationContext())
                     .load(program.getImageLink())
                     .into(mImageTop);
             mTitleTop.setText(program.getTitle());
             mSuccessTop.setVisibility(View.VISIBLE);
             mSuccessTop.setText(program.getSnapshot().child("success").getValue(String.class));
-            mTitleTop.setOnClickListener(view ->
-                    programsFragment.onClick(program.getSnapshot(),
-                            fragmentManager));
-            mTitleTop.callOnClick();
+            programsFragment.onClick(program.getSnapshot(),
+                    fragmentManager);
         });
     }
 

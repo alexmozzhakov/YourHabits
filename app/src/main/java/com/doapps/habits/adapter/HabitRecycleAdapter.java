@@ -40,30 +40,18 @@ public class HabitRecycleAdapter extends RecyclerView.Adapter implements Movable
 
         final HabitViewHolder habitViewHolder = (HabitViewHolder) holder;
         final Habit habit = mHabitList.get(position);
+
         habitViewHolder.txtTitle.setText(habit.title);
         habitViewHolder.checkBox.setOnClickListener(view -> {
+
             if (habitViewHolder.checkBox.isChecked()) {
+                mHabitsDatabase.updateHabit(habit, 1);
                 mHabitList.get(position).setDoneMarker(true);
-
-                mHabitsDatabase.updateHabit(
-                        habit.id,
-                        habit.markerUpdatedDay,
-                        habit.markerUpdatedMonth,
-                        habit.markerUpdatedYear,
-                        1);
-
                 habitViewHolder.txtTitle.setTextColor(Color.GRAY);
             } else {
-
-                mHabitsDatabase.updateHabit(
-                        habit.id,
-                        habit.markerUpdatedDay,
-                        habit.markerUpdatedMonth,
-                        habit.markerUpdatedYear,
-                        0);
-
-                habitViewHolder.txtTitle.setTextColor(Color.BLACK);
+                mHabitsDatabase.updateHabit(habit, 0);
                 mHabitList.get(position).setDoneMarker(false);
+                habitViewHolder.txtTitle.setTextColor(Color.BLACK);
             }
         });
 
