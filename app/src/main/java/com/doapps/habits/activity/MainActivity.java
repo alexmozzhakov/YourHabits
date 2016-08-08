@@ -1,6 +1,7 @@
 package com.doapps.habits.activity;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -58,14 +60,16 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
                     .beginTransaction()
                     .add(R.id.content_frame, new HomeFragment())
                     .commit();
-            mLastFragment = 0;
+            mLastFragment = R.id.nav_home;
         }
 
         if (user == null) {
-            FirebaseAuth.getInstance().signInAnonymously().addOnCompleteListener(task ->
-                    onSetupNavigationDrawer());
+            FirebaseAuth.getInstance().signInAnonymously().addOnCompleteListener(task -> {
+                user = FirebaseAuth.getInstance().getCurrentUser();
+                onSetupNavigationDrawer(user);
+            });
         } else {
-            onSetupNavigationDrawer();
+            onSetupNavigationDrawer(user);
             NameChangeListener.listener.
                     addObserver((observable, o) -> {
                         final TextView navName = (TextView)
@@ -79,7 +83,15 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
         }
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar,
-                R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
+
+
+            @Override
+            public void onDrawerOpened(final View drawerView) {
+                closeImm();
+                super.onDrawerOpened(drawerView);
+            }
+        };
         mDrawerLayout.addDrawerListener(mDrawerToggle);
 
         if (getActionBar() != null) {
@@ -91,47 +103,36 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
     public boolean onNavigationItemSelected(final MenuItem item) {
         mDrawerLayout.closeDrawer(GravityCompat.START);
         final int id = item.getItemId();
-        if (mLastFragment == 3 && id != R.id.nav_profile) {
-            findViewById(R.id.toolbar_shadow).setVisibility(View.VISIBLE);
-        }
 
-        new Handler().postDelayed(() -> {
-            if (id == R.id.nav_home && mLastFragment != 0) {
-                final FragmentTransaction transaction =
-                        getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.content_frame, new HomeFragment()).commit();
-                mToolbar.setTitle("Home");
-                mLastFragment = 0;
-                mNavigationView.getMenu().findItem(R.id.nav_home).setChecked(true);
 
-            } else if (id == R.id.nav_programs && mLastFragment != 1) {
-                final FragmentTransaction
-                        transaction = getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.content_frame, new ProgramsFragment()).commit();
-                mToolbar.setTitle("Programs");
-                mLastFragment = 1;
-                mNavigationView.getMenu().findItem(R.id.nav_programs).setChecked(true);
-
-            } else if (id == R.id.nav_lists && mLastFragment != 2) {
-                final FragmentTransaction transaction =
-                        getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.content_frame, new ListFragment()).commit();
-                mToolbar.setTitle("List");
-                mLastFragment = 2;
-                mNavigationView.getMenu().findItem(R.id.nav_lists).setChecked(true);
-            } else if (id == R.id.nav_profile && mLastFragment != 3) {
-                final FragmentTransaction transaction =
-                        getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.content_frame, new ProfileFragment()).commit();
-                mToolbar.setTitle("Profile");
-                mLastFragment = 3;
-                mNavigationView.getMenu().findItem(R.id.nav_profile).setChecked(true);
-            } else if (id == R.id.nav_logout) {
-                logoutUser();
+        if (id == R.id.nav_logout) {
+            logoutUser();
+        } else if (mLastFragment != id) {
+            if (mLastFragment == R.id.nav_profile) {
+                findViewById(R.id.toolbar_shadow).setVisibility(View.VISIBLE);
             }
-            ProgramsFragment.isShowing = false;
 
-        }, INFLATE_DELAY);
+            new Handler().postDelayed(() -> {
+                final FragmentTransaction transaction =
+                        getSupportFragmentManager().beginTransaction();
+                if (id == R.id.nav_home) {
+                    transaction.replace(R.id.content_frame, new HomeFragment()).commit();
+                    mToolbar.setTitle("Home");
+                } else if (id == R.id.nav_programs) {
+                    transaction.replace(R.id.content_frame, new ProgramsFragment()).commit();
+                    mToolbar.setTitle("Programs");
+
+                } else if (id == R.id.nav_lists) {
+                    transaction.replace(R.id.content_frame, new ListFragment()).commit();
+                    mToolbar.setTitle("List");
+                } else if (id == R.id.nav_profile) {
+                    transaction.replace(R.id.content_frame, new ProfileFragment()).commit();
+                    mToolbar.setTitle("Profile");
+                }
+                mLastFragment = id;
+            }, INFLATE_DELAY);
+        }
+        ProgramsFragment.isShowing = false;
 
         return true;
     }
@@ -143,18 +144,9 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
         mDrawerToggle.syncState();
     }
 
-    @Override
-    public void onBackPressed() {
-        if (mDrawerLayout != null && mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
-            mDrawerLayout.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
     public void toCreateFragment(final View view) {
         mNavigationView.getMenu().getItem(0).setChecked(false);
-        mLastFragment = 4;
+        mLastFragment = 5;
         mToolbar.setTitle("Create Habit");
 
         getSupportFragmentManager()
@@ -167,16 +159,11 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
     private void toProfile(final View view) {
         mDrawerLayout.closeDrawer(GravityCompat.START);
 
-        if (mLastFragment == 3) {
+        if (mLastFragment == R.id.nav_profile) {
             return;
         }
         new Handler().postDelayed(() -> {
             mToolbar.setTitle("Profile");
-
-            if (mLastFragment != -1) {
-                mNavigationView.getMenu().getItem(mLastFragment).setChecked(false);
-            }
-
             mNavigationView.getMenu().getItem(3).setChecked(true);
 
             findViewById(R.id.toolbar_shadow).setVisibility(View.GONE);
@@ -184,49 +171,51 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
                     .beginTransaction()
                     .replace(R.id.content_frame, new ProfileFragment())
                     .commit();
-            mLastFragment = 3;
+            mLastFragment = R.id.nav_profile;
         }, INFLATE_DELAY);
     }
 
-    private void onSetupNavigationDrawer() {
-        mNavigationView = (NavigationView) findViewById(R.id.navigationView);
-        if (mNavigationView != null) {
-            mNavigationView.setNavigationItemSelectedListener(this);
-            mNavigationView.getMenu().getItem(0).setChecked(true);
-            user = FirebaseAuth.getInstance().getCurrentUser();
-            if (user != null && user.isAnonymous()) {
-                Log.i("FirebaseAuth", "User is anonymous");
-                mNavigationView.getMenu().findItem(R.id.nav_logout).setTitle("Login");
-                mNavigationView.getHeaderView(0).setVisibility(View.GONE);
-            } else if (user != null) {
-                mNavigationView.getMenu().findItem(R.id.nav_profile).setVisible(true);
-                Log.i("FirebaseAuth", "Regular user");
-                final TextView navName =
-                        (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.name_info);
-                final TextView navEmail =
-                        (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.email_info);
-                navName.setText(user.getDisplayName());
-                navEmail.setText(user.getEmail());
-                mNavigationView.getHeaderView(0).setOnClickListener(this::toProfile);
-                if (user.getPhotoUrl() != null) {
-                    mNavigationView.getHeaderView(0)
-                            .findViewById(R.id.fields_info).setPadding(
-                            (int) PixelUtils.dpToPixel(this, 73), 0, 0, 0);
-                    final ImageView avatar =
-                            (ImageView) mNavigationView.getHeaderView(0).findViewById(R.id.profile_photo);
-                    Picasso.with(getApplicationContext())
-                            .load(user.getPhotoUrl())
-                            .transform(new RoundedTransformation())
-                            .into(avatar);
-                    avatar.setVisibility(View.VISIBLE);
-                }
-            } else {
-                Log.w("FirebaseAuth", "User is null");
-                mNavigationView.getMenu().findItem(R.id.nav_logout).setVisible(false);
-                mNavigationView.getHeaderView(0).setVisibility(View.INVISIBLE);
+    public void onSetupNavigationDrawer(final FirebaseUser user) {
+        if (mNavigationView == null) {
+            mNavigationView = (NavigationView) findViewById(R.id.navigationView);
+        }
+        mNavigationView.setNavigationItemSelectedListener(this);
+        mNavigationView.getMenu().getItem(0).setChecked(true);
+        if (user != null && user.isAnonymous()) {
+            Log.i("FirebaseAuth", "User is anonymous");
+            mNavigationView.getMenu().findItem(R.id.nav_logout).setVisible(true);
+            mNavigationView.getMenu().findItem(R.id.nav_logout).setTitle("Login");
+            mNavigationView.getHeaderView(0).setVisibility(View.GONE);
+        } else if (user != null) {
+            mNavigationView.getMenu().findItem(R.id.nav_logout).setVisible(true);
+            mNavigationView.getMenu().findItem(R.id.nav_profile).setVisible(true);
+            Log.i("FirebaseAuth", "Regular user");
+            final TextView navName =
+                    (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.name_info);
+            final TextView navEmail =
+                    (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.email_info);
+            navName.setText(user.getDisplayName());
+            navEmail.setText(user.getEmail());
+            mNavigationView.getHeaderView(0).setOnClickListener(this::toProfile);
+            if (user.getPhotoUrl() != null) {
+                mNavigationView.getHeaderView(0)
+                        .findViewById(R.id.fields_info).setPadding(
+                        (int) PixelUtils.dpToPixel(this, 73), 0, 0, 0);
+                final ImageView avatar =
+                        (ImageView) mNavigationView.getHeaderView(0).findViewById(R.id.profile_photo);
+                Picasso.with(getApplicationContext())
+                        .load(user.getPhotoUrl())
+                        .transform(new RoundedTransformation())
+                        .into(avatar);
+                avatar.setVisibility(View.VISIBLE);
             }
+        } else {
+            Log.w("FirebaseAuth", "User is null");
+            mNavigationView.getMenu().findItem(R.id.nav_logout).setVisible(false);
+            mNavigationView.getHeaderView(0).setVisibility(View.GONE);
         }
     }
+
 
     public Toolbar getToolbar() {
         return mToolbar;
@@ -262,4 +251,12 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
         return mCallbackManager;
     }
 
+    public void closeImm() {
+        final InputMethodManager imm = (InputMethodManager)
+                getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (getCurrentFocus() != null) {
+            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+        }
+        Log.i("IMM", "Closed imm");
+    }
 }

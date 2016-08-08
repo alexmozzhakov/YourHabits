@@ -5,4 +5,7 @@
   <item name='java.lang.String boolean contains(java.lang.CharSequence) 0'>
     <annotation name='org.jetbrains.annotations.NonNls'/>
   </item>
+  <item name='java.lang.String boolean endsWith(java.lang.String) 0'>
+    <annotation name='org.jetbrains.annotations.NonNls'/>
+  </item>
 </root>

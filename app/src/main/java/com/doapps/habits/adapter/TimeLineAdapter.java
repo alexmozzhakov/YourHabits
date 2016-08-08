@@ -6,7 +6,6 @@ import android.view.ViewGroup;
 
 import com.doapps.habits.R;
 import com.doapps.habits.models.Habit;
-import com.doapps.habits.models.HabitListProvider;
 import com.doapps.habits.models.LineType;
 import com.doapps.habits.models.UpdatableList;
 import com.doapps.habits.viewholder.TimeLineViewHolder;
@@ -14,7 +13,7 @@ import com.doapps.habits.viewholder.TimeLineViewHolder;
 import java.util.List;
 
 public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder>
-        implements UpdatableList<Habit>, HabitListProvider {
+        implements UpdatableList<Habit> {
 
     private List<Habit> mFeedList;
 
@@ -32,16 +31,6 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder>
         } else {
             return LineType.NORMAL;
         }
-    }
-
-    @Override
-    public List<Habit> getList() {
-        return mFeedList;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return mFeedList.isEmpty();
     }
 
     @Override

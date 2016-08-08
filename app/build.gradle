@@ -48,7 +48,6 @@ dependencies {
     compile 'com.ruesga.timeline-chart-view:timeline-chart-view:0.0.8'
     compile 'org.apmem.tools:layouts:1.10@aar'
     compile 'com.squareup.picasso:picasso:2.5.2'
-    // Photo selector dependency
     testCompile 'junit:junit:4.12'
     //noinspection GradleDependency
     compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha3'

@@ -48,7 +48,7 @@ public class ProfileFragment extends Fragment {
                              final Bundle savedInstanceState) {
         getActivity().findViewById(R.id.toolbar_shadow).setVisibility(View.GONE);
         // Inflate the layout for this fragment
-        final View result = inflater.inflate(R.layout.percent_profile_fragment, container, false);
+        final View result = inflater.inflate(R.layout.profile_fragment, container, false);
         final TextView name = (TextView) result.findViewById(R.id.name);
         final TextView email = (TextView) result.findViewById(R.id.email);
         final TextView location = (TextView) result.findViewById(R.id.location);
@@ -166,10 +166,6 @@ public class ProfileFragment extends Fragment {
             btnDelete.setOnClickListener(view -> deleteUser(user));
             name.setText(user.getDisplayName());
             email.setText(user.getEmail());
-//            getChildFragmentManager()
-//                    .beginTransaction()
-//                    .add(R.id.userInfo, new EditPhotoFragment())
-//                    .commit();
         }
 
         return result;

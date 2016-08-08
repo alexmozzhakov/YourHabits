@@ -12,19 +12,19 @@ import java.util.Locale;
  * Created by dee on 15/11/20.
  */
 public class FileUtils {
-    public static final String POSTFIX = ".JPEG";
-    public static final String APP_NAME = "ImageSelector";
-    public static final String CAMERA_PATH = "/" + APP_NAME + "/CameraImage/";
-    public static final String CROP_PATH = "/" + APP_NAME + "/CropImage/";
+    private static final String POSTFIX = ".JPEG";
+    private static final String APP_NAME = "ImageSelector";
+    private static final String CAMERA_PATH = "/" + APP_NAME + "/CameraImage/";
+    private static final String CROP_PATH = "/" + APP_NAME + "/CropImage/";
 
-    public static File createCameraFile(Context context) {
+    public static File createCameraFile(final Context context) {
         return createMediaFile(context,CAMERA_PATH);
     }
-    public static File createCropFile(Context context) {
+    public static File createCropFile(final Context context) {
         return createMediaFile(context,CROP_PATH);
     }
 
-    private static File createMediaFile(Context context,String parentPath){
+    private static File createMediaFile(final Context context, final String parentPath){
         String state = Environment.getExternalStorageState();
         File rootDir = state.equals(Environment.MEDIA_MOUNTED)?Environment.getExternalStorageDirectory():context.getCacheDir();
 
@@ -34,7 +34,7 @@ public class FileUtils {
         }
 
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.CHINA).format(new Date());
-        String fileName = APP_NAME + "_" + timeStamp + "";
+        String fileName = APP_NAME + '_' + timeStamp;
         File tmpFile = new File(folderDir, fileName + POSTFIX);
         return tmpFile;
     }

@@ -62,7 +62,7 @@ public class ProgramsFragment extends Fragment {
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              final Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final View result = inflater.inflate(R.layout.percent_fragment_programs, container, false);
+        final View result = inflater.inflate(R.layout.fragment_programs, container, false);
 
         if (!persistenceEnabled) {
             FirebaseDatabase.getInstance().setPersistenceEnabled(true);
@@ -72,6 +72,7 @@ public class ProgramsFragment extends Fragment {
         mRootRef = FirebaseDatabase.getInstance().getReference().child("programs");
         final View emptyView = result.findViewById(R.id.empty_view);
         final RecyclerView recyclerView = (RecyclerView) result.findViewById(R.id.recyclerView);
+        mImageTop = (ImageView) result.findViewById(R.id.imageViewTop);
 
         final ConnectivityManager conMan = (ConnectivityManager)
                 getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -86,6 +87,7 @@ public class ProgramsFragment extends Fragment {
         if (sharedPreferences.getBoolean("downloaded", false)) {
             emptyView.setVisibility(View.INVISIBLE);
             recyclerView.setVisibility(View.VISIBLE);
+            mImageTop.setVisibility(View.VISIBLE);
             Log.i("FD", "Database is already downloaded");
         } else {
             isEmpty = true;
@@ -103,7 +105,6 @@ public class ProgramsFragment extends Fragment {
         recyclerView.setAdapter(mAdapter);
 
         mSuccessTop = (TextView) result.findViewById(R.id.percentTop);
-        mImageTop = (ImageView) result.findViewById(R.id.imageViewTop);
         mImageTop.setMaxHeight(result.getHeight()/3);
         mTitleTop = (TextView) result.findViewById(R.id.titleTop);
 
@@ -118,6 +119,7 @@ public class ProgramsFragment extends Fragment {
                     if (isEmpty) {
                         emptyView.setVisibility(View.INVISIBLE);
                         recyclerView.setVisibility(View.VISIBLE);
+                        mImageTop.setVisibility(View.VISIBLE);
                     }
                     generateTopProgram();
                 } else {

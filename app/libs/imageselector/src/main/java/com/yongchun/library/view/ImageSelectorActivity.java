@@ -15,12 +15,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.yongchun.library.R;
-import com.yongchun.library.adapter.ImageFolderAdapter;
 import com.yongchun.library.adapter.ImageListAdapter;
 import com.yongchun.library.model.LocalMedia;
 import com.yongchun.library.model.LocalMediaFolder;
+import com.yongchun.library.model.OnItemClickListener;
 import com.yongchun.library.utils.FileUtils;
 import com.yongchun.library.utils.GridSpacingItemDecoration;
+import com.yongchun.library.utils.LocalMediaLoadListener;
 import com.yongchun.library.utils.LocalMediaLoader;
 import com.yongchun.library.utils.ScreenUtils;
 
@@ -29,9 +30,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-/**
- * Created by dee on 15/11/19.
- */
 public class ImageSelectorActivity extends AppCompatActivity {
     public static final int REQUEST_IMAGE = 66;
     private static final int REQUEST_CAMERA = 67;
@@ -68,7 +66,8 @@ public class ImageSelectorActivity extends AppCompatActivity {
 
     private String cameraPath;
 
-    public static void start(Activity activity, int maxSelectNum, int mode, boolean isShow, boolean enablePreview, boolean enableCrop) {
+    public static void start(final Activity activity, final int maxSelectNum, final int mode,
+                             final boolean isShow, final boolean enablePreview, final boolean enableCrop) {
         final Intent intent = new Intent(activity, ImageSelectorActivity.class);
         intent.putExtra(EXTRA_MAX_SELECT_NUM, maxSelectNum);
         intent.putExtra(EXTRA_SELECT_MODE, mode);
@@ -99,7 +98,7 @@ public class ImageSelectorActivity extends AppCompatActivity {
         }
         initView();
         registerListener();
-        new LocalMediaLoader(this, LocalMediaLoader.TYPE_IMAGE).loadAllImage(new LocalMediaLoader.LocalMediaLoadListener() {
+        new LocalMediaLoader(this, LocalMediaLoader.TYPE_IMAGE).loadAllImage(new LocalMediaLoadListener() {
 
             @Override
             public void loadComplete(final List<LocalMediaFolder> folders) {
@@ -188,21 +187,21 @@ public class ImageSelectorActivity extends AppCompatActivity {
         });
         doneText.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(final View view) {
                 onSelectDone(imageAdapter.getSelectedImages());
             }
         });
-        folderWindow.setOnItemClickListener(new ImageFolderAdapter.OnItemClickListener() {
+        folderWindow.setOnItemClickListener(new OnItemClickListener<LocalMedia>() {
             @Override
-            public void onItemClick(String name, List<LocalMedia> images) {
+            public void onItemClick(final String name, final List<LocalMedia> items) {
                 folderWindow.dismiss();
-                imageAdapter.bindImages(images);
+                imageAdapter.bindImages(items);
                 folderName.setText(name);
             }
         });
         previewText.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(final View view) {
                 startPreview(imageAdapter.getSelectedImages(), 0);
             }
         });
@@ -268,7 +267,6 @@ public class ImageSelectorActivity extends AppCompatActivity {
 
     /**
      * on select done
-     *
      * @param medias
      */
     private void onSelectDone(final Collection<LocalMedia> medias) {

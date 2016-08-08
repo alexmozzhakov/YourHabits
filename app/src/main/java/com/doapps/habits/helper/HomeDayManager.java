@@ -7,31 +7,35 @@ import com.doapps.habits.models.Habit;
 import com.doapps.habits.models.UpdatableList;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 
-public class HomeDayManager implements DayManager<Habit> {
+public class HomeDayManager implements DayManager {
     private final UpdatableList<Habit> timeLineAdapter;
+    private final List<Habit> habitList;
 
-    public HomeDayManager(final UpdatableList<Habit> timeLineAdapter) {
+    public HomeDayManager(final UpdatableList<Habit> timeLineAdapter, final List<Habit> habitList) {
         this.timeLineAdapter = timeLineAdapter;
+        this.habitList = habitList;
     }
 
     @Override
-    public void updateListByDay(final List<Habit> list, final int dayOfWeek) {
-        final List<Habit> dayHabits = new ArrayList<>(list);
-        filterListByDay(dayHabits, dayOfWeek + 1);
+    public void updateListByDay(final int dayOfWeek) {
+        final List<Habit> dayHabits = new ArrayList<>(habitList);
+        filterListByDay(dayHabits, dayOfWeek);
         timeLineAdapter.updateList(dayHabits);
     }
 
     @Override
-    public void updateForToday(final List<Habit> list, final int dayOfWeek) {
-        final List<Habit> todayHabits = new ArrayList<>(list);
-        filterListForToday(todayHabits, dayOfWeek);
+    public void updateForToday() {
+        final List<Habit> todayHabits = new ArrayList<>(habitList);
+        filterListForToday(todayHabits);
         timeLineAdapter.updateList(todayHabits);
     }
 
-    public static void filterListForToday(final Iterable<Habit> todayHabits, final int dayOfWeek) {
+    public static void filterListForToday(final Iterable<Habit> todayHabits) {
+        final int dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
         final Iterator<Habit> habitIterator = todayHabits.iterator();
         while (habitIterator.hasNext()) {
             final short[] freq = habitIterator.next().getFrequencyArray();
