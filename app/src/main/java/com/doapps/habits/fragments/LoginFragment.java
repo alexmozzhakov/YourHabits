@@ -137,10 +137,8 @@ public class LoginFragment extends Fragment {
                                     // signed in user can be handled in the listener.
                                     if (task.isSuccessful()) {
                                         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-                                        if (user != null) {
+                                        if (user != null && user.getPhotoUrl() == null) {
                                             final String userID = token.getUserId();
-
                                             final UserProfileChangeRequest profileUpdates =
                                                     new UserProfileChangeRequest.Builder()
                                                             .setPhotoUri(Uri.parse(String.format("https://graph.facebook.com/%s/picture?type=large", userID)))

@@ -5,6 +5,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,6 +20,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.doapps.habits.BuildConfig;
 import com.doapps.habits.R;
+import com.doapps.habits.activity.MainActivity;
 import com.doapps.habits.adapter.TimeLineAdapter;
 import com.doapps.habits.helper.HabitListManager;
 import com.doapps.habits.helper.HomeDayManager;
@@ -26,6 +28,8 @@ import com.doapps.habits.models.DayManager;
 import com.doapps.habits.models.Habit;
 import com.doapps.habits.models.HabitListProvider;
 import com.doapps.habits.models.StringSelector;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,10 +41,12 @@ import java.util.List;
 public class HomeFragment extends Fragment {
     private TextView weather;
     private TextView weatherBot;
-
     @SuppressWarnings("HardCodedStringLiteral")
     private static final String URL_WEATHER_API = "http://habbitsapp.esy.es/weather.php";
 
+    /**
+     * @return true if user is connected to Internet
+     */
     private static boolean isConnected(final Context context) {
         final ConnectivityManager connectivityManager
                 = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -61,10 +67,8 @@ public class HomeFragment extends Fragment {
                 HabitListManager.getInstance(getContext());
 
         final List<Habit> habitList = new ArrayList<>(habitListManager.getList());
-        // get day of week
-        final int dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK) + 1;
         // filter list for today
-        HomeDayManager.filterListForToday(habitList, dayOfWeek + 1);
+        HomeDayManager.filterListForToday(habitList);
 
         // set due count of filtered list
         final TextView tasksDue = (TextView) view.findViewById(R.id.tasks_due);
@@ -73,7 +77,7 @@ public class HomeFragment extends Fragment {
         weather = (TextView) view.findViewById(R.id.weather);
         weatherBot = (TextView) view.findViewById(R.id.weatherBot);
         if (isConnected(getContext())) {
-            getWeather(getContext());
+            getWeather(getContext(), habitList.size());
         } else {
             weather.setText(String.valueOf(habitList.size()));
             weatherBot.setText("All tasks");
@@ -81,8 +85,28 @@ public class HomeFragment extends Fragment {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 final ConnectivityManager conMan = (ConnectivityManager)
                         getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-                Log.i("Lol", "addDefaultNetworkActiveListener");
-                conMan.addDefaultNetworkActiveListener(() -> getWeather(getContext()));
+                Log.i("HomeFragment", "addDefaultNetworkActiveListener");
+                final ConnectivityManager.OnNetworkActiveListener activeListener =
+                        new ConnectivityManager.OnNetworkActiveListener() {
+                            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+                            @Override
+                            public void onNetworkActive() {
+                                getWeather(getContext(), habitList.size());
+
+                                final FirebaseUser[] user = {FirebaseAuth.getInstance().getCurrentUser()};
+                                if (user[0] == null) {
+                                    FirebaseAuth.getInstance().signInAnonymously().addOnCompleteListener(task -> {
+                                        final MainActivity ac = (MainActivity) getActivity();
+                                        user[0] = FirebaseAuth.getInstance().getCurrentUser();
+                                        ac.onSetupNavigationDrawer(user[0]);
+                                    });
+                                } else {
+                                    ((MainActivity) getActivity()).onSetupNavigationDrawer(user[0]);
+                                }
+                                conMan.removeDefaultNetworkActiveListener(this);
+                            }
+                        };
+                conMan.addDefaultNetworkActiveListener(activeListener);
             }
         }
 
@@ -91,16 +115,17 @@ public class HomeFragment extends Fragment {
         timeLineAdapter.setHasStableIds(true);
         recyclerView.setAdapter(timeLineAdapter);
 
-        final StringSelector swipeSelector = (StringSelector) view.findViewById(R.id.sliding_tabs);
+        // get day of week
+        final int dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
 
-        swipeSelector.setItems(getDaysOfWeekFromToday(dayOfWeek));
+        final StringSelector swipeSelector = (StringSelector) view.findViewById(R.id.sliding_tabs);
+        swipeSelector.setItems(getDaysOfWeekFromToday(dayOfWeek - 1));
 
         initDaysTabs(
                 dayOfWeek,
                 swipeSelector,
-                HabitListManager.getInstance(getContext()),
-                new HomeDayManager(timeLineAdapter));
-
+                new HomeDayManager(timeLineAdapter,
+                        HabitListManager.getInstance(getContext()).getList()));
         return view;
 
     }
@@ -114,16 +139,22 @@ public class HomeFragment extends Fragment {
         return daysOfWeek;
     }
 
+    /**
+     * Initiates
+     *
+     * @param swipeStringSelector by using
+     * @param habitDayManager     for filtering list
+     * @param dayOfWeek           for getting dayOfWeek from number of selected item
+     */
     private static void initDaysTabs(
             final int dayOfWeek,
             final StringSelector swipeStringSelector,
-            final HabitListProvider habitListProvider,
-            final DayManager<Habit> habitDayManager) {
+            final DayManager habitDayManager) {
 
         swipeStringSelector.setOnItemSelectedListener(item -> {
             final int value = swipeStringSelector.getAdapter().getCurrentPosition();
             if (value == 0) {
-                habitDayManager.updateForToday(habitListProvider.getList(), dayOfWeek + 1);
+                habitDayManager.updateForToday();
 
                 if (BuildConfig.DEBUG) {
                     Log.i("HomeFragment", "Selected day (today) = " + dayOfWeek);
@@ -136,11 +167,16 @@ public class HomeFragment extends Fragment {
                     Log.i("HomeFragment", "Selected day = " + day);
                 }
 
-                habitDayManager.updateListByDay(habitListProvider.getList(), day);
+                habitDayManager.updateListByDay(day);
             }
         });
     }
 
+
+    /**
+     * @param habitsList is iterable list of {@link Habit}
+     * @return String value of number of incomplete habits
+     */
     private static CharSequence getDueCount(final Iterable<Habit> habitsList) {
         final Calendar calendar = Calendar.getInstance();
         final int date = calendar.get(Calendar.DATE);
@@ -156,7 +192,7 @@ public class HomeFragment extends Fragment {
         return String.valueOf(counter);
     }
 
-    private void getWeather(final Context context) {
+    private void getWeather(final Context context, final int listSize) {
         Volley.newRequestQueue(context.getApplicationContext()).add(
                 new StringRequest(Request.Method.GET, URL_WEATHER_API,
                         response -> {
@@ -180,10 +216,24 @@ public class HomeFragment extends Fragment {
 
                             } catch (final JSONException e) {
                                 Log.e("JSONException", "Response got: " + response, e);
+                                weather.setText(String.valueOf(listSize));
+                                weatherBot.setText("All tasks");
                             }
 
                         },
-                        error -> Log.e("StringRequest error", error.toString()))
+                        error -> {
+                            Log.e("StringRequest error", error.toString());
+                            weather.setText(String.valueOf(listSize));
+                            weatherBot.setText("All tasks");
+                        })
         );
+    }
+
+    @Override
+    public void onPause() {
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            conMan.removeDefaultNetworkActiveListener(activeListener);
+//        }
+        super.onPause();
     }
 }

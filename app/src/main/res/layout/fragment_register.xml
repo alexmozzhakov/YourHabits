@@ -104,11 +104,11 @@
             android:layout_height="40dp"
             android:layout_weight=".5"
             android:gravity="start|center_vertical"
+            android:onClick="toTerms"
             android:paddingEnd="10dp"
             android:paddingLeft="10dp"
             android:paddingStart="10dp"
             android:text="@string/btn_terms_and_conditions"
-            android:onClick="toTerms"
             android:textColor="@color/input_login_hint"
             android:textSize="12sp"/>
 

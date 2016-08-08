@@ -8,20 +8,20 @@
                                             android:orientation="vertical">
 
     <FrameLayout
-        android:layout_width="match_parent"
         android:id="@+id/topPanel"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
         app:layout_heightPercent="30%">
 
         <ImageView
             android:id="@+id/imageView3"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginBottom="55dp"
             android:adjustViewBounds="true"
-            android:background="@color/colorPrimary"
             android:contentDescription="@string/avatar"
-            android:paddingBottom="55dp"
-            android:scaleType="center"
+            android:scaleType="centerInside"
             android:src="@drawable/ic_add_avatar"/>
 
         <TextView

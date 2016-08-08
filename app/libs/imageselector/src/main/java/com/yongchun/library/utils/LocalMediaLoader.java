@@ -2,6 +2,7 @@ package com.yongchun.library.utils;
 
 import android.database.Cursor;
 import android.os.Bundle;
+import android.provider.BaseColumns;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
@@ -14,6 +15,7 @@ import com.yongchun.library.model.LocalMediaFolder;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -25,41 +27,40 @@ import java.util.List;
 public class LocalMediaLoader {
     // load type
     public static final int TYPE_IMAGE = 1;
-    public static final int TYPE_VIDEO = 2;
+    private static final int TYPE_VIDEO = 2;
+    private final Collection<String> mDirPaths = new HashSet<>(1);
 
-    private final static String[] IMAGE_PROJECTION = {
-            MediaStore.Images.Media.DATA,
-            MediaStore.Images.Media.DISPLAY_NAME,
-            MediaStore.Images.Media.DATE_ADDED,
-            MediaStore.Images.Media._ID};
+    private static final String[] IMAGE_PROJECTION = {
+            MediaStore.MediaColumns.DATA,
+            MediaStore.MediaColumns.DISPLAY_NAME,
+            MediaStore.MediaColumns.DATE_ADDED,
+            BaseColumns._ID};
 
-    private final static String[] VIDEO_PROJECTION = {
-            MediaStore.Video.Media.DATA,
-            MediaStore.Video.Media.DISPLAY_NAME,
-            MediaStore.Video.Media.DATE_ADDED,
-            MediaStore.Video.Media._ID,
-            MediaStore.Video.Media.DURATION};
-
+    private static final String[] VIDEO_PROJECTION = {
+            MediaStore.MediaColumns.DATA,
+            MediaStore.MediaColumns.DISPLAY_NAME,
+            MediaStore.MediaColumns.DATE_ADDED,
+            BaseColumns._ID,
+            MediaStore.Video.VideoColumns.DURATION};
     private int type = TYPE_IMAGE;
-    private FragmentActivity activity;
 
-    public LocalMediaLoader(FragmentActivity activity, int type) {
+    private final FragmentActivity activity;
+    public LocalMediaLoader(final FragmentActivity activity, final int type) {
         this.activity = activity;
         this.type = type;
     }
 
-    HashSet<String> mDirPaths = new HashSet<String>();
 
     public void loadAllImage(final LocalMediaLoadListener imageLoadListener) {
         activity.getSupportLoaderManager().initLoader(type, null, new LoaderManager.LoaderCallbacks<Cursor>() {
             @Override
-            public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+            public Loader<Cursor> onCreateLoader(final int id, final Bundle args) {
                 CursorLoader cursorLoader = null;
                 if (id == TYPE_IMAGE) {
                     cursorLoader = new CursorLoader(
                             activity, MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                            IMAGE_PROJECTION, MediaStore.Images.Media.MIME_TYPE + "=? or "
-                            + MediaStore.Images.Media.MIME_TYPE + "=?",
+                            IMAGE_PROJECTION, MediaStore.MediaColumns.MIME_TYPE + "=? or "
+                            + MediaStore.MediaColumns.MIME_TYPE + "=?",
                             new String[]{"image/jpeg", "image/png"}, IMAGE_PROJECTION[2] + " DESC");
                 } else if (id == TYPE_VIDEO) {
                     cursorLoader = new CursorLoader(
@@ -70,21 +71,21 @@ public class LocalMediaLoader {
             }
 
             @Override
-            public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-                ArrayList<LocalMediaFolder> imageFolders = new ArrayList<>();
-                LocalMediaFolder allImageFolder = new LocalMediaFolder();
-                List<LocalMedia> allImages = new ArrayList<>();
+            public void onLoadFinished(final Loader<Cursor> loader, final Cursor data) {
+                final List<LocalMediaFolder> imageFolders = new ArrayList<>();
+                final LocalMediaFolder allImageFolder = new LocalMediaFolder();
+                final List<LocalMedia> allImages = new ArrayList<>();
 
                 while (data != null && data.moveToNext()) {
-                    // 获取图片的路径
-                    String path = data.getString(data
+                    // Get picture path
+                    final String path = data.getString(data
                             .getColumnIndex(MediaStore.MediaColumns.DATA));
-                    File file = new File(path);
+                    final File file = new File(path);
                     if (!file.exists()) {
                         continue;
                     }
-                    // 获取该图片的目录路径名
-                    File parentFile = file.getParentFile();
+                    // Get the picture directory path name
+                    final File parentFile = file.getParentFile();
                     if (parentFile == null || !parentFile.exists()) {
                         continue;
                     }
@@ -104,11 +105,9 @@ public class LocalMediaLoader {
                     final File[] files = parentFile.listFiles(new FilenameFilter() {
                         @Override
                         public boolean accept(File dir, String filename) {
-                            if (filename.endsWith(".jpg")
+                            return filename.endsWith(".jpg")
                                     || filename.endsWith(".png")
-                                    || filename.endsWith(".jpeg"))
-                                return true;
-                            return false;
+                                    || filename.endsWith(".jpeg");
                         }
                     });
                     final List<LocalMedia> images = new ArrayList<>(files.length);
@@ -137,27 +136,32 @@ public class LocalMediaLoader {
             }
 
             @Override
-            public void onLoaderReset(Loader<Cursor> loader) {
+            public void onLoaderReset(final Loader<Cursor> loader) {
+                // ignored
             }
         });
     }
 
     private static void sortFolder(final List<LocalMediaFolder> imageFolders) {
-        // 文件夹按图片数量排序
+        // Folder of images sorted by image number
         Collections.sort(imageFolders, new Comparator<LocalMediaFolder>() {
             @Override
-            public int compare(LocalMediaFolder lhs, LocalMediaFolder rhs) {
-                if (lhs.getImages() == null || rhs.getImages() == null) {
+            public int compare(final LocalMediaFolder t, final LocalMediaFolder t1) {
+                if (t.getImages() == null || t1.getImages() == null) {
                     return 0;
                 }
-                final int lsize = lhs.getImageNum();
-                final int rsize = rhs.getImageNum();
-                return lsize == rsize ? 0 : lsize < rsize ? 1 : -1;
+                final int lsize = t.getImageNum();
+                final int rsize = t1.getImageNum();
+                if (lsize < rsize) {
+                    return 1;
+                } else {
+                    return lsize == rsize ? 0 : -1;
+                }
             }
         });
     }
 
-    private LocalMediaFolder getImageFolder(String path, List<LocalMediaFolder> imageFolders) {
+    private static LocalMediaFolder getImageFolder(final String path, final Iterable<LocalMediaFolder> imageFolders) {
         final File imageFile = new File(path);
         final File folderFile = imageFile.getParentFile();
 
@@ -171,10 +175,6 @@ public class LocalMediaLoader {
         newFolder.setPath(folderFile.getAbsolutePath());
         newFolder.setFirstImagePath(path);
         return newFolder;
-    }
-
-    public interface LocalMediaLoadListener {
-        void loadComplete(List<LocalMediaFolder> folders);
     }
 
 }

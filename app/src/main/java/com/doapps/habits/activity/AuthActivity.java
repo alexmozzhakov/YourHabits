@@ -1,13 +1,16 @@
 package com.doapps.habits.activity;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.FrameLayout;
 
 import com.doapps.habits.R;
 import com.doapps.habits.fragments.LoginFragment;
+import com.doapps.habits.slider.swipeselector.PixelUtils;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
 import com.google.firebase.auth.FirebaseAuth;
@@ -39,6 +42,7 @@ public class AuthActivity extends AppCompatActivity {
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auth);
+        onConfigurationChanged(getResources().getConfiguration());
 
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = firebaseAuth -> {
@@ -74,6 +78,29 @@ public class AuthActivity extends AppCompatActivity {
             FacebookSdk.clearLoggingBehaviors();
         }
     }
+
+    @Override
+    public void onConfigurationChanged(final Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        // Checks the orientation of the screen
+        if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            findViewById(R.id.top_image_text).setVisibility(View.VISIBLE);
+            final FrameLayout layout = (FrameLayout) findViewById(R.id.frame_layout);
+            final FrameLayout.LayoutParams params =
+                    (FrameLayout.LayoutParams) layout.getLayoutParams();
+            params.topMargin = (int) PixelUtils.dpToPixel(getApplicationContext(), 170);
+            layout.setLayoutParams(params);
+        } else if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            findViewById(R.id.top_image_text).setVisibility(View.INVISIBLE);
+            final FrameLayout layout = (FrameLayout) findViewById(R.id.frame_layout);
+            final FrameLayout.LayoutParams params =
+                    (FrameLayout.LayoutParams) layout.getLayoutParams();
+            params.topMargin = 0;
+            layout.setLayoutParams(params);
+        }
+    }
+
 
     public void toTerms(final View view) {
         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://habbitsapp.esy.es/terms.txt")));

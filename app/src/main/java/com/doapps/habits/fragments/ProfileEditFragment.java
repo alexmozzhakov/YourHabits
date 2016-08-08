@@ -18,7 +18,6 @@ import android.widget.Toast;
 import com.doapps.habits.BuildConfig;
 import com.doapps.habits.R;
 import com.doapps.habits.activity.MainActivity;
-import com.doapps.habits.helper.ImmManager;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -60,17 +59,6 @@ public class ProfileEditFragment extends Fragment {
                                 String.valueOf(((TextView) result.findViewById(R.id.edit_name)).getText());
 
                         if (!isUpdated(user, email, name)) { // same info
-                            ProfileFragment.getEditorOpened()[0] = false;
-                            fab.setImageResource(R.drawable.ic_edit_white_24dp);
-                            fab.setOnClickListener(v -> {
-                                if (!ProfileFragment.getEditorOpened()[0]) {
-                                    getParentFragment().getChildFragmentManager()
-                                            .beginTransaction()
-                                            .replace(R.id.userInfo, new ProfileEditFragment())
-                                            .commit();
-                                    ProfileFragment.getEditorOpened()[0] = true;
-                                }
-                            });
                             getFragmentManager().beginTransaction().remove(this).commit();
                             Log.i("EditProfile", "Nothing to update");
                             return;
@@ -92,16 +80,6 @@ public class ProfileEditFragment extends Fragment {
                                             user.reauthenticate(credential)
                                                     .addOnCompleteListener(task -> Log.d(TAG, "User re-authenticated."));
                                             updateUser(getActivity(), user, name, email);
-                                            fab.setOnClickListener(v -> {
-                                                if (!ProfileFragment.getEditorOpened()[0]) {
-                                                    getParentFragment().getChildFragmentManager()
-                                                            .beginTransaction()
-                                                            .replace(R.id.userInfo, new ProfileEditFragment())
-                                                            .commit();
-                                                    ProfileFragment.getEditorOpened()[0] = true;
-                                                }
-                                            });
-
                                         }
 
                                         @Override
@@ -133,16 +111,6 @@ public class ProfileEditFragment extends Fragment {
                         }
 
                         updateUser(getActivity(), user, name, email);
-
-                        fab.setOnClickListener(v -> {
-                            if (!ProfileFragment.getEditorOpened()[0]) {
-                                getParentFragment().getChildFragmentManager()
-                                        .beginTransaction()
-                                        .replace(R.id.userInfo, new ProfileEditFragment())
-                                        .commit();
-                                ProfileFragment.getEditorOpened()[0] = true;
-                            }
-                        });
 
                         getFragmentManager().beginTransaction().remove(this).commit();
 
@@ -176,18 +144,6 @@ public class ProfileEditFragment extends Fragment {
         // Set up the buttons
         builder.setPositiveButton("OK", (dialog, which) -> inputPassword = input.getText().toString());
         builder.setNegativeButton("Cancel", (dialog, which) -> {
-            dialog.cancel();
-            ProfileFragment.getEditorOpened()[0] = false;
-            fab.setImageResource(R.drawable.ic_edit_white_24dp);
-            fab.setOnClickListener(v -> {
-                if (!ProfileFragment.getEditorOpened()[0]) {
-                    getParentFragment().getChildFragmentManager()
-                            .beginTransaction()
-                            .replace(R.id.userInfo, new ProfileEditFragment())
-                            .commit();
-                    ProfileFragment.getEditorOpened()[0] = true;
-                }
-            });
             getFragmentManager().beginTransaction().remove(this).commit();
         });
 
@@ -246,10 +202,22 @@ public class ProfileEditFragment extends Fragment {
 
     @Override
     public void onPause() {
-        // Closes keyboard
-        ImmManager.getInstance().closeImm(getActivity());
+        // Set up fab back
+        fab.setImageResource(R.drawable.ic_edit_white_24dp);
+        fab.setOnClickListener(v -> {
+            if (!ProfileFragment.getEditorOpened()[0]) {
+                getParentFragment().getChildFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.userInfo, new ProfileEditFragment())
+                        .commit();
+                ProfileFragment.getEditorOpened()[0] = true;
+            }
+        });
+
         // Sets editors state to close
         ProfileFragment.getEditorOpened()[0] = false;
+        // Close keyboard
+        ((MainActivity) getActivity()).closeImm();
         super.onPause();
     }
 }
