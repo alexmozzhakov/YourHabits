@@ -18,8 +18,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-;
-
 public class ImageFolderAdapter extends RecyclerView.Adapter<ViewHolder> {
     private final Context context;
     private List<LocalMediaFolder> folders = new ArrayList<>();

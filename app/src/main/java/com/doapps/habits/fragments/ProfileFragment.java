@@ -22,7 +22,11 @@ import com.doapps.habits.BuildConfig;
 import com.doapps.habits.R;
 import com.doapps.habits.activity.EditPhotoActivity;
 import com.doapps.habits.activity.MainActivity;
+import com.doapps.habits.helper.AvatarManager;
 import com.doapps.habits.helper.RoundedTransformation;
+import com.doapps.habits.listeners.MenuAvatarListener;
+import com.doapps.habits.listeners.ProfileFragmentAvatarListener;
+import com.doapps.habits.listeners.UserAvatarListener;
 import com.doapps.habits.slider.swipeselector.PixelUtils;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -56,15 +60,11 @@ public class ProfileFragment extends Fragment {
         final FloatingActionButton fab = (FloatingActionButton) result.findViewById(R.id.fab);
 
         fab.setOnClickListener(view -> {
-            if (!editorOpened[0]) {
-                getChildFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.userInfo, new ProfileEditFragment())
-                        .commit();
-                editorOpened[0] = true;
-            } else {
-                Log.i("ProfileFragment", "fab set improperly");
-            }
+            getChildFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.userInfo, new ProfileEditFragment())
+                    .commit();
+            editorOpened[0] = true;
         });
 
 
@@ -77,6 +77,15 @@ public class ProfileFragment extends Fragment {
                     .getString("location", ""));
 
             final ImageView avatar = (ImageView) result.findViewById(R.id.imageView3);
+
+            AvatarManager.listener
+                    .addObserver(new ProfileFragmentAvatarListener(avatar));
+
+            AvatarManager.listener
+                    .addObserver(new MenuAvatarListener((MainActivity) getActivity()));
+
+            AvatarManager.listener.addObserver(new UserAvatarListener());
+
             if (user.getPhotoUrl() != null && !user.getPhotoUrl().toString().contains("facebook")) {
                 final Button btnFacebook = (Button) result.findViewById(R.id.btn_connect_facebook);
                 btnFacebook.setVisibility(View.VISIBLE);
@@ -106,12 +115,7 @@ public class ProfileFragment extends Fragment {
                                                         task.getResult() +
                                                                 " Successfully connected with Facebook",
                                                         Toast.LENGTH_SHORT).show();
-                                                final ImageView avatar = (ImageView)
-                                                        getActivity().findViewById(R.id.imageView3);
-                                                Picasso.with(getActivity().getApplicationContext())
-                                                        .load(user.getPhotoUrl())
-                                                        .transform(new RoundedTransformation())
-                                                        .into(avatar);
+                                                AvatarManager.listener.hasChanged();
                                             } else {
                                                 Toast.makeText(getContext().getApplicationContext(),
                                                         "Authentication failed.",
@@ -167,6 +171,7 @@ public class ProfileFragment extends Fragment {
             name.setText(user.getDisplayName());
             email.setText(user.getEmail());
         }
+
 
         return result;
     }

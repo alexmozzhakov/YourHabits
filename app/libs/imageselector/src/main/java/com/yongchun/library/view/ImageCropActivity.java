@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.opengl.GLES10;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ import com.yongchun.library.utils.FileUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -48,6 +50,29 @@ public class ImageCropActivity extends AppCompatActivity {
         activity.startActivityForResult(intent, REQUEST_CROP);
     }
 
+    public static int getExifRotation(final File imageFile) {
+        if (imageFile == null) {
+            return 0;
+        }
+        try {
+            final ExifInterface exif = new ExifInterface(imageFile.getAbsolutePath());
+            // We only recognize a subset of orientation tag values
+            final int i = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                    ExifInterface.ORIENTATION_UNDEFINED);
+            if (i == ExifInterface.ORIENTATION_ROTATE_90) {
+                return 90;
+            } else if (i == ExifInterface.ORIENTATION_ROTATE_180) {
+                return 180;
+            } else if (i == ExifInterface.ORIENTATION_ROTATE_270) {
+                return 270;
+            } else {
+                return ExifInterface.ORIENTATION_UNDEFINED;
+            }
+        } catch (IOException e) {
+            return 0;
+        }
+    }
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,7 +96,7 @@ public class ImageCropActivity extends AppCompatActivity {
 
 
         final int exifRotation =
-                CropUtil.getExifRotation(CropUtil.getFromMediaUri(this, getContentResolver(), sourceUri));
+                getExifRotation(CropUtil.getFromMediaUri(this, getContentResolver(), sourceUri));
 
         InputStream is = null;
         try {
