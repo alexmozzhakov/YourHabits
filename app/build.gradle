@@ -41,17 +41,17 @@ dependencies {
     compile 'com.android.support:support-v4:24.1.1'
     compile 'com.android.support:percent:24.1.1'
     compile 'com.android.volley:volley:1.0.0'
-    compile 'com.google.firebase:firebase-database:9.2.1'
-    compile 'com.google.firebase:firebase-auth:9.2.1'
-    compile 'com.google.firebase:firebase-crash:9.2.1'
-    compile 'com.facebook.android:facebook-android-sdk:4.14.0'
+    compile 'com.google.firebase:firebase-database:9.4.0'
+    compile 'com.google.firebase:firebase-auth:9.4.0'
+    compile 'com.google.firebase:firebase-crash:9.4.0'
+    compile 'com.facebook.android:facebook-android-sdk:4.14.1'
     compile 'com.ruesga.timeline-chart-view:timeline-chart-view:0.0.8'
     compile 'org.apmem.tools:layouts:1.10@aar'
     compile 'com.squareup.picasso:picasso:2.5.2'
     testCompile 'junit:junit:4.12'
     //noinspection GradleDependency
-    compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha3'
     compile project(path: ':imageselector')
+    compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha6'
 }
 
 tasks.whenTaskAdded { task ->

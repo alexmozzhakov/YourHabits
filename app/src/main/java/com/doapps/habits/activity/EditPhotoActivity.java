@@ -22,6 +22,17 @@ import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.doapps.habits.BuildConfig;
+import com.doapps.habits.helper.AvatarManager;
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
@@ -32,8 +43,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.facebook.login.widget.ProfilePictureView.TAG;
-
 public class EditPhotoActivity extends Activity {
 
     @SuppressWarnings("HardCodedStringLiteral")
@@ -41,6 +50,8 @@ public class EditPhotoActivity extends Activity {
     private static final String KEY_IMAGE = "image";
     private ProgressDialog prgDialog;
     private Bitmap bitmap;
+    private static final String TAG = EditPhotoActivity.class.getSimpleName();
+    private final CallbackManager mCallbackManager = CallbackManager.Factory.create();
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -48,6 +59,7 @@ public class EditPhotoActivity extends Activity {
         final int permissionCheck =
                 ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
+            FacebookSdk.sdkInitialize(getApplicationContext());
             ImageSelectorActivity.start(this, 1, ImageSelectorActivity.MODE_SINGLE, true, true, true);
         } else {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
@@ -67,6 +79,7 @@ public class EditPhotoActivity extends Activity {
         }
     }
 
+
     @Override
     protected void onActivityResult(final int requestCode, final int resultCode,
                                     final Intent data) {
@@ -77,39 +90,29 @@ public class EditPhotoActivity extends Activity {
 
             bitmap = BitmapFactory.decodeFile(images.get(0));
             Log.i("some", String.valueOf(bitmap.getByteCount()));
-            uploadImageV2();
+            uploadImage();
+        } else if (resultCode == RESULT_CANCELED) {
+            finish();
         }
+        mCallbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void uploadImageV2() {
+    private void uploadImage() {
         //Showing the progress dialog
         final ProgressDialog loading =
                 ProgressDialog.show(this, "Uploading...", "Please wait...", false, false);
         final StringRequest stringRequest = new StringRequest(Request.Method.POST, UPLOAD_URL,
                 s -> {
-                    //Dismissing the progress dialog
-                    //Showing toast message of the response
                     final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                     if (user != null) {
-                        Log.i("Url", String.valueOf(Uri.parse(s)));
                         if (user.getPhotoUrl() != null &&
                                 user.getPhotoUrl().toString().contains("facebook")) {
-                            s += "?facebook";
+                            logInWithFacebook();
+                            AvatarManager.listener.setUri(Uri.parse(s + "&facebook"));
+                        } else {
+                            AvatarManager.listener.setUri(Uri.parse(s));
                         }
-                        final UserProfileChangeRequest changeRequest =
-                                new UserProfileChangeRequest.Builder().setPhotoUri(Uri.parse(s)).build();
-                        user.updateProfile(changeRequest).addOnCompleteListener(EditPhotoActivity.this,
-                                task -> {
-                                });
-                        user.updateProfile(changeRequest).addOnCompleteListener(task -> {
-                            if (task.isSuccessful()) {
-                                Log.d(TAG, "User profile updated.");
-                            } else {
-                                task.addOnFailureListener(e -> Log.e("ERROR", e.getMessage()));
-                                Toast.makeText(EditPhotoActivity.this, "Error updating profile",
-                                        Toast.LENGTH_LONG).show();
-                            }
-                        });
+
                     } else {
                         Toast.makeText(EditPhotoActivity.this, s, Toast.LENGTH_LONG).show();
                     }
@@ -149,7 +152,7 @@ public class EditPhotoActivity extends Activity {
 
             @Override
             public void retry(final VolleyError error) {
-                // ignore
+                // ignored
             }
         });
         //Creating a Request Queue
@@ -177,5 +180,66 @@ public class EditPhotoActivity extends Activity {
         }
     }
 
+    private void logInWithFacebook() {
+        LoginManager.getInstance().registerCallback(mCallbackManager,
+                new FacebookCallback<LoginResult>() {
+                    @Override
+                    public void onSuccess(final LoginResult result) {
+                        if (BuildConfig.DEBUG) {
+                            Log.d(TAG, "facebook:onSuccess:" + result);
+                        }
+                        handleFacebookAccessToken(result.getAccessToken());
+                    }
 
+                    @Override
+                    public void onCancel() {
+                        Log.d(TAG, "facebook:onCancel");
+                    }
+
+                    @Override
+                    public void onError(final FacebookException error) {
+                        Log.d(TAG, "facebook:onError", error);
+                    }
+
+                    private void handleFacebookAccessToken(final AccessToken token) {
+                        if (BuildConfig.DEBUG) {
+                            Log.d(TAG, "handleFacebookAccessToken:" + token);
+                        }
+
+                        final FirebaseUser[] user = {FirebaseAuth.getInstance().getCurrentUser()};
+                        final AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
+                        user[0].reauthenticate(credential)
+                                .addOnCompleteListener(task -> {
+                                    if (BuildConfig.DEBUG) {
+                                        Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
+                                    }
+
+                                    // If sign in fails, display a message to the user. If sign in succeeds
+                                    // the auth state listener will be notified and logic to handle the
+                                    // signed in user can be handled in the listener.
+                                    if (task.isSuccessful()) {
+                                        user[0] = FirebaseAuth.getInstance().getCurrentUser();
+                                        if (user[0] != null && user[0].getPhotoUrl() == null) {
+                                            final String userID = token.getUserId();
+                                            final UserProfileChangeRequest profileUpdates =
+                                                    new UserProfileChangeRequest.Builder()
+                                                            .setPhotoUri(Uri.parse(String.format("https://graph.facebook.com/%s/picture?type=large", userID)))
+                                                            .build();
+
+                                            user[0].updateProfile(profileUpdates)
+                                                    .addOnCompleteListener(update -> {
+                                                        if (update.isSuccessful()) {
+                                                            Log.d(TAG, "User photo set.");
+                                                        }
+                                                    });
+                                        }
+                                    } else {
+                                        Log.w(TAG, "signInWithCredential", task.getException());
+                                        Toast.makeText(getApplicationContext(), "Authentication failed.",
+                                                Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                    }
+                });
+    }
 }

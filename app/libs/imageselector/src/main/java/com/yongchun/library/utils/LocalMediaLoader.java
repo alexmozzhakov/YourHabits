@@ -111,8 +111,8 @@ public class LocalMediaLoader {
                         }
                     });
                     final List<LocalMedia> images = new ArrayList<>(files.length);
-                    for (final File f : files) {
-                        final LocalMedia localMedia = new LocalMedia(f.getAbsolutePath());
+                    for (final File image : files) {
+                        final LocalMedia localMedia = new LocalMedia(image.getAbsolutePath());
                         allImages.add(localMedia);
                         images.add(localMedia);
                     }

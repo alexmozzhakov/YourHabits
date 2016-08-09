@@ -1,25 +1,21 @@
 package com.yongchun.library.model;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by dee on 2015/8/5.
- */
-public class LocalMediaFolder implements Serializable {
+public class LocalMediaFolder {
     private String name;
     private String path;
     private String firstImagePath;
     private int imageNum;
-    private List<LocalMedia> images = new ArrayList<LocalMedia>();
+    private List<LocalMedia> images = new ArrayList<>();
 
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 
@@ -27,7 +23,7 @@ public class LocalMediaFolder implements Serializable {
         return path;
     }
 
-    public void setPath(String path) {
+    public void setPath(final String path) {
         this.path = path;
     }
 
@@ -35,7 +31,7 @@ public class LocalMediaFolder implements Serializable {
         return firstImagePath;
     }
 
-    public void setFirstImagePath(String firstImagePath) {
+    public void setFirstImagePath(final String firstImagePath) {
         this.firstImagePath = firstImagePath;
     }
 
@@ -43,7 +39,7 @@ public class LocalMediaFolder implements Serializable {
         return imageNum;
     }
 
-    public void setImageNum(int imageNum) {
+    public void setImageNum(final int imageNum) {
         this.imageNum = imageNum;
     }
 
@@ -51,7 +47,7 @@ public class LocalMediaFolder implements Serializable {
         return images;
     }
 
-    public void setImages(List<LocalMedia> images) {
+    public void setImages(final List<LocalMedia> images) {
         this.images = images;
     }
 }

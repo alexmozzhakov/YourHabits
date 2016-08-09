@@ -143,6 +143,7 @@ public class LoginFragment extends Fragment {
                                                     new UserProfileChangeRequest.Builder()
                                                             .setPhotoUri(Uri.parse(String.format("https://graph.facebook.com/%s/picture?type=large", userID)))
                                                             .build();
+                                            Log.d(TAG, String.valueOf(Uri.parse(String.format("https://graph.facebook.com/%s/picture?type=large", userID))));
 
                                             user.updateProfile(profileUpdates)
                                                     .addOnCompleteListener(update -> {

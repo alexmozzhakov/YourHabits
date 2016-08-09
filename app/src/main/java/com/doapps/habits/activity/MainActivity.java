@@ -3,6 +3,7 @@ package com.doapps.habits.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
@@ -27,6 +28,7 @@ import com.doapps.habits.fragments.ProfileFragment;
 import com.doapps.habits.fragments.ProgramsFragment;
 import com.doapps.habits.helper.NameChangeListener;
 import com.doapps.habits.helper.RoundedTransformation;
+import com.doapps.habits.models.MenuAvatarUpdater;
 import com.doapps.habits.slider.swipeselector.PixelUtils;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
@@ -35,7 +37,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
 
-public class MainActivity extends FragmentActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends FragmentActivity implements NavigationView.OnNavigationItemSelectedListener,
+        MenuAvatarUpdater {
 
     private static final long INFLATE_DELAY = 200L;
     private int mLastFragment = -1;
@@ -173,6 +176,16 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
                     .commit();
             mLastFragment = R.id.nav_profile;
         }, INFLATE_DELAY);
+    }
+
+    public void updateMenuAvatar(final Uri uri) {
+        mNavigationView = (NavigationView) findViewById(R.id.navigationView);
+        final ImageView avatar =
+                (ImageView) mNavigationView.getHeaderView(0).findViewById(R.id.profile_photo);
+        Picasso.with(getApplicationContext())
+                .load(uri)
+                .transform(new RoundedTransformation())
+                .into(avatar);
     }
 
     public void onSetupNavigationDrawer(final FirebaseUser user) {

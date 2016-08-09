@@ -139,7 +139,8 @@ public class ImageSelectorActivity extends AppCompatActivity {
     private void registerListener() {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(final View view) {
+                setResult(RESULT_CANCELED);
                 finish();
             }
         });

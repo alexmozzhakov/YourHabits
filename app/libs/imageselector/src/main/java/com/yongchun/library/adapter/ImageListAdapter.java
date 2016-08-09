@@ -18,27 +18,24 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by dee on 15/11/19.
- */
 public class ImageListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public static final int TYPE_CAMERA = 1;
     public static final int TYPE_PICTURE = 2;
 
-    private Context context;
+    private final Context context;
     private boolean showCamera = true;
     private boolean enablePreview = true;
-    private int maxSelectNum;
+    private final int maxSelectNum;
     private int selectMode = ImageSelectorActivity.MODE_MULTIPLE;
 
-    private List<LocalMedia> images = new ArrayList<LocalMedia>();
-    private List<LocalMedia> selectImages = new ArrayList<LocalMedia>();
+    private List<LocalMedia> images = new ArrayList<>();
+    private List<LocalMedia> selectImages = new ArrayList<>();
 
-    private OnImageSelectChangedListener imageSelectChangedListener;
+    private ImageListAdapter.OnImageSelectChangedListener imageSelectChangedListener;
 
     public ImageListAdapter(Context context, int maxSelectNum, int mode, boolean showCamera, boolean enablePreview) {
         this.context = context;
-        this.selectMode = mode;
+        selectMode = mode;
         this.maxSelectNum = maxSelectNum;
         this.showCamera = showCamera;
         this.enablePreview = enablePreview;
@@ -50,7 +47,7 @@ public class ImageListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     public void bindSelectImages(List<LocalMedia> images) {
-        this.selectImages = images;
+        selectImages = images;
         notifyDataSetChanged();
         if (imageSelectChangedListener != null) {
             imageSelectChangedListener.onChange(selectImages);
@@ -58,29 +55,25 @@ public class ImageListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     @Override
-    public int getItemViewType(int position) {
-        if (showCamera && position == 0) {
-            return TYPE_CAMERA;
-        } else {
-            return TYPE_PICTURE;
-        }
+    public int getItemViewType(final int position) {
+        return showCamera && position == 0 ? TYPE_CAMERA : TYPE_PICTURE;
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == TYPE_CAMERA) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_camera, parent, false);
-            return new HeaderViewHolder(view);
+            return new ImageListAdapter.HeaderViewHolder(view);
         } else {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_picture, parent, false);
-            return new ViewHolder(view);
+            return new ImageListAdapter.ViewHolder(view);
         }
     }
 
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         if (getItemViewType(position) == TYPE_CAMERA) {
-            HeaderViewHolder headerHolder = (HeaderViewHolder) holder;
+            ImageListAdapter.HeaderViewHolder headerHolder = (ImageListAdapter.HeaderViewHolder) holder;
             headerHolder.headerView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -90,7 +83,7 @@ public class ImageListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 }
             });
         } else {
-            final ViewHolder contentHolder = (ViewHolder) holder;
+            final ImageListAdapter.ViewHolder contentHolder = (ImageListAdapter.ViewHolder) holder;
             final LocalMedia image = images.get(showCamera ? position - 1 : position);
 
             Glide.with(context)
@@ -135,14 +128,14 @@ public class ImageListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         return showCamera ? images.size() + 1 : images.size();
     }
 
-    private void changeCheckboxState(ViewHolder contentHolder, LocalMedia image) {
+    private void changeCheckboxState(ImageListAdapter.ViewHolder contentHolder, LocalMedia image) {
         boolean isChecked = contentHolder.check.isSelected();
         if (selectImages.size() >= maxSelectNum && !isChecked) {
             Toast.makeText(context, context.getString(R.string.message_max_num, maxSelectNum), Toast.LENGTH_LONG).show();
             return;
         }
         if (isChecked) {
-            for (LocalMedia media : selectImages) {
+            for (final LocalMedia media : selectImages) {
                 if (media.getPath().equals(image.getPath())) {
                     selectImages.remove(media);
                     break;
@@ -174,7 +167,7 @@ public class ImageListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         return false;
     }
 
-    public void selectImage(ViewHolder holder, boolean isChecked) {
+    public void selectImage(ImageListAdapter.ViewHolder holder, boolean isChecked) {
         holder.check.setSelected(isChecked);
         if (isChecked) {
             holder.picture.setColorFilter(context.getResources().getColor(R.color.image_overlay2), PorterDuff.Mode.SRC_ATOP);
@@ -183,22 +176,22 @@ public class ImageListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
     }
 
-    static class HeaderViewHolder extends RecyclerView.ViewHolder {
-        View headerView;
+    private static class HeaderViewHolder extends RecyclerView.ViewHolder {
+        private View headerView;
 
-        public HeaderViewHolder(View itemView) {
+        private HeaderViewHolder(final View itemView) {
             super(itemView);
             headerView = itemView;
         }
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView picture;
-        ImageView check;
+    private static class ViewHolder extends RecyclerView.ViewHolder {
+        private ImageView picture;
+        private ImageView check;
 
-        View contentView;
+        private View contentView;
 
-        public ViewHolder(View itemView) {
+        private ViewHolder(final View itemView) {
             super(itemView);
             contentView = itemView;
             picture = (ImageView) itemView.findViewById(R.id.picture);
@@ -215,7 +208,7 @@ public class ImageListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         void onPictureClick(LocalMedia media, int position);
     }
 
-    public void setOnImageSelectChangedListener(OnImageSelectChangedListener imageSelectChangedListener) {
+    public void setOnImageSelectChangedListener(ImageListAdapter.OnImageSelectChangedListener imageSelectChangedListener) {
         this.imageSelectChangedListener = imageSelectChangedListener;
     }
 }
