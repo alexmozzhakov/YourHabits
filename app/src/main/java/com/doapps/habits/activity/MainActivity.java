@@ -26,8 +26,10 @@ import com.doapps.habits.fragments.HomeFragment;
 import com.doapps.habits.fragments.ListFragment;
 import com.doapps.habits.fragments.ProfileFragment;
 import com.doapps.habits.fragments.ProgramsFragment;
+import com.doapps.habits.helper.AvatarManager;
 import com.doapps.habits.helper.NameChangeListener;
 import com.doapps.habits.helper.RoundedTransformation;
+import com.doapps.habits.listeners.MenuAvatarListener;
 import com.doapps.habits.models.MenuAvatarUpdater;
 import com.doapps.habits.slider.swipeselector.PixelUtils;
 import com.facebook.CallbackManager;
@@ -39,7 +41,6 @@ import com.squareup.picasso.Picasso;
 
 public class MainActivity extends FragmentActivity implements NavigationView.OnNavigationItemSelectedListener,
         MenuAvatarUpdater {
-
     private static final long INFLATE_DELAY = 200L;
     private int mLastFragment = -1;
     private NavigationView mNavigationView;
@@ -79,22 +80,20 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
                                 mNavigationView.getHeaderView(0).findViewById(R.id.name_info);
                         navName.setText(user.getDisplayName());
                     });
-            if (user.getPhotoUrl() != null) {
-                Log.i("FA image url", String.valueOf(user.getPhotoUrl()));
-
-            }
         }
+
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
-
-
             @Override
             public void onDrawerOpened(final View drawerView) {
-                closeImm();
+                if (mLastFragment == R.id.nav_profile || mLastFragment == -1) {
+                    closeImm();
+                }
                 super.onDrawerOpened(drawerView);
             }
         };
+
         mDrawerLayout.addDrawerListener(mDrawerToggle);
 
         if (getActionBar() != null) {
@@ -135,8 +134,8 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
                 mLastFragment = id;
             }, INFLATE_DELAY);
         }
-        ProgramsFragment.isShowing = false;
 
+        ProgramsFragment.isShowing = false;
         return true;
     }
 
@@ -178,10 +177,14 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
         }, INFLATE_DELAY);
     }
 
+    @Override
     public void updateMenuAvatar(final Uri uri) {
         mNavigationView = (NavigationView) findViewById(R.id.navigationView);
         final ImageView avatar =
                 (ImageView) mNavigationView.getHeaderView(0).findViewById(R.id.profile_photo);
+        user.reload();
+        Picasso.with(avatar.getContext().getApplicationContext())
+                .invalidate(uri);
         Picasso.with(getApplicationContext())
                 .load(uri)
                 .transform(new RoundedTransformation())
@@ -192,6 +195,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
         if (mNavigationView == null) {
             mNavigationView = (NavigationView) findViewById(R.id.navigationView);
         }
+
         mNavigationView.setNavigationItemSelectedListener(this);
         mNavigationView.getMenu().getItem(0).setChecked(true);
         if (user != null && user.isAnonymous()) {
@@ -216,10 +220,18 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
                         (int) PixelUtils.dpToPixel(this, 73), 0, 0, 0);
                 final ImageView avatar =
                         (ImageView) mNavigationView.getHeaderView(0).findViewById(R.id.profile_photo);
-                Picasso.with(getApplicationContext())
-                        .load(user.getPhotoUrl())
-                        .transform(new RoundedTransformation())
-                        .into(avatar);
+                AvatarManager.listener.invalidateUrl();
+                if (AvatarManager.listener.getUri().toString().contains("graph")) {
+                    Picasso.with(getApplicationContext())
+                            .load(AvatarManager.listener.getUri() + "?type=normal")
+                            .transform(new RoundedTransformation())
+                            .into(avatar);
+                } else {
+                    Picasso.with(getApplicationContext())
+                            .load(AvatarManager.listener.getUri())
+                            .transform(new RoundedTransformation())
+                            .into(avatar);
+                }
                 avatar.setVisibility(View.VISIBLE);
             }
         } else {
@@ -227,8 +239,10 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
             mNavigationView.getMenu().findItem(R.id.nav_logout).setVisible(false);
             mNavigationView.getHeaderView(0).setVisibility(View.GONE);
         }
+        if (AvatarManager.listener.countObservers() == 0) {
+            AvatarManager.listener.addObserver(new MenuAvatarListener(this));
+        }
     }
-
 
     public Toolbar getToolbar() {
         return mToolbar;
@@ -239,7 +253,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
         if (user.isAnonymous()) {
             user.delete();
         } else {
-            if (user.getPhotoUrl() != null && user.getPhotoUrl().toString().contains("facebook")) {
+            if (isFacebook(user)) {
                 FacebookSdk.sdkInitialize(getApplicationContext());
                 LoginManager.getInstance().logOut();
             }
@@ -247,7 +261,6 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
             FirebaseAuth.getInstance().signOut();
             Log.i("FA", "user was signed out");
         }
-
         // Launching the login activity
         final Intent intent = new Intent(this, AuthActivity.class);
         startActivity(intent);
@@ -270,6 +283,24 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
         if (getCurrentFocus() != null) {
             imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
         }
+
         Log.i("IMM", "Closed imm");
+    }
+
+    public static boolean isFacebook(final FirebaseUser user) {
+        if (user.getProviders() != null) {
+            for (final String provider : user.getProviders()) {
+                if (provider.contains("facebook")) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    @Override
+    protected void onDestroy() {
+        AvatarManager.listener.deleteObservers();
+        super.onDestroy();
     }
 }

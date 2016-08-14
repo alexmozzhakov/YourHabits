@@ -14,7 +14,6 @@ import java.util.List;
 
 public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder>
         implements UpdatableList<Habit> {
-
     private List<Habit> mFeedList;
 
     public TimeLineAdapter(final List<Habit> feedList) {
@@ -59,5 +58,4 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder>
     public int getItemCount() {
         return mFeedList != null ? mFeedList.size() : 0;
     }
-
 }

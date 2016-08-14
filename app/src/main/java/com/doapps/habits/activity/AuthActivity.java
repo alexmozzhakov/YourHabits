@@ -12,12 +12,10 @@ import com.doapps.habits.R;
 import com.doapps.habits.fragments.LoginFragment;
 import com.doapps.habits.slider.swipeselector.PixelUtils;
 import com.facebook.CallbackManager;
-import com.facebook.FacebookSdk;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class AuthActivity extends AppCompatActivity {
-
     private final CallbackManager mCallbackManager = CallbackManager.Factory.create();
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseAuth mAuth;
@@ -25,7 +23,6 @@ public class AuthActivity extends AppCompatActivity {
     public CallbackManager getCallbackManager() {
         return mCallbackManager;
     }
-
 
     public FirebaseAuth getAuth() {
         return mAuth;
@@ -36,7 +33,6 @@ public class AuthActivity extends AppCompatActivity {
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
     }
-
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -61,7 +57,6 @@ public class AuthActivity extends AppCompatActivity {
                 .commit();
     }
 
-
     @Override
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -73,9 +68,6 @@ public class AuthActivity extends AppCompatActivity {
         super.onStop();
         if (mAuthListener != null) {
             mAuth.removeAuthStateListener(mAuthListener);
-        }
-        if (FacebookSdk.isInitialized()) {
-            FacebookSdk.clearLoggingBehaviors();
         }
     }
 
@@ -100,7 +92,6 @@ public class AuthActivity extends AppCompatActivity {
             layout.setLayoutParams(params);
         }
     }
-
 
     public void toTerms(final View view) {
         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://habbitsapp.esy.es/terms.txt")));

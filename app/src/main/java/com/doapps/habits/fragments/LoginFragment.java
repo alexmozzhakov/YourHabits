@@ -1,6 +1,5 @@
 package com.doapps.habits.fragments;
 
-
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -21,6 +20,7 @@ import com.doapps.habits.R;
 import com.doapps.habits.activity.AuthActivity;
 import com.doapps.habits.activity.MainActivity;
 import com.doapps.habits.activity.PasswordRecoveryActivity;
+import com.doapps.habits.helper.AvatarManager;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -32,13 +32,12 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
 
 import java.util.Arrays;
 
 public class LoginFragment extends Fragment {
 
-    private static final String TAG = LoginFragment.class.getName();
+    private static final String TAG = LoginFragment.class.getSimpleName();
 
     private FirebaseAuth mAuth;
     private TextInputEditText inputPassword;
@@ -104,9 +103,6 @@ public class LoginFragment extends Fragment {
                 new FacebookCallback<LoginResult>() {
                     @Override
                     public void onSuccess(final LoginResult result) {
-                        if (BuildConfig.DEBUG) {
-                            Log.d(TAG, "facebook:onSuccess:" + result);
-                        }
                         handleFacebookAccessToken(result.getAccessToken());
                     }
 
@@ -121,44 +117,31 @@ public class LoginFragment extends Fragment {
                     }
 
                     private void handleFacebookAccessToken(final AccessToken token) {
-                        if (BuildConfig.DEBUG) {
-                            Log.d(TAG, "handleFacebookAccessToken:" + token);
-                        }
-
-                        final AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
+                        final AuthCredential credential =
+                                FacebookAuthProvider.getCredential(token.getToken());
                         mAuth.signInWithCredential(credential)
+                                .addOnFailureListener(e -> {
+                                    Log.w(TAG, "signInWithCredential", e);
+                                    Toast.makeText(getContext(), "Authentication failed.",
+                                            Toast.LENGTH_SHORT).show();
+                                })
                                 .addOnCompleteListener(task -> {
-                                    if (BuildConfig.DEBUG) {
-                                        Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
-                                    }
-
-                                    // If sign in fails, display a message to the user. If sign in succeeds
-                                    // the auth state listener will be notified and logic to handle the
-                                    // signed in user can be handled in the listener.
-                                    if (task.isSuccessful()) {
-                                        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                                        if (user != null && user.getPhotoUrl() == null) {
-                                            final String userID = token.getUserId();
-                                            final UserProfileChangeRequest profileUpdates =
-                                                    new UserProfileChangeRequest.Builder()
-                                                            .setPhotoUri(Uri.parse(String.format("https://graph.facebook.com/%s/picture?type=large", userID)))
-                                                            .build();
-                                            Log.d(TAG, String.valueOf(Uri.parse(String.format("https://graph.facebook.com/%s/picture?type=large", userID))));
-
-                                            user.updateProfile(profileUpdates)
-                                                    .addOnCompleteListener(update -> {
-                                                        if (update.isSuccessful()) {
-                                                            Log.d(TAG, "User photo set.");
-                                                        }
-                                                    });
-                                        }
-                                    } else {
-                                        Log.w(TAG, "signInWithCredential", task.getException());
-                                        Toast.makeText(getContext(), "Authentication failed.",
-                                                Toast.LENGTH_SHORT).show();
+                                    final FirebaseUser user =
+                                            FirebaseAuth.getInstance().getCurrentUser();
+                                    if (getContext().getSharedPreferences("pref",
+                                            Context.MODE_PRIVATE).getString(user.getUid(), null) == null) {
+                                        getContext()
+                                                .getSharedPreferences("pref", Context.MODE_PRIVATE)
+                                                .edit()
+                                                .putString(user.getUid(), token.getUserId())
+                                                .apply();
+                                        AvatarManager.listener.setUri(
+                                                Uri.parse(String.format("https://graph.facebook.com/%s/picture",
+                                                        token.getUserId())));
                                     }
                                 });
                     }
+
                 });
         btnFacebook.setOnClickListener(view ->
                 LoginManager.getInstance().

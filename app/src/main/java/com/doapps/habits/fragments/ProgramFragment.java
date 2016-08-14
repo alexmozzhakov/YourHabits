@@ -27,7 +27,7 @@ import java.util.List;
 public class ProgramFragment extends Fragment {
 
     private static final SparseArray<Program> programHashMap = new SparseArray<>();
-    private DataSnapshot snapshot;
+    private DataSnapshot mSnapshot;
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
@@ -39,17 +39,17 @@ public class ProgramFragment extends Fragment {
 
         final TextView description = (TextView) result.findViewById(R.id.description);
 
-        description.setText(snapshot.child("habit").child("description").getValue(String.class));
+        description.setText(mSnapshot.child("habit").child("description").getValue(String.class));
         if (BuildConfig.DEBUG) {
-            Log.i("Program fragment", snapshot.toString());
+            Log.i("Program fragment", mSnapshot.toString());
         }
 
         if (fab != null) {
             fab.setOnClickListener(view -> {
-                final int id = Integer.valueOf(snapshot.getKey());
+                final int id = Integer.valueOf(mSnapshot.getKey());
 
                 if (programHashMap.get(id) == null) {
-                    final Program program = onProgramApply(snapshot, getContext());
+                    final Program program = onProgramApply(mSnapshot, getContext());
                     programHashMap.put(id, program);
                     Toast.makeText(getActivity(), "New program added", Toast.LENGTH_SHORT).show();
                 } else {
@@ -63,7 +63,7 @@ public class ProgramFragment extends Fragment {
     }
 
     void setSnapshot(final DataSnapshot snapshot) {
-        this.snapshot = snapshot;
+        mSnapshot = snapshot;
     }
 
     private static Program onProgramApply(final DataSnapshot dataSnapshot, final Context context) {

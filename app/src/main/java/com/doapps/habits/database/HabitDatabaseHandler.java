@@ -17,19 +17,14 @@ import java.util.List;
 
 @SuppressWarnings("HardCodedStringLiteral")
 public class HabitDatabaseHandler extends SQLiteOpenHelper implements HabitsDatabase {
-
     private static final String TAG = HabitDatabaseHandler.class.getSimpleName();
-
     // All Static variables
     // Database Version
     private static final int DATABASE_VERSION = 1;
-
     // Database Name
     private static final String DATABASE_NAME = "habits";
-
     // Habit table name
     private static final String TABLE_HABIT = "habit";
-
     // Habit Table Columns names
     private static final String KEY_ID = "id";
     private static final String KEY_NAME = "title";
@@ -55,6 +50,7 @@ public class HabitDatabaseHandler extends SQLiteOpenHelper implements HabitsData
         for (int i = 0; i < shorts.length && i < temp.length; i++) {
             shorts[i] = Short.valueOf(temp[i]);
         }
+
         return shorts;
     }
 
@@ -80,7 +76,6 @@ public class HabitDatabaseHandler extends SQLiteOpenHelper implements HabitsData
     // Creating Tables
     @Override
     public void onCreate(final SQLiteDatabase sqLiteDatabase) {
-
         final StringBuilder createLoginTable = new StringBuilder(106)
                 .append("CREATE TABLE ")
                 .append(TABLE_HABIT)
@@ -96,9 +91,7 @@ public class HabitDatabaseHandler extends SQLiteOpenHelper implements HabitsData
                 .append(KEY_FREQUENCY_ARRAY).append(" TEXT,")
                 .append(KEY_UPDATED_YEAR).append(INTEGER)
                 .append(KEY_DONE).append(" INTEGER)");
-
         sqLiteDatabase.execSQL(createLoginTable.toString());
-
         Log.d(TAG, "Database tables created");
     }
 
@@ -107,7 +100,6 @@ public class HabitDatabaseHandler extends SQLiteOpenHelper implements HabitsData
     public void onUpgrade(final SQLiteDatabase sqLiteDatabase, final int i, final int i1) {
         // Drop older table if existed
         sqLiteDatabase.execSQL(String.format("DROP TABLE IF EXISTS %s", TABLE_HABIT));
-
         // Create tables again
         onCreate(sqLiteDatabase);
     }
@@ -118,7 +110,6 @@ public class HabitDatabaseHandler extends SQLiteOpenHelper implements HabitsData
     @Override
     public void addHabit(final String name, final String question, final int time,
                          final Calendar upd, final int cost, final int... frequency) {
-
         final SQLiteDatabase database = getWritableDatabase();
         final ContentValues values = new ContentValues();
         values.put(KEY_NAME, name); // Title
@@ -131,11 +122,10 @@ public class HabitDatabaseHandler extends SQLiteOpenHelper implements HabitsData
         values.put(KEY_COST, cost); // cost
         values.put(KEY_FREQUENCY_ARRAY, integerArrayToString(frequency)); // frequency
         values.put(KEY_DONE, 0);
-
         // Inserting Row
         final long id = database.insert(TABLE_HABIT, null, values);
-        database.close(); // Closing database connection
-
+        // Closing database connection
+        database.close();
         isSame = false;
         if (BuildConfig.DEBUG) {
             Log.d(TAG, String.format("New habit inserted into sqlite: %d", id));
@@ -160,18 +150,16 @@ public class HabitDatabaseHandler extends SQLiteOpenHelper implements HabitsData
         values.put(KEY_COST, cost); // cost
         values.put(KEY_FREQUENCY_ARRAY, frequency); // frequency
         values.put(KEY_DONE, 0);
-
         // Inserting Row
         final long id = database.insert(TABLE_HABIT, null, values);
-        database.close(); // Closing database connection
-
+        // Closing database connection
+        database.close();
         isSame = false;
         if (BuildConfig.DEBUG) {
             Log.d(TAG, String.format("New habit inserted into sqlite: %d", id));
         }
         return id;
     }
-
 
     /**
      * Getting habit data from database

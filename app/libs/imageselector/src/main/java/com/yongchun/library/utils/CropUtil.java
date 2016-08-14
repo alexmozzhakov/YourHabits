@@ -17,20 +17,17 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-/*
- * Modified from original in AOSP.
- */
 public class CropUtil {
 
     private static final String SCHEME_FILE = "file";
     private static final String SCHEME_CONTENT = "content";
 
-    public static void closeSilently(@Nullable final Closeable c) {
-        if (c == null) {
+    public static void closeSilently(@Nullable final Closeable closeable) {
+        if (closeable == null) {
             return;
         }
         try {
-            c.close();
+            closeable.close();
         } catch (final IOException ignored) {
             // ignored
         } catch (final Throwable ignored) {
@@ -84,7 +81,8 @@ public class CropUtil {
     }
 
     @Nullable
-    private static File getFromMediaUriPfd(Context context, ContentResolver resolver, Uri uri) {
+    private static File getFromMediaUriPfd(final Context context, final ContentResolver resolver,
+                                           final Uri uri) {
         if (uri == null) {
             return null;
         }
@@ -94,17 +92,20 @@ public class CropUtil {
         try {
             final ParcelFileDescriptor pfd = resolver.openFileDescriptor(uri, "r");
             final FileDescriptor fd = pfd != null ? pfd.getFileDescriptor() : null;
-            input = new FileInputStream(fd);
+            if (fd != null) {
+                input = new FileInputStream(fd);
 
-            final String tempFilename = getTempFilename(context);
-            output = new FileOutputStream(tempFilename);
+                final String tempFilename = getTempFilename(context);
+                output = new FileOutputStream(tempFilename);
 
-            int read;
-            final byte[] bytes = new byte[4096];
-            while ((read = input.read(bytes)) != -1) {
-                output.write(bytes, 0, read);
+                final byte[] bytes = new byte[4096];
+                int read = input.read(bytes);
+                while (read != -1) {
+                    output.write(bytes, 0, read);
+                    read = input.read(bytes);
+                }
+                return new File(tempFilename);
             }
-            return new File(tempFilename);
         } catch (final FileNotFoundException ignored) {
             // ignored
         } catch (final IOException ignored) {
@@ -115,62 +116,4 @@ public class CropUtil {
         }
         return null;
     }
-
-//    public static void startBackgroundJob(MonitoredActivity activity,
-//                                          String title, String message, Runnable job, Handler handler) {
-//        // Make the progress dialog uncancelable, so that we can guarantee
-//        // the thread will be done before the activity getting destroyed
-//        ProgressDialog dialog = ProgressDialog.show(
-//                activity, title, message, true, false);
-//        new Thread(new BackgroundJob(activity, job, dialog, handler)).start();
-//    }
-
-//    private static class BackgroundJob extends MonitoredActivity.LifeCycleAdapter implements Runnable {
-//
-//        private final MonitoredActivity activity;
-//        private final ProgressDialog dialog;
-//        private final Runnable job;
-//        private final Handler handler;
-//        private final Runnable cleanupRunner = new Runnable() {
-//            public void run() {
-//                activity.removeLifeCycleListener(BackgroundJob.this);
-//                if (dialog.getWindow() != null) dialog.dismiss();
-//            }
-//        };
-//
-//        public BackgroundJob(MonitoredActivity activity, Runnable job,
-//                             ProgressDialog dialog, Handler handler) {
-//            this.activity = activity;
-//            this.dialog = dialog;
-//            this.job = job;
-//            this.activity.addLifeCycleListener(this);
-//            this.handler = handler;
-//        }
-//
-//        public void run() {
-//            try {
-//                job.run();
-//            } finally {
-//                handler.post(cleanupRunner);
-//            }
-//        }
-//
-//        @Override
-//        public void onActivityDestroyed(MonitoredActivity activity) {
-//            // We get here only when the onDestroyed being called before
-//            // the cleanupRunner. So, run it now and remove it from the queue
-//            cleanupRunner.run();
-//            handler.removeCallbacks(cleanupRunner);
-//        }
-//
-//        @Override
-//        public void onActivityStopped(MonitoredActivity activity) {
-//            dialog.hide();
-//        }
-//
-//        @Override
-//        public void onActivityStarted(MonitoredActivity activity) {
-//            dialog.show();
-//        }
-//    }
 }

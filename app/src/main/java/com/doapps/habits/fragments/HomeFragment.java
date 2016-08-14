@@ -228,12 +228,4 @@ public class HomeFragment extends Fragment {
                         })
         );
     }
-
-    @Override
-    public void onPause() {
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//            conMan.removeDefaultNetworkActiveListener(activeListener);
-//        }
-        super.onPause();
-    }
 }

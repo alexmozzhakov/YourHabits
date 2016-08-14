@@ -19,11 +19,10 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 public class ProgramRecycleAdapter extends RecyclerView.Adapter {
-
     private final List<ProgramViewProvider> mProgramList;
-    private final Context context;
-    private final FragmentManager fragmentManager;
-    private final ProgramsFragment programsFragment;
+    private final Context mContext;
+    private final FragmentManager mFragmentManager;
+    private final ProgramsFragment mProgramsFragment;
     private ImageView mImageTop;
     private TextView mTitleTop;
     private TextView mSuccessTop;
@@ -32,9 +31,9 @@ public class ProgramRecycleAdapter extends RecyclerView.Adapter {
                                  final FragmentManager fragmentManager,
                                  final ProgramsFragment programsFragment) {
         mProgramList = data;
-        this.context = context;
-        this.fragmentManager = fragmentManager;
-        this.programsFragment = programsFragment;
+        mContext = context;
+        mFragmentManager = fragmentManager;
+        mProgramsFragment = programsFragment;
     }
 
     @Override
@@ -71,14 +70,14 @@ public class ProgramRecycleAdapter extends RecyclerView.Adapter {
         programViewHolder.getTitleTextView().setText(program.getTitle());
         programViewHolder.getPercentTextView().setText(program.getPercent());
         programViewHolder.getTitleTextView().setOnClickListener(v -> {
-            Picasso.with(context.getApplicationContext())
+            Picasso.with(mContext.getApplicationContext())
                     .load(program.getImageLink())
                     .into(mImageTop);
             mTitleTop.setText(program.getTitle());
             mSuccessTop.setVisibility(View.VISIBLE);
             mSuccessTop.setText(program.getSnapshot().child("success").getValue(String.class));
-            programsFragment.onClick(program.getSnapshot(),
-                    fragmentManager);
+            // TODO: 11/08/2016 change onClick to smth more abstract
+            mProgramsFragment.onClick(program.getSnapshot(), mFragmentManager);
         });
     }
 

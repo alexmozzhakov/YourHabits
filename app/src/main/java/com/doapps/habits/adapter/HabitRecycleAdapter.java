@@ -17,13 +17,12 @@ import java.util.Calendar;
 import java.util.List;
 
 public class HabitRecycleAdapter extends RecyclerView.Adapter implements MovableList {
-
     private final List<Habit> mHabitList;
     private final HabitsDatabase mHabitsDatabase;
-    private final HabitDatabaseMovableListProvider movableList;
+    private final HabitDatabaseMovableListProvider mMovableList;
 
     public HabitRecycleAdapter(final HabitDatabaseMovableListProvider movableList) {
-        this.movableList = movableList;
+        mMovableList = movableList;
         mHabitList = movableList.getList();
         mHabitsDatabase = movableList.getDatabase();
     }
@@ -43,7 +42,6 @@ public class HabitRecycleAdapter extends RecyclerView.Adapter implements Movable
 
         habitViewHolder.txtTitle.setText(habit.title);
         habitViewHolder.checkBox.setOnClickListener(view -> {
-
             if (habitViewHolder.checkBox.isChecked()) {
                 mHabitsDatabase.updateHabit(habit, 1);
                 mHabitList.get(position).setDoneMarker(true);
@@ -71,14 +69,13 @@ public class HabitRecycleAdapter extends RecyclerView.Adapter implements Movable
 
     @Override
     public void onItemDismiss(final int position) {
-        movableList.onItemDismiss(position);
+        mMovableList.onItemDismiss(position);
         notifyItemRemoved(position);
     }
 
     @Override
     public void onItemMove(final int fromPosition, final int toPosition) {
-        movableList.onItemMove(fromPosition, toPosition);
+        mMovableList.onItemMove(fromPosition, toPosition);
         notifyItemMoved(fromPosition, toPosition);
     }
-
 }

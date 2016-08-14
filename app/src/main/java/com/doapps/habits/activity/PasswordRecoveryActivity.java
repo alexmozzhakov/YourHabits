@@ -14,7 +14,6 @@ import com.doapps.habits.fragments.RegisterFragment;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class PasswordRecoveryActivity extends AppCompatActivity {
-
     private TextInputEditText emailEdit;
 
     @Override
