@@ -12,26 +12,26 @@ import java.util.Iterator;
 import java.util.List;
 
 public class HomeDayManager implements DayManager {
-    private final UpdatableList<Habit> timeLineAdapter;
-    private final List<Habit> habitList;
+    private final UpdatableList<Habit> mTimeLineAdapter;
+    private final List<Habit> mHabitList;
 
     public HomeDayManager(final UpdatableList<Habit> timeLineAdapter, final List<Habit> habitList) {
-        this.timeLineAdapter = timeLineAdapter;
-        this.habitList = habitList;
+        mTimeLineAdapter = timeLineAdapter;
+        mHabitList = habitList;
     }
 
     @Override
     public void updateListByDay(final int dayOfWeek) {
-        final List<Habit> dayHabits = new ArrayList<>(habitList);
+        final List<Habit> dayHabits = new ArrayList<>(mHabitList);
         filterListByDay(dayHabits, dayOfWeek);
-        timeLineAdapter.updateList(dayHabits);
+        mTimeLineAdapter.updateList(dayHabits);
     }
 
     @Override
     public void updateForToday() {
-        final List<Habit> todayHabits = new ArrayList<>(habitList);
+        final List<Habit> todayHabits = new ArrayList<>(mHabitList);
         filterListForToday(todayHabits);
-        timeLineAdapter.updateList(todayHabits);
+        mTimeLineAdapter.updateList(todayHabits);
     }
 
     public static void filterListForToday(final Iterable<Habit> todayHabits) {

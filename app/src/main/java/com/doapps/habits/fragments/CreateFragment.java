@@ -44,6 +44,7 @@ public class CreateFragment extends Fragment implements AdapterView.OnItemSelect
         tvFreqDen = (TextView) result.findViewById(R.id.input_freq_den);
         llCustomFrequency = (ViewGroup) result.findViewById(R.id.llCustomFrequency);
 
+        sFrequency.setOnItemSelectedListener(this);
         result.findViewById(R.id.btnRegister).setOnClickListener(view -> onHabitCreate());
 
         return result;

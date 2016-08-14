@@ -4,16 +4,16 @@ import java.util.Observable;
 
 
 public class NameChangeListener extends Observable {
-    private volatile boolean changed;
+    private volatile boolean mChanged;
     public static final NameChangeListener listener = new NameChangeListener();
 
     public void setChanged(final boolean changed) {
-        this.changed = changed;
+        mChanged = changed;
         super.notifyObservers();
     }
 
     @Override
     public synchronized boolean hasChanged() {
-        return changed;
+        return mChanged;
     }
 }

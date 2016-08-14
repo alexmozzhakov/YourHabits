@@ -4,22 +4,25 @@ apply plugin: 'me.tatarka.retrolambda'
 android {
     compileSdkVersion 24
     buildToolsVersion '24.0.0'
+
     defaultConfig {
         applicationId "com.doapps.habit"
         minSdkVersion 16
         //noinspection OldTargetApi
         targetSdkVersion 23
         versionCode 1
-        versionName "0.4.6"
-        multiDexEnabled true
+        versionName "0.5.3b4"
     }
+
     compileOptions {
         targetCompatibility JavaVersion.VERSION_1_8
         sourceCompatibility JavaVersion.VERSION_1_8
     }
+
     dexOptions {
         javaMaxHeapSize "3g"
     }
+
     buildTypes {
         release {
             minifyEnabled true
@@ -30,8 +33,9 @@ android {
 }
 
 repositories {
-    jcenter()
-    maven { url "https://jitpack.io" }
+    maven {
+        url "https://jitpack.io"
+    }
 }
 
 dependencies {
@@ -46,17 +50,18 @@ dependencies {
     compile 'com.google.firebase:firebase-crash:9.4.0'
     compile 'com.facebook.android:facebook-android-sdk:4.14.1'
     compile 'com.ruesga.timeline-chart-view:timeline-chart-view:0.0.8'
-    compile 'org.apmem.tools:layouts:1.10@aar'
-    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.squareup.picasso:picasso:2.5.1'
     testCompile 'junit:junit:4.12'
     //noinspection GradleDependency
     compile project(path: ':imageselector')
     compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha6'
 }
 
-tasks.whenTaskAdded { task ->
-    if (task.name.equals("lint")) {
-        task.enabled = false
-    }
+tasks.whenTaskAdded {
+    task ->
+        if (task.name.equals("lint")) {
+            task.enabled = false
+        }
 }
+
 apply plugin: 'com.google.gms.google-services'

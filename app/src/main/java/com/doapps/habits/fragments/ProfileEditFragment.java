@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,14 +46,13 @@ public class ProfileEditFragment extends Fragment {
         // Inflate the layout for this fragment
         final View result = inflater.inflate(R.layout.fragment_edit_profile, container, false);
         fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        final ImageView avatar = (ImageView) getActivity().findViewById(R.id.avatarImage);
 
         fab.setImageResource(R.drawable.ic_action_name);
         fab.setOnClickListener(view -> {
                     final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
                     if (user != null && user.getEmail() != null) {
-                        final boolean facebookUser =
-                                user.getPhotoUrl() != null && user.getPhotoUrl().toString().contains("facebook");
                         final String email =
                                 String.valueOf(((TextView) result.findViewById(R.id.edit_email)).getText()).toLowerCase();
                         final String name =
@@ -63,7 +63,7 @@ public class ProfileEditFragment extends Fragment {
                             Log.i("EditProfile", "Nothing to update");
                             return;
                         }
-                        if (facebookUser) {
+                        if (MainActivity.isFacebook(user)) {
                             // TODO: 14/07/2016 change to working solution
                             final CallbackManager callbackManager =
                                     ((MainActivity) getActivity()).getCallbackManager();
@@ -93,6 +93,7 @@ public class ProfileEditFragment extends Fragment {
                                             Log.d(TAG, "facebook:onError", error);
                                         }
                                     });
+
                             getFragmentManager().beginTransaction().remove(this).commit();
                         } else {
                             getPasswordFromUser();
@@ -101,19 +102,17 @@ public class ProfileEditFragment extends Fragment {
                                     .getCredential(user.getEmail(), inputPassword);
                             user.reauthenticate(credential)
                                     .addOnCompleteListener(task -> Log.d(TAG, "User re-authenticated."));
-                        }
-                        if (inputPassword.isEmpty() && !facebookUser) { // entered password empty
-                            Toast.makeText(getContext().getApplicationContext(),
-                                    "Please enter correct password", Toast.LENGTH_SHORT)
-                                    .show();
-                            getPasswordFromUser();
-                            return;
+                            if (inputPassword.isEmpty()) { // entered password empty
+                                Toast.makeText(getContext().getApplicationContext(),
+                                        "Please enter correct password", Toast.LENGTH_SHORT)
+                                        .show();
+                                getPasswordFromUser();
+                                return;
+                            }
                         }
 
                         updateUser(getActivity(), user, name, email);
-
                         getFragmentManager().beginTransaction().remove(this).commit();
-
                     } else {
                         Log.e(TAG, "User is null");
                     }

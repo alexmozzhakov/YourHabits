@@ -2,6 +2,7 @@ package com.doapps.habits.fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -24,7 +25,6 @@ import com.doapps.habits.activity.EditPhotoActivity;
 import com.doapps.habits.activity.MainActivity;
 import com.doapps.habits.helper.AvatarManager;
 import com.doapps.habits.helper.RoundedTransformation;
-import com.doapps.habits.listeners.MenuAvatarListener;
 import com.doapps.habits.listeners.ProfileFragmentAvatarListener;
 import com.doapps.habits.listeners.UserAvatarListener;
 import com.doapps.habits.slider.swipeselector.PixelUtils;
@@ -46,13 +46,15 @@ import java.util.Arrays;
 public class ProfileFragment extends Fragment {
     private static final boolean[] editorOpened = new boolean[1];
     private static final String TAG = ProfileFragment.class.getName();
+    private static int mDialogTextLength;
+    private static final int DIALOG_MIN_LENGTH = 6;
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              final Bundle savedInstanceState) {
         getActivity().findViewById(R.id.toolbar_shadow).setVisibility(View.GONE);
         // Inflate the layout for this fragment
-        final View result = inflater.inflate(R.layout.profile_fragment, container, false);
+        final View result = inflater.inflate(R.layout.fragment_profile, container, false);
         final TextView name = (TextView) result.findViewById(R.id.name);
         final TextView email = (TextView) result.findViewById(R.id.email);
         final TextView location = (TextView) result.findViewById(R.id.location);
@@ -71,28 +73,57 @@ public class ProfileFragment extends Fragment {
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
         if (user != null) {
-
             location.setText(getActivity()
                     .getSharedPreferences("pref", Context.MODE_PRIVATE)
                     .getString("location", ""));
 
-            final ImageView avatar = (ImageView) result.findViewById(R.id.imageView3);
+            final ImageView avatar = (ImageView) result.findViewById(R.id.avatarImage);
 
-            AvatarManager.listener
-                    .addObserver(new ProfileFragmentAvatarListener(avatar));
+            if (AvatarManager.listener.countObservers() == 1) {
+                AvatarManager.listener.addObserver(new ProfileFragmentAvatarListener(avatar));
+                AvatarManager.listener.addObserver(new UserAvatarListener());
+            }
 
-            AvatarManager.listener
-                    .addObserver(new MenuAvatarListener((MainActivity) getActivity()));
-
-            AvatarManager.listener.addObserver(new UserAvatarListener());
-
-            if (user.getPhotoUrl() != null && !user.getPhotoUrl().toString().contains("facebook")) {
-                final Button btnFacebook = (Button) result.findViewById(R.id.btn_connect_facebook);
-                btnFacebook.setVisibility(View.VISIBLE);
+            AvatarManager.listener.invalidateUrl();
+            final Uri avatarUri = AvatarManager.listener.getUri();
+            if (avatarUri != null) {
+                if (avatarUri.toString().contains("graph")) {
+                    Picasso.with(getContext().getApplicationContext())
+                            .load(avatarUri + "?type=large")
+                            .transform(new RoundedTransformation())
+                            .into(avatar);
+                } else {
+                    Picasso.with(getContext().getApplicationContext())
+                            .load(avatarUri)
+                            .transform(new RoundedTransformation())
+                            .into(avatar);
+                }
+            } else {
+                Log.w(TAG, "no avatar");
                 avatar.setOnClickListener(view -> {
                     final Intent intent = new Intent(getActivity(), EditPhotoActivity.class);
                     startActivity(intent);
                 });
+            }
+            if (MainActivity.isFacebook(user)) {
+                final View topPanel = result.findViewById(R.id.topPanel);
+                topPanel.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
+                    if (topPanel.getHeight() - PixelUtils.dpToPixel(getContext(), 50) < 200) {
+                        avatar.setImageAlpha(0);
+                        name.setGravity(Gravity.CENTER);
+                        location.setGravity(Gravity.CENTER);
+                        Log.i("Top Panel", "I really can't fit on top panel, the view is only " +
+                                (topPanel.getHeight() - PixelUtils.dpToPixel(getContext(), 50)));
+                    } else {
+                        avatar.setImageAlpha(255);
+                        name.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
+                        location.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
+                        Log.i("Top Panel", "I fit on top panel");
+                    }
+                });
+            } else {
+                final Button btnFacebook = (Button) result.findViewById(R.id.btn_connect_facebook);
+                btnFacebook.setVisibility(View.VISIBLE);
                 FacebookSdk.sdkInitialize(getContext().getApplicationContext());
                 final CallbackManager callbackManager =
                         ((MainActivity) getActivity()).getCallbackManager();
@@ -110,6 +141,13 @@ public class ProfileFragment extends Fragment {
                                             if (BuildConfig.DEBUG) {
                                                 Log.d("FA", "linkWithCredential:onComplete:" + task.isSuccessful());
                                             }
+
+                                            getActivity()
+                                                    .getSharedPreferences("pref", Context.MODE_PRIVATE)
+                                                    .edit()
+                                                    .putString(user.getUid(), result.getAccessToken().getUserId())
+                                                    .apply();
+
                                             if (task.isSuccessful()) {
                                                 Toast.makeText(getContext().getApplicationContext(),
                                                         task.getResult() +
@@ -140,36 +178,12 @@ public class ProfileFragment extends Fragment {
                         LoginManager.getInstance().
                                 logInWithReadPermissions(getActivity(),
                                         Arrays.asList("email", "public_profile")));
-            } else {
-                Picasso.with(getActivity().getApplicationContext())
-                        .load(user.getPhotoUrl())
-                        .transform(new RoundedTransformation())
-                        .into(avatar);
-                final View topPanel = result.findViewById(R.id.topPanel);
-                avatar.setOnClickListener(view -> {
-                    final Intent intent = new Intent(getActivity(), EditPhotoActivity.class);
-                    startActivity(intent);
-                });
-                topPanel.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
-                    if (topPanel.getHeight() - PixelUtils.dpToPixel(getContext(), 50) < 200) {
-                        avatar.setImageAlpha(0);
-                        name.setGravity(Gravity.CENTER);
-                        location.setGravity(Gravity.CENTER);
-                        Log.i("Top Panel", "I really can't fit on top panel, the view is only " +
-                                (topPanel.getHeight() - PixelUtils.dpToPixel(getContext(), 50)));
-                    } else {
-                        avatar.setImageAlpha(255);
-                        name.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
-                        location.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
-                        Log.i("Top Panel", "I fit on top panel");
-                    }
-                });
             }
 
-
-            btnDelete.setOnClickListener(view -> deleteUser(user));
             name.setText(user.getDisplayName());
             email.setText(user.getEmail());
+
+            btnDelete.setOnClickListener(view -> deleteUser(user));
         }
 
 
@@ -177,13 +191,59 @@ public class ProfileFragment extends Fragment {
     }
 
     private void deleteUser(final FirebaseUser user) {
-        if (user.getPhotoUrl() == null || !user.getPhotoUrl().toString().contains("facebook")) {
+        if (MainActivity.isFacebook(user)) {
+            FacebookSdk.sdkInitialize(getContext().getApplicationContext());
+            LoginManager.getInstance().
+                    logInWithReadPermissions(getActivity(),
+                            Arrays.asList("email", "public_profile"));
+            final CallbackManager callbackManager =
+                    ((MainActivity) getActivity()).getCallbackManager();
+            LoginManager.getInstance().registerCallback(callbackManager,
+                    new FacebookCallback<LoginResult>() {
+                        @Override
+                        public void onSuccess(final LoginResult result) {
+                            if (BuildConfig.DEBUG) {
+                                Log.d(TAG, "facebook:onSuccess:" + result);
+                            }
+                            final AuthCredential credential = FacebookAuthProvider.getCredential(
+                                    result.getAccessToken().getToken());
+                            user.reauthenticate(credential).addOnCompleteListener(task -> {
+                                if (task.isSuccessful()) {
+                                    user.delete().addOnCompleteListener(task1 -> {
+                                        if (task1.isSuccessful()) {
+                                            getActivity()
+                                                    .getSharedPreferences("pref", 0).edit()
+                                                    .remove(user.getUid()).apply();
+                                            final Intent intent = new Intent(getActivity(),
+                                                    MainActivity.class);
+                                            startActivity(intent);
+                                            Log.i("FA", "user deleted");
+                                        } else {
+                                            Log.e("FA", "error deleting user");
+                                        }
+                                    });
+                                } else if (BuildConfig.DEBUG) {
+                                    Log.i("FA", "error reauthorizing user");
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onCancel() {
+                            Log.d(TAG, "facebook:onCancel");
+                            // ignored
+                        }
+
+                        @Override
+                        public void onError(final FacebookException error) {
+                            Log.d(TAG, "facebook:onError", error);
+                        }
+                    });
+        } else {
             final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setTitle("Please re-enter your password");
+            final EditText input = new EditText(getContext());
 
-            // Set up the input
-            final EditText input = new EditText(getActivity());
-            // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
             input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
             builder.setView(input);
 
@@ -208,52 +268,15 @@ public class ProfileFragment extends Fragment {
                 }
             });
             builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
-
-            builder.show();
-        } else {
-            FacebookSdk.sdkInitialize(getContext().getApplicationContext());
-            LoginManager.getInstance().
-                    logInWithReadPermissions(getActivity(),
-                            Arrays.asList("email", "public_profile"));
-            final CallbackManager callbackManager =
-                    ((MainActivity) getActivity()).getCallbackManager();
-            LoginManager.getInstance().registerCallback(callbackManager,
-                    new FacebookCallback<LoginResult>() {
-                        @Override
-                        public void onSuccess(final LoginResult result) {
-                            if (BuildConfig.DEBUG) {
-                                Log.d(TAG, "facebook:onSuccess:" + result);
-                            }
-                            final AuthCredential credential = FacebookAuthProvider.getCredential(
-                                    result.getAccessToken().getToken());
-                            user.reauthenticate(credential).addOnCompleteListener(task -> {
-                                if (task.isSuccessful()) {
-                                    user.delete().addOnCompleteListener(task1 -> {
-                                        if (task1.isSuccessful()) {
-                                            final Intent intent = new Intent(getActivity(), MainActivity.class);
-                                            startActivity(intent);
-                                            Log.i("FA", "user deleted");
-                                        } else {
-                                            Log.e("FA", "error deleting user");
-                                        }
-                                    });
-                                } else if (BuildConfig.DEBUG) {
-                                    Log.i("FA", "error reauthorizing user");
-                                }
-                            });
-                        }
-
-                        @Override
-                        public void onCancel() {
-                            Log.d(TAG, "facebook:onCancel");
-                            // ignored
-                        }
-
-                        @Override
-                        public void onError(final FacebookException error) {
-                            Log.d(TAG, "facebook:onError", error);
-                        }
-                    });
+            final AlertDialog dialog = builder.create();
+            dialog.show();
+            input.setOnKeyListener((view, i, keyEvent) -> {
+                mDialogTextLength++;
+                if (mDialogTextLength > DIALOG_MIN_LENGTH) {
+                    dialog.getButton(1).setEnabled(true);
+                }
+                return false;
+            });
         }
     }
 

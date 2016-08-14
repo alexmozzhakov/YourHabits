@@ -33,8 +33,6 @@ import com.doapps.habits.models.StringSelector;
  *    limitations under the License.
  */
 public class SwipeStringSelector extends FrameLayout implements StringSelector {
-    private static final int DEFAULT_INDICATOR_SIZE = 6;
-    private static final int DEFAULT_INDICATOR_MARGIN = 8;
     private static final String STATE_SELECTOR = "STATE_SELECTOR";
 
     private SwipeAdapter mAdapter;
@@ -59,8 +57,6 @@ public class SwipeStringSelector extends FrameLayout implements StringSelector {
         final TypedArray ta = context.getTheme().obtainStyledAttributes(attrs,
                 R.styleable.SwipeStringSelector, defStyleAttr, 0);
 
-        int indicatorSize;
-        int indicatorMargin;
         int leftButtonResource;
         int rightButtonResource;
 
@@ -68,11 +64,6 @@ public class SwipeStringSelector extends FrameLayout implements StringSelector {
         int titleTextAppearance;
 
         try {
-            indicatorSize = (int) ta.getDimension(R.styleable.SwipeStringSelector_swipe_indicatorSize,
-                    PixelUtils.dpToPixel(context, DEFAULT_INDICATOR_SIZE));
-            indicatorMargin = (int) ta.getDimension(R.styleable.SwipeStringSelector_swipe_indicatorMargin,
-                    PixelUtils.dpToPixel(context, DEFAULT_INDICATOR_MARGIN));
-
             leftButtonResource = ta.getResourceId(R.styleable.SwipeStringSelector_swipe_leftButtonResource,
                     R.drawable.ic_action_navigation_chevron_left);
             rightButtonResource = ta.getResourceId(R.styleable.SwipeStringSelector_swipe_rightButtonResource,
@@ -97,8 +88,6 @@ public class SwipeStringSelector extends FrameLayout implements StringSelector {
 
         mAdapter = new SwipeAdapter.Builder()
                 .viewPager(pager)
-                .indicatorSize(indicatorSize)
-                .indicatorMargin(indicatorMargin)
                 .leftButtonResource(leftButtonResource)
                 .rightButtonResource(rightButtonResource)
                 .leftButton(leftButton)

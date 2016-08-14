@@ -11,6 +11,10 @@
     <annotation name='org.jetbrains.annotations.NonNls'/>
   </item>
   <item
+      name='android.content.SharedPreferences java.lang.String getString(java.lang.String, java.lang.String) 1'>
+    <annotation name='org.jetbrains.annotations.NonNls'/>
+  </item>
+  <item
       name='android.content.SharedPreferences.Editor android.content.SharedPreferences.Editor putBoolean(java.lang.String, boolean) 0'>
     <annotation name='org.jetbrains.annotations.NonNls'/>
   </item>
