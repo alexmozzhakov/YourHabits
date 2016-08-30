@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.doapps.habits.R;
 import com.doapps.habits.adapter.ProgramRecycleAdapter;
 import com.doapps.habits.models.FirebaseProgramView;
@@ -28,7 +29,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,9 +49,9 @@ public class ProgramsFragment extends Fragment {
     private DatabaseReference mRootRef;
 
     @Override
-    public void onAttach(final Context context) {
+    public void onAttach(Context context) {
         super.onAttach(context);
-        final AssetManager assets = context.getAssets();
+        AssetManager assets = context.getAssets();
         if (assets != null) {
             mFaceLight = Typeface.createFromAsset(assets, "Montserrat-Light.otf");
             mFace = Typeface.createFromAsset(assets, "Montserrat-Regular.ttf");
@@ -59,10 +59,10 @@ public class ProgramsFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
-                             final Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final View result = inflater.inflate(R.layout.fragment_programs, container, false);
+        View result = inflater.inflate(R.layout.fragment_programs, container, false);
 
         if (!persistenceEnabled) {
             FirebaseDatabase.getInstance().setPersistenceEnabled(true);
@@ -70,16 +70,16 @@ public class ProgramsFragment extends Fragment {
         }
 
         mRootRef = FirebaseDatabase.getInstance().getReference().child("programs");
-        final View emptyView = result.findViewById(R.id.empty_view);
-        final RecyclerView recyclerView = (RecyclerView) result.findViewById(R.id.recyclerView);
+        View emptyView = result.findViewById(R.id.empty_view);
+        RecyclerView recyclerView = (RecyclerView) result.findViewById(R.id.recyclerView);
         mImageTop = (ImageView) result.findViewById(R.id.imageViewTop);
 
-        final ConnectivityManager conMan = (ConnectivityManager)
+        ConnectivityManager conMan = (ConnectivityManager)
                 getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-        final SharedPreferences sharedPreferences = getActivity()
+        SharedPreferences sharedPreferences = getActivity()
                 .getSharedPreferences("pref", Context.MODE_PRIVATE);
 
-        final NetworkInfo activeNetwork = conMan.getActiveNetworkInfo();
+        NetworkInfo activeNetwork = conMan.getActiveNetworkInfo();
         if (activeNetwork != null && activeNetwork.isConnected()) {
             sharedPreferences.edit().putBoolean("downloaded", true).apply();
             Log.i("FD", "User downloaded database");
@@ -99,20 +99,20 @@ public class ProgramsFragment extends Fragment {
 
         recyclerView.setHasFixedSize(true);
 
-        final LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(llm);
 
         recyclerView.setAdapter(mAdapter);
 
         mSuccessTop = (TextView) result.findViewById(R.id.percentTop);
-        mImageTop.setMaxHeight(result.getHeight()/3);
+        mImageTop.setMaxHeight(result.getHeight() / 3);
         mTitleTop = (TextView) result.findViewById(R.id.titleTop);
 
 
         mRootRef.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onChildAdded(final DataSnapshot dataSnapshot, final String s) {
-                final int position = Integer.parseInt(dataSnapshot.getKey());
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                int position = Integer.parseInt(dataSnapshot.getKey());
 
                 Log.i(TAG, "onChildAdded:()");
                 if (position == 0) {
@@ -130,9 +130,9 @@ public class ProgramsFragment extends Fragment {
             }
 
             @Override
-            public void onChildChanged(final DataSnapshot dataSnapshot, final String s) {
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 Log.i(TAG, "onChildChanged: ()");
-                final int position = Integer.parseInt(dataSnapshot.getKey()) - 1;
+                int position = Integer.parseInt(dataSnapshot.getKey()) - 1;
 
                 if (position >= 0) {
                     mProgramData.remove(position);
@@ -143,9 +143,9 @@ public class ProgramsFragment extends Fragment {
             }
 
             @Override
-            public void onChildRemoved(final DataSnapshot dataSnapshot) {
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
                 Log.i(TAG, "onChildRemoved()");
-                final int position = Integer.parseInt(dataSnapshot.getKey()) - 1;
+                int position = Integer.parseInt(dataSnapshot.getKey()) - 1;
                 if (position >= 0) {
                     mProgramData.remove(position);
                 }
@@ -153,13 +153,13 @@ public class ProgramsFragment extends Fragment {
             }
 
             @Override
-            public void onChildMoved(final DataSnapshot dataSnapshot, final String s) {
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
                 // mAdapter.notifyItemMoved();
                 Log.i(TAG, "onChildMoved: ()");
             }
 
             @Override
-            public void onCancelled(final DatabaseError databaseError) {
+            public void onCancelled(DatabaseError databaseError) {
                 Log.e("DatabaseError", databaseError.toString());
             }
         });
@@ -168,19 +168,19 @@ public class ProgramsFragment extends Fragment {
     }
 
     private void generateTopProgram() {
-        final DatabaseReference programRef = mRootRef.child("0");
+        DatabaseReference programRef = mRootRef.child("0");
 
         programRef.addValueEventListener(new ValueEventListener() {
 
             @Override
-            public void onDataChange(final DataSnapshot dataSnapshot) {
+            public void onDataChange(DataSnapshot dataSnapshot) {
                 mTitleTop.setText(dataSnapshot.child("name").getValue(String.class));
-                final String imageLink = String.format("http://habbitsapp.esy.es/img_progs/%s.jpg",
+                String imageLink = String.format("http://habbitsapp.esy.es/img_progs/%s.jpg",
                         dataSnapshot.child("image").getValue(String.class));
                 Log.v("IMG_URL", imageLink);
 
                 if (getActivity() != null) {
-                    Picasso.with(getActivity().getApplicationContext())
+                    Glide.with(getActivity().getApplicationContext())
                             .load(imageLink)
                             .into(mImageTop);
                 }
@@ -207,13 +207,13 @@ public class ProgramsFragment extends Fragment {
             }
 
             @Override
-            public void onCancelled(final DatabaseError databaseError) {
+            public void onCancelled(DatabaseError databaseError) {
                 Log.e("FirebaseError", databaseError.toString());
             }
         });
     }
 
-    public void onClick(final DataSnapshot dataSnapshot, final FragmentManager fragmentManager) {
+    public void onClick(DataSnapshot dataSnapshot, FragmentManager fragmentManager) {
         if (isShowing) {
             if (!isTop) {
                 generateTopProgram();
@@ -229,8 +229,8 @@ public class ProgramsFragment extends Fragment {
         }
     }
 
-    private static void createProgramApplyFragment(final DataSnapshot dataSnapshot,
-                                                   final FragmentManager fragmentManager) {
+    private static void createProgramApplyFragment(DataSnapshot dataSnapshot,
+                                                   FragmentManager fragmentManager) {
 
         // delete previous fragment if showing
         if (isShowing) {
@@ -239,7 +239,7 @@ public class ProgramsFragment extends Fragment {
                     .commit();
         }
 
-        final ProgramFragment programFragment = new ProgramFragment();
+        ProgramFragment programFragment = new ProgramFragment();
         programFragment.setSnapshot(dataSnapshot);
 
         fragmentManager.beginTransaction()

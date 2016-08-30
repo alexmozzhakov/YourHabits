@@ -23,9 +23,9 @@ public class ImageListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public static final int TYPE_PICTURE = 2;
 
     private final Context context;
+    private final int maxSelectNum;
     private boolean showCamera = true;
     private boolean enablePreview = true;
-    private final int maxSelectNum;
     private int selectMode = ImageSelectorActivity.MODE_MULTIPLE;
 
     private List<LocalMedia> images = new ArrayList<>();
@@ -55,7 +55,7 @@ public class ImageListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     @Override
-    public int getItemViewType(final int position) {
+    public int getItemViewType(int position) {
         return showCamera && position == 0 ? TYPE_CAMERA : TYPE_PICTURE;
     }
 
@@ -71,7 +71,7 @@ public class ImageListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         if (getItemViewType(position) == TYPE_CAMERA) {
             ImageListAdapter.HeaderViewHolder headerHolder = (ImageListAdapter.HeaderViewHolder) holder;
             headerHolder.headerView.setOnClickListener(new View.OnClickListener() {
@@ -135,7 +135,7 @@ public class ImageListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             return;
         }
         if (isChecked) {
-            for (final LocalMedia media : selectImages) {
+            for (LocalMedia media : selectImages) {
                 if (media.getPath().equals(image.getPath())) {
                     selectImages.remove(media);
                     break;
@@ -176,28 +176,8 @@ public class ImageListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
     }
 
-    private static class HeaderViewHolder extends RecyclerView.ViewHolder {
-        private View headerView;
-
-        private HeaderViewHolder(final View itemView) {
-            super(itemView);
-            headerView = itemView;
-        }
-    }
-
-    private static class ViewHolder extends RecyclerView.ViewHolder {
-        private ImageView picture;
-        private ImageView check;
-
-        private View contentView;
-
-        private ViewHolder(final View itemView) {
-            super(itemView);
-            contentView = itemView;
-            picture = (ImageView) itemView.findViewById(R.id.picture);
-            check = (ImageView) itemView.findViewById(R.id.check);
-        }
-
+    public void setOnImageSelectChangedListener(ImageListAdapter.OnImageSelectChangedListener imageSelectChangedListener) {
+        this.imageSelectChangedListener = imageSelectChangedListener;
     }
 
     public interface OnImageSelectChangedListener {
@@ -208,7 +188,27 @@ public class ImageListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         void onPictureClick(LocalMedia media, int position);
     }
 
-    public void setOnImageSelectChangedListener(ImageListAdapter.OnImageSelectChangedListener imageSelectChangedListener) {
-        this.imageSelectChangedListener = imageSelectChangedListener;
+    private static class HeaderViewHolder extends RecyclerView.ViewHolder {
+        private final View headerView;
+
+        private HeaderViewHolder(View itemView) {
+            super(itemView);
+            headerView = itemView;
+        }
+    }
+
+    private static class ViewHolder extends RecyclerView.ViewHolder {
+        private final ImageView picture;
+        private final ImageView check;
+
+        private final View contentView;
+
+        private ViewHolder(View itemView) {
+            super(itemView);
+            contentView = itemView;
+            picture = (ImageView) itemView.findViewById(R.id.picture);
+            check = (ImageView) itemView.findViewById(R.id.check);
+        }
+
     }
 }

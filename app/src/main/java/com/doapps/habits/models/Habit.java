@@ -20,9 +20,9 @@ public final class Habit {
     private int markerUpdatedYear;
     private final int daysFollowing;
 
-    public Habit(final int id, final String title, final String question, final boolean doneMarker,
-                 final int markerUpdatedDay, final int markerUpdatedMonth, final int markerUpdatedYear,
-                 final int time, final int followingFrom, final int cost, final short... frequencyArray) {
+    public Habit(int id, String title, String question, boolean doneMarker,
+                 int markerUpdatedDay, int markerUpdatedMonth, int markerUpdatedYear,
+                 int time, int followingFrom, int cost, short... frequencyArray) {
 
         this.id = id;
         this.title = title;
@@ -41,17 +41,17 @@ public final class Habit {
         return frequencyArray;
     }
 
-    public void setDoneMarker(final boolean doneMarker) {
+    public void setDoneMarker(boolean doneMarker) {
         this.doneMarker = doneMarker;
         if (doneMarker) {
-            final Calendar calendar = Calendar.getInstance();
+            Calendar calendar = Calendar.getInstance();
             markerUpdatedDay = calendar.get(Calendar.DATE);
             markerUpdatedMonth = calendar.get(Calendar.MONTH);
             markerUpdatedYear = calendar.get(Calendar.YEAR);
         }
     }
 
-    public boolean isDone(final int markerUpdatedDay, final int markerUpdatedMonth, final int markerUpdatedYear) {
+    public boolean isDone(int markerUpdatedDay, int markerUpdatedMonth, int markerUpdatedYear) {
         return markerUpdatedDay == this.markerUpdatedDay &&
                 markerUpdatedMonth == this.markerUpdatedMonth &&
                 markerUpdatedYear == this.markerUpdatedYear &&

@@ -22,15 +22,15 @@ public class CropUtil {
     private static final String SCHEME_FILE = "file";
     private static final String SCHEME_CONTENT = "content";
 
-    public static void closeSilently(@Nullable final Closeable closeable) {
+    public static void closeSilently(@Nullable Closeable closeable) {
         if (closeable == null) {
             return;
         }
         try {
             closeable.close();
-        } catch (final IOException ignored) {
+        } catch (IOException ignored) {
             // ignored
-        } catch (final Throwable ignored) {
+        } catch (Throwable ignored) {
             // ignored
         }
     }
@@ -44,26 +44,26 @@ public class CropUtil {
             return new File(uri.getPath());
         }
         if (SCHEME_CONTENT.equals(uri.getScheme())) {
-            final String[] filePathColumn = {MediaStore.MediaColumns.DATA, MediaStore.MediaColumns.DISPLAY_NAME};
+            String[] filePathColumn = {MediaStore.MediaColumns.DATA, MediaStore.MediaColumns.DISPLAY_NAME};
             Cursor cursor = null;
             try {
                 cursor = resolver.query(uri, filePathColumn, null, null, null);
                 if (cursor != null && cursor.moveToFirst()) {
-                    final int columnIndex = cursor.getColumnIndex(uri.toString()
+                    int columnIndex = cursor.getColumnIndex(uri.toString()
                             .startsWith("content://com.google.android.gallery3d") ?
                             MediaStore.MediaColumns.DISPLAY_NAME : MediaStore.MediaColumns.DATA);
                     // Picasa images on API 13+
                     if (columnIndex != -1) {
-                        final String filePath = cursor.getString(columnIndex);
+                        String filePath = cursor.getString(columnIndex);
                         if (!TextUtils.isEmpty(filePath)) {
                             return new File(filePath);
                         }
                     }
                 }
-            } catch (final IllegalArgumentException ignored) {
+            } catch (IllegalArgumentException ignored) {
                 // ignored
                 return getFromMediaUriPfd(context, resolver, uri);
-            } catch (final SecurityException ignored) {
+            } catch (SecurityException ignored) {
                 // ignored
             } finally {
                 if (cursor != null) {
@@ -74,15 +74,15 @@ public class CropUtil {
         return null;
     }
 
-    private static String getTempFilename(final Context context) throws IOException {
-        final File outputDir = context.getCacheDir();
-        final File outputFile = File.createTempFile("image", "tmp", outputDir);
+    private static String getTempFilename(Context context) throws IOException {
+        File outputDir = context.getCacheDir();
+        File outputFile = File.createTempFile("image", "tmp", outputDir);
         return outputFile.getAbsolutePath();
     }
 
     @Nullable
-    private static File getFromMediaUriPfd(final Context context, final ContentResolver resolver,
-                                           final Uri uri) {
+    private static File getFromMediaUriPfd(Context context, ContentResolver resolver,
+                                           Uri uri) {
         if (uri == null) {
             return null;
         }
@@ -90,15 +90,15 @@ public class CropUtil {
         FileInputStream input = null;
         FileOutputStream output = null;
         try {
-            final ParcelFileDescriptor pfd = resolver.openFileDescriptor(uri, "r");
-            final FileDescriptor fd = pfd != null ? pfd.getFileDescriptor() : null;
+            ParcelFileDescriptor pfd = resolver.openFileDescriptor(uri, "r");
+            FileDescriptor fd = pfd != null ? pfd.getFileDescriptor() : null;
             if (fd != null) {
                 input = new FileInputStream(fd);
 
-                final String tempFilename = getTempFilename(context);
+                String tempFilename = getTempFilename(context);
                 output = new FileOutputStream(tempFilename);
 
-                final byte[] bytes = new byte[4096];
+                byte[] bytes = new byte[4096];
                 int read = input.read(bytes);
                 while (read != -1) {
                     output.write(bytes, 0, read);
@@ -106,9 +106,9 @@ public class CropUtil {
                 }
                 return new File(tempFilename);
             }
-        } catch (final FileNotFoundException ignored) {
+        } catch (FileNotFoundException ignored) {
             // ignored
-        } catch (final IOException ignored) {
+        } catch (IOException ignored) {
             // ignored
         } finally {
             closeSilently(input);

@@ -37,30 +37,29 @@ public class SwipeStringSelector extends FrameLayout implements StringSelector {
 
     private SwipeAdapter mAdapter;
 
-    public SwipeStringSelector(final Context context) {
+    public SwipeStringSelector(Context context) {
         super(context);
         init(context, null, 0);
     }
 
-    public SwipeStringSelector(final Context context, final AttributeSet attrs) {
+    public SwipeStringSelector(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context, attrs, 0);
     }
 
-    public SwipeStringSelector(final Context context, final AttributeSet attrs, final int defStyleAttr) {
+    public SwipeStringSelector(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context, attrs, defStyleAttr);
     }
 
-    private void init(final Context context, final AttributeSet attrs,
-                      final int defStyleAttr) {
-        final TypedArray ta = context.getTheme().obtainStyledAttributes(attrs,
+    private void init(Context context, AttributeSet attrs,
+                      int defStyleAttr) {
+        TypedArray ta = context.getTheme().obtainStyledAttributes(attrs,
                 R.styleable.SwipeStringSelector, defStyleAttr, 0);
 
         int leftButtonResource;
         int rightButtonResource;
 
-        java.lang.String customFontPath;
         int titleTextAppearance;
 
         try {
@@ -69,21 +68,20 @@ public class SwipeStringSelector extends FrameLayout implements StringSelector {
             rightButtonResource = ta.getResourceId(R.styleable.SwipeStringSelector_swipe_rightButtonResource,
                     R.drawable.ic_action_navigation_chevron_right);
 
-            customFontPath = ta.getString(R.styleable.SwipeStringSelector_swipe_customFontPath);
             titleTextAppearance = ta.getResourceId(R.styleable.SwipeStringSelector_swipe_titleTextAppearance,
                     -1);
         } finally {
             ta.recycle();
         }
 
-        final LayoutInflater inflater = LayoutInflater.from(context);
+        LayoutInflater inflater = LayoutInflater.from(context);
         inflater.inflate(R.layout.swipeselector_layout, this);
 
-        final ViewPager pager =
+        ViewPager pager =
                 (ViewPager) findViewById(R.id.swipeselector_layout_swipePager);
-        final ImageView leftButton =
+        ImageView leftButton =
                 (ImageView) findViewById(R.id.swipeselector_layout_leftButton);
-        final ImageView rightButton =
+        ImageView rightButton =
                 (ImageView) findViewById(R.id.swipeselector_layout_rightButton);
 
         mAdapter = new SwipeAdapter.Builder()
@@ -92,7 +90,6 @@ public class SwipeStringSelector extends FrameLayout implements StringSelector {
                 .rightButtonResource(rightButtonResource)
                 .leftButton(leftButton)
                 .rightButton(rightButton)
-                .customFontPath(customFontPath)
                 .titleTextAppearance(titleTextAppearance)
                 .build();
         pager.setAdapter(mAdapter);
@@ -104,7 +101,7 @@ public class SwipeStringSelector extends FrameLayout implements StringSelector {
      * @param listener the listener that gets fired on item selection
      */
     @Override
-    public void setOnItemSelectedListener(final OnItemSelectedListener<String> listener) {
+    public void setOnItemSelectedListener(OnItemSelectedListener<String> listener) {
         mAdapter.setOnItemSelectedListener(listener);
     }
 
@@ -115,32 +112,32 @@ public class SwipeStringSelector extends FrameLayout implements StringSelector {
      *                   inside this view.
      */
     @Override
-    public void setItems(final String... strings) {
+    public void setItems(String... strings) {
         mAdapter.setItems(strings);
     }
 
     @Override
     public Parcelable onSaveInstanceState() {
-        final Bundle bundle = mAdapter.onSaveInstanceState();
+        Bundle bundle = mAdapter.onSaveInstanceState();
         bundle.putParcelable(STATE_SELECTOR, super.onSaveInstanceState());
         return bundle;
     }
 
     @Override
     public void onRestoreInstanceState(Parcelable state) {
-        final Bundle bundle = (Bundle) state;
+        Bundle bundle = (Bundle) state;
         mAdapter.onRestoreInstanceState(bundle);
         state = bundle.getParcelable(STATE_SELECTOR);
         super.onRestoreInstanceState(state);
     }
 
     @Override
-    protected void dispatchSaveInstanceState(final SparseArray<Parcelable> container) {
+    protected void dispatchSaveInstanceState(SparseArray<Parcelable> container) {
         dispatchFreezeSelfOnly(container);
     }
 
     @Override
-    protected void dispatchRestoreInstanceState(final SparseArray<Parcelable> container) {
+    protected void dispatchRestoreInstanceState(SparseArray<Parcelable> container) {
         dispatchThawSelfOnly(container);
     }
 

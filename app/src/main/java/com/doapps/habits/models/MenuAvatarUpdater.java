@@ -4,5 +4,5 @@ import android.net.Uri;
 
 @FunctionalInterface
 public interface MenuAvatarUpdater {
-    void updateMenuAvatar(final Uri uri);
+    void updateMenuAvatar(Uri uri);
 }

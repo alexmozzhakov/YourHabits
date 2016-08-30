@@ -35,17 +35,17 @@ public class AuthActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onCreate(final Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auth);
         onConfigurationChanged(getResources().getConfiguration());
 
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = firebaseAuth -> {
-            final FirebaseUser user = firebaseAuth.getCurrentUser();
+            FirebaseUser user = firebaseAuth.getCurrentUser();
             if (user != null && !user.isAnonymous()) {
                 // User is signed in
-                final Intent intent = new Intent(this, MainActivity.class);
+                Intent intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
             }
         };
@@ -58,7 +58,7 @@ public class AuthActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         mCallbackManager.onActivityResult(requestCode, resultCode, data);
     }
@@ -72,28 +72,28 @@ public class AuthActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onConfigurationChanged(final Configuration newConfig) {
+    public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
 
         // Checks the orientation of the screen
         if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
             findViewById(R.id.top_image_text).setVisibility(View.VISIBLE);
-            final FrameLayout layout = (FrameLayout) findViewById(R.id.frame_layout);
-            final FrameLayout.LayoutParams params =
+            FrameLayout layout = (FrameLayout) findViewById(R.id.frame_layout);
+            FrameLayout.LayoutParams params =
                     (FrameLayout.LayoutParams) layout.getLayoutParams();
             params.topMargin = (int) PixelUtils.dpToPixel(getApplicationContext(), 170);
             layout.setLayoutParams(params);
         } else if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             findViewById(R.id.top_image_text).setVisibility(View.INVISIBLE);
-            final FrameLayout layout = (FrameLayout) findViewById(R.id.frame_layout);
-            final FrameLayout.LayoutParams params =
+            FrameLayout layout = (FrameLayout) findViewById(R.id.frame_layout);
+            FrameLayout.LayoutParams params =
                     (FrameLayout.LayoutParams) layout.getLayoutParams();
             params.topMargin = 0;
             layout.setLayoutParams(params);
         }
     }
 
-    public void toTerms(final View view) {
+    public void toTerms(View view) {
         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://habbitsapp.esy.es/terms.txt")));
     }
 }

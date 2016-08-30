@@ -30,14 +30,14 @@ public class ProgramFragment extends Fragment {
     private DataSnapshot mSnapshot;
 
     @Override
-    public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
-                             final Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final View result = inflater.inflate(R.layout.fragment_program, container, false);
+        View result = inflater.inflate(R.layout.fragment_program, container, false);
 
-        final FloatingActionButton fab = (FloatingActionButton) result.findViewById(R.id.fab);
+        FloatingActionButton fab = (FloatingActionButton) result.findViewById(R.id.fab);
 
-        final TextView description = (TextView) result.findViewById(R.id.description);
+        TextView description = (TextView) result.findViewById(R.id.description);
 
         description.setText(mSnapshot.child("habit").child("description").getValue(String.class));
         if (BuildConfig.DEBUG) {
@@ -46,10 +46,10 @@ public class ProgramFragment extends Fragment {
 
         if (fab != null) {
             fab.setOnClickListener(view -> {
-                final int id = Integer.valueOf(mSnapshot.getKey());
+                int id = Integer.valueOf(mSnapshot.getKey());
 
                 if (programHashMap.get(id) == null) {
-                    final Program program = onProgramApply(mSnapshot, getContext());
+                    Program program = onProgramApply(mSnapshot, getContext());
                     programHashMap.put(id, program);
                     Toast.makeText(getActivity(), "New program added", Toast.LENGTH_SHORT).show();
                 } else {
@@ -62,13 +62,13 @@ public class ProgramFragment extends Fragment {
         return result;
     }
 
-    void setSnapshot(final DataSnapshot snapshot) {
+    void setSnapshot(DataSnapshot snapshot) {
         mSnapshot = snapshot;
     }
 
-    private static Program onProgramApply(final DataSnapshot dataSnapshot, final Context context) {
-        final HabitsDatabase habitsDatabase = HabitListManager.getInstance(context).getDatabase();
-        final long habitId = habitsDatabase.addHabit(
+    private static Program onProgramApply(DataSnapshot dataSnapshot, Context context) {
+        HabitsDatabase habitsDatabase = HabitListManager.getInstance(context).getDatabase();
+        long habitId = habitsDatabase.addHabit(
                 dataSnapshot.child("habit").child("title").getValue(String.class),
                 dataSnapshot.child("habit").child("question").getValue(String.class),
                 dataSnapshot.child("habit").child("time").getValue(Integer.class),
@@ -77,7 +77,7 @@ public class ProgramFragment extends Fragment {
                 dataSnapshot.child("habit").child("frequency").getValue(String.class)
         );
 
-        final List<Achievement> achievements =
+        List<Achievement> achievements =
                 createAchievementList(dataSnapshot.child("achievements"));
 
         return new Program(
@@ -89,15 +89,15 @@ public class ProgramFragment extends Fragment {
         );
     }
 
-    private static List<Achievement> createAchievementList(final DataSnapshot dataSnapshot) {
-        final List<Achievement> achievements = new ArrayList<>((int) dataSnapshot.getChildrenCount());
-        for (final DataSnapshot achievementSnapshot : dataSnapshot.getChildren()) {
-            final List<String> templates =
+    private static List<Achievement> createAchievementList(DataSnapshot dataSnapshot) {
+        List<Achievement> achievements = new ArrayList<>((int) dataSnapshot.getChildrenCount());
+        for (DataSnapshot achievementSnapshot : dataSnapshot.getChildren()) {
+            List<String> templates =
                     new ArrayList<>((int) achievementSnapshot.getChildrenCount());
-            for (final DataSnapshot templatesSnapshot : achievementSnapshot.child("templates").getChildren()) {
+            for (DataSnapshot templatesSnapshot : achievementSnapshot.child("templates").getChildren()) {
                 templates.add(templatesSnapshot.child("name").getValue(String.class));
             }
-            final Achievement achievement = new Achievement(
+            Achievement achievement = new Achievement(
                     achievementSnapshot.child("rating").getValue(Integer.class),
                     templates);
             achievements.add(achievement);

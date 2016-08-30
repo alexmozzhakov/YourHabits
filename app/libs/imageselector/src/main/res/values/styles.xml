@@ -13,6 +13,7 @@
         <!--<item name="android:paddingLeft">@dimen/abc_action_bar_default_padding_start_material</item>-->
         <!--<item name="android:paddingRight">@dimen/abc_action_bar_default_padding_end_material</item>-->
     </style>
+
     <style name="ToolBarTitle" parent="android:Widget">
         <item name="android:textSize">19sp</item>
         <item name="android:textColor">@color/white</item>

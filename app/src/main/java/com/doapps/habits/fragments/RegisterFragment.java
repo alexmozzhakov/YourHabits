@@ -33,32 +33,32 @@ public class RegisterFragment extends Fragment {
     public static final Pattern EMAIL_PATTERN = Pattern.compile(
             "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
 
-    public static boolean isValidPattern(final CharSequence sequence, final Pattern pattern) {
+    public static boolean isValidPattern(CharSequence sequence, Pattern pattern) {
         return pattern.matcher(sequence).matches();
     }
 
     @Override
-    public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
-                             final Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final View result = inflater.inflate(R.layout.fragment_register, container, false);
-        final EditText inputFullName = (EditText) result.findViewById(R.id.full_name);
-        final EditText inputEmail = (EditText) result.findViewById(R.id.email);
-        final EditText inputPassword = (EditText) result.findViewById(R.id.password);
-        final Button btnRegister = (Button) result.findViewById(R.id.btnRegister);
-        final Button btnLinkToLogin = (Button) result.findViewById(R.id.btnLinkToLoginScreen);
+        View result = inflater.inflate(R.layout.fragment_register, container, false);
+        EditText inputFullName = (EditText) result.findViewById(R.id.full_name);
+        EditText inputEmail = (EditText) result.findViewById(R.id.email);
+        EditText inputPassword = (EditText) result.findViewById(R.id.password);
+        Button btnRegister = (Button) result.findViewById(R.id.btnCreate);
+        Button btnLinkToLogin = (Button) result.findViewById(R.id.btnLinkToLoginScreen);
 
         btnLinkToLogin.setOnClickListener(view -> toLoginActivity());
         inputEmail.setText(
                 getActivity().getSharedPreferences("pref", Context.MODE_PRIVATE)
                         .getString("last email", ""));
 
-        final FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
         // Register Button Click event
         btnRegister.setOnClickListener(view -> {
-                    final String name = inputFullName.getText().toString().trim();
-                    final String email = inputEmail.getText().toString().trim();
-                    final String password = inputPassword.getText().toString().trim();
+                    String name = inputFullName.getText().toString().trim();
+                    String email = inputEmail.getText().toString().trim();
+                    String password = inputPassword.getText().toString().trim();
 
                     if (!email.isEmpty() && !password.isEmpty() && !name.isEmpty()) {
                         if (isValidPattern(name, NAME_PATTERN)) {
@@ -98,16 +98,16 @@ public class RegisterFragment extends Fragment {
                 .replace(R.id.frame_layout, new LoginFragment()).commit();
     }
 
-    private void setUserName(final String name) {
-        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    private void setUserName(String name) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
-            final UserProfileChangeRequest.Builder changeRequest =
+            UserProfileChangeRequest.Builder changeRequest =
                     new UserProfileChangeRequest.Builder();
             changeRequest.setDisplayName(name);
             user.updateProfile(changeRequest.build()).addOnCompleteListener(task -> {
                 if (NameChangeListener.listener.countObservers() == 0) {
                     if (getActivity() != null) {
-                        final NavigationView nav = (NavigationView)
+                        NavigationView nav = (NavigationView)
                                 getActivity().findViewById(R.id.navigationView);
                         if (nav != null) {
                             ((TextView) nav.getHeaderView(0).findViewById(R.id.name_info)).setText(name);
@@ -125,7 +125,7 @@ public class RegisterFragment extends Fragment {
         }
     }
 
-    private static void handleRegisterError(final Task task, final Activity activity) {
+    private static void handleRegisterError(Task task, Activity activity) {
         task.addOnFailureListener(activity, fail -> {
                     // Sign in failed.
                     Log.e("task failed", fail.getMessage());

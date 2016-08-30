@@ -25,24 +25,24 @@ public class ImageFolderAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     private OnItemClickListener<LocalMedia> onItemClickListener;
 
-    public ImageFolderAdapter(final Context context) {
+    public ImageFolderAdapter(Context context) {
         this.context = context;
     }
 
-    public void bindFolder(final List<LocalMediaFolder> folders) {
+    public void bindFolder(List<LocalMediaFolder> folders) {
         this.folders = folders;
         notifyDataSetChanged();
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
-        final View itemView = LayoutInflater.from(context).inflate(R.layout.item_folder, parent, false);
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View itemView = LayoutInflater.from(context).inflate(R.layout.item_folder, parent, false);
         return new ViewHolder(itemView);
     }
 
     @SuppressLint("StringFormatMatches")
     @Override
-    public void onBindViewHolder(final ViewHolder holder, final int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         final LocalMediaFolder folder = folders.get(position);
         Glide.with(context)
                 .load(new File(folder.getFirstImagePath()))
@@ -58,7 +58,7 @@ public class ImageFolderAdapter extends RecyclerView.Adapter<ViewHolder> {
 
         holder.getContentView().setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(final View view) {
+            public void onClick(View view) {
                 if (onItemClickListener != null) {
                     checkedIndex = holder.getAdapterPosition();
                     notifyDataSetChanged();
@@ -73,7 +73,7 @@ public class ImageFolderAdapter extends RecyclerView.Adapter<ViewHolder> {
         return folders.size();
     }
 
-    public void setOnItemClickListener(final OnItemClickListener<LocalMedia> onItemClickListener) {
+    public void setOnItemClickListener(OnItemClickListener<LocalMedia> onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
     }
 }

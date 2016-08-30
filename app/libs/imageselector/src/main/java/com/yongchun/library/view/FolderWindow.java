@@ -30,7 +30,7 @@ class FolderWindow extends PopupWindow {
     private ImageFolderAdapter adapter;
     private boolean isDismiss;
 
-    FolderWindow(final Context context) {
+    FolderWindow(Context context) {
         this.context = context;
         window = LayoutInflater.from(context).inflate(R.layout.window_folder, null);
         setContentView(window);
@@ -46,6 +46,30 @@ class FolderWindow extends PopupWindow {
         setPopupWindowTouchModal(this, false);
     }
 
+    private static void setPopupWindowTouchModal(PopupWindow popupWindow,
+                                                 boolean touchModal) {
+        if (popupWindow == null) {
+            return;
+        }
+        try {
+            Method method = PopupWindow.class.getDeclaredMethod("setTouchModal", boolean.class);
+            method.setAccessible(true);
+            method.invoke(popupWindow, touchModal);
+        } catch (IllegalAccessException e) {
+            Log.e("FolderWindow", e.getMessage());
+        } catch (IllegalArgumentException e) {
+            Log.e("FolderWindow", e.getMessage());
+        } catch (NoSuchMethodException e) {
+            Log.e("FolderWindow", e.getMessage());
+        } catch (SecurityException e) {
+            Log.e("FolderWindow", e.getMessage());
+        } catch (InvocationTargetException e) {
+            Log.e("FolderWindow", e.getMessage());
+        } catch (RuntimeException e) {
+            Log.e("FolderWindow", e.getMessage());
+        }
+    }
+
     private void initView() {
         adapter = new ImageFolderAdapter(context);
 
@@ -55,18 +79,18 @@ class FolderWindow extends PopupWindow {
         recyclerView.setAdapter(adapter);
     }
 
-    void bindFolder(final List<LocalMediaFolder> folders) {
+    void bindFolder(List<LocalMediaFolder> folders) {
         adapter.bindFolder(folders);
     }
 
     @Override
-    public void showAsDropDown(final View anchor) {
+    public void showAsDropDown(View anchor) {
         super.showAsDropDown(anchor);
-        final Animation animation = AnimationUtils.loadAnimation(context, R.anim.up_in);
+        Animation animation = AnimationUtils.loadAnimation(context, R.anim.up_in);
         recyclerView.startAnimation(animation);
     }
 
-    void setOnItemClickListener(final OnItemClickListener<LocalMedia> onItemClickListener) {
+    void setOnItemClickListener(OnItemClickListener<LocalMedia> onItemClickListener) {
         adapter.setOnItemClickListener(onItemClickListener);
     }
 
@@ -76,49 +100,25 @@ class FolderWindow extends PopupWindow {
             return;
         }
         isDismiss = true;
-        final Animation animation = AnimationUtils.loadAnimation(context, R.anim.down_out);
+        Animation animation = AnimationUtils.loadAnimation(context, R.anim.down_out);
         recyclerView.startAnimation(animation);
         dismiss();
         animation.setAnimationListener(new Animation.AnimationListener() {
             @Override
-            public void onAnimationStart(final Animation animation) {
+            public void onAnimationStart(Animation animation) {
                 // ignored
             }
 
             @Override
-            public void onAnimationEnd(final Animation animation) {
+            public void onAnimationEnd(Animation animation) {
                 isDismiss = false;
                 FolderWindow.super.dismiss();
             }
 
             @Override
-            public void onAnimationRepeat(final Animation animation) {
+            public void onAnimationRepeat(Animation animation) {
                 // ignored
             }
         });
-    }
-
-    private static void setPopupWindowTouchModal(final PopupWindow popupWindow,
-                                                 final boolean touchModal) {
-        if (popupWindow == null) {
-            return;
-        }
-        try {
-            final Method method = PopupWindow.class.getDeclaredMethod("setTouchModal", boolean.class);
-            method.setAccessible(true);
-            method.invoke(popupWindow, touchModal);
-        } catch (final IllegalAccessException e) {
-            Log.e("FolderWindow", e.getMessage());
-        } catch (final IllegalArgumentException e) {
-            Log.e("FolderWindow", e.getMessage());
-        } catch (final NoSuchMethodException e) {
-            Log.e("FolderWindow", e.getMessage());
-        } catch (final SecurityException e) {
-            Log.e("FolderWindow", e.getMessage());
-        } catch (final InvocationTargetException e) {
-            Log.e("FolderWindow", e.getMessage());
-        } catch (final RuntimeException e) {
-            Log.e("FolderWindow", e.getMessage());
-        }
     }
 }

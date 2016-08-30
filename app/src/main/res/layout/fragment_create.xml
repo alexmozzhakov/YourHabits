@@ -7,7 +7,7 @@
               android:layout_marginRight="16dp"
               android:layout_marginTop="?android:attr/actionBarSize"
               android:orientation="vertical"
-              tools:context=".fragments.CreateFragment">
+              tools:context=".com.doapps.habits.fragments.CreateFragment">
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
@@ -41,6 +41,7 @@
             android:inputType="textAutoComplete"/>
     </android.support.design.widget.TextInputLayout>
 
+
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -54,6 +55,7 @@
             android:layout_height="wrap_content"
             android:inputType="number"/>
     </android.support.design.widget.TextInputLayout>
+
 
     <LinearLayout style="@style/dialogFormRow">
 
@@ -99,7 +101,7 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/btnRegister"
+        android:id="@+id/btnCreate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"

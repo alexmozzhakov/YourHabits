@@ -15,7 +15,7 @@ public class ViewHolder extends RecyclerView.ViewHolder {
 
     private View contentView;
 
-    public ViewHolder(final View itemView) {
+    public ViewHolder(View itemView) {
         super(itemView);
         contentView = itemView;
         firstImage = (ImageView) itemView.findViewById(R.id.first_image);

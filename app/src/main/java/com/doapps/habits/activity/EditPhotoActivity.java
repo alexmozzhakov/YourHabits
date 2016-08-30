@@ -42,9 +42,9 @@ public class EditPhotoActivity extends Activity {
     private final CallbackManager mCallbackManager = CallbackManager.Factory.create();
 
     @Override
-    protected void onCreate(final Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        final int permissionCheck =
+        int permissionCheck =
                 ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
             FacebookSdk.sdkInitialize(getApplicationContext());
@@ -55,11 +55,11 @@ public class EditPhotoActivity extends Activity {
     }
 
     @Override
-    protected void onActivityResult(final int requestCode, final int resultCode,
-                                    final Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode,
+                                    Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == ImageSelectorActivity.REQUEST_IMAGE) {
-            final List<String> images =
+            List<String> images =
                     (List<String>) data.getSerializableExtra(ImageSelectorActivity.REQUEST_OUTPUT);
 
             bitmap = BitmapFactory.decodeFile(images.get(0));
@@ -73,26 +73,26 @@ public class EditPhotoActivity extends Activity {
 
     private void uploadImage() {
         Toast.makeText(getApplicationContext(), "Uploading...", Toast.LENGTH_LONG).show();
-        final StringRequest stringRequest = new StringRequest(Request.Method.POST, UPLOAD_URL,
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, UPLOAD_URL,
                 s -> {
-                    final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                     if (user != null) {
                         Toast.makeText(EditPhotoActivity.this, "Upload complete"
                                 , Toast.LENGTH_LONG).show();
-                        AvatarManager.listener.setUri(Uri.parse(s));
+                        AvatarManager.listener.setUri(Uri.parse(s), this);
                     } else {
                         Toast.makeText(EditPhotoActivity.this, s, Toast.LENGTH_LONG).show();
                     }
                 },
                 volleyError -> {
-                    Toast.makeText(EditPhotoActivity.this, volleyError.getMessage(),
+                    Toast.makeText(EditPhotoActivity.this,
+                            "Server error " + volleyError.networkResponse.statusCode,
                             Toast.LENGTH_LONG).show();
-                    Log.e("VolleyError", volleyError.getMessage());
                 }) {
             @Override
             protected Map<String, String> getParams() {
                 //Creating parameters
-                final Map<String, String> params = new HashMap<>(1);
+                Map<String, String> params = new HashMap<>(1);
 
                 //Adding parameters
                 params.put(KEY_IMAGE, getStringImage(bitmap));
@@ -114,28 +114,28 @@ public class EditPhotoActivity extends Activity {
             }
 
             @Override
-            public void retry(final VolleyError error) {
+            public void retry(VolleyError error) {
                 // ignored
             }
         });
         //Creating a Request Queue
-        final RequestQueue requestQueue = Volley.newRequestQueue(this);
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
 
         //Adding request to the queue
         requestQueue.add(stringRequest);
         finish();
     }
 
-    public static String getStringImage(final Bitmap bmp) {
-        final ByteArrayOutputStream stream = new ByteArrayOutputStream();
+    public static String getStringImage(Bitmap bmp) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-        final byte[] imageBytes = stream.toByteArray();
+        byte[] imageBytes = stream.toByteArray();
         return Base64.encodeToString(imageBytes, Base64.DEFAULT);
     }
 
     @Override
-    public void onRequestPermissionsResult(final int requestCode, @NonNull final String[] permissions,
-                                           @NonNull final int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == 1) {
             ImageSelectorActivity.start(this, 1, ImageSelectorActivity.MODE_SINGLE, true, true, true);

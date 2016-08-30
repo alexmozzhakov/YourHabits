@@ -1,11 +1,11 @@
 package com.doapps.habits.activity;
 
-
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
@@ -20,6 +20,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.doapps.habits.BuildConfig;
 import com.doapps.habits.R;
 import com.doapps.habits.fragments.CreateFragment;
 import com.doapps.habits.fragments.HomeFragment;
@@ -28,13 +29,11 @@ import com.doapps.habits.fragments.ProfileFragment;
 import com.doapps.habits.fragments.ProgramsFragment;
 import com.doapps.habits.helper.AvatarManager;
 import com.doapps.habits.helper.NameChangeListener;
-import com.doapps.habits.helper.RoundedTransformation;
+import com.doapps.habits.helper.PicassoRoundedTransformation;
 import com.doapps.habits.listeners.MenuAvatarListener;
 import com.doapps.habits.models.MenuAvatarUpdater;
 import com.doapps.habits.slider.swipeselector.PixelUtils;
 import com.facebook.CallbackManager;
-import com.facebook.FacebookSdk;
-import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
@@ -43,7 +42,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
         MenuAvatarUpdater {
     private static final long INFLATE_DELAY = 200L;
     private int mLastFragment = -1;
-    private NavigationView mNavigationView;
+    protected NavigationView mNavigationView;
     private FirebaseUser user;
     private ActionBarDrawerToggle mDrawerToggle;
     private Toolbar mToolbar;
@@ -51,7 +50,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
     private final CallbackManager mCallbackManager = CallbackManager.Factory.create();
 
     @Override
-    protected void onCreate(final Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         user = FirebaseAuth.getInstance().getCurrentUser();
@@ -66,6 +65,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
                     .commit();
             mLastFragment = R.id.nav_home;
         }
+        mNavigationView = (NavigationView) findViewById(R.id.navigationView);
 
         if (user == null) {
             FirebaseAuth.getInstance().signInAnonymously().addOnCompleteListener(task -> {
@@ -76,7 +76,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
             onSetupNavigationDrawer(user);
             NameChangeListener.listener.
                     addObserver((observable, o) -> {
-                        final TextView navName = (TextView)
+                        TextView navName = (TextView)
                                 mNavigationView.getHeaderView(0).findViewById(R.id.name_info);
                         navName.setText(user.getDisplayName());
                     });
@@ -86,7 +86,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
             @Override
-            public void onDrawerOpened(final View drawerView) {
+            public void onDrawerOpened(View drawerView) {
                 if (mLastFragment == R.id.nav_profile || mLastFragment == -1) {
                     closeImm();
                 }
@@ -102,20 +102,22 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
     }
 
     @Override
-    public boolean onNavigationItemSelected(final MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         mDrawerLayout.closeDrawer(GravityCompat.START);
-        final int id = item.getItemId();
 
+        int id = item.getItemId();
 
         if (id == R.id.nav_logout) {
             logoutUser();
         } else if (mLastFragment != id) {
             if (mLastFragment == R.id.nav_profile) {
                 findViewById(R.id.toolbar_shadow).setVisibility(View.VISIBLE);
+            } else if (mLastFragment == R.id.nav_programs) {
+                ProgramsFragment.isShowing = false;
             }
 
             new Handler().postDelayed(() -> {
-                final FragmentTransaction transaction =
+                FragmentTransaction transaction =
                         getSupportFragmentManager().beginTransaction();
                 if (id == R.id.nav_home) {
                     transaction.replace(R.id.content_frame, new HomeFragment()).commit();
@@ -135,18 +137,17 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
             }, INFLATE_DELAY);
         }
 
-        ProgramsFragment.isShowing = false;
         return true;
     }
 
     @Override
-    protected void onPostCreate(final Bundle savedInstanceState) {
+    protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         // Sync the toggle state after onRestoreInstanceState has occurred.
         mDrawerToggle.syncState();
     }
 
-    public void toCreateFragment(final View view) {
+    public void toCreateFragment(View view) {
         mNavigationView.getMenu().getItem(0).setChecked(false);
         mLastFragment = 5;
         mToolbar.setTitle("Create Habit");
@@ -158,7 +159,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
 
     }
 
-    private void toProfile(final View view) {
+    private void toProfile(View view) {
         mDrawerLayout.closeDrawer(GravityCompat.START);
 
         if (mLastFragment == R.id.nav_profile) {
@@ -178,23 +179,20 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
     }
 
     @Override
-    public void updateMenuAvatar(final Uri uri) {
-        mNavigationView = (NavigationView) findViewById(R.id.navigationView);
-        final ImageView avatar =
+    public void updateMenuAvatar(Uri uri) {
+        ImageView avatar =
                 (ImageView) mNavigationView.getHeaderView(0).findViewById(R.id.profile_photo);
-        user.reload();
-        Picasso.with(avatar.getContext().getApplicationContext())
-                .invalidate(uri);
+        if (BuildConfig.DEBUG) {
+            Log.i("updateMenuAvatar", String.valueOf(uri));
+        }
         Picasso.with(getApplicationContext())
                 .load(uri)
-                .transform(new RoundedTransformation())
+                .transform(new PicassoRoundedTransformation())
                 .into(avatar);
+        avatar.invalidate();
     }
 
-    public void onSetupNavigationDrawer(final FirebaseUser user) {
-        if (mNavigationView == null) {
-            mNavigationView = (NavigationView) findViewById(R.id.navigationView);
-        }
+    public void onSetupNavigationDrawer(FirebaseUser user) {
 
         mNavigationView.setNavigationItemSelectedListener(this);
         mNavigationView.getMenu().getItem(0).setChecked(true);
@@ -207,9 +205,9 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
             mNavigationView.getMenu().findItem(R.id.nav_logout).setVisible(true);
             mNavigationView.getMenu().findItem(R.id.nav_profile).setVisible(true);
             Log.i("FirebaseAuth", "Regular user");
-            final TextView navName =
+            TextView navName =
                     (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.name_info);
-            final TextView navEmail =
+            TextView navEmail =
                     (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.email_info);
             navName.setText(user.getDisplayName());
             navEmail.setText(user.getEmail());
@@ -217,21 +215,16 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
             if (user.getPhotoUrl() != null) {
                 mNavigationView.getHeaderView(0)
                         .findViewById(R.id.fields_info).setPadding(
-                        (int) PixelUtils.dpToPixel(this, 73), 0, 0, 0);
-                final ImageView avatar =
+                        (int) PixelUtils.dpToPixel(this, 72), 0, 0, 0);
+                ImageView avatar =
                         (ImageView) mNavigationView.getHeaderView(0).findViewById(R.id.profile_photo);
+
                 AvatarManager.listener.invalidateUrl();
-                if (AvatarManager.listener.getUri().toString().contains("graph")) {
-                    Picasso.with(getApplicationContext())
-                            .load(AvatarManager.listener.getUri() + "?type=normal")
-                            .transform(new RoundedTransformation())
-                            .into(avatar);
-                } else {
-                    Picasso.with(getApplicationContext())
-                            .load(AvatarManager.listener.getUri())
-                            .transform(new RoundedTransformation())
-                            .into(avatar);
-                }
+                Log.i("updateMenuAvatar", String.valueOf(AvatarManager.listener.getMediumUri()));
+                Picasso.with(getApplicationContext())
+                        .load(AvatarManager.listener.getMediumUri())
+                        .transform(new PicassoRoundedTransformation())
+                        .into(avatar);
                 avatar.setVisibility(View.VISIBLE);
             }
         } else {
@@ -253,22 +246,17 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
         if (user.isAnonymous()) {
             user.delete();
         } else {
-            if (isFacebook(user)) {
-                FacebookSdk.sdkInitialize(getApplicationContext());
-                LoginManager.getInstance().logOut();
-            }
-
             FirebaseAuth.getInstance().signOut();
             Log.i("FA", "user was signed out");
         }
         // Launching the login activity
-        final Intent intent = new Intent(this, AuthActivity.class);
+        Intent intent = new Intent(this, AuthActivity.class);
         startActivity(intent);
     }
 
 
     @Override
-    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         mCallbackManager.onActivityResult(requestCode, resultCode, data);
     }
@@ -278,7 +266,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
     }
 
     public void closeImm() {
-        final InputMethodManager imm = (InputMethodManager)
+        InputMethodManager imm = (InputMethodManager)
                 getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         if (getCurrentFocus() != null) {
             imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
@@ -287,9 +275,9 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
         Log.i("IMM", "Closed imm");
     }
 
-    public static boolean isFacebook(final FirebaseUser user) {
+    public static boolean isFacebook(FirebaseUser user) {
         if (user.getProviders() != null) {
-            for (final String provider : user.getProviders()) {
+            for (String provider : user.getProviders()) {
                 if (provider.contains("facebook")) {
                     return true;
                 }

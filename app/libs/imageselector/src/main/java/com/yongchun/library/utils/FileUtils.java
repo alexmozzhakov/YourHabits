@@ -17,19 +17,20 @@ public class FileUtils {
     private static final String CAMERA_PATH = "/" + APP_NAME + "/CameraImage/";
     private static final String CROP_PATH = "/" + APP_NAME + "/CropImage/";
 
-    public static File createCameraFile(final Context context) {
-        return createMediaFile(context,CAMERA_PATH);
-    }
-    public static File createCropFile(final Context context) {
-        return createMediaFile(context,CROP_PATH);
+    public static File createCameraFile(Context context) {
+        return createMediaFile(context, CAMERA_PATH);
     }
 
-    private static File createMediaFile(final Context context, final String parentPath){
+    public static File createCropFile(Context context) {
+        return createMediaFile(context, CROP_PATH);
+    }
+
+    private static File createMediaFile(Context context, String parentPath) {
         String state = Environment.getExternalStorageState();
-        File rootDir = state.equals(Environment.MEDIA_MOUNTED)?Environment.getExternalStorageDirectory():context.getCacheDir();
+        File rootDir = state.equals(Environment.MEDIA_MOUNTED) ? Environment.getExternalStorageDirectory() : context.getCacheDir();
 
         File folderDir = new File(rootDir.getAbsolutePath() + parentPath);
-        if (!folderDir.exists() && folderDir.mkdirs()){
+        if (!folderDir.exists() && folderDir.mkdirs()) {
 
         }
 

@@ -24,7 +24,8 @@ import com.doapps.habits.R;
 import com.doapps.habits.activity.EditPhotoActivity;
 import com.doapps.habits.activity.MainActivity;
 import com.doapps.habits.helper.AvatarManager;
-import com.doapps.habits.helper.RoundedTransformation;
+import com.doapps.habits.helper.PicassoDrawableViewBackgroundTarget;
+import com.doapps.habits.helper.PicassoRoundedTransformation;
 import com.doapps.habits.listeners.ProfileFragmentAvatarListener;
 import com.doapps.habits.listeners.UserAvatarListener;
 import com.doapps.habits.slider.swipeselector.PixelUtils;
@@ -45,21 +46,21 @@ import java.util.Arrays;
 
 public class ProfileFragment extends Fragment {
     private static final boolean[] editorOpened = new boolean[1];
-    private static final String TAG = ProfileFragment.class.getName();
+    private static final String TAG = ProfileFragment.class.getSimpleName();
     private static int mDialogTextLength;
     private static final int DIALOG_MIN_LENGTH = 6;
 
     @Override
-    public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
-                             final Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         getActivity().findViewById(R.id.toolbar_shadow).setVisibility(View.GONE);
         // Inflate the layout for this fragment
-        final View result = inflater.inflate(R.layout.fragment_profile, container, false);
-        final TextView name = (TextView) result.findViewById(R.id.name);
-        final TextView email = (TextView) result.findViewById(R.id.email);
-        final TextView location = (TextView) result.findViewById(R.id.location);
-        final Button btnDelete = (Button) result.findViewById(R.id.btn_delete_user);
-        final FloatingActionButton fab = (FloatingActionButton) result.findViewById(R.id.fab);
+        View result = inflater.inflate(R.layout.fragment_profile, container, false);
+        TextView name = (TextView) result.findViewById(R.id.name);
+        TextView email = (TextView) result.findViewById(R.id.email);
+        TextView location = (TextView) result.findViewById(R.id.location);
+        Button btnDelete = (Button) result.findViewById(R.id.btn_delete_user);
+        FloatingActionButton fab = (FloatingActionButton) result.findViewById(R.id.fab);
 
         fab.setOnClickListener(view -> {
             getChildFragmentManager()
@@ -70,71 +71,75 @@ public class ProfileFragment extends Fragment {
         });
 
 
-        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
         if (user != null) {
             location.setText(getActivity()
                     .getSharedPreferences("pref", Context.MODE_PRIVATE)
                     .getString("location", ""));
 
-            final ImageView avatar = (ImageView) result.findViewById(R.id.avatarImage);
+            ImageView avatar = (ImageView) result.findViewById(R.id.avatarImage);
+            AvatarManager.fixBackgroundSize(avatar);
 
             if (AvatarManager.listener.countObservers() == 1) {
-                AvatarManager.listener.addObserver(new ProfileFragmentAvatarListener(avatar));
+                AvatarManager.listener.addObserver(
+                        new ProfileFragmentAvatarListener(getActivity().getSupportFragmentManager()));
                 AvatarManager.listener.addObserver(new UserAvatarListener());
             }
 
-            AvatarManager.listener.invalidateUrl();
-            final Uri avatarUri = AvatarManager.listener.getUri();
+            Uri avatarUri = AvatarManager.listener.getLargeUri();
             if (avatarUri != null) {
-                if (avatarUri.toString().contains("graph")) {
-                    Picasso.with(getContext().getApplicationContext())
-                            .load(avatarUri + "?type=large")
-                            .transform(new RoundedTransformation())
-                            .into(avatar);
-                } else {
-                    Picasso.with(getContext().getApplicationContext())
-                            .load(avatarUri)
-                            .transform(new RoundedTransformation())
-                            .into(avatar);
-                }
+                Log.i(TAG, String.valueOf(avatarUri));
+
+                Picasso.with(getContext().getApplicationContext())
+                        .load(avatarUri)
+                        .transform(new PicassoRoundedTransformation())
+                        .into(new PicassoDrawableViewBackgroundTarget(avatar));
             } else {
                 Log.w(TAG, "no avatar");
                 avatar.setOnClickListener(view -> {
-                    final Intent intent = new Intent(getActivity(), EditPhotoActivity.class);
+                    Intent intent = new Intent(getActivity(), EditPhotoActivity.class);
                     startActivity(intent);
                 });
             }
             if (MainActivity.isFacebook(user)) {
-                final View topPanel = result.findViewById(R.id.topPanel);
+                View topPanel = result.findViewById(R.id.topPanel);
                 topPanel.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
                     if (topPanel.getHeight() - PixelUtils.dpToPixel(getContext(), 50) < 200) {
                         avatar.setImageAlpha(0);
+                        if (avatar.getBackground() != null) {
+                            avatar.getBackground().setAlpha(0);
+                        } else {
+                            Log.i(TAG, "Background is null");
+                        }
                         name.setGravity(Gravity.CENTER);
                         location.setGravity(Gravity.CENTER);
                         Log.i("Top Panel", "I really can't fit on top panel, the view is only " +
                                 (topPanel.getHeight() - PixelUtils.dpToPixel(getContext(), 50)));
                     } else {
                         avatar.setImageAlpha(255);
+                        if (avatar.getBackground() != null) {
+                            avatar.getBackground().setAlpha(255);
+                        }
                         name.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
                         location.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
                         Log.i("Top Panel", "I fit on top panel");
                     }
                 });
             } else {
-                final Button btnFacebook = (Button) result.findViewById(R.id.btn_connect_facebook);
+                Button btnFacebook = (Button) result.findViewById(R.id.btn_connect_facebook);
                 btnFacebook.setVisibility(View.VISIBLE);
                 FacebookSdk.sdkInitialize(getContext().getApplicationContext());
-                final CallbackManager callbackManager =
+                CallbackManager callbackManager =
                         ((MainActivity) getActivity()).getCallbackManager();
                 LoginManager.getInstance().registerCallback(callbackManager,
                         new FacebookCallback<LoginResult>() {
                             @Override
-                            public void onSuccess(final LoginResult result) {
+                            public void onSuccess(LoginResult result) {
                                 if (BuildConfig.DEBUG) {
                                     Log.d(TAG, "facebook:onSuccess:" + result);
                                 }
-                                final AuthCredential credential =
+                                AuthCredential credential =
                                         FacebookAuthProvider.getCredential(result.getAccessToken().getToken());
                                 user.linkWithCredential(credential)
                                         .addOnCompleteListener(task -> {
@@ -169,7 +174,7 @@ public class ProfileFragment extends Fragment {
                             }
 
                             @Override
-                            public void onError(final FacebookException error) {
+                            public void onError(FacebookException error) {
                                 Log.d(TAG, "facebook:onError", error);
                             }
                         });
@@ -190,22 +195,22 @@ public class ProfileFragment extends Fragment {
         return result;
     }
 
-    private void deleteUser(final FirebaseUser user) {
+    private void deleteUser(FirebaseUser user) {
         if (MainActivity.isFacebook(user)) {
             FacebookSdk.sdkInitialize(getContext().getApplicationContext());
             LoginManager.getInstance().
                     logInWithReadPermissions(getActivity(),
                             Arrays.asList("email", "public_profile"));
-            final CallbackManager callbackManager =
+            CallbackManager callbackManager =
                     ((MainActivity) getActivity()).getCallbackManager();
             LoginManager.getInstance().registerCallback(callbackManager,
                     new FacebookCallback<LoginResult>() {
                         @Override
-                        public void onSuccess(final LoginResult result) {
+                        public void onSuccess(LoginResult result) {
                             if (BuildConfig.DEBUG) {
                                 Log.d(TAG, "facebook:onSuccess:" + result);
                             }
-                            final AuthCredential credential = FacebookAuthProvider.getCredential(
+                            AuthCredential credential = FacebookAuthProvider.getCredential(
                                     result.getAccessToken().getToken());
                             user.reauthenticate(credential).addOnCompleteListener(task -> {
                                 if (task.isSuccessful()) {
@@ -214,7 +219,7 @@ public class ProfileFragment extends Fragment {
                                             getActivity()
                                                     .getSharedPreferences("pref", 0).edit()
                                                     .remove(user.getUid()).apply();
-                                            final Intent intent = new Intent(getActivity(),
+                                            Intent intent = new Intent(getActivity(),
                                                     MainActivity.class);
                                             startActivity(intent);
                                             Log.i("FA", "user deleted");
@@ -235,23 +240,23 @@ public class ProfileFragment extends Fragment {
                         }
 
                         @Override
-                        public void onError(final FacebookException error) {
+                        public void onError(FacebookException error) {
                             Log.d(TAG, "facebook:onError", error);
                         }
                     });
         } else {
-            final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setTitle("Please re-enter your password");
-            final EditText input = new EditText(getContext());
+            EditText input = new EditText(getContext());
 
             input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
             builder.setView(input);
 
             // Set up the buttons
             builder.setPositiveButton("OK", (dialog, which) -> {
-                final String inputPassword = input.getText().toString();
+                String inputPassword = input.getText().toString();
                 if (!inputPassword.isEmpty() && user.getEmail() != null) {
-                    final AuthCredential credential = EmailAuthProvider
+                    AuthCredential credential = EmailAuthProvider
                             .getCredential(user.getEmail(), inputPassword);
                     user.reauthenticate(credential).addOnCompleteListener(task ->
                             user.delete().addOnCompleteListener(t -> {
@@ -268,7 +273,7 @@ public class ProfileFragment extends Fragment {
                 }
             });
             builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
-            final AlertDialog dialog = builder.create();
+            AlertDialog dialog = builder.create();
             dialog.show();
             input.setOnKeyListener((view, i, keyEvent) -> {
                 mDialogTextLength++;

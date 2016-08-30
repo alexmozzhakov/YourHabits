@@ -27,9 +27,9 @@ public class PixelUtils {
      * @param dp dimension in dps
      * @return dimension in pixels
      */
-    public static float dpToPixel(final Context context, final float dp){
-        final Resources resources = context.getResources();
-        final DisplayMetrics metrics = resources.getDisplayMetrics();
+    public static float dpToPixel(Context context, float dp){
+        Resources resources = context.getResources();
+        DisplayMetrics metrics = resources.getDisplayMetrics();
         return dp * (metrics.densityDpi / 160.0f);
     }
 }

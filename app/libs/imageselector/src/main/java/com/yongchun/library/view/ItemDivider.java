@@ -14,29 +14,29 @@ import com.yongchun.library.utils.ScreenUtils;
 class ItemDivider extends RecyclerView.ItemDecoration {
     private final Drawable mDrawable;
 
-    ItemDivider(final Context context) {
+    ItemDivider(Context context) {
         mDrawable = ContextCompat.getDrawable(context, R.drawable.item_divider);
     }
 
     @Override
-    public void onDrawOver(final Canvas c, final RecyclerView parent, final RecyclerView.State state) {
-        final int left = ScreenUtils.dip2px(parent.getContext(), 16);
-        final int right = parent.getWidth() - left;
+    public void onDrawOver(Canvas c, RecyclerView parent, RecyclerView.State state) {
+        int left = ScreenUtils.dip2px(parent.getContext(), 16);
+        int right = parent.getWidth() - left;
 
-        final int childCount = parent.getChildCount();
+        int childCount = parent.getChildCount();
         for (int i = 0; i < childCount - 1; i++) {
-            final View child = parent.getChildAt(i);
-            final RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
-            final int top = child.getBottom() + params.bottomMargin;
-            final int bottom = top + mDrawable.getIntrinsicHeight();
+            View child = parent.getChildAt(i);
+            RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
+            int top = child.getBottom() + params.bottomMargin;
+            int bottom = top + mDrawable.getIntrinsicHeight();
             mDrawable.setBounds(left, top, right, bottom);
             mDrawable.draw(c);
         }
     }
 
     @Override
-    public void getItemOffsets(final Rect outRect, final View view, final RecyclerView parent,
-                               final RecyclerView.State state) {
+    public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
+                               RecyclerView.State state) {
         outRect.set(0, 0, 0, mDrawable.getIntrinsicWidth());
     }
 

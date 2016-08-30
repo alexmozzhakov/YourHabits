@@ -6,22 +6,22 @@ import android.widget.RelativeLayout;
 
 public class SquareRelativeLayout extends RelativeLayout {
 
-    public SquareRelativeLayout(final Context context) {
+    public SquareRelativeLayout(Context context) {
         super(context);
     }
 
-    public SquareRelativeLayout(final Context context, final AttributeSet attrs) {
+    public SquareRelativeLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public SquareRelativeLayout(final Context context, final AttributeSet attrs,
-                                final int defStyleAttr) {
+    public SquareRelativeLayout(Context context, AttributeSet attrs,
+                                int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
     @SuppressWarnings("SuspiciousNameCombination")
     @Override
-    protected void onMeasure(final int widthMeasureSpec, final int heightMeasureSpec) {
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         // Set a square layout.
         super.onMeasure(widthMeasureSpec, widthMeasureSpec);
     }
