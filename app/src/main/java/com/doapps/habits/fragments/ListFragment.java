@@ -19,15 +19,15 @@ import com.doapps.habits.models.HabitDatabaseMovableListProvider;
 public class ListFragment extends Fragment {
 
     @Override
-    public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
-                             final Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final View result = inflater.inflate(R.layout.fragment_list, container, false);
+        View result = inflater.inflate(R.layout.fragment_list, container, false);
 
-        final RecyclerView recyclerView = (RecyclerView) result.findViewById(R.id.rv);
+        RecyclerView recyclerView = (RecyclerView) result.findViewById(R.id.habits_list);
         recyclerView.setHasFixedSize(true);
-        final TextView emptyView = (TextView) result.findViewById(R.id.empty_view);
-        final HabitDatabaseMovableListProvider habitListManager = new HabitListManager(getContext());
+        TextView emptyView = (TextView) result.findViewById(R.id.empty_view);
+        HabitDatabaseMovableListProvider habitListManager = HabitListManager.getInstance(getContext());
 
         if (habitListManager.isEmpty()) {
             recyclerView.setVisibility(View.GONE);
@@ -35,14 +35,14 @@ public class ListFragment extends Fragment {
         } else {
             recyclerView.setVisibility(View.VISIBLE);
             emptyView.setVisibility(View.GONE);
-            final LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+            LinearLayoutManager llm = new LinearLayoutManager(getActivity());
             recyclerView.setLayoutManager(llm);
-            final HabitRecycleAdapter recycleAdapter =
+            HabitRecycleAdapter recycleAdapter =
                     new HabitRecycleAdapter(habitListManager);
             recyclerView.setAdapter(recycleAdapter);
-            final ItemTouchHelper.Callback callback =
+            ItemTouchHelper.Callback callback =
                     new SimpleItemTouchHelperCallback(recycleAdapter);
-            final ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
+            ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
             touchHelper.attachToRecyclerView(recyclerView);
         }
 

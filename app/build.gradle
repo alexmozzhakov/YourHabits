@@ -4,25 +4,27 @@ apply plugin: 'me.tatarka.retrolambda'
 android {
     compileSdkVersion 24
     buildToolsVersion '24.0.0'
+
     defaultConfig {
         applicationId "com.doapps.habit"
         minSdkVersion 16
         //noinspection OldTargetApi
         targetSdkVersion 23
         versionCode 1
-        versionName "0.4.6"
-        multiDexEnabled true
+        versionName "0.5.4"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
     compileOptions {
-        targetCompatibility JavaVersion.VERSION_1_8
-        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
     }
+
     dexOptions {
         javaMaxHeapSize "3g"
     }
-    dataBinding {
-        enabled = true
-    }
+
     buildTypes {
         release {
             minifyEnabled true
@@ -32,23 +34,49 @@ android {
     }
 }
 
-dependencies {
-
-    compile 'com.android.support:design:24.0.0'
-    compile 'com.android.support:recyclerview-v7:24.0.0'
-    compile 'com.android.support:appcompat-v7:24.0.0'
-    compile 'com.android.support:support-v4:24.0.0'
-    compile 'com.android.support:percent:24.0.0'
-    compile 'com.google.firebase:firebase-database:9.2.0'
-    compile 'com.google.firebase:firebase-auth:9.2.0'
-    compile 'com.google.firebase:firebase-crash:9.2.0'
-    compile 'com.facebook.android:facebook-android-sdk:4.13.2'
-    compile 'com.mcxiaoke.volley:library-aar:1.0.1'
-    compile 'com.ruesga.timeline-chart-view:timeline-chart-view:0.0.8'
-    compile 'com.squareup.picasso:picasso:2.5.2'
-    testCompile 'junit:junit:4.12'
-    compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha3'
+repositories {
+    maven {
+        url "https://jitpack.io"
+    }
 }
 
+dependencies {
+    // App's dependencies, including test
+    compile(project(path: ':imageselector')) {
+        exclude group: 'com.github.bumptech.glide'
+        exclude group: 'com.android.support'
+    }
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:design:24.2.0'
+    compile 'com.android.support:recyclerview-v7:24.2.0'
+    compile 'com.android.support:appcompat-v7:24.2.0'
+    compile 'com.android.support:support-v4:24.2.0'
+    compile 'com.android.support:percent:24.2.0'
+    compile 'com.android.volley:volley:1.0.0'
+    compile 'com.google.firebase:firebase-database:9.4.0'
+    compile 'com.google.firebase:firebase-auth:9.4.0'
+    compile 'com.google.firebase:firebase-crash:9.4.0'
+    compile 'com.squareup.picasso:picasso:2.5.1'
+    compile 'com.facebook.android:facebook-android-sdk:4.14.1'
+    compile 'com.ruesga.timeline-chart-view:timeline-chart-view:0.0.8'
+    compile 'com.github.bumptech.glide:glide:3.7.0'
+    compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha6'
+
+    androidTestCompile 'com.android.support:support-annotations:24.2.0'
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2') {
+        exclude group: 'com.android.support'
+    }
+    androidTestCompile('com.android.support.test.espresso:espresso-contrib:2.2.2') {
+        exclude group: 'com.android.support'
+    }
+    androidTestCompile 'com.android.support.test:runner:0.5'
+}
+
+tasks.whenTaskAdded {
+    task ->
+        if (task.name.equals("lint")) {
+            task.enabled = false
+        }
+}
 
 apply plugin: 'com.google.gms.google-services'

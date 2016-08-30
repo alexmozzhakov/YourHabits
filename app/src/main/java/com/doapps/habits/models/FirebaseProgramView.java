@@ -9,7 +9,7 @@ public class FirebaseProgramView implements ProgramViewProvider {
     private final String imageLink;
     private final DataSnapshot snapshot;
 
-    public FirebaseProgramView(final DataSnapshot snapshot) {
+    public FirebaseProgramView(DataSnapshot snapshot) {
         this.snapshot = snapshot;
         title = snapshot.child("name").getValue(String.class);
         percent = String.format("%s SUCCESS", snapshot.child("success").getValue(String.class));

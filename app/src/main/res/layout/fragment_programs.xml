@@ -1,85 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                             xmlns:app="http://schemas.android.com/apk/res-auto"
-                                             xmlns:tools="http://schemas.android.com/tools"
-                                             android:id="@+id/programs_layout"
-                                             android:layout_width="match_parent"
-                                             android:layout_height="match_parent"
-                                             android:layout_marginTop="?android:attr/actionBarSize"
-                                             tools:context=".fragments.ProgramsFragment"
-                                             tools:layout_editor_absoluteX="0dp"
-                                             tools:layout_editor_absoluteY="81dp">
+<android.support.percent.PercentFrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="?android:attr/actionBarSize">
 
     <TextView
         android:id="@+id/empty_view"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:gravity="center"
         android:text="@string/no_connection_available"
-        android:textSize="16sp"
-        app:layout_constraintLeft_toLeftOf="@+id/programs_layout"
-        app:layout_constraintTop_toTopOf="@+id/programs_layout"
-        app:layout_constraintRight_toRightOf="@+id/programs_layout"
-        app:layout_constraintBottom_toBottomOf="@+id/programs_layout"/>
+        android:textSize="16sp"/>
 
-    <ImageView
-        android:id="@+id/imageViewTop"
-        android:layout_width="0dp"
-        android:layout_height="200dp"
-        android:scaleType="centerCrop"
-        tools:ignore="ContentDescription"
-        app:layout_constraintLeft_toLeftOf="@+id/programs_layout"
-        app:layout_constraintTop_toTopOf="@+id/programs_layout"
-        app:layout_constraintRight_toRightOf="@+id/programs_layout"/>
+    <FrameLayout
+        android:layout_width="match_parent"
+        app:layout_heightPercent="40%">
 
-    <TextView
-        android:id="@+id/titleTop"
-        android:layout_width="0dp"
-        android:layout_height="35dp"
-        android:gravity="center"
-        android:textIsSelectable="true"
-        android:textSize="30sp"
-        app:layout_constraintLeft_toLeftOf="@+id/programs_layout"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
-        app:layout_constraintTop_toBottomOf="@+id/imageViewTop"
-        app:layout_constraintRight_toRightOf="@+id/programs_layout"
-        android:layout_marginRight="16dp"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/programs_layout"/>
+        <ImageView
+            android:id="@+id/imageViewTop"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/grey_500"
+            android:scaleType="centerCrop"
+            android:visibility="invisible"
+            tools:ignore="ContentDescription"/>
 
-    <TextView
-        android:id="@+id/percentTop"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:background="@drawable/round_border"
-        android:gravity="center"
-        android:textColor="@color/white"
-        android:visibility="gone"
-        android:textIsSelectable="false"
-        app:layout_constraintRight_toRightOf="@+id/programs_layout"
-        android:layout_marginRight="10dp"
-        android:layout_marginEnd="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/recyclerLayout"
-        android:layout_marginBottom="10dp"/>
+        <TextView
+            android:id="@+id/titleTop"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_gravity="center"
+            android:layout_marginEnd="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginStart="16dp"
+            android:gravity="center_horizontal"
+            android:textColor="@color/white"
+            android:textIsSelectable="true"
+            android:textSize="30sp"/>
+
+        <TextView
+            android:id="@+id/percentTop"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="bottom|end"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/round_border"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textIsSelectable="false"
+            android:visibility="gone"/>
+    </FrameLayout>
 
     <FrameLayout
         android:id="@+id/recyclerLayout"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintLeft_toLeftOf="@+id/programs_layout"
-        app:layout_constraintTop_toBottomOf="@+id/imageViewTop"
-        app:layout_constraintRight_toRightOf="@+id/programs_layout"
-        app:layout_constraintBottom_toBottomOf="@+id/programs_layout">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_marginTopPercent="40%">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="gone"
-            tools:layout_editor_absoluteX="0dp"
-            tools:layout_editor_absoluteY="0dp"/>
-
+            android:visibility="gone"/>
     </FrameLayout>
 
-</android.support.constraint.ConstraintLayout>
+</android.support.percent.PercentFrameLayout>

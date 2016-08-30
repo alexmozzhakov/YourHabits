@@ -1,98 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                             xmlns:app="http://schemas.android.com/apk/res-auto"
-                                             xmlns:tools="http://schemas.android.com/tools"
-                                             android:id="@+id/constraintLayout3"
-                                             android:layout_width="match_parent"
-                                             android:layout_height="match_parent"
-                                             android:layout_marginTop="?android:attr/actionBarSize"
-                                             android:fitsSystemWindows="true"
-                                             android:orientation="horizontal">
+<android.support.percent.PercentFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                            xmlns:app="http://schemas.android.com/apk/res-auto"
+                                            xmlns:tools="http://schemas.android.com/tools"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:layout_marginTop="?android:attr/actionBarSize"
+                                            android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="0dp"
-        android:layout_height="200dp"
-        android:adjustViewBounds="true"
-        android:scaleType="centerCrop"
-        android:src="@drawable/bg_img"
-        app:layout_constraintLeft_toLeftOf="@+id/constraintLayout3"
-        app:layout_constraintRight_toRightOf="@+id/constraintLayout3"
-        app:layout_constraintTop_toTopOf="@+id/constraintLayout3"
-        tools:ignore="ContentDescription"/>
-
-    <ImageView
-        android:id="@+id/iconPerson"
-        android:layout_width="wrap_content"
+    <FrameLayout
+        android:id="@+id/topPanel"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="32dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="32dp"
-        android:src="@drawable/ic_person_blue_24dp"
-        app:layout_constraintLeft_toLeftOf="@+id/constraintLayout3"
-        app:layout_constraintTop_toTopOf="@+id/userInfo"
-        tools:ignore="ContentDescription"/>
+        android:background="@color/colorPrimary"
+        app:layout_heightPercent="30%">
 
-    <TextView
-        android:id="@+id/name"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="32dp"
-        android:layout_toEndOf="@id/iconPerson"
-        android:layout_toRightOf="@id/iconPerson"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:textColor="#212121"
-        android:textIsSelectable="true"
-        app:layout_constraintLeft_toRightOf="@+id/iconPerson"
-        app:layout_constraintTop_toTopOf="@+id/userInfo"/>
+        <com.doapps.habits.viewholder.SquareImageView
+            android:id="@+id/avatarImage"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="55dp"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/avatar"
+            android:scaleType="center"/>
 
-    <include
-        android:id="@+id/divider1"
-        layout="@layout/item_divider"
-        android:layout_width="0dp"
-        android:layout_height="7dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintLeft_toLeftOf="@+id/constraintLayout3"
-        app:layout_constraintRight_toRightOf="@+id/constraintLayout3"
-        app:layout_constraintTop_toBottomOf="@+id/iconPerson"/>
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="30dp"
+            android:gravity="center_horizontal"
+            android:textColor="@color/white"
+            android:textIsSelectable="true"
+            android:textSize="18sp"/>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:src="@drawable/ic_edit_white_24dp"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView3"
-        app:layout_constraintRight_toRightOf="@+id/constraintLayout3"
-        app:layout_constraintTop_toBottomOf="@+id/imageView3"/>
+        <TextView
+            android:id="@+id/location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="10dp"
+            android:gravity="center_horizontal"
+            android:textColor="#bfffffff"
+            android:textIsSelectable="true"
+            android:textSize="14sp"/>
 
+    </FrameLayout>
 
-    <ImageView
-        android:id="@+id/ivContactItem3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="32dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="16dp"
-        android:src="@drawable/ic_email_blue_24dp"
-        app:layout_constraintLeft_toLeftOf="@+id/constraintLayout3"
-        app:layout_constraintTop_toBottomOf="@+id/divider1"
-        tools:ignore="ContentDescription"/>
-
+    <!--fix positioning-->
     <!-- Connect with facebook button -->
     <Button
         android:id="@+id/btn_connect_facebook"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
         android:background="@color/facebook"
         android:drawableLeft="@drawable/ic_facebook_icon"
         android:drawablePadding="-32dp"
@@ -103,16 +65,14 @@
         android:text="@string/connect_with_facebook"
         android:textColor="@color/white"
         android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/btn_delete_user"
-        app:layout_constraintLeft_toLeftOf="@+id/constraintLayout3"
-        app:layout_constraintRight_toRightOf="@+id/constraintLayout3"
         tools:ignore="RtlSymmetry"/>
 
     <!-- Delete user Button -->
     <Button
         android:id="@+id/btn_delete_user"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
         android:layout_marginBottom="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginLeft="16dp"
@@ -120,38 +80,71 @@
         android:layout_marginStart="16dp"
         android:background="@color/colorRed"
         android:text="@string/delete_user"
-        android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="@+id/constraintLayout3"
-        app:layout_constraintHorizontal_bias="0.62"
-        app:layout_constraintLeft_toLeftOf="@+id/constraintLayout3"
-        app:layout_constraintRight_toRightOf="@+id/constraintLayout3"/>
+        android:textColor="@color/white"/>
 
-    <TextView
-        android:id="@+id/email"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_toEndOf="@id/ivContactItem3"
-        android:layout_toRightOf="@id/ivContactItem3"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:textColor="#212121"
-        android:textIsSelectable="true"
-        app:layout_constraintLeft_toRightOf="@+id/ivContactItem3"
-        app:layout_constraintTop_toBottomOf="@+id/divider1"/>
 
     <FrameLayout
         android:id="@+id/userInfo"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="@dimen/activity_horizontal_margin"
-        app:layout_constraintLeft_toLeftOf="@+id/constraintLayout3"
-        app:layout_constraintRight_toRightOf="@+id/constraintLayout3"
-        app:layout_constraintTop_toBottomOf="@+id/imageView3"
-        tools:showIn="@layout/fragment_profile"/>
+        android:paddingEnd="16dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingStart="16dp"
+        app:layout_marginTopPercent="30%">
 
-</android.support.constraint.ConstraintLayout>
+        <ImageView
+            android:id="@+id/ivContactItem3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="40dp"
+            android:src="@drawable/ic_email_blue_24dp"
+            tools:ignore="ContentDescription"/>
+
+        <TextView
+            android:id="@+id/email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:ellipsize="end"
+            android:gravity="center_horizontal"
+            android:paddingEnd="44dp"
+            android:paddingLeft="44dp"
+            android:paddingRight="44dp"
+            android:paddingStart="44dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="#212121"
+            android:textIsSelectable="true"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="70dp"
+            android:background="#ccc"
+            android:paddingTop="50dp"/>
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_heightPercent="60%">
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|end"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:src="@drawable/ic_edit_white_24dp"/>
+
+    </FrameLayout>
+</android.support.percent.PercentFrameLayout>
