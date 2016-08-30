@@ -1,5 +1,6 @@
 package com.doapps.habits.database;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+@SuppressLint("DefaultLocale")
 @SuppressWarnings("HardCodedStringLiteral")
 public class HabitDatabaseHandler extends SQLiteOpenHelper implements HabitsDatabase {
     private static final String TAG = HabitDatabaseHandler.class.getSimpleName();
@@ -38,15 +40,15 @@ public class HabitDatabaseHandler extends SQLiteOpenHelper implements HabitsData
     private static final String KEY_COST = "cost";
     private static final String KEY_FREQUENCY_ARRAY = "freq_arr";
     private static final String INTEGER = " INTEGER,";
-    private static boolean isSame = true;
+    private static boolean isSame = false;
 
-    public HabitDatabaseHandler(final Context context) {
+    public HabitDatabaseHandler(Context context) {
         super(context.getApplicationContext(), DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-    private static short[] stringToShortArray(final String str) {
-        final String[] temp = str.split(",");
-        final short[] shorts = new short[temp.length];
+    private static short[] stringToShortArray(String str) {
+        String[] temp = str.split(",");
+        short[] shorts = new short[temp.length];
         for (int i = 0; i < shorts.length && i < temp.length; i++) {
             shorts[i] = Short.valueOf(temp[i]);
         }
@@ -56,18 +58,22 @@ public class HabitDatabaseHandler extends SQLiteOpenHelper implements HabitsData
 
     @Override
     public boolean isEmpty() {
-        final SQLiteDatabase database = getWritableDatabase();
-        final Cursor cursor = database.rawQuery(
-                String.format("SELECT * FROM %s", TABLE_HABIT), null);
-        final boolean isEmpty = cursor.getCount() == 0;
+        boolean flag;
+        String quString = "select exists(select 1 from " + TABLE_HABIT + ");";
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery(quString, null);
+        cursor.moveToFirst();
+        int count = cursor.getInt(0);
+        flag = count != 1;
         cursor.close();
-        database.close();
-        return isEmpty;
+        db.close();
+
+        return flag;
     }
 
-    private static String integerArrayToString(final int... ints) {
-        final StringBuilder sb = new StringBuilder(10);
-        for (final int i : ints) {
+    private static String integerArrayToString(int... ints) {
+        StringBuilder sb = new StringBuilder(ints.length);
+        for (int i : ints) {
             sb.append(i).append(',');
         }
         return sb.toString();
@@ -75,29 +81,28 @@ public class HabitDatabaseHandler extends SQLiteOpenHelper implements HabitsData
 
     // Creating Tables
     @Override
-    public void onCreate(final SQLiteDatabase sqLiteDatabase) {
-        final StringBuilder createLoginTable = new StringBuilder(106)
-                .append("CREATE TABLE ")
-                .append(TABLE_HABIT)
-                .append('(')
-                .append(KEY_ID).append(" INTEGER PRIMARY KEY,")
-                .append(KEY_NAME).append(" TEXT,")
-                .append(KEY_QUESTION).append(" TEXT,")
-                .append(KEY_TIME).append(INTEGER)
-                .append(KEY_UPDATED_DATE).append(INTEGER)
-                .append(KEY_UPDATED_MONTH).append(INTEGER)
-                .append(KEY_FOLLOWING_FROM).append(INTEGER)
-                .append(KEY_COST).append(INTEGER)
-                .append(KEY_FREQUENCY_ARRAY).append(" TEXT,")
-                .append(KEY_UPDATED_YEAR).append(INTEGER)
-                .append(KEY_DONE).append(" INTEGER)");
-        sqLiteDatabase.execSQL(createLoginTable.toString());
+    public void onCreate(SQLiteDatabase sqLiteDatabase) {
+        String createLoginTable = "CREATE TABLE " +
+                TABLE_HABIT + '(' +
+                KEY_ID + " INTEGER PRIMARY KEY," +
+                KEY_NAME + " TEXT," +
+                KEY_QUESTION + " TEXT," +
+                KEY_TIME + INTEGER +
+                KEY_UPDATED_DATE + INTEGER +
+                KEY_UPDATED_MONTH + INTEGER +
+                KEY_FOLLOWING_FROM + INTEGER +
+                KEY_COST + INTEGER +
+                KEY_FREQUENCY_ARRAY + " TEXT," +
+                KEY_UPDATED_YEAR + INTEGER +
+                KEY_DONE + " INTEGER)";
+
+        sqLiteDatabase.execSQL(createLoginTable);
         Log.d(TAG, "Database tables created");
     }
 
     // Upgrading database
     @Override
-    public void onUpgrade(final SQLiteDatabase sqLiteDatabase, final int i, final int i1) {
+    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
         // Drop older table if existed
         sqLiteDatabase.execSQL(String.format("DROP TABLE IF EXISTS %s", TABLE_HABIT));
         // Create tables again
@@ -108,10 +113,10 @@ public class HabitDatabaseHandler extends SQLiteOpenHelper implements HabitsData
      * Storing habit details in database
      */
     @Override
-    public void addHabit(final String name, final String question, final int time,
-                         final Calendar upd, final int cost, final int... frequency) {
-        final SQLiteDatabase database = getWritableDatabase();
-        final ContentValues values = new ContentValues();
+    public void addHabit(String name, String question, int time,
+                         Calendar upd, int cost, int... frequency) {
+        SQLiteDatabase database = getWritableDatabase();
+        ContentValues values = new ContentValues();
         values.put(KEY_NAME, name); // Title
         values.put(KEY_QUESTION, question); // Question
         values.put(KEY_TIME, time); // Time
@@ -123,7 +128,7 @@ public class HabitDatabaseHandler extends SQLiteOpenHelper implements HabitsData
         values.put(KEY_FREQUENCY_ARRAY, integerArrayToString(frequency)); // frequency
         values.put(KEY_DONE, 0);
         // Inserting Row
-        final long id = database.insert(TABLE_HABIT, null, values);
+        long id = database.insert(TABLE_HABIT, null, values);
         // Closing database connection
         database.close();
         isSame = false;
@@ -134,12 +139,11 @@ public class HabitDatabaseHandler extends SQLiteOpenHelper implements HabitsData
 
 
     @Override
-    public long addHabit(final String name, final String question, final int time,
-                         final Calendar upd, final int cost, final String frequency) {
+    public long addHabit(String name, String question, int time,
+                         Calendar upd, int cost, String frequency) {
 
-        final SQLiteDatabase database = getWritableDatabase();
-        //final int time,
-        final ContentValues values = new ContentValues();
+        SQLiteDatabase database = getWritableDatabase();
+        ContentValues values = new ContentValues();
         values.put(KEY_NAME, name); // Title
         values.put(KEY_QUESTION, question); // Question
         values.put(KEY_TIME, time); // Time
@@ -151,7 +155,7 @@ public class HabitDatabaseHandler extends SQLiteOpenHelper implements HabitsData
         values.put(KEY_FREQUENCY_ARRAY, frequency); // frequency
         values.put(KEY_DONE, 0);
         // Inserting Row
-        final long id = database.insert(TABLE_HABIT, null, values);
+        long id = database.insert(TABLE_HABIT, null, values);
         // Closing database connection
         database.close();
         isSame = false;
@@ -169,16 +173,15 @@ public class HabitDatabaseHandler extends SQLiteOpenHelper implements HabitsData
     public List<Habit> getHabitDetailsAsList() {
         Log.w("Database", "getHabitDetailsAsList()");
 
-        final String selectQuery = String.format("SELECT  * FROM %s", TABLE_HABIT);
+        String selectQuery = String.format("SELECT  * FROM %s", TABLE_HABIT);
 
-        final SQLiteDatabase database = getReadableDatabase();
-        final Cursor cursor = database.rawQuery(selectQuery, null);
-        final List<Habit> habitList = new ArrayList<>(cursor.getCount());
+        SQLiteDatabase database = getReadableDatabase();
+        Cursor cursor = database.rawQuery(selectQuery, null);
+        List<Habit> habitList = new ArrayList<>(cursor.getCount());
 
-        // Move to first row
         cursor.moveToFirst();
         for (int i = 0; i < cursor.getCount(); i++) {
-            final Habit temp = new Habit(
+            Habit temp = new Habit(
                     cursor.getInt(cursor.getColumnIndex(KEY_ID)), // id
                     cursor.getString(cursor.getColumnIndex(KEY_NAME)), // title
                     cursor.getString(cursor.getColumnIndex(KEY_QUESTION)), // question
@@ -192,7 +195,6 @@ public class HabitDatabaseHandler extends SQLiteOpenHelper implements HabitsData
                     stringToShortArray(
                             cursor.getString(cursor.getColumnIndex(KEY_FREQUENCY_ARRAY)))// frequency
             );
-
 
             habitList.add(temp);
             if (BuildConfig.DEBUG) {
@@ -209,8 +211,8 @@ public class HabitDatabaseHandler extends SQLiteOpenHelper implements HabitsData
     }
 
     @Override
-    public void delete(final int position) {
-        final SQLiteDatabase database = getWritableDatabase();
+    public void delete(int position) {
+        SQLiteDatabase database = getWritableDatabase();
         database.execSQL(
                 String.format("DELETE FROM %s WHERE %s = %d", TABLE_HABIT, KEY_ID, position));
 
@@ -221,10 +223,10 @@ public class HabitDatabaseHandler extends SQLiteOpenHelper implements HabitsData
     }
 
     @Override
-    public void updateHabit(final Habit habit, final int done) {
-        final SQLiteDatabase database = getWritableDatabase();
+    public void updateHabit(Habit habit, int done) {
+        SQLiteDatabase database = getWritableDatabase();
 
-        final String query = String.format("UPDATE %s SET %s = %d, %s = %d,%s = %d,%s = %d WHERE %s = %d",
+        String query = String.format("UPDATE %s SET %s = %d, %s = %d,%s = %d,%s = %d WHERE %s = %d",
                 TABLE_HABIT, KEY_DONE, done,
                 KEY_UPDATED_DATE, habit.getMarkerUpdatedDay(), KEY_UPDATED_MONTH, habit.getMarkerUpdatedMonth(),
                 KEY_UPDATED_YEAR, habit.getMarkerUpdatedYear(), KEY_ID, habit.id);
@@ -232,7 +234,7 @@ public class HabitDatabaseHandler extends SQLiteOpenHelper implements HabitsData
         Log.i(TAG, query);
 
         if (done == 1 && mustHaveFollowed(habit)) {
-            final String setFollowingCounter = String.format("UPDATE %s SET %s = %d WHERE %s = %d",
+            String setFollowingCounter = String.format("UPDATE %s SET %s = %d WHERE %s = %d",
                     TABLE_HABIT, KEY_FOLLOWING_FROM, System.currentTimeMillis(), KEY_ID, habit.id);
             database.execSQL(setFollowingCounter);
             Log.i(TAG, setFollowingCounter);
@@ -243,8 +245,8 @@ public class HabitDatabaseHandler extends SQLiteOpenHelper implements HabitsData
     }
 
     @Override
-    public void move(final int fromPosition, final int toPosition) {
-        final SQLiteDatabase database = getWritableDatabase();
+    public void move(int fromPosition, int toPosition) {
+        SQLiteDatabase database = getWritableDatabase();
 
         database.execSQL(String.format("UPDATE %s SET %s = 0 WHERE %s = %d",
                 TABLE_HABIT, KEY_ID, KEY_ID, fromPosition));
@@ -277,29 +279,25 @@ public class HabitDatabaseHandler extends SQLiteOpenHelper implements HabitsData
         return !isSame;
     }
 
-    private static int daysTillNow(final Habit habit) {
-        android.os.Debug.startMethodTracing("daysTillNow");
-        final Calendar updateDate = Calendar.getInstance();
+    private static int daysTillNow(Habit habit) {
+        Calendar updateDate = Calendar.getInstance();
         updateDate.set(habit.getMarkerUpdatedYear(), habit.getMarkerUpdatedMonth(), habit.getMarkerUpdatedDay());
 
-        final long millis1 = System.currentTimeMillis();
-        final long millis2 = updateDate.getTimeInMillis();
-        final long diff = millis2 - millis1;
+        long millis1 = System.currentTimeMillis();
+        long millis2 = updateDate.getTimeInMillis();
+        long diff = millis2 - millis1;
         if (BuildConfig.DEBUG) {
             Log.i(TAG, "Not marked for " + diff / 86400000);
         }
-        android.os.Debug.stopMethodTracing();
         return (int) (diff / 86400000);
-
     }
 
-    private static boolean mustHaveFollowed(final Habit habit) {
-        final int daysTillNow = daysTillNow(habit);
-        final short[] freq = habit.getFrequencyArray();
+    private static boolean mustHaveFollowed(Habit habit) {
+        int daysTillNow = daysTillNow(habit);
+        short[] freq = habit.getFrequencyArray();
         if (BuildConfig.DEBUG) {
             Log.i(TAG, "Must have followed = " + (daysTillNow > freq[freq.length - 1]));
         }
-        return daysTillNow > freq[freq.length - 1]
-                || daysTillNow == 1 && freq[freq.length - 1] == 0;
+        return daysTillNow > freq[freq.length - 1];
     }
 }

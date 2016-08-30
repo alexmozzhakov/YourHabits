@@ -16,18 +16,18 @@ public class HabitListManager implements HabitDatabaseMovableListProvider {
     private final HabitsDatabase mHabitsDatabase;
     private static volatile HabitDatabaseMovableListProvider instance;
 
-    public static HabitDatabaseMovableListProvider getInstance(final Context context) {
+    public static HabitDatabaseMovableListProvider getInstance(Context context) {
         if (instance == null) {
             synchronized (HabitListManager.class) {
                 if (instance == null) {
-                    instance = new HabitListManager(context);
+                    instance = new HabitListManager(context.getApplicationContext());
                 }
             }
         }
         return instance;
     }
 
-    private HabitListManager(final Context context) {
+    private HabitListManager(Context context) {
         mHabitsDatabase = new HabitDatabaseHandler(context);
         mHabitsList = mHabitsDatabase.getHabitDetailsAsList();
     }
@@ -35,7 +35,7 @@ public class HabitListManager implements HabitDatabaseMovableListProvider {
     @Override
     public List<Habit> getList() {
         if (HabitDatabaseHandler.notSame() || mHabitsList == null) {
-            Log.w(String.valueOf(HabitDatabaseHandler.notSame()), String.valueOf(mHabitsList == null));
+            Log.i("t", String.valueOf(mHabitsList == null));
             mHabitsList = mHabitsDatabase.getHabitDetailsAsList();
         }
 
@@ -44,19 +44,20 @@ public class HabitListManager implements HabitDatabaseMovableListProvider {
 
     @Override
     public boolean isEmpty() {
-        return mHabitsDatabase.isEmpty();
+        return (!HabitDatabaseHandler.notSame() && mHabitsList.size() == 0)
+                || mHabitsDatabase.isEmpty();
     }
 
     @Override
-    public void onItemDismiss(final int position) {
+    public void onItemDismiss(int position) {
         mHabitsDatabase.delete(mHabitsList.get(position).id);
         mHabitsList.remove(position);
     }
 
     @Override
-    public void onItemMove(final int fromPosition, final int toPosition) {
+    public void onItemMove(int fromPosition, int toPosition) {
         Collections.swap(mHabitsList, fromPosition, toPosition);
-        final int fromPositionId = mHabitsList.get(fromPosition).id;
+        int fromPositionId = mHabitsList.get(fromPosition).id;
         mHabitsList.get(fromPosition).id = mHabitsList.get(toPosition).id;
         mHabitsList.get(toPosition).id = fromPositionId;
         mHabitsDatabase.move(mHabitsList.get(fromPosition).id, mHabitsList.get(toPosition).id);

@@ -13,7 +13,7 @@ public class HabitViewHolder extends RecyclerView.ViewHolder {
     public final TextView txtTitle;
     public final CheckBox checkBox;
 
-    public HabitViewHolder(final View itemView) {
+    public HabitViewHolder(View itemView) {
         super(itemView);
         txtTitle = (TextView) itemView.findViewById(R.id.habit_title);
         checkBox = (CheckBox) itemView.findViewById(R.id.checkBox);

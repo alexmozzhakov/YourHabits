@@ -1,5 +1,6 @@
 package com.yongchun.library.view;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,9 +25,6 @@ import com.yongchun.library.widget.PreviewViewPager;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by dee on 15/11/24.
- */
 public class ImagePreviewActivity extends AppCompatActivity {
     public static final int REQUEST_PREVIEW = 68;
     public static final String EXTRA_PREVIEW_LIST = "previewList";
@@ -122,6 +120,7 @@ public class ImagePreviewActivity extends AppCompatActivity {
             }
         });
         checkboxSelect.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("StringFormatMatches")
             @Override
             public void onClick(View v) {
                 boolean isChecked = checkboxSelect.isChecked();
@@ -152,22 +151,7 @@ public class ImagePreviewActivity extends AppCompatActivity {
         });
     }
 
-    public class SimpleFragmentAdapter extends FragmentPagerAdapter {
-        public SimpleFragmentAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return ImagePreviewFragment.getInstance(images.get(position).getPath());
-        }
-
-        @Override
-        public int getCount() {
-            return images.size();
-        }
-    }
-
+    @SuppressLint("StringFormatMatches")
     public void onSelectNumChange() {
         boolean enable = selectImages.size() != 0;
         doneText.setEnabled(enable);
@@ -214,11 +198,28 @@ public class ImagePreviewActivity extends AppCompatActivity {
         }
         isShowBar = !isShowBar;
     }
-    public void onDoneClick(boolean isDone){
+
+    public void onDoneClick(boolean isDone) {
         Intent intent = new Intent();
-        intent.putExtra(OUTPUT_LIST,(ArrayList)selectImages);
-        intent.putExtra(OUTPUT_ISDONE,isDone);
-        setResult(RESULT_OK,intent);
+        intent.putExtra(OUTPUT_LIST, (ArrayList) selectImages);
+        intent.putExtra(OUTPUT_ISDONE, isDone);
+        setResult(RESULT_OK, intent);
         finish();
+    }
+
+    public class SimpleFragmentAdapter extends FragmentPagerAdapter {
+        public SimpleFragmentAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return ImagePreviewFragment.getInstance(images.get(position).getPath());
+        }
+
+        @Override
+        public int getCount() {
+            return images.size();
+        }
     }
 }

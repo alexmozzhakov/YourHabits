@@ -1,11 +1,11 @@
 package com.doapps.habits.fragments;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -47,31 +47,31 @@ public class HomeFragment extends Fragment {
     /**
      * @return true if user is connected to Internet
      */
-    private static boolean isConnected(final Context context) {
-        final ConnectivityManager connectivityManager
+    public static boolean isConnected(Context context) {
+        ConnectivityManager connectivityManager
                 = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        final NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
     @Override
-    public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
-                             final Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final View view = inflater.inflate(R.layout.fragment_home, container, false);
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.timeline);
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.timeline);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        final HabitListProvider habitListManager =
+        HabitListProvider habitListManager =
                 HabitListManager.getInstance(getContext());
 
-        final List<Habit> habitList = new ArrayList<>(habitListManager.getList());
+        List<Habit> habitList = new ArrayList<>(habitListManager.getList());
         // filter list for today
         HomeDayManager.filterListForToday(habitList);
 
         // set due count of filtered list
-        final TextView tasksDue = (TextView) view.findViewById(R.id.tasks_due);
+        TextView tasksDue = (TextView) view.findViewById(R.id.tasks_due);
         tasksDue.setText(getDueCount(habitList));
 
         weather = (TextView) view.findViewById(R.id.weather);
@@ -83,20 +83,20 @@ public class HomeFragment extends Fragment {
             weatherBot.setText("All tasks");
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                final ConnectivityManager conMan = (ConnectivityManager)
+                ConnectivityManager conMan = (ConnectivityManager)
                         getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
                 Log.i("HomeFragment", "addDefaultNetworkActiveListener");
-                final ConnectivityManager.OnNetworkActiveListener activeListener =
+                ConnectivityManager.OnNetworkActiveListener activeListener =
                         new ConnectivityManager.OnNetworkActiveListener() {
-                            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+                            @TargetApi(Build.VERSION_CODES.LOLLIPOP)
                             @Override
                             public void onNetworkActive() {
                                 getWeather(getContext(), habitList.size());
 
-                                final FirebaseUser[] user = {FirebaseAuth.getInstance().getCurrentUser()};
+                                FirebaseUser[] user = {FirebaseAuth.getInstance().getCurrentUser()};
                                 if (user[0] == null) {
                                     FirebaseAuth.getInstance().signInAnonymously().addOnCompleteListener(task -> {
-                                        final MainActivity ac = (MainActivity) getActivity();
+                                        MainActivity ac = (MainActivity) getActivity();
                                         user[0] = FirebaseAuth.getInstance().getCurrentUser();
                                         ac.onSetupNavigationDrawer(user[0]);
                                     });
@@ -111,14 +111,14 @@ public class HomeFragment extends Fragment {
         }
 
         // set filtered list to adapter
-        final TimeLineAdapter timeLineAdapter = new TimeLineAdapter(habitList);
+        TimeLineAdapter timeLineAdapter = new TimeLineAdapter(habitList);
         timeLineAdapter.setHasStableIds(true);
         recyclerView.setAdapter(timeLineAdapter);
 
         // get day of week
-        final int dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+        int dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
 
-        final StringSelector swipeSelector = (StringSelector) view.findViewById(R.id.sliding_tabs);
+        StringSelector swipeSelector = (StringSelector) view.findViewById(R.id.sliding_tabs);
         swipeSelector.setItems(getDaysOfWeekFromToday(dayOfWeek - 1));
 
         initDaysTabs(
@@ -130,9 +130,9 @@ public class HomeFragment extends Fragment {
 
     }
 
-    private String[] getDaysOfWeekFromToday(final int dayOfWeek) {
-        final String[] daysOfWeekNames = getActivity().getResources().getStringArray(R.array.days_of_week_array);
-        final String[] daysOfWeek = new String[7];
+    private String[] getDaysOfWeekFromToday(int dayOfWeek) {
+        String[] daysOfWeekNames = getActivity().getResources().getStringArray(R.array.days_of_week_array);
+        String[] daysOfWeek = new String[7];
         for (int i = 0; i < daysOfWeekNames.length; i++) {
             daysOfWeek[i] = daysOfWeekNames[(dayOfWeek + i) % 7];
         }
@@ -147,12 +147,12 @@ public class HomeFragment extends Fragment {
      * @param dayOfWeek           for getting dayOfWeek from number of selected item
      */
     private static void initDaysTabs(
-            final int dayOfWeek,
-            final StringSelector swipeStringSelector,
-            final DayManager habitDayManager) {
+            int dayOfWeek,
+            StringSelector swipeStringSelector,
+            DayManager habitDayManager) {
 
         swipeStringSelector.setOnItemSelectedListener(item -> {
-            final int value = swipeStringSelector.getAdapter().getCurrentPosition();
+            int value = swipeStringSelector.getAdapter().getCurrentPosition();
             if (value == 0) {
                 habitDayManager.updateForToday();
 
@@ -161,7 +161,7 @@ public class HomeFragment extends Fragment {
                 }
 
             } else {
-                final int day = (dayOfWeek + value) % 7;
+                int day = (dayOfWeek + value) % 7;
 
                 if (BuildConfig.DEBUG) {
                     Log.i("HomeFragment", "Selected day = " + day);
@@ -177,14 +177,14 @@ public class HomeFragment extends Fragment {
      * @param habitsList is iterable list of {@link Habit}
      * @return String value of number of incomplete habits
      */
-    private static CharSequence getDueCount(final Iterable<Habit> habitsList) {
-        final Calendar calendar = Calendar.getInstance();
-        final int date = calendar.get(Calendar.DATE);
-        final int month = calendar.get(Calendar.MONTH);
-        final int year = calendar.get(Calendar.YEAR);
+    private static CharSequence getDueCount(Iterable<Habit> habitsList) {
+        Calendar calendar = Calendar.getInstance();
+        int date = calendar.get(Calendar.DATE);
+        int month = calendar.get(Calendar.MONTH);
+        int year = calendar.get(Calendar.YEAR);
 
         int counter = 0;
-        for (final Habit habit : habitsList) {
+        for (Habit habit : habitsList) {
             if (!habit.isDone(date, month, year)) {
                 counter++;
             }
@@ -192,12 +192,12 @@ public class HomeFragment extends Fragment {
         return String.valueOf(counter);
     }
 
-    private void getWeather(final Context context, final int listSize) {
+    private void getWeather(Context context, int listSize) {
         Volley.newRequestQueue(context.getApplicationContext()).add(
                 new StringRequest(Request.Method.GET, URL_WEATHER_API,
                         response -> {
                             try {
-                                final JSONObject o = new JSONObject(response);
+                                JSONObject o = new JSONObject(response);
 
                                 if (o.has("error")) {
                                     Log.e("JSONException", "Response got: " + o.getString("error"));
@@ -214,7 +214,7 @@ public class HomeFragment extends Fragment {
                                     weatherBot.setText(o.getString("location"));
                                 }
 
-                            } catch (final JSONException e) {
+                            } catch (JSONException e) {
                                 Log.e("JSONException", "Response got: " + response, e);
                                 weather.setText(String.valueOf(listSize));
                                 weatherBot.setText("All tasks");

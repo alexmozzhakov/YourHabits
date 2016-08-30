@@ -1,37 +1,30 @@
 package com.doapps.habits.listeners;
 
-import android.net.Uri;
-import android.widget.ImageView;
+import android.support.v4.app.FragmentManager;
+import android.util.Log;
 
+import com.doapps.habits.BuildConfig;
+import com.doapps.habits.R;
+import com.doapps.habits.fragments.ProfileFragment;
 import com.doapps.habits.helper.AvatarManager;
-import com.doapps.habits.helper.RoundedTransformation;
-import com.squareup.picasso.Picasso;
 
 import java.util.Observable;
 import java.util.Observer;
 
 public class ProfileFragmentAvatarListener implements Observer {
-    private final ImageView mAvatarImage;
+    private final FragmentManager mFragmentManager;
 
-    public ProfileFragmentAvatarListener(final ImageView avatarImage) {
-        mAvatarImage = avatarImage;
+    public ProfileFragmentAvatarListener(FragmentManager fragmentManager) {
+        mFragmentManager = fragmentManager;
     }
 
     @Override
-    public void update(final Observable observable, final Object o) {
-        final Uri avatarUri = AvatarManager.listener.getUri();
-        if (avatarUri.toString().contains("graph")) {
-            Picasso.with(mAvatarImage.getContext().getApplicationContext())
-                    .load(avatarUri + "?type=large")
-                    .transform(new RoundedTransformation())
-                    .into(mAvatarImage);
-        } else {
-            Picasso.with(mAvatarImage.getContext().getApplicationContext())
-                    .invalidate(avatarUri);
-            Picasso.with(mAvatarImage.getContext().getApplicationContext())
-                    .load(avatarUri)
-                    .transform(new RoundedTransformation())
-                    .into(mAvatarImage);
+    public void update(Observable observable, Object o) {
+        if (BuildConfig.DEBUG) {
+            Log.i("update", String.valueOf(AvatarManager.listener.getLargeUri()));
         }
+        mFragmentManager.beginTransaction()
+                .replace(R.id.content_frame, new ProfileFragment())
+                .commit();
     }
 }

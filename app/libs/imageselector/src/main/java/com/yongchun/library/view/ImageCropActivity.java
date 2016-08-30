@@ -28,36 +28,32 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public class ImageCropActivity extends AppCompatActivity {
-    private static final String EXTRA_PATH = "extraPath";
     static final String OUTPUT_PATH = "outputPath";
     static final int REQUEST_CROP = 69;
+    private static final String EXTRA_PATH = "extraPath";
     private static final int SIZE_DEFAULT = 2048;
     private static final int SIZE_LIMIT = 4096;
-
+    private final Handler handler = new Handler();
     private Toolbar toolbar;
     private TextView doneText;
     private CropImageView cropImageView;
-
-
     private Uri sourceUri;
     private Uri saveUri;
 
-    private final Handler handler = new Handler();
-
-    static void startCrop(final Activity activity, final String path) {
-        final Intent intent = new Intent(activity, ImageCropActivity.class);
+    static void startCrop(Activity activity, String path) {
+        Intent intent = new Intent(activity, ImageCropActivity.class);
         intent.putExtra(EXTRA_PATH, path);
         activity.startActivityForResult(intent, REQUEST_CROP);
     }
 
-    public static int getExifRotation(final File imageFile) {
+    public static int getExifRotation(File imageFile) {
         if (imageFile == null) {
             return 0;
         }
         try {
-            final ExifInterface exif = new ExifInterface(imageFile.getAbsolutePath());
+            ExifInterface exif = new ExifInterface(imageFile.getAbsolutePath());
             // We only recognize a subset of orientation tag values
-            final int i = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+            int i = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION,
                     ExifInterface.ORIENTATION_UNDEFINED);
             if (i == ExifInterface.ORIENTATION_ROTATE_90) {
                 return 90;
@@ -73,11 +69,34 @@ public class ImageCropActivity extends AppCompatActivity {
         }
     }
 
+    private static Matrix getRotateMatrix(Bitmap bitmap, int rotation) {
+        Matrix matrix = new Matrix();
+        if (bitmap != null && rotation != 0) {
+            int cx = bitmap.getWidth() / 2;
+            int cy = bitmap.getHeight() / 2;
+            matrix.preTranslate(-cx, -cy);
+            matrix.postRotate(rotation);
+            matrix.postTranslate(bitmap.getWidth() >> 1, bitmap.getHeight() >> 1);
+        }
+        return matrix;
+    }
+
+    private static int getMaxImageSize() {
+        int textureLimit = getMaxTextureSize();
+        return textureLimit == 0 ? SIZE_DEFAULT : Math.min(textureLimit, SIZE_LIMIT);
+    }
+
+    private static int getMaxTextureSize() {
+        int[] maxSize = new int[1];
+        GLES10.glGetIntegerv(GLES10.GL_MAX_TEXTURE_SIZE, maxSize, 0);
+        return maxSize[0];
+    }
+
     @Override
-    protected void onCreate(final Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_crop);
-        final String path = getIntent().getStringExtra(EXTRA_PATH);
+        String path = getIntent().getStringExtra(EXTRA_PATH);
         sourceUri = Uri.fromFile(new File(path));
 
         initView();
@@ -95,62 +114,49 @@ public class ImageCropActivity extends AppCompatActivity {
         cropImageView.setHandleSizeInDp(10);
 
 
-        final int exifRotation =
+        int exifRotation =
                 getExifRotation(CropUtil.getFromMediaUri(this, getContentResolver(), sourceUri));
 
         InputStream is = null;
         try {
-            final int sampleSize = calculateBitmapSampleSize(sourceUri);
+            int sampleSize = calculateBitmapSampleSize(sourceUri);
             is = getContentResolver().openInputStream(sourceUri);
-            final BitmapFactory.Options option = new BitmapFactory.Options();
+            BitmapFactory.Options option = new BitmapFactory.Options();
             option.inSampleSize = sampleSize;
-            final Bitmap sizeBitmap = BitmapFactory.decodeStream(is, null, option);
+            Bitmap sizeBitmap = BitmapFactory.decodeStream(is, null, option);
             if (sizeBitmap == null) {
                 return;
             }
-            final Matrix matrix = getRotateMatrix(sizeBitmap, exifRotation % 360);
-            final Bitmap rotated =
+            Matrix matrix = getRotateMatrix(sizeBitmap, exifRotation % 360);
+            Bitmap rotated =
                     Bitmap.createBitmap(sizeBitmap, 0, 0, sizeBitmap.getWidth(),
                             sizeBitmap.getHeight(), matrix, true);
             cropImageView.setImageBitmap(rotated);
-        } catch (final FileNotFoundException e) {
+        } catch (FileNotFoundException e) {
             Log.e("ImageCrop", e.getMessage());
         } finally {
             CropUtil.closeSilently(is);
         }
     }
 
-
     private void registerListener() {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(final View view) {
+            public void onClick(View view) {
                 finish();
             }
         });
         doneText.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(final View view) {
+            public void onClick(View view) {
                 saveUri = Uri.fromFile(FileUtils.createCropFile(ImageCropActivity.this));
                 saveOutput(cropImageView.getCroppedBitmap());
             }
         });
     }
 
-    private static Matrix getRotateMatrix(final Bitmap bitmap, final int rotation) {
-        final Matrix matrix = new Matrix();
-        if (bitmap != null && rotation != 0) {
-            final int cx = bitmap.getWidth() / 2;
-            final int cy = bitmap.getHeight() / 2;
-            matrix.preTranslate(-cx, -cy);
-            matrix.postRotate(rotation);
-            matrix.postTranslate(bitmap.getWidth() >> 1, bitmap.getHeight() >> 1);
-        }
-        return matrix;
-    }
-
-    private int calculateBitmapSampleSize(final Uri bitmapUri) throws FileNotFoundException {
-        final BitmapFactory.Options options = new BitmapFactory.Options();
+    private int calculateBitmapSampleSize(Uri bitmapUri) throws FileNotFoundException {
+        BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         InputStream is = null;
         try {
@@ -160,23 +166,12 @@ public class ImageCropActivity extends AppCompatActivity {
             CropUtil.closeSilently(is);
         }
 
-        final int maxSize = getMaxImageSize();
+        int maxSize = getMaxImageSize();
         int sampleSize = 1;
         while (options.outHeight / sampleSize > maxSize || options.outWidth / sampleSize > maxSize) {
             sampleSize <<= 1;
         }
         return sampleSize;
-    }
-
-    private static int getMaxImageSize() {
-        final int textureLimit = getMaxTextureSize();
-        return textureLimit == 0 ? SIZE_DEFAULT : Math.min(textureLimit, SIZE_LIMIT);
-    }
-
-    private static int getMaxTextureSize() {
-        final int[] maxSize = new int[1];
-        GLES10.glGetIntegerv(GLES10.GL_MAX_TEXTURE_SIZE, maxSize, 0);
-        return maxSize[0];
     }
 
     private void saveOutput(final Bitmap croppedImage) {
@@ -187,7 +182,7 @@ public class ImageCropActivity extends AppCompatActivity {
                 if (outputStream != null) {
                     croppedImage.compress(Bitmap.CompressFormat.JPEG, 90, outputStream);
                 }
-            } catch (final FileNotFoundException e) {
+            } catch (FileNotFoundException e) {
                 Log.e("ImageCrop", e.getMessage());
             } finally {
                 CropUtil.closeSilently(outputStream);
@@ -195,6 +190,7 @@ public class ImageCropActivity extends AppCompatActivity {
             setResult(RESULT_OK, new Intent().putExtra(OUTPUT_PATH, saveUri.getPath()));
         }
         handler.post(new Runnable() {
+            @Override
             public void run() {
                 croppedImage.recycle();
             }

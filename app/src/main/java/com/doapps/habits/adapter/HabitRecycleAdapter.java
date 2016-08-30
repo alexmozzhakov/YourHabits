@@ -21,24 +21,24 @@ public class HabitRecycleAdapter extends RecyclerView.Adapter implements Movable
     private final HabitsDatabase mHabitsDatabase;
     private final HabitDatabaseMovableListProvider mMovableList;
 
-    public HabitRecycleAdapter(final HabitDatabaseMovableListProvider movableList) {
+    public HabitRecycleAdapter(HabitDatabaseMovableListProvider movableList) {
         mMovableList = movableList;
         mHabitList = movableList.getList();
         mHabitsDatabase = movableList.getDatabase();
     }
 
     @Override
-    public HabitViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
-        final View view =
+    public HabitViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view =
                 LayoutInflater.from(parent.getContext()).inflate(R.layout.habit_list_item, parent, false);
         return new HabitViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
-        final HabitViewHolder habitViewHolder = (HabitViewHolder) holder;
-        final Habit habit = mHabitList.get(position);
+        HabitViewHolder habitViewHolder = (HabitViewHolder) holder;
+        Habit habit = mHabitList.get(position);
 
         habitViewHolder.txtTitle.setText(habit.title);
         habitViewHolder.checkBox.setOnClickListener(view -> {
@@ -53,7 +53,7 @@ public class HabitRecycleAdapter extends RecyclerView.Adapter implements Movable
             }
         });
 
-        final Calendar calendar = Calendar.getInstance();
+        Calendar calendar = Calendar.getInstance();
 
         habitViewHolder.checkBox.setChecked(habit.isDone(
                 calendar.get(Calendar.DATE),
@@ -68,13 +68,13 @@ public class HabitRecycleAdapter extends RecyclerView.Adapter implements Movable
     }
 
     @Override
-    public void onItemDismiss(final int position) {
+    public void onItemDismiss(int position) {
         mMovableList.onItemDismiss(position);
         notifyItemRemoved(position);
     }
 
     @Override
-    public void onItemMove(final int fromPosition, final int toPosition) {
+    public void onItemMove(int fromPosition, int toPosition) {
         mMovableList.onItemMove(fromPosition, toPosition);
         notifyItemMoved(fromPosition, toPosition);
     }

@@ -32,21 +32,16 @@ import java.util.List;
 
 public class ImageSelectorActivity extends AppCompatActivity {
     public static final int REQUEST_IMAGE = 66;
-    private static final int REQUEST_CAMERA = 67;
-
-    private static final String BUNDLE_CAMERA_PATH = "CameraPath";
-
     public static final String REQUEST_OUTPUT = "outputList";
-
+    public static final int MODE_MULTIPLE = 1;
+    public static final int MODE_SINGLE = 2;
+    private static final int REQUEST_CAMERA = 67;
+    private static final String BUNDLE_CAMERA_PATH = "CameraPath";
     private static final String EXTRA_SELECT_MODE = "SelectMode";
     private static final String EXTRA_SHOW_CAMERA = "ShowCamera";
     private static final String EXTRA_ENABLE_PREVIEW = "EnablePreview";
     private static final String EXTRA_ENABLE_CROP = "EnableCrop";
     private static final String EXTRA_MAX_SELECT_NUM = "MaxSelectNum";
-
-    public static final int MODE_MULTIPLE = 1;
-    public static final int MODE_SINGLE = 2;
-
     private int maxSelectNum = 9;
     private int selectMode = MODE_MULTIPLE;
     private boolean showCamera = true;
@@ -66,9 +61,9 @@ public class ImageSelectorActivity extends AppCompatActivity {
 
     private String cameraPath;
 
-    public static void start(final Activity activity, final int maxSelectNum, final int mode,
-                             final boolean isShow, final boolean enablePreview, final boolean enableCrop) {
-        final Intent intent = new Intent(activity, ImageSelectorActivity.class);
+    public static void start(Activity activity, int maxSelectNum, int mode,
+                             boolean isShow, boolean enablePreview, boolean enableCrop) {
+        Intent intent = new Intent(activity, ImageSelectorActivity.class);
         intent.putExtra(EXTRA_MAX_SELECT_NUM, maxSelectNum);
         intent.putExtra(EXTRA_SELECT_MODE, mode);
         intent.putExtra(EXTRA_SHOW_CAMERA, isShow);
@@ -78,7 +73,7 @@ public class ImageSelectorActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onCreate(final Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_imageselector);
 
@@ -101,7 +96,7 @@ public class ImageSelectorActivity extends AppCompatActivity {
         new LocalMediaLoader(this, LocalMediaLoader.TYPE_IMAGE).loadAllImage(new LocalMediaLoadListener() {
 
             @Override
-            public void loadComplete(final List<LocalMediaFolder> folders) {
+            public void loadComplete(List<LocalMediaFolder> folders) {
                 folderWindow.bindFolder(folders);
                 imageAdapter.bindImages(folders.get(0).getImages());
             }
@@ -125,9 +120,9 @@ public class ImageSelectorActivity extends AppCompatActivity {
         folderLayout = (LinearLayout) findViewById(R.id.folder_layout);
         folderName = (TextView) findViewById(R.id.folder_name);
 
-        final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.folder_list);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.folder_list);
         recyclerView.setHasFixedSize(true);
-        final int spanCount = 3;
+        int spanCount = 3;
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(spanCount, ScreenUtils.dip2px(this, 2), false));
         recyclerView.setLayoutManager(new GridLayoutManager(this, spanCount));
 
@@ -139,7 +134,7 @@ public class ImageSelectorActivity extends AppCompatActivity {
     private void registerListener() {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(final View view) {
+            public void onClick(View view) {
                 setResult(RESULT_CANCELED);
                 finish();
             }
@@ -157,8 +152,8 @@ public class ImageSelectorActivity extends AppCompatActivity {
         imageAdapter.setOnImageSelectChangedListener(new ImageListAdapter.OnImageSelectChangedListener() {
             @SuppressLint("StringFormatMatches")
             @Override
-            public void onChange(final List<LocalMedia> selectImages) {
-                final boolean enable = !selectImages.isEmpty();
+            public void onChange(List<LocalMedia> selectImages) {
+                boolean enable = !selectImages.isEmpty();
                 doneText.setEnabled(enable);
                 previewText.setEnabled(enable);
                 if (enable) {
@@ -176,7 +171,7 @@ public class ImageSelectorActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onPictureClick(final LocalMedia media, final int position) {
+            public void onPictureClick(LocalMedia media, int position) {
                 if (enablePreview) {
                     startPreview(imageAdapter.getImages(), position);
                 } else if (enableCrop) {
@@ -188,13 +183,13 @@ public class ImageSelectorActivity extends AppCompatActivity {
         });
         doneText.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(final View view) {
+            public void onClick(View view) {
                 onSelectDone(imageAdapter.getSelectedImages());
             }
         });
         folderWindow.setOnItemClickListener(new OnItemClickListener<LocalMedia>() {
             @Override
-            public void onItemClick(final String name, final List<LocalMedia> items) {
+            public void onItemClick(String name, List<LocalMedia> items) {
                 folderWindow.dismiss();
                 imageAdapter.bindImages(items);
                 folderName.setText(name);
@@ -202,7 +197,7 @@ public class ImageSelectorActivity extends AppCompatActivity {
         });
         previewText.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(final View view) {
+            public void onClick(View view) {
                 startPreview(imageAdapter.getSelectedImages(), 0);
             }
         });
@@ -210,7 +205,7 @@ public class ImageSelectorActivity extends AppCompatActivity {
 
 
     @Override
-    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             // on take photo success
             if (requestCode == REQUEST_CAMERA) {
@@ -223,8 +218,8 @@ public class ImageSelectorActivity extends AppCompatActivity {
             }
             //on preview select change
             else if (requestCode == ImagePreviewActivity.REQUEST_PREVIEW) {
-                final boolean isDone = data.getBooleanExtra(ImagePreviewActivity.OUTPUT_ISDONE, false);
-                final List<LocalMedia> images =
+                boolean isDone = data.getBooleanExtra(ImagePreviewActivity.OUTPUT_ISDONE, false);
+                List<LocalMedia> images =
                         (List<LocalMedia>) data.getSerializableExtra(ImagePreviewActivity.OUTPUT_LIST);
                 if (isDone) {
                     onSelectDone(images);
@@ -234,14 +229,14 @@ public class ImageSelectorActivity extends AppCompatActivity {
             }
             // on crop success
             else if (requestCode == ImageCropActivity.REQUEST_CROP) {
-                final String path = data.getStringExtra(ImageCropActivity.OUTPUT_PATH);
+                String path = data.getStringExtra(ImageCropActivity.OUTPUT_PATH);
                 onSelectDone(path);
             }
         }
     }
 
     @Override
-    protected void onSaveInstanceState(final Bundle outState) {
+    protected void onSaveInstanceState(Bundle outState) {
         outState.putString(BUNDLE_CAMERA_PATH, cameraPath);
     }
 
@@ -249,42 +244,43 @@ public class ImageSelectorActivity extends AppCompatActivity {
      * start to camera、preview、crop
      */
     private void startCamera() {
-        final Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (cameraIntent.resolveActivity(getPackageManager()) != null) {
-            final File cameraFile = FileUtils.createCameraFile(this);
+            File cameraFile = FileUtils.createCameraFile(this);
             cameraPath = cameraFile.getAbsolutePath();
             cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(cameraFile));
             startActivityForResult(cameraIntent, REQUEST_CAMERA);
         }
     }
 
-    private void startPreview(final List<LocalMedia> previewImages, final int position) {
+    private void startPreview(List<LocalMedia> previewImages, int position) {
         ImagePreviewActivity.startPreview(this, previewImages, imageAdapter.getSelectedImages(), maxSelectNum, position);
     }
 
-    private void startCrop(final String path) {
+    private void startCrop(String path) {
         ImageCropActivity.startCrop(this, path);
     }
 
     /**
      * on select done
+     *
      * @param medias
      */
-    private void onSelectDone(final Collection<LocalMedia> medias) {
-        final ArrayList<String> images = new ArrayList<>(medias.size());
-        for (final LocalMedia media : medias) {
+    private void onSelectDone(Collection<LocalMedia> medias) {
+        ArrayList<String> images = new ArrayList<>(medias.size());
+        for (LocalMedia media : medias) {
             images.add(media.getPath());
         }
         onResult(images);
     }
 
-    private void onSelectDone(final String path) {
-        final ArrayList<String> images = new ArrayList<>(1);
+    private void onSelectDone(String path) {
+        ArrayList<String> images = new ArrayList<>(1);
         images.add(path);
         onResult(images);
     }
 
-    private void onResult(final ArrayList<String> images) {
+    private void onResult(ArrayList<String> images) {
         setResult(RESULT_OK, new Intent().putStringArrayListExtra(REQUEST_OUTPUT, images));
         finish();
     }

@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface HabitsDatabase {
 
-    void updateHabit(Habit habit, final int done);
+    void updateHabit(Habit habit, int done);
 
     void delete(int position);
 

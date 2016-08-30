@@ -5,7 +5,7 @@ public class LocalMedia {
     private long duration;
 
 
-    public LocalMedia(final String path) {
+    public LocalMedia(String path) {
         this.path = path;
     }
 
@@ -13,7 +13,7 @@ public class LocalMedia {
         return path;
     }
 
-    public void setPath(final String path) {
+    public void setPath(String path) {
         this.path = path;
     }
 
@@ -21,7 +21,7 @@ public class LocalMedia {
         return duration;
     }
 
-    public void setDuration(final long duration) {
+    public void setDuration(long duration) {
         this.duration = duration;
     }
 }

@@ -10,11 +10,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.doapps.habits.R;
 import com.doapps.habits.fragments.ProgramsFragment;
 import com.doapps.habits.models.ProgramViewProvider;
 import com.doapps.habits.viewholder.ProgramViewHolder;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -27,9 +27,9 @@ public class ProgramRecycleAdapter extends RecyclerView.Adapter {
     private TextView mTitleTop;
     private TextView mSuccessTop;
 
-    public ProgramRecycleAdapter(final List<ProgramViewProvider> data, final Context context,
-                                 final FragmentManager fragmentManager,
-                                 final ProgramsFragment programsFragment) {
+    public ProgramRecycleAdapter(List<ProgramViewProvider> data, Context context,
+                                 FragmentManager fragmentManager,
+                                 ProgramsFragment programsFragment) {
         mProgramList = data;
         mContext = context;
         mFragmentManager = fragmentManager;
@@ -37,18 +37,18 @@ public class ProgramRecycleAdapter extends RecyclerView.Adapter {
     }
 
     @Override
-    public ProgramViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
-        final View view = LayoutInflater.from(parent.getContext())
+    public ProgramViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.program_list_item, parent, false);
 
-        final Typeface face = Typeface.createFromAsset(parent.getContext().getAssets(),
+        Typeface face = Typeface.createFromAsset(parent.getContext().getAssets(),
                 "Montserrat-Regular.ttf");
 
-        final Typeface faceLight = Typeface.createFromAsset(parent.getContext().getAssets(),
+        Typeface faceLight = Typeface.createFromAsset(parent.getContext().getAssets(),
                 "Montserrat-Light.otf");
 
-        final TextView txtTitle = (TextView) view.findViewById(R.id.program_title);
-        final TextView txtPercent = (TextView) view.findViewById(R.id.program_percent);
+        TextView txtTitle = (TextView) view.findViewById(R.id.program_title);
+        TextView txtPercent = (TextView) view.findViewById(R.id.program_percent);
 
         txtPercent.setTypeface(face);
         txtTitle.setTypeface(faceLight);
@@ -61,16 +61,16 @@ public class ProgramRecycleAdapter extends RecyclerView.Adapter {
     }
 
     @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder holder,
-                                 final int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder,
+                                 int position) {
 
-        final ProgramViewHolder programViewHolder = (ProgramViewHolder) holder;
-        final ProgramViewProvider program = mProgramList.get(position);
+        ProgramViewHolder programViewHolder = (ProgramViewHolder) holder;
+        ProgramViewProvider program = mProgramList.get(position);
 
         programViewHolder.getTitleTextView().setText(program.getTitle());
         programViewHolder.getPercentTextView().setText(program.getPercent());
         programViewHolder.getTitleTextView().setOnClickListener(v -> {
-            Picasso.with(mContext.getApplicationContext())
+            Glide.with(mContext.getApplicationContext())
                     .load(program.getImageLink())
                     .into(mImageTop);
             mTitleTop.setText(program.getTitle());

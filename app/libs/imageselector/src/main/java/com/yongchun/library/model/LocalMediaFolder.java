@@ -15,7 +15,7 @@ public class LocalMediaFolder {
         return name;
     }
 
-    public void setName(final String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -23,7 +23,7 @@ public class LocalMediaFolder {
         return path;
     }
 
-    public void setPath(final String path) {
+    public void setPath(String path) {
         this.path = path;
     }
 
@@ -31,7 +31,7 @@ public class LocalMediaFolder {
         return firstImagePath;
     }
 
-    public void setFirstImagePath(final String firstImagePath) {
+    public void setFirstImagePath(String firstImagePath) {
         this.firstImagePath = firstImagePath;
     }
 
@@ -39,7 +39,7 @@ public class LocalMediaFolder {
         return imageNum;
     }
 
-    public void setImageNum(final int imageNum) {
+    public void setImageNum(int imageNum) {
         this.imageNum = imageNum;
     }
 
@@ -47,7 +47,7 @@ public class LocalMediaFolder {
         return images;
     }
 
-    public void setImages(final List<LocalMedia> images) {
+    public void setImages(List<LocalMedia> images) {
         this.images = images;
     }
 }

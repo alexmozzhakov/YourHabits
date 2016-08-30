@@ -6,10 +6,10 @@
 
     <ImageView
         android:id="@+id/profile_photo"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
         android:layout_gravity="center_vertical"
-        android:layout_marginLeft="25dp"
+        android:layout_marginLeft="16dp"
         android:contentDescription="@string/avatar"/>
 
     <FrameLayout

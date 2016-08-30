@@ -15,30 +15,30 @@ public class HomeDayManager implements DayManager {
     private final UpdatableList<Habit> mTimeLineAdapter;
     private final List<Habit> mHabitList;
 
-    public HomeDayManager(final UpdatableList<Habit> timeLineAdapter, final List<Habit> habitList) {
+    public HomeDayManager(UpdatableList<Habit> timeLineAdapter, List<Habit> habitList) {
         mTimeLineAdapter = timeLineAdapter;
         mHabitList = habitList;
     }
 
     @Override
-    public void updateListByDay(final int dayOfWeek) {
-        final List<Habit> dayHabits = new ArrayList<>(mHabitList);
+    public void updateListByDay(int dayOfWeek) {
+        List<Habit> dayHabits = new ArrayList<>(mHabitList);
         filterListByDay(dayHabits, dayOfWeek);
         mTimeLineAdapter.updateList(dayHabits);
     }
 
     @Override
     public void updateForToday() {
-        final List<Habit> todayHabits = new ArrayList<>(mHabitList);
+        List<Habit> todayHabits = new ArrayList<>(mHabitList);
         filterListForToday(todayHabits);
         mTimeLineAdapter.updateList(todayHabits);
     }
 
-    public static void filterListForToday(final Iterable<Habit> todayHabits) {
-        final int dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
-        final Iterator<Habit> habitIterator = todayHabits.iterator();
+    public static void filterListForToday(Iterable<Habit> todayHabits) {
+        int dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+        Iterator<Habit> habitIterator = todayHabits.iterator();
         while (habitIterator.hasNext()) {
-            final short[] freq = habitIterator.next().getFrequencyArray();
+            short[] freq = habitIterator.next().getFrequencyArray();
             if (freq.length == 0) {
                 Log.w("filterListByDay()", "frequency not set");
             } else {
@@ -60,10 +60,10 @@ public class HomeDayManager implements DayManager {
     }
 
     @SuppressWarnings("LocalVariableOfConcreteClass")
-    static void filterListByDay(final Iterable<Habit> dayHabits, final int dayOfWeek) {
-        final Iterator<Habit> habitIterator = dayHabits.iterator();
+    static void filterListByDay(Iterable<Habit> dayHabits, int dayOfWeek) {
+        Iterator<Habit> habitIterator = dayHabits.iterator();
         while (habitIterator.hasNext()) {
-            final short[] freq = habitIterator.next().getFrequencyArray();
+            short[] freq = habitIterator.next().getFrequencyArray();
             if (freq.length == 0) {
                 Log.w("filterListByDay()", "frequency not set");
             } else if (freq[0] != freq[1]) {

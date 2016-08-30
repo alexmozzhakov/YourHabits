@@ -49,11 +49,11 @@ public class LoginFragment extends Fragment {
     private Button btnAnonymous;
 
     @Override
-    public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
-                             final Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         FacebookSdk.sdkInitialize(getContext().getApplicationContext());
         // Inflate the layout for this fragment
-        final View result = inflater.inflate(R.layout.fragment_login, container, false);
+        View result = inflater.inflate(R.layout.fragment_login, container, false);
 
         inputEmail = (TextInputEditText) result.findViewById(R.id.email);
         inputPassword = (TextInputEditText) result.findViewById(R.id.password);
@@ -77,8 +77,8 @@ public class LoginFragment extends Fragment {
 
         // Login button Click Event
         btnLogin.setOnClickListener(view -> {
-            final String email = inputEmail != null ? inputEmail.getText().toString().trim() : null;
-            final String password = inputPassword != null ? inputPassword.getText().toString().trim() : null;
+            String email = inputEmail != null ? inputEmail.getText().toString().trim() : null;
+            String password = inputPassword != null ? inputPassword.getText().toString().trim() : null;
 
             // Check for empty data in the form
             checkInput(email, password);
@@ -92,17 +92,17 @@ public class LoginFragment extends Fragment {
 
 
         btnRecovery.setOnClickListener(view -> {
-            final Intent intent = new Intent(getActivity().getApplicationContext(),
+            Intent intent = new Intent(getActivity().getApplicationContext(),
                     PasswordRecoveryActivity.class);
             startActivity(intent);
         });
 
-        final CallbackManager callbackManager = ((AuthActivity) getActivity()).getCallbackManager();
+        CallbackManager callbackManager = ((AuthActivity) getActivity()).getCallbackManager();
 
         LoginManager.getInstance().registerCallback(callbackManager,
                 new FacebookCallback<LoginResult>() {
                     @Override
-                    public void onSuccess(final LoginResult result) {
+                    public void onSuccess(LoginResult result) {
                         handleFacebookAccessToken(result.getAccessToken());
                     }
 
@@ -112,12 +112,12 @@ public class LoginFragment extends Fragment {
                     }
 
                     @Override
-                    public void onError(final FacebookException error) {
+                    public void onError(FacebookException error) {
                         Log.d(TAG, "facebook:onError", error);
                     }
 
-                    private void handleFacebookAccessToken(final AccessToken token) {
-                        final AuthCredential credential =
+                    private void handleFacebookAccessToken(AccessToken token) {
+                        AuthCredential credential =
                                 FacebookAuthProvider.getCredential(token.getToken());
                         mAuth.signInWithCredential(credential)
                                 .addOnFailureListener(e -> {
@@ -126,7 +126,7 @@ public class LoginFragment extends Fragment {
                                             Toast.LENGTH_SHORT).show();
                                 })
                                 .addOnCompleteListener(task -> {
-                                    final FirebaseUser user =
+                                    FirebaseUser user =
                                             FirebaseAuth.getInstance().getCurrentUser();
                                     if (getContext().getSharedPreferences("pref",
                                             Context.MODE_PRIVATE).getString(user.getUid(), null) == null) {
@@ -137,7 +137,7 @@ public class LoginFragment extends Fragment {
                                                 .apply();
                                         AvatarManager.listener.setUri(
                                                 Uri.parse(String.format("https://graph.facebook.com/%s/picture",
-                                                        token.getUserId())));
+                                                        token.getUserId())), getActivity());
                                     }
                                 });
                     }
@@ -150,7 +150,7 @@ public class LoginFragment extends Fragment {
     }
 
 
-    private void checkInput(final String email, final String password) {
+    private void checkInput(String email, String password) {
         // Check for empty data in the form
         if (email.isEmpty() || password.isEmpty()) {
             // Prompt user to enter credentials
@@ -166,7 +166,7 @@ public class LoginFragment extends Fragment {
                     .show();
         } else {
             // login user
-            final FirebaseAuth auth = FirebaseAuth.getInstance();
+            FirebaseAuth auth = FirebaseAuth.getInstance();
             auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
                 if (!task.isSuccessful()) {
                     Toast.makeText
@@ -182,7 +182,7 @@ public class LoginFragment extends Fragment {
     }
 
     private void setupFields() {
-        final Typeface face =
+        Typeface face =
                 Typeface.createFromAsset(getActivity().getApplicationContext().getAssets(),
                         "Montserrat-Regular.ttf");
 
@@ -192,8 +192,8 @@ public class LoginFragment extends Fragment {
         inputPassword.setOnKeyListener((final View view, final int keyCode, final KeyEvent event) -> {
             // If the event is a key-down event on the "enter" button
             if (keyCode == KeyEvent.KEYCODE_ENTER) {
-                final String email = inputEmail.getText().toString().trim();
-                final String password = inputPassword.getText().toString().trim();
+                String email = inputEmail.getText().toString().trim();
+                String password = inputPassword.getText().toString().trim();
 
                 checkInput(email, password);
 
@@ -203,7 +203,7 @@ public class LoginFragment extends Fragment {
         });
     }
 
-    private void anonymousLogin(final View view) {
+    private void anonymousLogin(View view) {
         FirebaseAuth.getInstance().signInAnonymously().addOnCompleteListener(task -> {
             if (BuildConfig.DEBUG) {
                 Log.d(TAG, "signInAnonymously:onComplete:" + task.isSuccessful());
@@ -214,7 +214,7 @@ public class LoginFragment extends Fragment {
             // signed in user can be handled in the listener.
             if (task.isSuccessful()) {
                 if (getActivity() != null) {
-                    final Intent intent = new Intent(getActivity(), MainActivity.class);
+                    Intent intent = new Intent(getActivity(), MainActivity.class);
                     startActivity(intent);
                 } else {
                     Log.i("FA", "login page no longer exists");
