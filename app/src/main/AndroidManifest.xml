@@ -5,8 +5,8 @@
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <!--<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>-->
+    <!--<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>-->
 
     <application
         android:allowBackup="true"
@@ -17,7 +17,12 @@
         android:screenOrientation="landscape"
         android:supportsRtl="true"
         tools:ignore="GoogleAppIndexingWarning">
-
+        <activity android:name="com.yongchun.library.view.ImageSelectorActivity"/>
+        <activity android:name="com.yongchun.library.view.ImagePreviewActivity"/>
+        <activity android:name="com.yongchun.library.view.ImageCropActivity"/>
+        <activity
+            android:name=".activity.EditPhotoActivity"
+            android:theme="@style/AppTheme.Auth"/>
         <activity
             android:name=".activity.AuthActivity"
             android:configChanges="orientation|screenSize"
@@ -52,5 +57,14 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id"/>
 
+        <receiver
+            android:name=".receivers.Alarm"
+            android:process=":remote"/>
+
+        <service
+            android:name=".services.YourService"
+            android:enabled="true"
+            android:process=":your_service">
+        </service>
     </application>
 </manifest>

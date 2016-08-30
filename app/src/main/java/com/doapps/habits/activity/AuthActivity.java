@@ -1,18 +1,21 @@
 package com.doapps.habits.activity;
 
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.FrameLayout;
 
 import com.doapps.habits.R;
 import com.doapps.habits.fragments.LoginFragment;
+import com.doapps.habits.slider.swipeselector.PixelUtils;
 import com.facebook.CallbackManager;
-import com.facebook.FacebookSdk;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class AuthActivity extends AppCompatActivity {
-
     private final CallbackManager mCallbackManager = CallbackManager.Factory.create();
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseAuth mAuth;
@@ -20,7 +23,6 @@ public class AuthActivity extends AppCompatActivity {
     public CallbackManager getCallbackManager() {
         return mCallbackManager;
     }
-
 
     public FirebaseAuth getAuth() {
         return mAuth;
@@ -32,32 +34,31 @@ public class AuthActivity extends AppCompatActivity {
         mAuth.addAuthStateListener(mAuthListener);
     }
 
-
     @Override
-    public void onCreate(final Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auth);
+        onConfigurationChanged(getResources().getConfiguration());
 
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = firebaseAuth -> {
-            final FirebaseUser user = firebaseAuth.getCurrentUser();
+            FirebaseUser user = firebaseAuth.getCurrentUser();
             if (user != null && !user.isAnonymous()) {
                 // User is signed in
-                final Intent intent = new Intent(this, MainActivity.class);
+                Intent intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
-                finish();
             }
         };
 
         getSupportFragmentManager()
                 .beginTransaction()
+                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
                 .add(R.id.frame_layout, new LoginFragment())
                 .commit();
     }
 
-
     @Override
-    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         mCallbackManager.onActivityResult(requestCode, resultCode, data);
     }
@@ -68,8 +69,31 @@ public class AuthActivity extends AppCompatActivity {
         if (mAuthListener != null) {
             mAuth.removeAuthStateListener(mAuthListener);
         }
-        if (FacebookSdk.isInitialized()) {
-            FacebookSdk.clearLoggingBehaviors();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        // Checks the orientation of the screen
+        if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            findViewById(R.id.top_image_text).setVisibility(View.VISIBLE);
+            FrameLayout layout = (FrameLayout) findViewById(R.id.frame_layout);
+            FrameLayout.LayoutParams params =
+                    (FrameLayout.LayoutParams) layout.getLayoutParams();
+            params.topMargin = (int) PixelUtils.dpToPixel(getApplicationContext(), 170);
+            layout.setLayoutParams(params);
+        } else if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            findViewById(R.id.top_image_text).setVisibility(View.INVISIBLE);
+            FrameLayout layout = (FrameLayout) findViewById(R.id.frame_layout);
+            FrameLayout.LayoutParams params =
+                    (FrameLayout.LayoutParams) layout.getLayoutParams();
+            params.topMargin = 0;
+            layout.setLayoutParams(params);
         }
+    }
+
+    public void toTerms(View view) {
+        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://habbitsapp.esy.es/terms.txt")));
     }
 }

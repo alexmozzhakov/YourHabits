@@ -1,8 +1,8 @@
 package com.doapps.habits.models;
 
-import java.util.List;
-
-public interface DayManager<T> {
-    void updateListByDay(List<T> list, int dayOfWeek);
-    void updateForToday(List<T> list, int dayOfWeek);
+public interface DayManager {
+    // Updates lists content for day from 1 to 7
+    void updateListByDay(int dayOfWeek);
+    // Updates lists content for today
+    void updateForToday();
 }

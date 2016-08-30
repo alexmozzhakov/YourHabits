@@ -6,7 +6,6 @@ import android.view.ViewGroup;
 
 import com.doapps.habits.R;
 import com.doapps.habits.models.Habit;
-import com.doapps.habits.models.HabitListProvider;
 import com.doapps.habits.models.LineType;
 import com.doapps.habits.models.UpdatableList;
 import com.doapps.habits.viewholder.TimeLineViewHolder;
@@ -14,15 +13,16 @@ import com.doapps.habits.viewholder.TimeLineViewHolder;
 import java.util.List;
 
 public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder>
-        implements UpdatableList<Habit>, HabitListProvider {
-
+        implements UpdatableList<Habit> {
     private List<Habit> mFeedList;
+    private final int mListSize;
 
-    public TimeLineAdapter(final List<Habit> feedList) {
+    public TimeLineAdapter(List<Habit> feedList) {
         mFeedList = feedList;
+        mListSize = getItemCount();
     }
 
-    private static int getTimeLineViewType(final int position, final int totalSize) {
+    private static int getTimeLineViewType(int position, int totalSize) {
         if (totalSize == 1) {
             return LineType.ONLY_ONE;
         } else if (position == 0) {
@@ -35,34 +35,24 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder>
     }
 
     @Override
-    public List<Habit> getList() {
-        return mFeedList;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return mFeedList.isEmpty();
-    }
-
-    @Override
-    public void updateList(final List<Habit> data) {
+    public void updateList(List<Habit> data) {
         mFeedList = data;
         notifyDataSetChanged();
     }
 
     @Override
-    public int getItemViewType(final int position) {
-        return getTimeLineViewType(position, getItemCount());
+    public int getItemViewType(int position) {
+        return getTimeLineViewType(position, mListSize);
     }
 
     @Override
-    public TimeLineViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
-        final View view = View.inflate(parent.getContext(), R.layout.habit_timeline_item, null);
+    public TimeLineViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = View.inflate(parent.getContext(), R.layout.habit_timeline_item, null);
         return new TimeLineViewHolder(view, viewType);
     }
 
     @Override
-    public void onBindViewHolder(final TimeLineViewHolder holder, final int position) {
+    public void onBindViewHolder(TimeLineViewHolder holder, int position) {
         holder.getName().setText(mFeedList.get(position).title);
     }
 
@@ -70,5 +60,4 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder>
     public int getItemCount() {
         return mFeedList != null ? mFeedList.size() : 0;
     }
-
 }

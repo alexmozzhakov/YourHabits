@@ -12,9 +12,9 @@
         android:layout_gravity="top|center_horizontal"
         android:layout_marginTop="20dp"
         android:gravity="center"
-        android:text="@string/navigation_drawer_close"
         android:textColor="@color/black"
-        android:textSize="26sp"/>
+        android:textSize="26sp"
+        android:textIsSelectable="false"/>
 
     <TextView
         android:id="@+id/program_percent"
@@ -22,9 +22,9 @@
         android:layout_height="50dp"
         android:layout_gravity="bottom|center_horizontal"
         android:gravity="center"
-        android:text="@string/app_name"
-        android:textColor="@color/black"
-        android:textSize="12sp"/>
+        android:textColor="#801D1D26"
+        android:textSize="12sp"
+        android:textIsSelectable="false"/>
 
     <View xmlns:android="http://schemas.android.com/apk/res/android"
           android:layout_width="match_parent"

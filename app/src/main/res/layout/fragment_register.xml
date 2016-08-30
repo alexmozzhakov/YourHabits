@@ -76,7 +76,7 @@
     </android.support.design.widget.TextInputLayout>
 
     <Button
-        android:id="@+id/btnRegister"
+        android:id="@+id/btnCreate"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
@@ -104,6 +104,7 @@
             android:layout_height="40dp"
             android:layout_weight=".5"
             android:gravity="start|center_vertical"
+            android:onClick="toTerms"
             android:paddingEnd="10dp"
             android:paddingLeft="10dp"
             android:paddingStart="10dp"

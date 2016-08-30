@@ -1,37 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
-             android:layout_marginTop="20dp"
              android:layout_height="100dp">
 
     <ImageView
         android:id="@+id/profile_photo"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
         android:layout_gravity="center_vertical"
-        android:layout_marginLeft="25dp"/>
-
-    <TextView
-        android:id="@+id/name_info"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="89dp"
-        android:onClick="toProfile"
-        android:textColor="@color/black"
-        android:textSize="20sp"/>
-
-    <TextView
-        android:id="@+id/email_info"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_marginLeft="89dp"
-        android:layout_marginTop="16dp"
-        android:textIsSelectable="true"/>
+        android:layout_marginLeft="16dp"
+        android:contentDescription="@string/avatar"/>
 
     <FrameLayout
+        android:id="@+id/fields_info"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="16dp">
+
+        <TextView
+            android:id="@+id/name_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="10dp"
+            android:textColor="@color/black"
+            android:textIsSelectable="false"
+            android:textSize="20sp"
+            tools:ignore="SelectableText"/>
+
+        <TextView
+            android:id="@+id/email_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="16dp"
+            android:textIsSelectable="true"/>
+
+    </FrameLayout>
+
+    <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_gravity="bottom"

@@ -5,8 +5,7 @@ import java.util.List;
 
 public interface HabitsDatabase {
 
-    void updateHabit(int id, int day, int month, int year,
-                     int done);
+    void updateHabit(Habit habit, int done);
 
     void delete(int position);
 
@@ -14,6 +13,9 @@ public interface HabitsDatabase {
 
     List<Habit> getHabitDetailsAsList();
 
-    long addHabit(String name, String question, int time, Calendar upd,
-                  int followingFrom, int cost, int frequency);
+    void addHabit(String name, String question, int time, Calendar upd, int cost, int... frequency);
+
+    long addHabit(String name, String question, int time, Calendar upd, int cost, String frequency);
+
+    boolean isEmpty();
 }

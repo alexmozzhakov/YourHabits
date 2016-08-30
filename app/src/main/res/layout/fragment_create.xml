@@ -3,9 +3,11 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
+              android:layout_marginLeft="16dp"
+              android:layout_marginRight="16dp"
               android:layout_marginTop="?android:attr/actionBarSize"
               android:orientation="vertical"
-              tools:context=".fragments.CreateFragment">
+              tools:context=".com.doapps.habits.fragments.CreateFragment">
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
@@ -39,6 +41,7 @@
             android:inputType="textAutoComplete"/>
     </android.support.design.widget.TextInputLayout>
 
+
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -53,8 +56,52 @@
             android:inputType="number"/>
     </android.support.design.widget.TextInputLayout>
 
+
+    <LinearLayout style="@style/dialogFormRow">
+
+        <TextView
+            style="@style/dialogFormLabel"
+            android:text="@string/repeat"/>
+
+        <android.support.v7.widget.AppCompatSpinner
+            android:id="@+id/sFrequency"
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:entries="@array/frequencyQuickSelect"
+            android:minWidth="400dp"
+            android:theme="@style/dialogFormText"
+            android:visibility="visible"/>
+
+        <LinearLayout
+            android:id="@+id/llCustomFrequency"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone">
+
+            <EditText
+                android:id="@+id/input_freq_num"
+                style="@style/dialogFormInputSmallNumber"/>
+
+            <TextView
+                style="@style/dialogFormText"
+                android:gravity="center"
+                android:text="@string/times_every"/>
+
+            <EditText
+                android:id="@+id/input_freq_den"
+                style="@style/dialogFormInputSmallNumber"/>
+
+            <TextView
+                style="@style/dialogFormText"
+                android:gravity="center_vertical"
+                android:paddingLeft="12dp"
+                android:text="@string/days"/>
+
+        </LinearLayout>
+    </LinearLayout>
+
     <Button
-        android:id="@+id/btnRegister"
+        android:id="@+id/btnCreate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"

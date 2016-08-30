@@ -3,7 +3,6 @@ package com.doapps.habits.fragments;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -19,29 +18,26 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.doapps.habits.R;
 import com.doapps.habits.adapter.ProgramRecycleAdapter;
-import com.doapps.habits.helper.FirebaseDatabaseManager;
-import com.doapps.habits.helper.HabitListManager;
-import com.doapps.habits.models.Achievement;
 import com.doapps.habits.models.FirebaseProgramView;
-import com.doapps.habits.models.HabitsDatabase;
-import com.doapps.habits.models.Program;
 import com.doapps.habits.models.ProgramViewProvider;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 public class ProgramsFragment extends Fragment {
     private static final String TAG = ProgramsFragment.class.getSimpleName();
     public static boolean isShowing;
+    private static boolean persistenceEnabled;
+    private static boolean isTop;
     private ProgramRecycleAdapter mAdapter;
     private List<ProgramViewProvider> mProgramData;
     private TextView mTitleTop;
@@ -53,9 +49,9 @@ public class ProgramsFragment extends Fragment {
     private DatabaseReference mRootRef;
 
     @Override
-    public void onAttach(final Context context) {
+    public void onAttach(Context context) {
         super.onAttach(context);
-        final AssetManager assets = context.getAssets();
+        AssetManager assets = context.getAssets();
         if (assets != null) {
             mFaceLight = Typeface.createFromAsset(assets, "Montserrat-Light.otf");
             mFace = Typeface.createFromAsset(assets, "Montserrat-Regular.ttf");
@@ -63,20 +59,27 @@ public class ProgramsFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
-                             final Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final View result = inflater.inflate(R.layout.fragment_programs, container, false);
-        mRootRef = FirebaseDatabaseManager.getInstance().getDatabase().child("programs");
-        final View emptyView = result.findViewById(R.id.empty_view);
-        final RecyclerView recyclerView = (RecyclerView) result.findViewById(R.id.recyclerView);
+        View result = inflater.inflate(R.layout.fragment_programs, container, false);
 
-        final ConnectivityManager conMan = (ConnectivityManager)
+        if (!persistenceEnabled) {
+            FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+            persistenceEnabled = true;
+        }
+
+        mRootRef = FirebaseDatabase.getInstance().getReference().child("programs");
+        View emptyView = result.findViewById(R.id.empty_view);
+        RecyclerView recyclerView = (RecyclerView) result.findViewById(R.id.recyclerView);
+        mImageTop = (ImageView) result.findViewById(R.id.imageViewTop);
+
+        ConnectivityManager conMan = (ConnectivityManager)
                 getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-        final SharedPreferences sharedPreferences = getActivity()
+        SharedPreferences sharedPreferences = getActivity()
                 .getSharedPreferences("pref", Context.MODE_PRIVATE);
 
-        final NetworkInfo activeNetwork = conMan.getActiveNetworkInfo();
+        NetworkInfo activeNetwork = conMan.getActiveNetworkInfo();
         if (activeNetwork != null && activeNetwork.isConnected()) {
             sharedPreferences.edit().putBoolean("downloaded", true).apply();
             Log.i("FD", "User downloaded database");
@@ -84,6 +87,7 @@ public class ProgramsFragment extends Fragment {
         if (sharedPreferences.getBoolean("downloaded", false)) {
             emptyView.setVisibility(View.INVISIBLE);
             recyclerView.setVisibility(View.VISIBLE);
+            mImageTop.setVisibility(View.VISIBLE);
             Log.i("FD", "Database is already downloaded");
         } else {
             isEmpty = true;
@@ -95,26 +99,27 @@ public class ProgramsFragment extends Fragment {
 
         recyclerView.setHasFixedSize(true);
 
-        final LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(llm);
 
         recyclerView.setAdapter(mAdapter);
 
         mSuccessTop = (TextView) result.findViewById(R.id.percentTop);
-        mImageTop = (ImageView) result.findViewById(R.id.imageViewTop);
+        mImageTop.setMaxHeight(result.getHeight() / 3);
         mTitleTop = (TextView) result.findViewById(R.id.titleTop);
 
 
         mRootRef.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onChildAdded(final DataSnapshot dataSnapshot, final String s) {
-                final int position = Integer.parseInt(dataSnapshot.getKey());
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                int position = Integer.parseInt(dataSnapshot.getKey());
 
                 Log.i(TAG, "onChildAdded:()");
                 if (position == 0) {
                     if (isEmpty) {
                         emptyView.setVisibility(View.INVISIBLE);
                         recyclerView.setVisibility(View.VISIBLE);
+                        mImageTop.setVisibility(View.VISIBLE);
                     }
                     generateTopProgram();
                 } else {
@@ -125,9 +130,9 @@ public class ProgramsFragment extends Fragment {
             }
 
             @Override
-            public void onChildChanged(final DataSnapshot dataSnapshot, final String s) {
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 Log.i(TAG, "onChildChanged: ()");
-                final int position = Integer.parseInt(dataSnapshot.getKey()) - 1;
+                int position = Integer.parseInt(dataSnapshot.getKey()) - 1;
 
                 if (position >= 0) {
                     mProgramData.remove(position);
@@ -138,9 +143,9 @@ public class ProgramsFragment extends Fragment {
             }
 
             @Override
-            public void onChildRemoved(final DataSnapshot dataSnapshot) {
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
                 Log.i(TAG, "onChildRemoved()");
-                final int position = Integer.parseInt(dataSnapshot.getKey()) - 1;
+                int position = Integer.parseInt(dataSnapshot.getKey()) - 1;
                 if (position >= 0) {
                     mProgramData.remove(position);
                 }
@@ -148,13 +153,13 @@ public class ProgramsFragment extends Fragment {
             }
 
             @Override
-            public void onChildMoved(final DataSnapshot dataSnapshot, final String s) {
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
                 // mAdapter.notifyItemMoved();
                 Log.i(TAG, "onChildMoved: ()");
             }
 
             @Override
-            public void onCancelled(final DatabaseError databaseError) {
+            public void onCancelled(DatabaseError databaseError) {
                 Log.e("DatabaseError", databaseError.toString());
             }
         });
@@ -162,61 +167,20 @@ public class ProgramsFragment extends Fragment {
         return result;
     }
 
-    static Program onProgramApply(final DataSnapshot dataSnapshot, final Context context) {
-        final HabitsDatabase habitsDatabase = new HabitListManager(context).getDatabase();
-        final long habitId = habitsDatabase.addHabit(
-                dataSnapshot.child("habit").child("title").getValue(String.class),
-                dataSnapshot.child("habit").child("question").getValue(String.class),
-                dataSnapshot.child("habit").child("time").getValue(Integer.class),
-                Calendar.getInstance(),
-                0,
-                dataSnapshot.child("habit").child("cost").getValue(Integer.class),
-                dataSnapshot.child("habit").child("frequency").getValue(Integer.class)
-        );
-
-        final List<Achievement> achievements =
-                createAchievementList(dataSnapshot.child("achievements"));
-
-        return new Program(
-                Integer.valueOf(dataSnapshot.getKey()),
-                dataSnapshot.child("name").getValue(String.class),
-                String.format("%s SUCCESS", dataSnapshot.child("success").getValue(String.class)),
-                habitId,
-                achievements
-        );
-    }
-
-    private static List<Achievement> createAchievementList(final DataSnapshot dataSnapshot) {
-        final List<Achievement> achievements = new ArrayList<>((int) dataSnapshot.getChildrenCount());
-        for (final DataSnapshot achievementSnapshot : dataSnapshot.getChildren()) {
-            final List<String> templates =
-                    new ArrayList<>((int) achievementSnapshot.getChildrenCount());
-            for (final DataSnapshot templatesSnapshot : achievementSnapshot.child("templates").getChildren()) {
-                templates.add(templatesSnapshot.child("name").getValue(String.class));
-            }
-            final Achievement achievement = new Achievement(
-                    achievementSnapshot.child("rating").getValue(Integer.class),
-                    templates);
-            achievements.add(achievement);
-        }
-        return achievements;
-    }
-
     private void generateTopProgram() {
-        final DatabaseReference programRef = mRootRef.child("0");
+        DatabaseReference programRef = mRootRef.child("0");
 
         programRef.addValueEventListener(new ValueEventListener() {
 
             @Override
-            public void onDataChange(final DataSnapshot dataSnapshot) {
+            public void onDataChange(DataSnapshot dataSnapshot) {
                 mTitleTop.setText(dataSnapshot.child("name").getValue(String.class));
-                mTitleTop.setTextColor(Color.WHITE);
-                final String imageLink = String.format("http://habbitsapp.esy.es/img_progs/%s.jpg",
+                String imageLink = String.format("http://habbitsapp.esy.es/img_progs/%s.jpg",
                         dataSnapshot.child("image").getValue(String.class));
                 Log.v("IMG_URL", imageLink);
 
                 if (getActivity() != null) {
-                    Picasso.with(getActivity().getApplicationContext())
+                    Glide.with(getActivity().getApplicationContext())
                             .load(imageLink)
                             .into(mImageTop);
                 }
@@ -227,10 +191,14 @@ public class ProgramsFragment extends Fragment {
                     createProgramApplyFragment(dataSnapshot, getChildFragmentManager());
                 }
 
-                mImageTop.setOnClickListener(view ->
-                        onClick(dataSnapshot, getChildFragmentManager()));
-                mTitleTop.setOnClickListener(view ->
-                        onClick(dataSnapshot, getChildFragmentManager()));
+                mImageTop.setOnClickListener(view -> {
+                    onClick(dataSnapshot, getChildFragmentManager());
+                    isTop = true;
+                });
+                mTitleTop.setOnClickListener(view -> {
+                    onClick(dataSnapshot, getChildFragmentManager());
+                    isTop = true;
+                });
 
                 //Style percent view
                 mSuccessTop.setVisibility(View.VISIBLE);
@@ -239,39 +207,42 @@ public class ProgramsFragment extends Fragment {
             }
 
             @Override
-            public void onCancelled(final DatabaseError databaseError) {
+            public void onCancelled(DatabaseError databaseError) {
                 Log.e("FirebaseError", databaseError.toString());
             }
         });
     }
 
-    public void onClick(final DataSnapshot snapshot, final FragmentManager fm) {
+    public void onClick(DataSnapshot dataSnapshot, FragmentManager fragmentManager) {
         if (isShowing) {
-            generateTopProgram();
+            if (!isTop) {
+                generateTopProgram();
+            }
 
-            fm.beginTransaction()
-                    .remove(fm.findFragmentById(R.id.recyclerLayout))
+            fragmentManager.beginTransaction()
+                    .remove(fragmentManager.findFragmentById(R.id.recyclerLayout))
                     .commit();
             isShowing = false;
         } else {
-            createProgramApplyFragment(snapshot, fm);
+            createProgramApplyFragment(dataSnapshot, fragmentManager);
+            isTop = false;
         }
     }
 
-    private static void createProgramApplyFragment(final DataSnapshot snapshot,
-                                                   final FragmentManager fm) {
+    private static void createProgramApplyFragment(DataSnapshot dataSnapshot,
+                                                   FragmentManager fragmentManager) {
 
         // delete previous fragment if showing
         if (isShowing) {
-            fm.beginTransaction()
-                    .remove(fm.findFragmentById(R.id.recyclerLayout))
+            fragmentManager.beginTransaction()
+                    .remove(fragmentManager.findFragmentById(R.id.recyclerLayout))
                     .commit();
         }
 
-        final ProgramFragment programFragment = new ProgramFragment();
-        programFragment.setSnapshot(snapshot);
+        ProgramFragment programFragment = new ProgramFragment();
+        programFragment.setSnapshot(dataSnapshot);
 
-        fm.beginTransaction()
+        fragmentManager.beginTransaction()
                 .replace(R.id.recyclerLayout, programFragment)
                 .commit();
 

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:background="@color/white"
     android:layout_height="match_parent"
-    tools:context=".fragments.ProgramFragment">
+    tools:context="com.doapps.habits.fragments.ProgramFragment">
 
     <TextView
         android:id="@+id/description"
@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
         android:layout_marginStart="5dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="16dp"
         android:gravity="center"
         android:textSize="18sp"
         android:textIsSelectable="true"/>
@@ -26,6 +26,6 @@
         android:layout_marginBottom="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-        android:src="@drawable/ic_plus"/>
+        android:src="@drawable/ic_check_white_24dp"/>
 
 </FrameLayout>
