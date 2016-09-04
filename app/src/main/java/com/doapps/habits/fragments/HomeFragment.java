@@ -24,10 +24,10 @@ import com.doapps.habits.activity.MainActivity;
 import com.doapps.habits.adapter.TimeLineAdapter;
 import com.doapps.habits.helper.HabitListManager;
 import com.doapps.habits.helper.HomeDayManager;
-import com.doapps.habits.models.DayManager;
+import com.doapps.habits.models.IDayManager;
 import com.doapps.habits.models.Habit;
-import com.doapps.habits.models.HabitListProvider;
-import com.doapps.habits.models.StringSelector;
+import com.doapps.habits.models.IHabitListProvider;
+import com.doapps.habits.models.IStringSelector;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -47,7 +47,7 @@ public class HomeFragment extends Fragment {
     /**
      * @return true if user is connected to Internet
      */
-    public static boolean isConnected(Context context) {
+    private static boolean isConnected(Context context) {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
@@ -63,7 +63,7 @@ public class HomeFragment extends Fragment {
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.timeline);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        HabitListProvider habitListManager =
+        IHabitListProvider habitListManager =
                 HabitListManager.getInstance(getContext());
 
         List<Habit> habitList = new ArrayList<>(habitListManager.getList());
@@ -118,7 +118,7 @@ public class HomeFragment extends Fragment {
         // get day of week
         int dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
 
-        StringSelector swipeSelector = (StringSelector) view.findViewById(R.id.sliding_tabs);
+        IStringSelector swipeSelector = (IStringSelector) view.findViewById(R.id.sliding_tabs);
         swipeSelector.setItems(getDaysOfWeekFromToday(dayOfWeek - 1));
 
         initDaysTabs(
@@ -148,8 +148,8 @@ public class HomeFragment extends Fragment {
      */
     private static void initDaysTabs(
             int dayOfWeek,
-            StringSelector swipeStringSelector,
-            DayManager habitDayManager) {
+            IStringSelector swipeStringSelector,
+            IDayManager habitDayManager) {
 
         swipeStringSelector.setOnItemSelectedListener(item -> {
             int value = swipeStringSelector.getAdapter().getCurrentPosition();
@@ -167,7 +167,7 @@ public class HomeFragment extends Fragment {
                     Log.i("HomeFragment", "Selected day = " + day);
                 }
 
-                habitDayManager.updateListByDay(day);
+                habitDayManager.updateListByDayOfWeek(day);
             }
         });
     }

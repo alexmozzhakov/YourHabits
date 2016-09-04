@@ -10,7 +10,7 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 public class PicassoDrawableViewBackgroundTarget implements Target {
-    private ImageView mImageView;
+    private final ImageView mImageView;
 
     public PicassoDrawableViewBackgroundTarget(ImageView imageView) {
         mImageView = imageView;

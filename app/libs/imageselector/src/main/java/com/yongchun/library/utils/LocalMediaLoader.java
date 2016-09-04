@@ -21,9 +21,6 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 
-/**
- * Created by dee on 15/11/19.
- */
 public class LocalMediaLoader {
     // load type
     public static final int TYPE_IMAGE = 1;
@@ -56,12 +53,12 @@ public class LocalMediaLoader {
                 if (t.getImages() == null || t1.getImages() == null) {
                     return 0;
                 }
-                int lsize = t.getImageNum();
-                int rsize = t1.getImageNum();
-                if (lsize < rsize) {
+                int lSize = t.getImageNum();
+                int rSize = t1.getImageNum();
+                if (lSize < rSize) {
                     return 1;
                 } else {
-                    return lsize == rsize ? 0 : -1;
+                    return lSize == rSize ? 0 : -1;
                 }
             }
         });

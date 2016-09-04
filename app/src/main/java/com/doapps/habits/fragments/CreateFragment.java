@@ -19,7 +19,7 @@ import com.doapps.habits.R;
 import com.doapps.habits.activity.MainActivity;
 import com.doapps.habits.helper.HabitListManager;
 import com.doapps.habits.helper.HabitNotifier;
-import com.doapps.habits.models.HabitsDatabase;
+import com.doapps.habits.models.IHabitsDatabase;
 
 import java.util.Arrays;
 import java.util.Calendar;
@@ -115,15 +115,16 @@ public class CreateFragment extends Fragment implements AdapterView.OnItemSelect
             int time = editTime.getText().toString().isEmpty() ?
                     0 : Integer.valueOf(editTime.getText().toString());
             // Checks what data was entered and adds habit to habitsDatabase
-            HabitsDatabase habitsDatabase = HabitListManager.getInstance(getContext()).getDatabase();
-            habitsDatabase.addHabit(
+            IHabitsDatabase habitsDatabase = HabitListManager.getInstance(getContext()).getDatabase();
+            long id = habitsDatabase.addHabit(
                     editTitle.getText().toString(),
                     editQuestion.getText().toString(),
                     time,
                     Calendar.getInstance(),
                     0, frequency
             );
-            HabitNotifier habitNotifier = new HabitNotifier(getContext(), editQuestion.getText().toString());
+            HabitNotifier habitNotifier = new HabitNotifier(getContext(),
+                    editQuestion.getText().toString(), id);
             habitNotifier.initiate();
 
             ((MainActivity) getActivity()).getToolbar().setTitle("List");
@@ -148,5 +149,11 @@ public class CreateFragment extends Fragment implements AdapterView.OnItemSelect
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
         // ignored
+    }
+
+    @Override
+    public void onPause() {
+        ((MainActivity) getActivity()).closeImm();
+        super.onPause();
     }
 }

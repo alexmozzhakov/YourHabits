@@ -3,9 +3,11 @@ package com.doapps.habits.models;
 import java.util.Calendar;
 import java.util.List;
 
-public interface HabitsDatabase {
+public interface IHabitsDatabase {
 
     void updateHabit(Habit habit, int done);
+
+    Habit getHabit(long id);
 
     void delete(int position);
 
@@ -13,7 +15,7 @@ public interface HabitsDatabase {
 
     List<Habit> getHabitDetailsAsList();
 
-    void addHabit(String name, String question, int time, Calendar upd, int cost, int... frequency);
+    long addHabit(String name, String question, int time, Calendar upd, int cost, int... frequency);
 
     long addHabit(String name, String question, int time, Calendar upd, int cost, String frequency);
 

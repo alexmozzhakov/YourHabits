@@ -6,7 +6,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.0-beta1'
+        classpath 'com.android.tools.build:gradle:2.2.0-rc1'
         classpath 'me.tatarka:gradle-retrolambda:3.2.5'
         classpath 'me.tatarka.retrolambda.projectlombok:lombok.ast:0.2.3.a2'
         classpath 'com.google.gms:google-services:3.0.0'
@@ -19,8 +19,4 @@ allprojects {
     repositories {
         jcenter()
     }
-}
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '2.0'
 }

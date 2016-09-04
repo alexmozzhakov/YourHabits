@@ -10,7 +10,7 @@ import android.util.Log;
 
 import com.doapps.habits.BuildConfig;
 import com.doapps.habits.models.Habit;
-import com.doapps.habits.models.HabitsDatabase;
+import com.doapps.habits.models.IHabitsDatabase;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -18,7 +18,7 @@ import java.util.List;
 
 @SuppressLint("DefaultLocale")
 @SuppressWarnings("HardCodedStringLiteral")
-public class HabitDatabaseHandler extends SQLiteOpenHelper implements HabitsDatabase {
+public class HabitDatabaseHandler extends SQLiteOpenHelper implements IHabitsDatabase {
     private static final String TAG = HabitDatabaseHandler.class.getSimpleName();
     // All Static variables
     // Database Version
@@ -113,7 +113,7 @@ public class HabitDatabaseHandler extends SQLiteOpenHelper implements HabitsData
      * Storing habit details in database
      */
     @Override
-    public void addHabit(String name, String question, int time,
+    public long addHabit(String name, String question, int time,
                          Calendar upd, int cost, int... frequency) {
         SQLiteDatabase database = getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -135,6 +135,8 @@ public class HabitDatabaseHandler extends SQLiteOpenHelper implements HabitsData
         if (BuildConfig.DEBUG) {
             Log.d(TAG, String.format("New habit inserted into sqlite: %d", id));
         }
+
+        return id;
     }
 
 
@@ -242,6 +244,39 @@ public class HabitDatabaseHandler extends SQLiteOpenHelper implements HabitsData
 
         database.close();
         isSame = false;
+    }
+
+    @Override
+    public Habit getHabit(long id) {
+        Log.w("Database", "getHabitDetailsAsList()");
+
+        String selectQuery = String.format("SELECT * FROM %s WHERE %s = %d", TABLE_HABIT, KEY_ID, id);
+        SQLiteDatabase database = getReadableDatabase();
+        Cursor cursor = database.rawQuery(selectQuery, null);
+        cursor.moveToFirst();
+        Habit temp = new Habit(
+                cursor.getInt(cursor.getColumnIndex(KEY_ID)), // id
+                cursor.getString(cursor.getColumnIndex(KEY_NAME)), // title
+                cursor.getString(cursor.getColumnIndex(KEY_QUESTION)), // question
+                cursor.getInt(cursor.getColumnIndex(KEY_DONE)) == 1, // if activity is done
+                cursor.getInt(cursor.getColumnIndex(KEY_UPDATED_DATE)), // last markerUpdatedDate done
+                cursor.getInt(cursor.getColumnIndex(KEY_UPDATED_MONTH)), // last done month
+                cursor.getInt(cursor.getColumnIndex(KEY_UPDATED_YEAR)), // last done year
+                cursor.getInt(cursor.getColumnIndex(KEY_TIME)), // time, that a habit takes
+                cursor.getInt(cursor.getColumnIndex(KEY_FOLLOWING_FROM)), // Day last followed
+                cursor.getInt(cursor.getColumnIndex(KEY_COST)), // cost
+                stringToShortArray(
+                        cursor.getString(cursor.getColumnIndex(KEY_FREQUENCY_ARRAY)))// frequency
+        );
+
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, temp.toString());
+        }
+
+        cursor.close();
+        database.close();
+
+        return temp;
     }
 
     @Override

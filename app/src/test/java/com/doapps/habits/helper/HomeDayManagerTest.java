@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 @SuppressWarnings("HardCodedStringLiteral")
 public class HomeDayManagerTest {
@@ -35,7 +36,7 @@ public class HomeDayManagerTest {
     }
 
     @Test
-    public void filterForToday() throws Exception {
+    public void filterForToday() {
         final List<Habit> list = generateListOfHabits();
         HomeDayManager.filterListForToday(list);
         System.out.println("today : {");
@@ -44,14 +45,14 @@ public class HomeDayManagerTest {
                     habit.title.contains("once") || habit.title.contains("sunday")
                             || habit.title.contains("every day"), CoreMatchers.is(true));
         }
-        Assert.assertThat(String.format("List size = %d, here are them: %s", list.size(),
+        Assert.assertThat(String.format(Locale.ENGLISH, "List size = %d, here are them: %s", list.size(),
                 list),
                 list.size() == 6, CoreMatchers.is(true));
         System.out.println("}");
     }
 
     @Test
-    public void filterListForSun() throws Exception {
+    public void filterListForSun() {
         final List<Habit> list = generateListOfHabits();
         HomeDayManager.filterListByDay(list, 1);
         System.out.println("sun : {");
@@ -59,14 +60,14 @@ public class HomeDayManagerTest {
             Assert.assertThat(String.format("  %s%n", habit.title), habit.title.contains("sunday")
                     || habit.title.contains("every day"), CoreMatchers.is(true));
         }
-        Assert.assertThat(String.format("List size = %d, here are them: %s", list.size(),
+        Assert.assertThat(String.format(Locale.ENGLISH, "List size = %d, here are them: %s", list.size(),
                 list),
                 list.size() == 3, CoreMatchers.is(true));
         System.out.println("}");
     }
 
     @Test
-    public void filterListForMon() throws Exception {
+    public void filterListForMon() {
         final List<Habit> list = generateListOfHabits();
         HomeDayManager.filterListByDay(list, 2);
         System.out.println("mon : {");
@@ -75,14 +76,14 @@ public class HomeDayManagerTest {
                     habit.title.contains("monday")
                             || habit.title.contains("every day"), CoreMatchers.is(true));
         }
-        Assert.assertThat(String.format("List size = %d, here are them: %s", list.size(),
+        Assert.assertThat(String.format(Locale.ENGLISH, "List size = %d, here are them: %s", list.size(),
                 list),
                 list.size() == 3, CoreMatchers.is(true));
         System.out.println("}");
     }
 
     @Test
-    public void filterListForTue() throws Exception {
+    public void filterListForTue() {
         final List<Habit> list = generateListOfHabits();
         HomeDayManager.filterListByDay(list, 3);
         System.out.println("tue : {");
@@ -91,14 +92,14 @@ public class HomeDayManagerTest {
                     habit.title.contains("tuesday")
                             || habit.title.contains("every day"), CoreMatchers.is(true));
         }
-        Assert.assertThat(String.format("List size = %d, here are them: %s", list.size(),
+        Assert.assertThat(String.format(Locale.ENGLISH, "List size = %d, here are them: %s", list.size(),
                 list),
                 list.size() == 3, CoreMatchers.is(true));
         System.out.println("}");
     }
 
     @Test
-    public void filterListForWed() throws Exception {
+    public void filterListForWed() {
         final List<Habit> list = generateListOfHabits();
         HomeDayManager.filterListByDay(list, 4);
         System.out.println("wed : {");
@@ -107,14 +108,14 @@ public class HomeDayManagerTest {
                     habit.title.contains("wednesday")
                             || habit.title.contains("every day"), CoreMatchers.is(true));
         }
-        Assert.assertThat(String.format("List size = %d, here are them: %s", list.size(),
+        Assert.assertThat(String.format(Locale.ENGLISH, "List size = %d, here are them: %s", list.size(),
                 list),
                 list.size() == 3, CoreMatchers.is(true));
         System.out.println("}");
     }
 
     @Test
-    public void filterListForThu() throws Exception {
+    public void filterListForThu() {
         final List<Habit> list = generateListOfHabits();
         HomeDayManager.filterListByDay(list, 5);
         System.out.println("thu : {");
@@ -123,14 +124,14 @@ public class HomeDayManagerTest {
                     habit.title.contains("thursday")
                             || habit.title.contains("every day"), CoreMatchers.is(true));
         }
-        Assert.assertThat(String.format("List size = %d, here are them: %s", list.size(),
+        Assert.assertThat(String.format(Locale.ENGLISH, "List size = %d, here are them: %s", list.size(),
                 list),
                 list.size() == 4, CoreMatchers.is(true));
         System.out.println("}");
     }
 
     @Test
-    public void filterListForFri() throws Exception {
+    public void filterListForFri() {
         final List<Habit> list = generateListOfHabits();
         HomeDayManager.filterListByDay(list, 6);
         System.out.println("fri : {");
@@ -139,14 +140,14 @@ public class HomeDayManagerTest {
                     habit.title.contains("friday")
                             || habit.title.contains("every day"), CoreMatchers.is(true));
         }
-        Assert.assertThat(String.format("List size = %d, here are them: %s", list.size(),
+        Assert.assertThat(String.format(Locale.ENGLISH, "List size = %d, here are them: %s", list.size(),
                 list),
                 list.size() == 3, CoreMatchers.is(true));
         System.out.println("}");
     }
 
     @Test
-    public void filterListForSat() throws Exception {
+    public void filterListForSat() {
         final List<Habit> list = generateListOfHabits();
         HomeDayManager.filterListByDay(list, 7);
         System.out.println("sat : {");
@@ -155,7 +156,7 @@ public class HomeDayManagerTest {
                     habit.title.contains("saturday")
                             || habit.title.contains("every day"), CoreMatchers.is(true));
         }
-        Assert.assertThat(String.format("List size = %d, here are them: %s", list.size(),
+        Assert.assertThat(String.format(Locale.ENGLISH, "List size = %d, here are them: %s", list.size(),
                 list),
                 list.size() == 3, CoreMatchers.is(true));
         System.out.println("}");

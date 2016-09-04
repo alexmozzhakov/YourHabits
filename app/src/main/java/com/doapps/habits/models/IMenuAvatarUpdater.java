@@ -3,6 +3,6 @@ package com.doapps.habits.models;
 import android.net.Uri;
 
 @FunctionalInterface
-public interface MenuAvatarUpdater {
+public interface IMenuAvatarUpdater {
     void updateMenuAvatar(Uri uri);
 }

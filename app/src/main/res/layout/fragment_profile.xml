@@ -95,7 +95,6 @@
         app:layout_marginTopPercent="30%">
 
         <ImageView
-            android:id="@+id/ivContactItem3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"

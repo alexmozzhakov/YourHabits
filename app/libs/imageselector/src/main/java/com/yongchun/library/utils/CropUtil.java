@@ -52,7 +52,6 @@ public class CropUtil {
                     int columnIndex = cursor.getColumnIndex(uri.toString()
                             .startsWith("content://com.google.android.gallery3d") ?
                             MediaStore.MediaColumns.DISPLAY_NAME : MediaStore.MediaColumns.DATA);
-                    // Picasa images on API 13+
                     if (columnIndex != -1) {
                         String filePath = cursor.getString(columnIndex);
                         if (!TextUtils.isEmpty(filePath)) {

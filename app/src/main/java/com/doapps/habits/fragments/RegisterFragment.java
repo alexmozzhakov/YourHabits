@@ -118,7 +118,7 @@ public class RegisterFragment extends Fragment {
                         Log.i("updateProfile", "activity is null");
                     }
                 } else {
-                    NameChangeListener.listener.setChanged(true);
+                    NameChangeListener.listener.setChanged();
                     Log.i("NameChangeListener", "notifyObservers");
                 }
             });

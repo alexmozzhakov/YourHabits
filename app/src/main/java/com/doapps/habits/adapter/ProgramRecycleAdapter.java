@@ -13,13 +13,13 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.doapps.habits.R;
 import com.doapps.habits.fragments.ProgramsFragment;
-import com.doapps.habits.models.ProgramViewProvider;
+import com.doapps.habits.models.IProgramViewProvider;
 import com.doapps.habits.viewholder.ProgramViewHolder;
 
 import java.util.List;
 
 public class ProgramRecycleAdapter extends RecyclerView.Adapter {
-    private final List<ProgramViewProvider> mProgramList;
+    private final List<IProgramViewProvider> mProgramList;
     private final Context mContext;
     private final FragmentManager mFragmentManager;
     private final ProgramsFragment mProgramsFragment;
@@ -27,7 +27,7 @@ public class ProgramRecycleAdapter extends RecyclerView.Adapter {
     private TextView mTitleTop;
     private TextView mSuccessTop;
 
-    public ProgramRecycleAdapter(List<ProgramViewProvider> data, Context context,
+    public ProgramRecycleAdapter(List<IProgramViewProvider> data, Context context,
                                  FragmentManager fragmentManager,
                                  ProgramsFragment programsFragment) {
         mProgramList = data;
@@ -65,7 +65,7 @@ public class ProgramRecycleAdapter extends RecyclerView.Adapter {
                                  int position) {
 
         ProgramViewHolder programViewHolder = (ProgramViewHolder) holder;
-        ProgramViewProvider program = mProgramList.get(position);
+        IProgramViewProvider program = mProgramList.get(position);
 
         programViewHolder.getTitleTextView().setText(program.getTitle());
         programViewHolder.getPercentTextView().setText(program.getPercent());
@@ -76,7 +76,7 @@ public class ProgramRecycleAdapter extends RecyclerView.Adapter {
             mTitleTop.setText(program.getTitle());
             mSuccessTop.setVisibility(View.VISIBLE);
             mSuccessTop.setText(program.getSnapshot().child("success").getValue(String.class));
-            // TODO: 11/08/2016 change onClick to smth more abstract
+            // TODO: 11/08/2016 change onClick to something more abstract
             mProgramsFragment.onClick(program.getSnapshot(), mFragmentManager);
         });
     }

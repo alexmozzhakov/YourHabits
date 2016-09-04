@@ -62,7 +62,7 @@ public class ImageFolderAdapter extends RecyclerView.Adapter<ViewHolder> {
                 if (onItemClickListener != null) {
                     checkedIndex = holder.getAdapterPosition();
                     notifyDataSetChanged();
-                    onItemClickListener.onItemClick(folder.getName(), folder.getImages());
+                    onItemClickListener.onItemsClick(folder.getName(), folder.getImages());
                 }
             }
         });

@@ -2,26 +2,26 @@ package com.doapps.habits.helper;
 
 import android.util.Log;
 
-import com.doapps.habits.models.DayManager;
+import com.doapps.habits.models.IDayManager;
 import com.doapps.habits.models.Habit;
-import com.doapps.habits.models.UpdatableList;
+import com.doapps.habits.models.IUpdatableList;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 
-public class HomeDayManager implements DayManager {
-    private final UpdatableList<Habit> mTimeLineAdapter;
+public class HomeDayManager implements IDayManager {
+    private final IUpdatableList<Habit> mTimeLineAdapter;
     private final List<Habit> mHabitList;
 
-    public HomeDayManager(UpdatableList<Habit> timeLineAdapter, List<Habit> habitList) {
+    public HomeDayManager(IUpdatableList<Habit> timeLineAdapter, List<Habit> habitList) {
         mTimeLineAdapter = timeLineAdapter;
         mHabitList = habitList;
     }
 
     @Override
-    public void updateListByDay(int dayOfWeek) {
+    public void updateListByDayOfWeek(int dayOfWeek) {
         List<Habit> dayHabits = new ArrayList<>(mHabitList);
         filterListByDay(dayHabits, dayOfWeek);
         mTimeLineAdapter.updateList(dayHabits);

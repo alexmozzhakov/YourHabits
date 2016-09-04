@@ -35,6 +35,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Arrays;
 
+@SuppressWarnings("ConstantConditions")
 public class LoginFragment extends Fragment {
 
     private static final String TAG = LoginFragment.class.getSimpleName();
@@ -116,6 +117,7 @@ public class LoginFragment extends Fragment {
                         Log.d(TAG, "facebook:onError", error);
                     }
 
+                    @SuppressWarnings("ConstantConditions")
                     private void handleFacebookAccessToken(AccessToken token) {
                         AuthCredential credential =
                                 FacebookAuthProvider.getCredential(token.getToken());
@@ -203,7 +205,7 @@ public class LoginFragment extends Fragment {
         });
     }
 
-    private void anonymousLogin(View view) {
+    private void anonymousLogin(@SuppressWarnings("UnusedParameters") View view) {
         FirebaseAuth.getInstance().signInAnonymously().addOnCompleteListener(task -> {
             if (BuildConfig.DEBUG) {
                 Log.d(TAG, "signInAnonymously:onComplete:" + task.isSuccessful());

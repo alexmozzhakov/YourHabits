@@ -2,12 +2,12 @@ package com.doapps.habits.models;
 
 import com.doapps.habits.slider.swipeselector.SwipeAdapter;
 
-public interface StringSelector {
+public interface IStringSelector {
     /**
      * Register a callback to be invoked when an item in this selector has been clicked.
      * @param listener A listener to string selection
      */
-    void setOnItemSelectedListener(OnItemSelectedListener<String> listener);
+    void setOnItemSelectedListener(IOnItemSelectedListener<String> listener);
 
     /**
      * Returns the adapter currently associated with this selector.

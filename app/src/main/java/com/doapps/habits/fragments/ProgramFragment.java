@@ -16,7 +16,7 @@ import com.doapps.habits.BuildConfig;
 import com.doapps.habits.R;
 import com.doapps.habits.helper.HabitListManager;
 import com.doapps.habits.models.Achievement;
-import com.doapps.habits.models.HabitsDatabase;
+import com.doapps.habits.models.IHabitsDatabase;
 import com.doapps.habits.models.Program;
 import com.google.firebase.database.DataSnapshot;
 
@@ -67,7 +67,7 @@ public class ProgramFragment extends Fragment {
     }
 
     private static Program onProgramApply(DataSnapshot dataSnapshot, Context context) {
-        HabitsDatabase habitsDatabase = HabitListManager.getInstance(context).getDatabase();
+        IHabitsDatabase habitsDatabase = HabitListManager.getInstance(context).getDatabase();
         long habitId = habitsDatabase.addHabit(
                 dataSnapshot.child("habit").child("title").getValue(String.class),
                 dataSnapshot.child("habit").child("question").getValue(String.class),

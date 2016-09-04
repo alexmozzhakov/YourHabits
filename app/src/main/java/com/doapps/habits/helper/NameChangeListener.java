@@ -7,8 +7,8 @@ public class NameChangeListener extends Observable {
     private volatile boolean mChanged;
     public static final NameChangeListener listener = new NameChangeListener();
 
-    public void setChanged(boolean changed) {
-        mChanged = changed;
+    public void setChanged() {
+        mChanged = true;
         super.notifyObservers();
     }
 

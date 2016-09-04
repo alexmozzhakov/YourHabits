@@ -5,18 +5,18 @@ import android.util.Log;
 
 import com.doapps.habits.database.HabitDatabaseHandler;
 import com.doapps.habits.models.Habit;
-import com.doapps.habits.models.HabitDatabaseMovableListProvider;
-import com.doapps.habits.models.HabitsDatabase;
+import com.doapps.habits.models.IHabitDatabaseMovableListProvider;
+import com.doapps.habits.models.IHabitsDatabase;
 
 import java.util.Collections;
 import java.util.List;
 
-public class HabitListManager implements HabitDatabaseMovableListProvider {
+public class HabitListManager implements IHabitDatabaseMovableListProvider {
     private List<Habit> mHabitsList;
-    private final HabitsDatabase mHabitsDatabase;
-    private static volatile HabitDatabaseMovableListProvider instance;
+    private final IHabitsDatabase mHabitsDatabase;
+    private static volatile IHabitDatabaseMovableListProvider instance;
 
-    public static HabitDatabaseMovableListProvider getInstance(Context context) {
+    public static IHabitDatabaseMovableListProvider getInstance(Context context) {
         if (instance == null) {
             synchronized (HabitListManager.class) {
                 if (instance == null) {
@@ -64,7 +64,7 @@ public class HabitListManager implements HabitDatabaseMovableListProvider {
     }
 
     @Override
-    public HabitsDatabase getDatabase() {
+    public IHabitsDatabase getDatabase() {
         return mHabitsDatabase;
     }
 }

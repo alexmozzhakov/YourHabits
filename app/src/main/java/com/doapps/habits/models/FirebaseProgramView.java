@@ -2,7 +2,7 @@ package com.doapps.habits.models;
 
 import com.google.firebase.database.DataSnapshot;
 
-public class FirebaseProgramView implements ProgramViewProvider {
+public class FirebaseProgramView implements IProgramViewProvider {
     private final String title;
     private final String percent;
     private final String description;

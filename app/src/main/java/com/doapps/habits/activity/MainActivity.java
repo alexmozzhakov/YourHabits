@@ -28,10 +28,12 @@ import com.doapps.habits.fragments.ListFragment;
 import com.doapps.habits.fragments.ProfileFragment;
 import com.doapps.habits.fragments.ProgramsFragment;
 import com.doapps.habits.helper.AvatarManager;
+import com.doapps.habits.helper.HabitListManager;
 import com.doapps.habits.helper.NameChangeListener;
 import com.doapps.habits.helper.PicassoRoundedTransformation;
 import com.doapps.habits.listeners.MenuAvatarListener;
-import com.doapps.habits.models.MenuAvatarUpdater;
+import com.doapps.habits.models.Habit;
+import com.doapps.habits.models.IMenuAvatarUpdater;
 import com.doapps.habits.slider.swipeselector.PixelUtils;
 import com.facebook.CallbackManager;
 import com.google.firebase.auth.FirebaseAuth;
@@ -39,10 +41,10 @@ import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
 
 public class MainActivity extends FragmentActivity implements NavigationView.OnNavigationItemSelectedListener,
-        MenuAvatarUpdater {
+        IMenuAvatarUpdater {
     private static final long INFLATE_DELAY = 200L;
     private int mLastFragment = -1;
-    protected NavigationView mNavigationView;
+    private NavigationView mNavigationView;
     private FirebaseUser user;
     private ActionBarDrawerToggle mDrawerToggle;
     private Toolbar mToolbar;
@@ -56,15 +58,41 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
         user = FirebaseAuth.getInstance().getCurrentUser();
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        mToolbar.setTitle("Home");
 
-        if (savedInstanceState == null) {
+        if (getIntent().getAction() != null) {
+            long id = getIntent().getLongExtra("id", 0);
+            if (getIntent().getAction().equals("no")) {
+                Log.i("Action", "No");
+                Habit habit = HabitListManager.getInstance(this).getDatabase().getHabit(id);
+                HabitListManager.getInstance(this).getDatabase().updateHabit(habit, 0);
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .add(R.id.content_frame, new ListFragment())
+                        .commit();
+                mLastFragment = R.id.nav_lists;
+                mToolbar.setTitle("List");
+            } else if (getIntent().getAction().equals("yes")) {
+                Log.i("Action", "Yes");
+                Habit habit = HabitListManager.getInstance(this).getDatabase().getHabit(id);
+                HabitListManager.getInstance(this).getDatabase().updateHabit(habit, 1);
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .add(R.id.content_frame, new ListFragment())
+                        .commit();
+                mLastFragment = R.id.nav_lists;
+                mToolbar.setTitle("List");
+            }
+        }
+
+        if (savedInstanceState == null && mLastFragment != R.id.nav_lists) {
             getSupportFragmentManager()
                     .beginTransaction()
                     .add(R.id.content_frame, new HomeFragment())
                     .commit();
             mLastFragment = R.id.nav_home;
+            mToolbar.setTitle("Home");
         }
+
         mNavigationView = (NavigationView) findViewById(R.id.navigationView);
 
         if (user == null) {
@@ -87,7 +115,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
             @Override
             public void onDrawerOpened(View drawerView) {
-                if (mLastFragment == R.id.nav_profile || mLastFragment == -1) {
+                if (mLastFragment == R.id.nav_profile) {
                     closeImm();
                 }
                 super.onDrawerOpened(drawerView);
@@ -99,6 +127,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
         if (getActionBar() != null) {
             getActionBar().setHomeButtonEnabled(true);
         }
+
     }
 
     @Override
@@ -147,7 +176,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
         mDrawerToggle.syncState();
     }
 
-    public void toCreateFragment(View view) {
+    public void toCreateFragment(@SuppressWarnings("UnusedParameters") View view) {
         mNavigationView.getMenu().getItem(0).setChecked(false);
         mLastFragment = 5;
         mToolbar.setTitle("Create Habit");
@@ -159,7 +188,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
 
     }
 
-    private void toProfile(View view) {
+    private void toProfile(@SuppressWarnings("UnusedParameters") View view) {
         mDrawerLayout.closeDrawer(GravityCompat.START);
 
         if (mLastFragment == R.id.nav_profile) {
