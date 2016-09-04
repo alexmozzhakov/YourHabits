@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.doapps.habits.R;
-import com.doapps.habits.models.OnItemSelectedListener;
+import com.doapps.habits.models.IOnItemSelectedListener;
 
 /*
  * SwipeStringSelector library for Android
@@ -49,7 +49,7 @@ public class SwipeAdapter extends PagerAdapter implements View.OnClickListener, 
     private final int mContentLeftPadding;
     private final int mContentRightPadding;
 
-    private OnItemSelectedListener<String> mOnItemSelectedListener;
+    private IOnItemSelectedListener<String> mOnItemSelectedListener;
     private String[] mItems;
 
     private int mCurrentPosition;
@@ -149,7 +149,7 @@ public class SwipeAdapter extends PagerAdapter implements View.OnClickListener, 
     /**
      * methods used by SwipeStringSelector
      */
-    void setOnItemSelectedListener(OnItemSelectedListener<String> listener) {
+    void setOnItemSelectedListener(IOnItemSelectedListener<String> listener) {
         mOnItemSelectedListener = listener;
     }
 

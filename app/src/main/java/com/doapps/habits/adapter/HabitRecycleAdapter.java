@@ -8,20 +8,20 @@ import android.view.ViewGroup;
 
 import com.doapps.habits.R;
 import com.doapps.habits.models.Habit;
-import com.doapps.habits.models.HabitDatabaseMovableListProvider;
-import com.doapps.habits.models.HabitsDatabase;
-import com.doapps.habits.models.MovableList;
+import com.doapps.habits.models.IHabitDatabaseMovableListProvider;
+import com.doapps.habits.models.IHabitsDatabase;
+import com.doapps.habits.models.IMovableList;
 import com.doapps.habits.viewholder.HabitViewHolder;
 
 import java.util.Calendar;
 import java.util.List;
 
-public class HabitRecycleAdapter extends RecyclerView.Adapter implements MovableList {
+public class HabitRecycleAdapter extends RecyclerView.Adapter implements IMovableList {
     private final List<Habit> mHabitList;
-    private final HabitsDatabase mHabitsDatabase;
-    private final HabitDatabaseMovableListProvider mMovableList;
+    private final IHabitsDatabase mHabitsDatabase;
+    private final IHabitDatabaseMovableListProvider mMovableList;
 
-    public HabitRecycleAdapter(HabitDatabaseMovableListProvider movableList) {
+    public HabitRecycleAdapter(IHabitDatabaseMovableListProvider movableList) {
         mMovableList = movableList;
         mHabitList = movableList.getList();
         mHabitsDatabase = movableList.getDatabase();

@@ -8,9 +8,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-/**
- * Created by dee on 15/11/20.
- */
 public class FileUtils {
     private static final String POSTFIX = ".JPEG";
     private static final String APP_NAME = "ImageSelector";
@@ -30,13 +27,9 @@ public class FileUtils {
         File rootDir = state.equals(Environment.MEDIA_MOUNTED) ? Environment.getExternalStorageDirectory() : context.getCacheDir();
 
         File folderDir = new File(rootDir.getAbsolutePath() + parentPath);
-        if (!folderDir.exists() && folderDir.mkdirs()) {
-
-        }
 
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.CHINA).format(new Date());
         String fileName = APP_NAME + '_' + timeStamp;
-        File tmpFile = new File(folderDir, fileName + POSTFIX);
-        return tmpFile;
+        return new File(folderDir, fileName + POSTFIX);
     }
 }

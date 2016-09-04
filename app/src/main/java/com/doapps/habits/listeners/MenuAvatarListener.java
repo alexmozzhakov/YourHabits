@@ -1,7 +1,7 @@
 package com.doapps.habits.listeners;
 
 import com.doapps.habits.helper.AvatarManager;
-import com.doapps.habits.models.MenuAvatarUpdater;
+import com.doapps.habits.models.IMenuAvatarUpdater;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -9,9 +9,9 @@ import java.util.Observer;
 
 public class MenuAvatarListener implements Observer {
 
-    private final MenuAvatarUpdater mMainActivity;
+    private final IMenuAvatarUpdater mMainActivity;
 
-    public MenuAvatarListener(MenuAvatarUpdater mainActivity) {
+    public MenuAvatarListener(IMenuAvatarUpdater mainActivity) {
         mMainActivity = mainActivity;
     }
 

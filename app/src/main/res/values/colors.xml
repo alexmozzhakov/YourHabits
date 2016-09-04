@@ -12,6 +12,4 @@
     <color name="grey_300">#E0E0E0</color>
     <color name="grey_500">#9E9E9E</color>
     <color name="grey_800">#424242</color>
-    <color name="swipeselector_color_indicator_active">#398DE3</color>
-    <color name="swipeselector_color_indicator_inactive">#DDDDDD</color>
 </resources>

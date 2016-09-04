@@ -89,6 +89,7 @@ public class EditPhotoActivity extends Activity {
                             "Server error " + volleyError.networkResponse.statusCode,
                             Toast.LENGTH_LONG).show();
                 }) {
+            @SuppressWarnings("ConstantConditions")
             @Override
             protected Map<String, String> getParams() {
                 //Creating parameters
@@ -126,7 +127,7 @@ public class EditPhotoActivity extends Activity {
         finish();
     }
 
-    public static String getStringImage(Bitmap bmp) {
+    private static String getStringImage(Bitmap bmp) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.JPEG, 100, stream);
         byte[] imageBytes = stream.toByteArray();

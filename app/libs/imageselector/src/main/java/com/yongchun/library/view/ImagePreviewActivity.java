@@ -27,13 +27,13 @@ import java.util.List;
 
 public class ImagePreviewActivity extends AppCompatActivity {
     public static final int REQUEST_PREVIEW = 68;
-    public static final String EXTRA_PREVIEW_LIST = "previewList";
-    public static final String EXTRA_PREVIEW_SELECT_LIST = "previewSelectList";
-    public static final String EXTRA_MAX_SELECT_NUM = "maxSelectNum";
-    public static final String EXTRA_POSITION = "position";
+    private static final String EXTRA_PREVIEW_LIST = "previewList";
+    private static final String EXTRA_PREVIEW_SELECT_LIST = "previewSelectList";
+    private static final String EXTRA_MAX_SELECT_NUM = "maxSelectNum";
+    private static final String EXTRA_POSITION = "position";
 
     public static final String OUTPUT_LIST = "outputList";
-    public static final String OUTPUT_ISDONE = "isDone";
+    public static final String OUTPUT_IS_DONE = "isDone";
 
     private LinearLayout barLayout;
     private RelativeLayout selectBarLayout;
@@ -43,7 +43,6 @@ public class ImagePreviewActivity extends AppCompatActivity {
     private PreviewViewPager viewPager;
 
 
-    private int position;
     private int maxSelectNum;
     private List<LocalMedia> images = new ArrayList<>();
     private List<LocalMedia> selectImages = new ArrayList<>();
@@ -70,11 +69,11 @@ public class ImagePreviewActivity extends AppCompatActivity {
         registerListener();
     }
 
-    public void initView() {
+    private void initView() {
         images = (List<LocalMedia>) getIntent().getSerializableExtra(EXTRA_PREVIEW_LIST);
         selectImages = (List<LocalMedia>) getIntent().getSerializableExtra(EXTRA_PREVIEW_SELECT_LIST);
         maxSelectNum = getIntent().getIntExtra(EXTRA_MAX_SELECT_NUM, 9);
-        position = getIntent().getIntExtra(EXTRA_POSITION, 1);
+        int position = getIntent().getIntExtra(EXTRA_POSITION, 1);
 
         barLayout = (LinearLayout) findViewById(R.id.bar_layout);
         selectBarLayout = (RelativeLayout) findViewById(R.id.select_bar_layout);
@@ -97,7 +96,7 @@ public class ImagePreviewActivity extends AppCompatActivity {
         viewPager.setCurrentItem(position);
     }
 
-    public void registerListener() {
+    private void registerListener() {
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -152,7 +151,7 @@ public class ImagePreviewActivity extends AppCompatActivity {
     }
 
     @SuppressLint("StringFormatMatches")
-    public void onSelectNumChange() {
+    private void onSelectNumChange() {
         boolean enable = selectImages.size() != 0;
         doneText.setEnabled(enable);
         if (enable) {
@@ -162,11 +161,11 @@ public class ImagePreviewActivity extends AppCompatActivity {
         }
     }
 
-    public void onImageSwitch(int position) {
+    private void onImageSwitch(int position) {
         checkboxSelect.setChecked(isSelected(images.get(position)));
     }
 
-    public boolean isSelected(LocalMedia image) {
+    private boolean isSelected(LocalMedia image) {
         for (LocalMedia media : selectImages) {
             if (media.getPath().equals(image.getPath())) {
                 return true;
@@ -199,10 +198,10 @@ public class ImagePreviewActivity extends AppCompatActivity {
         isShowBar = !isShowBar;
     }
 
-    public void onDoneClick(boolean isDone) {
+    private void onDoneClick(boolean isDone) {
         Intent intent = new Intent();
         intent.putExtra(OUTPUT_LIST, (ArrayList) selectImages);
-        intent.putExtra(OUTPUT_ISDONE, isDone);
+        intent.putExtra(OUTPUT_IS_DONE, isDone);
         setResult(RESULT_OK, intent);
         finish();
     }

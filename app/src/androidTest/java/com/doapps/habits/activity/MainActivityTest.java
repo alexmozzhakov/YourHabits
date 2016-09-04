@@ -30,7 +30,7 @@ public class MainActivityTest {
             new ActivityTestRule<>(MainActivity.class);
 
     @Test
-    public void createAndDeleteHabit() throws Exception {
+    public void createAndDeleteHabit() {
         onView(withId(R.id.fab)).perform(click());
         onView(withId(R.id.edit_title)).perform(typeText("Running"));
         onView(withId(R.id.edit_time)).perform(typeText("50")).perform(pressImeActionButton());

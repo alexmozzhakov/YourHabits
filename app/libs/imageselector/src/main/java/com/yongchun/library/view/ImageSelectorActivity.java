@@ -189,7 +189,7 @@ public class ImageSelectorActivity extends AppCompatActivity {
         });
         folderWindow.setOnItemClickListener(new OnItemClickListener<LocalMedia>() {
             @Override
-            public void onItemClick(String name, List<LocalMedia> items) {
+            public void onItemsClick(String name, List<LocalMedia> items) {
                 folderWindow.dismiss();
                 imageAdapter.bindImages(items);
                 folderName.setText(name);
@@ -218,7 +218,7 @@ public class ImageSelectorActivity extends AppCompatActivity {
             }
             //on preview select change
             else if (requestCode == ImagePreviewActivity.REQUEST_PREVIEW) {
-                boolean isDone = data.getBooleanExtra(ImagePreviewActivity.OUTPUT_ISDONE, false);
+                boolean isDone = data.getBooleanExtra(ImagePreviewActivity.OUTPUT_IS_DONE, false);
                 List<LocalMedia> images =
                         (List<LocalMedia>) data.getSerializableExtra(ImagePreviewActivity.OUTPUT_LIST);
                 if (isDone) {
@@ -264,7 +264,7 @@ public class ImageSelectorActivity extends AppCompatActivity {
     /**
      * on select done
      *
-     * @param medias
+     * @param medias Collection of medias passed
      */
     private void onSelectDone(Collection<LocalMedia> medias) {
         ArrayList<String> images = new ArrayList<>(medias.size());

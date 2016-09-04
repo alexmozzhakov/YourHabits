@@ -46,7 +46,7 @@ public class ImageCropActivity extends AppCompatActivity {
         activity.startActivityForResult(intent, REQUEST_CROP);
     }
 
-    public static int getExifRotation(File imageFile) {
+    private static int getExifRotation(File imageFile) {
         if (imageFile == null) {
             return 0;
         }

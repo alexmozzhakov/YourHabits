@@ -1,5 +1,6 @@
 package com.yongchun.library.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.support.v7.widget.RecyclerView;
@@ -19,8 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ImageListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    public static final int TYPE_CAMERA = 1;
-    public static final int TYPE_PICTURE = 2;
+    private static final int TYPE_CAMERA = 1;
+    private static final int TYPE_PICTURE = 2;
 
     private final Context context;
     private final int maxSelectNum;
@@ -128,6 +129,7 @@ public class ImageListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         return showCamera ? images.size() + 1 : images.size();
     }
 
+    @SuppressLint("StringFormatMatches")
     private void changeCheckboxState(ImageListAdapter.ViewHolder contentHolder, LocalMedia image) {
         boolean isChecked = contentHolder.check.isSelected();
         if (selectImages.size() >= maxSelectNum && !isChecked) {
@@ -158,7 +160,7 @@ public class ImageListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         return images;
     }
 
-    public boolean isSelected(LocalMedia image) {
+    private boolean isSelected(LocalMedia image) {
         for (LocalMedia media : selectImages) {
             if (media.getPath().equals(image.getPath())) {
                 return true;
@@ -167,7 +169,7 @@ public class ImageListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         return false;
     }
 
-    public void selectImage(ImageListAdapter.ViewHolder holder, boolean isChecked) {
+    private void selectImage(ImageListAdapter.ViewHolder holder, boolean isChecked) {
         holder.check.setSelected(isChecked);
         if (isChecked) {
             holder.picture.setColorFilter(context.getResources().getColor(R.color.image_overlay2), PorterDuff.Mode.SRC_ATOP);

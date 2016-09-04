@@ -3,13 +3,13 @@ package com.doapps.habits.helper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 
-import com.doapps.habits.models.MovableList;
+import com.doapps.habits.models.IMovableList;
 
 public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
-    private final MovableList mAdapter;
+    private final IMovableList mAdapter;
 
-    public SimpleItemTouchHelperCallback(MovableList adapter) {
+    public SimpleItemTouchHelperCallback(IMovableList adapter) {
         mAdapter = adapter;
     }
 

@@ -12,8 +12,8 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.doapps.habits.R;
-import com.doapps.habits.models.OnItemSelectedListener;
-import com.doapps.habits.models.StringSelector;
+import com.doapps.habits.models.IOnItemSelectedListener;
+import com.doapps.habits.models.IStringSelector;
 
 
 /*
@@ -32,7 +32,7 @@ import com.doapps.habits.models.StringSelector;
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-public class SwipeStringSelector extends FrameLayout implements StringSelector {
+public class SwipeStringSelector extends FrameLayout implements IStringSelector {
     private static final String STATE_SELECTOR = "STATE_SELECTOR";
 
     private SwipeAdapter mAdapter;
@@ -101,7 +101,7 @@ public class SwipeStringSelector extends FrameLayout implements StringSelector {
      * @param listener the listener that gets fired on item selection
      */
     @Override
-    public void setOnItemSelectedListener(OnItemSelectedListener<String> listener) {
+    public void setOnItemSelectedListener(IOnItemSelectedListener<String> listener) {
         mAdapter.setOnItemSelectedListener(listener);
     }
 

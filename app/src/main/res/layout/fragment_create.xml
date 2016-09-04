@@ -7,7 +7,7 @@
               android:layout_marginRight="16dp"
               android:layout_marginTop="?android:attr/actionBarSize"
               android:orientation="vertical"
-              tools:context=".com.doapps.habits.fragments.CreateFragment">
+              tools:context="com.doapps.habits.fragments.CreateFragment">
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"

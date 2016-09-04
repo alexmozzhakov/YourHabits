@@ -46,8 +46,7 @@ class FolderWindow extends PopupWindow {
         setPopupWindowTouchModal(this, false);
     }
 
-    private static void setPopupWindowTouchModal(PopupWindow popupWindow,
-                                                 boolean touchModal) {
+    private static void setPopupWindowTouchModal(PopupWindow popupWindow, boolean touchModal) {
         if (popupWindow == null) {
             return;
         }
@@ -55,17 +54,7 @@ class FolderWindow extends PopupWindow {
             Method method = PopupWindow.class.getDeclaredMethod("setTouchModal", boolean.class);
             method.setAccessible(true);
             method.invoke(popupWindow, touchModal);
-        } catch (IllegalAccessException e) {
-            Log.e("FolderWindow", e.getMessage());
-        } catch (IllegalArgumentException e) {
-            Log.e("FolderWindow", e.getMessage());
-        } catch (NoSuchMethodException e) {
-            Log.e("FolderWindow", e.getMessage());
-        } catch (SecurityException e) {
-            Log.e("FolderWindow", e.getMessage());
-        } catch (InvocationTargetException e) {
-            Log.e("FolderWindow", e.getMessage());
-        } catch (RuntimeException e) {
+        } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException | RuntimeException e) {
             Log.e("FolderWindow", e.getMessage());
         }
     }

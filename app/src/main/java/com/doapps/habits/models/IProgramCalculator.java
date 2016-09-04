@@ -1,6 +1,6 @@
 package com.doapps.habits.models;
 
-interface ProgramCalculator {
+interface IProgramCalculator {
 
     int moneySaved(Program program);
 

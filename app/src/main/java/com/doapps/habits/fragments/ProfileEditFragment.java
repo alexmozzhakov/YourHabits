@@ -204,7 +204,7 @@ public class ProfileEditFragment extends Fragment {
 
     }
 
-    public static void setUpPhotoEdition(ImageView avatar, Activity activity, Fragment fragment) {
+    private static void setUpPhotoEdition(ImageView avatar, Activity activity, Fragment fragment) {
         avatar.setImageResource(R.drawable.ic_photo_plus);
         if (avatar.getBackground() != null) {
             avatar.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
@@ -218,7 +218,7 @@ public class ProfileEditFragment extends Fragment {
     }
 
 
-    public static void removePhotoEdition(ImageView avatar) {
+    private static void removePhotoEdition(ImageView avatar) {
         avatar.setImageResource(R.drawable.fix);
         if (avatar.getBackground() != null) {
             avatar.getBackground().clearColorFilter();

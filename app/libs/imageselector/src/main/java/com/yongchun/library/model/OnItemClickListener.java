@@ -6,7 +6,8 @@ public interface OnItemClickListener<T> {
     /**
      * Callback method to be invoked when an item has been selected.
      *
-     * @param item An item that is selected
+     * @param items An items that are selected
+     * @param name Name of folder of an items
      */
-    void onItemClick(String name, List<T> items);
+    void onItemsClick(String name, List<T> items);
 }

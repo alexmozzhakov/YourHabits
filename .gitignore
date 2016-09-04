@@ -17,3 +17,5 @@ import-summary.txt
 captures/*
 
 *.alloc
+
+.DS_Store

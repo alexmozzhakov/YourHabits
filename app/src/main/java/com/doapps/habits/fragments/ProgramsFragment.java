@@ -22,7 +22,7 @@ import com.bumptech.glide.Glide;
 import com.doapps.habits.R;
 import com.doapps.habits.adapter.ProgramRecycleAdapter;
 import com.doapps.habits.models.FirebaseProgramView;
-import com.doapps.habits.models.ProgramViewProvider;
+import com.doapps.habits.models.IProgramViewProvider;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -39,7 +39,7 @@ public class ProgramsFragment extends Fragment {
     private static boolean persistenceEnabled;
     private static boolean isTop;
     private ProgramRecycleAdapter mAdapter;
-    private List<ProgramViewProvider> mProgramData;
+    private List<IProgramViewProvider> mProgramData;
     private TextView mTitleTop;
     private TextView mSuccessTop;
     private Typeface mFaceLight;

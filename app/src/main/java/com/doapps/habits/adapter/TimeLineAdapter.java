@@ -7,13 +7,13 @@ import android.view.ViewGroup;
 import com.doapps.habits.R;
 import com.doapps.habits.models.Habit;
 import com.doapps.habits.models.LineType;
-import com.doapps.habits.models.UpdatableList;
+import com.doapps.habits.models.IUpdatableList;
 import com.doapps.habits.viewholder.TimeLineViewHolder;
 
 import java.util.List;
 
 public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder>
-        implements UpdatableList<Habit> {
+        implements IUpdatableList<Habit> {
     private List<Habit> mFeedList;
     private final int mListSize;
 

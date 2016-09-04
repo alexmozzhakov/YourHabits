@@ -1,7 +1,7 @@
 package com.yongchun.library.model;
 
 public class LocalMedia {
-    private String path;
+    private final String path;
     private long duration;
 
 
@@ -11,10 +11,6 @@ public class LocalMedia {
 
     public String getPath() {
         return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
     }
 
     public long getDuration() {

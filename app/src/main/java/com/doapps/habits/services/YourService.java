@@ -8,17 +8,12 @@ import android.os.IBinder;
 import com.doapps.habits.receivers.Alarm;
 
 public class YourService extends Service {
-    Alarm alarm = new Alarm();
+    private final Alarm alarm = new Alarm();
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         alarm.setAlarm(this);
         return START_STICKY;
-    }
-
-    @Override
-    public void onStart(Intent intent, int startId) {
-        alarm.setAlarm(this);
     }
 
     @Override

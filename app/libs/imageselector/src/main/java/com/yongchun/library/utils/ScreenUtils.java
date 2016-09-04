@@ -6,13 +6,8 @@ import android.util.DisplayMetrics;
 
 import java.lang.reflect.Field;
 
-/**
- * Created by dee on 15/11/19.
- */
 public class ScreenUtils {
-    /**
-     * dp2px
-     */
+
     public static int dip2px(Context context, float dpValue) {
         float scale = context.getResources().getDisplayMetrics().density;
         return (int) (dpValue * scale + 0.5f);
@@ -30,11 +25,11 @@ public class ScreenUtils {
         return localDisplayMetrics.heightPixels - getStatusBarHeight(context);
     }
 
-    public static int getStatusBarHeight(Context context) {
-        Class<?> c = null;
-        Object obj = null;
-        Field field = null;
-        int x = 0, statusBarHeight = 0;
+    private static int getStatusBarHeight(Context context) {
+        Class<?> c;
+        Object obj;
+        Field field;
+        int x, statusBarHeight = 0;
         try {
             c = Class.forName("com.android.internal.R$dimen");
             obj = c.newInstance();

@@ -2,9 +2,9 @@ package com.doapps.habits.models;
 
 import java.util.List;
 
-public interface HabitListProvider extends ListProvider {
+public interface IHabitListProvider extends IListProvider {
     /**
-     * Obtains list of {@link Habit)
+     * Obtains list of habits
      */
     @Override
     List<Habit> getList();

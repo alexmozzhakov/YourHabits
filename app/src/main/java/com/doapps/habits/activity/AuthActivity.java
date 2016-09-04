@@ -24,10 +24,6 @@ public class AuthActivity extends AppCompatActivity {
         return mCallbackManager;
     }
 
-    public FirebaseAuth getAuth() {
-        return mAuth;
-    }
-
     @Override
     public void onStart() {
         super.onStart();
@@ -93,7 +89,7 @@ public class AuthActivity extends AppCompatActivity {
         }
     }
 
-    public void toTerms(View view) {
+    public void toTerms(@SuppressWarnings("UnusedParameters") View view) {
         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://habbitsapp.esy.es/terms.txt")));
     }
 }

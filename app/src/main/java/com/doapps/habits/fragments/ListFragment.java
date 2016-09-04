@@ -14,7 +14,7 @@ import com.doapps.habits.R;
 import com.doapps.habits.adapter.HabitRecycleAdapter;
 import com.doapps.habits.helper.HabitListManager;
 import com.doapps.habits.helper.SimpleItemTouchHelperCallback;
-import com.doapps.habits.models.HabitDatabaseMovableListProvider;
+import com.doapps.habits.models.IHabitDatabaseMovableListProvider;
 
 public class ListFragment extends Fragment {
 
@@ -27,7 +27,7 @@ public class ListFragment extends Fragment {
         RecyclerView recyclerView = (RecyclerView) result.findViewById(R.id.habits_list);
         recyclerView.setHasFixedSize(true);
         TextView emptyView = (TextView) result.findViewById(R.id.empty_view);
-        HabitDatabaseMovableListProvider habitListManager = HabitListManager.getInstance(getContext());
+        IHabitDatabaseMovableListProvider habitListManager = HabitListManager.getInstance(getContext());
 
         if (habitListManager.isEmpty()) {
             recyclerView.setVisibility(View.GONE);
