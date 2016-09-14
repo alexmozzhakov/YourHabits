@@ -16,7 +16,7 @@
             android:id="@+id/done_text"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/btn_height"
-            android:layout_gravity="right"
+            android:layout_gravity="end"
             android:layout_marginRight="@dimen/margin_text"
             android:background="@drawable/btn_round_green_selector"
             android:gravity="center"

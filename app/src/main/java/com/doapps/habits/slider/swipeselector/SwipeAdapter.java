@@ -235,12 +235,12 @@ public class SwipeAdapter extends PagerAdapter implements View.OnClickListener, 
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
+        // ignored
     }
 
     @Override
     public void onPageScrollStateChanged(int state) {
-
+        // ignored
     }
 
     /**

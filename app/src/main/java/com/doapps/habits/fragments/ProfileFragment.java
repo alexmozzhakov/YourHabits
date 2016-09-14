@@ -47,6 +47,8 @@ import java.util.Arrays;
 public class ProfileFragment extends Fragment {
     private static final boolean[] editorOpened = new boolean[1];
     private static final String TAG = ProfileFragment.class.getSimpleName();
+    private static ProfileFragmentAvatarListener mProfileFragmentAvatarListener;
+    private static UserAvatarListener mUserAvatarListener;
     private static int mDialogTextLength;
     private static final int DIALOG_MIN_LENGTH = 6;
 
@@ -82,9 +84,11 @@ public class ProfileFragment extends Fragment {
             AvatarManager.fixBackgroundSize(avatar);
 
             if (AvatarManager.listener.countObservers() == 1) {
-                AvatarManager.listener.addObserver(
-                        new ProfileFragmentAvatarListener(getActivity().getSupportFragmentManager()));
-                AvatarManager.listener.addObserver(new UserAvatarListener());
+                mProfileFragmentAvatarListener =
+                        new ProfileFragmentAvatarListener(getActivity().getSupportFragmentManager());
+                AvatarManager.listener.addObserver(mProfileFragmentAvatarListener);
+                mUserAvatarListener = new UserAvatarListener();
+                AvatarManager.listener.addObserver(mUserAvatarListener);
             }
 
             Uri avatarUri = AvatarManager.listener.getLargeUri();
@@ -287,5 +291,12 @@ public class ProfileFragment extends Fragment {
 
     static boolean[] getEditorOpened() {
         return editorOpened;
+    }
+
+    @Override
+    public void onPause() {
+        AvatarManager.listener.deleteObserver(mProfileFragmentAvatarListener);
+        AvatarManager.listener.deleteObserver(mUserAvatarListener);
+        super.onPause();
     }
 }

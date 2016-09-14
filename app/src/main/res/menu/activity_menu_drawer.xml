@@ -24,6 +24,7 @@
     </group>
 
     <group
+        android:id="@+id/bottom_menu"
         >
 
         <item

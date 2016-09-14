@@ -46,9 +46,9 @@ public class HabitDatabaseHandler extends SQLiteOpenHelper implements IHabitsDat
         super(context.getApplicationContext(), DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-    private static short[] stringToShortArray(String str) {
+    private static int[] stringToIntArray(String str) {
         String[] temp = str.split(",");
-        short[] shorts = new short[temp.length];
+        int[] shorts = new int[temp.length];
         for (int i = 0; i < shorts.length && i < temp.length; i++) {
             shorts[i] = Short.valueOf(temp[i]);
         }
@@ -194,7 +194,7 @@ public class HabitDatabaseHandler extends SQLiteOpenHelper implements IHabitsDat
                     cursor.getInt(cursor.getColumnIndex(KEY_TIME)), // time, that a habit takes
                     cursor.getInt(cursor.getColumnIndex(KEY_FOLLOWING_FROM)), // Day last followed
                     cursor.getInt(cursor.getColumnIndex(KEY_COST)), // cost
-                    stringToShortArray(
+                    stringToIntArray(
                             cursor.getString(cursor.getColumnIndex(KEY_FREQUENCY_ARRAY)))// frequency
             );
 
@@ -265,7 +265,7 @@ public class HabitDatabaseHandler extends SQLiteOpenHelper implements IHabitsDat
                 cursor.getInt(cursor.getColumnIndex(KEY_TIME)), // time, that a habit takes
                 cursor.getInt(cursor.getColumnIndex(KEY_FOLLOWING_FROM)), // Day last followed
                 cursor.getInt(cursor.getColumnIndex(KEY_COST)), // cost
-                stringToShortArray(
+                stringToIntArray(
                         cursor.getString(cursor.getColumnIndex(KEY_FREQUENCY_ARRAY)))// frequency
         );
 
@@ -329,7 +329,7 @@ public class HabitDatabaseHandler extends SQLiteOpenHelper implements IHabitsDat
 
     private static boolean mustHaveFollowed(Habit habit) {
         int daysTillNow = daysTillNow(habit);
-        short[] freq = habit.getFrequencyArray();
+        int[] freq = habit.getFrequencyArray();
         if (BuildConfig.DEBUG) {
             Log.i(TAG, "Must have followed = " + (daysTillNow > freq[freq.length - 1]));
         }

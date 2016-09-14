@@ -10,7 +10,7 @@ public final class Habit {
     private final String question;
     private final int time;
     private final int cost;
-    private final short[] frequencyArray;
+    private final int[] frequencyArray;
 
     // Changeable Habit values
     public int id;
@@ -22,7 +22,7 @@ public final class Habit {
 
     public Habit(int id, String title, String question, boolean doneMarker,
                  int markerUpdatedDay, int markerUpdatedMonth, int markerUpdatedYear,
-                 int time, int followingFrom, int cost, short... frequencyArray) {
+                 int time, int followingFrom, int cost, int... frequencyArray) {
 
         this.id = id;
         this.title = title;
@@ -37,7 +37,7 @@ public final class Habit {
         this.frequencyArray = frequencyArray;
     }
 
-    public short[] getFrequencyArray() {
+    public int[] getFrequencyArray() {
         return frequencyArray;
     }
 

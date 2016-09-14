@@ -29,7 +29,8 @@ public class ScreenUtils {
         Class<?> c;
         Object obj;
         Field field;
-        int x, statusBarHeight = 0;
+        int x;
+        int statusBarHeight = 0;
         try {
             c = Class.forName("com.android.internal.R$dimen");
             obj = c.newInstance();
