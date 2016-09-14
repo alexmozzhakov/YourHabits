@@ -65,21 +65,6 @@ public class CreateFragment extends Fragment implements AdapterView.OnItemSelect
             }
         });
         editTime = (TextInputEditText) result.findViewById(R.id.edit_time);
-        editTime.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
-        });
         sFrequency = (Spinner) result.findViewById(R.id.sFrequency);
         tvFreqNum = (TextView) result.findViewById(R.id.input_freq_num);
         tvFreqDen = (TextView) result.findViewById(R.id.input_freq_den);

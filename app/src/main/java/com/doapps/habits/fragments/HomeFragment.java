@@ -91,17 +91,18 @@ public class HomeFragment extends Fragment {
                             @TargetApi(Build.VERSION_CODES.LOLLIPOP)
                             @Override
                             public void onNetworkActive() {
+                                Log.i("HF", "onNetworkActive");
                                 getWeather(getContext(), habitList.size());
 
-                                FirebaseUser[] user = {FirebaseAuth.getInstance().getCurrentUser()};
-                                if (user[0] == null) {
+                                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                if (user == null) {
                                     FirebaseAuth.getInstance().signInAnonymously().addOnCompleteListener(task -> {
                                         MainActivity ac = (MainActivity) getActivity();
-                                        user[0] = FirebaseAuth.getInstance().getCurrentUser();
-                                        ac.onSetupNavigationDrawer(user[0]);
+                                        ac.onSetupNavigationDrawer(
+                                                FirebaseAuth.getInstance().getCurrentUser());
                                     });
                                 } else {
-                                    ((MainActivity) getActivity()).onSetupNavigationDrawer(user[0]);
+                                    ((MainActivity) getActivity()).onSetupNavigationDrawer(user);
                                 }
                                 conMan.removeDefaultNetworkActiveListener(this);
                             }

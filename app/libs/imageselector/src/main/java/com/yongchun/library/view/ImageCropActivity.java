@@ -10,7 +10,6 @@ import android.net.Uri;
 import android.opengl.GLES10;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -27,7 +26,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public class ImageCropActivity extends AppCompatActivity {
+public class ImageCropActivity extends Activity {
     static final String OUTPUT_PATH = "outputPath";
     static final int REQUEST_CROP = 69;
     private static final String EXTRA_PATH = "extraPath";
@@ -95,6 +94,7 @@ public class ImageCropActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTheme(R.style.AppTheme);
         setContentView(R.layout.activity_image_crop);
         String path = getIntent().getStringExtra(EXTRA_PATH);
         sourceUri = Uri.fromFile(new File(path));
@@ -106,7 +106,6 @@ public class ImageCropActivity extends AppCompatActivity {
     private void initView() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("");
-        setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.mipmap.ic_back);
 
         doneText = (TextView) findViewById(R.id.done_text);

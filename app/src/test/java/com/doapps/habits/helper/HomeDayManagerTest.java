@@ -15,23 +15,23 @@ public class HomeDayManagerTest {
     private static List<Habit> generateListOfHabits() {
         final List<Habit> list = new ArrayList<>(15);
         //once types
-        list.add(new Habit(1, "once", "", false, 12, 12, 12, 60, 30, 30, new short[]{1, 0}));
-        list.add(new Habit(1, "once a week", "", false, 12, 12, 12, 60, 30, 30, new short[]{1, 7}));
-        list.add(new Habit(1, "once a year", "", false, 12, 12, 12, 60, 30, 30, new short[]{1, 365}));
+        list.add(new Habit(1, "once", "", false, 12, 12, 12, 60, 30, 30, new int[]{1, 0}));
+        list.add(new Habit(1, "once a week", "", false, 12, 12, 12, 60, 30, 30, new int[]{1, 7}));
+        list.add(new Habit(1, "once a year", "", false, 12, 12, 12, 60, 30, 30, new int[]{1, 365}));
         //every ... types
-        list.add(new Habit(1, "every sunday", "", false, 12, 12, 12, 60, 30, 30, new short[]{1,8,1}));
-        list.add(new Habit(1, "every monday", "", false, 12, 12, 12, 60, 30, 30, new short[]{1,8,1}));
-        list.add(new Habit(1, "every tuesday", "", false, 12, 12, 12, 60, 30, 30, new short[]{1,8,1}));
-        list.add(new Habit(1, "every wednesday", "", false, 12, 12, 12, 60, 30, 30, new short[]{1,8,1}));
-        list.add(new Habit(1, "every thursday", "", false, 12, 12, 12, 60, 30, 30, new short[]{1,8,1}));
-        list.add(new Habit(1, "every friday", "", false, 12, 12, 12, 60, 30, 30, new short[]{1,8,1}));
-        list.add(new Habit(1, "every saturday", "", false, 12, 12, 12, 60, 30, 30, new short[]{1,8,1}));
-        list.add(new Habit(1, "every day", "", false, 12, 12, 12, 60, 30, 30, new short[]{1, 1}));
+        list.add(new Habit(1, "every sunday", "", false, 12, 12, 12, 60, 30, 30, new int[]{1,8,1}));
+        list.add(new Habit(1, "every monday", "", false, 12, 12, 12, 60, 30, 30, new int[]{1,8,1}));
+        list.add(new Habit(1, "every tuesday", "", false, 12, 12, 12, 60, 30, 30, new int[]{1,8,1}));
+        list.add(new Habit(1, "every wednesday", "", false, 12, 12, 12, 60, 30, 30, new int[]{1,8,1}));
+        list.add(new Habit(1, "every thursday", "", false, 12, 12, 12, 60, 30, 30, new int[]{1,8,1}));
+        list.add(new Habit(1, "every friday", "", false, 12, 12, 12, 60, 30, 30, new int[]{1,8,1}));
+        list.add(new Habit(1, "every saturday", "", false, 12, 12, 12, 60, 30, 30, new int[]{1,8,1}));
+        list.add(new Habit(1, "every day", "", false, 12, 12, 12, 60, 30, 30, new int[]{1, 1}));
         //every ... and ... types
-        list.add(new Habit(1, "every sunday and saturday", "", false, 12, 12, 12, 60, 30, 30, new short[]{1,8,1}));
-        list.add(new Habit(1, "every monday and friday", "", false, 12, 12, 12, 60, 30, 30, new short[]{1,8,1}));
-        list.add(new Habit(1, "every tuesday and thursday", "", false, 12, 12, 12, 60, 30, 30, new short[]{1,8,1}));
-        list.add(new Habit(1, "every wednesday and thursday", "", false, 12, 12, 12, 60, 30, 30, new short[]{1,8,1}));
+        list.add(new Habit(1, "every sunday and saturday", "", false, 12, 12, 12, 60, 30, 30, new int[]{1,8,1}));
+        list.add(new Habit(1, "every monday and friday", "", false, 12, 12, 12, 60, 30, 30, new int[]{1,8,1}));
+        list.add(new Habit(1, "every tuesday and thursday", "", false, 12, 12, 12, 60, 30, 30, new int[]{1,8,1}));
+        list.add(new Habit(1, "every wednesday and thursday", "", false, 12, 12, 12, 60, 30, 30, new int[]{1,8,1}));
         return list;
     }
 

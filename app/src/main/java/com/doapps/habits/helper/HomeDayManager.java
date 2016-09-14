@@ -38,7 +38,7 @@ public class HomeDayManager implements IDayManager {
         int dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
         Iterator<Habit> habitIterator = todayHabits.iterator();
         while (habitIterator.hasNext()) {
-            short[] freq = habitIterator.next().getFrequencyArray();
+            int[] freq = habitIterator.next().getFrequencyArray();
             if (freq.length == 0) {
                 Log.w("filterListByDay()", "frequency not set");
             } else {
@@ -63,7 +63,7 @@ public class HomeDayManager implements IDayManager {
     static void filterListByDay(Iterable<Habit> dayHabits, int dayOfWeek) {
         Iterator<Habit> habitIterator = dayHabits.iterator();
         while (habitIterator.hasNext()) {
-            short[] freq = habitIterator.next().getFrequencyArray();
+            int[] freq = habitIterator.next().getFrequencyArray();
             if (freq.length == 0) {
                 Log.w("filterListByDay()", "frequency not set");
             } else if (freq[0] != freq[1]) {

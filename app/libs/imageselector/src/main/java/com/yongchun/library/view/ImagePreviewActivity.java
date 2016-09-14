@@ -100,6 +100,7 @@ public class ImagePreviewActivity extends AppCompatActivity {
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                // ignored
             }
 
             @Override
@@ -110,6 +111,7 @@ public class ImagePreviewActivity extends AppCompatActivity {
 
             @Override
             public void onPageScrollStateChanged(int state) {
+                // ignored
             }
         });
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {

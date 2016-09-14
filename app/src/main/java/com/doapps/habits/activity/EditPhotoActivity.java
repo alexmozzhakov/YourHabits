@@ -25,7 +25,7 @@ import com.doapps.habits.helper.AvatarManager;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserInfo;
 import com.yongchun.library.view.ImageSelectorActivity;
 
 import java.io.ByteArrayOutputStream;
@@ -75,7 +75,7 @@ public class EditPhotoActivity extends Activity {
         Toast.makeText(getApplicationContext(), "Uploading...", Toast.LENGTH_LONG).show();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, UPLOAD_URL,
                 s -> {
-                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    UserInfo user = FirebaseAuth.getInstance().getCurrentUser();
                     if (user != null) {
                         Toast.makeText(EditPhotoActivity.this, "Upload complete"
                                 , Toast.LENGTH_LONG).show();

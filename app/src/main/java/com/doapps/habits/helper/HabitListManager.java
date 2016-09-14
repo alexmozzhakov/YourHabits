@@ -44,7 +44,7 @@ public class HabitListManager implements IHabitDatabaseMovableListProvider {
 
     @Override
     public boolean isEmpty() {
-        return (!HabitDatabaseHandler.notSame() && mHabitsList.size() == 0)
+        return !HabitDatabaseHandler.notSame() && mHabitsList.size() == 0
                 || mHabitsDatabase.isEmpty();
     }
 
