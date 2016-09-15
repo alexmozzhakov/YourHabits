@@ -30,8 +30,6 @@ public class CropUtil {
             closeable.close();
         } catch (IOException ignored) {
             // ignored
-        } catch (Throwable ignored) {
-            // ignored
         }
     }
 

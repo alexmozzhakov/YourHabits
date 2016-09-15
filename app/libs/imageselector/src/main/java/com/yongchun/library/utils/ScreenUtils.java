@@ -3,10 +3,12 @@ package com.yongchun.library.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.util.DisplayMetrics;
+import android.util.Log;
 
 import java.lang.reflect.Field;
 
 public class ScreenUtils {
+    private static final String TAG = ScreenUtils.class.getSimpleName();
 
     public static int dip2px(Context context, float dpValue) {
         float scale = context.getResources().getDisplayMetrics().density;
@@ -37,8 +39,14 @@ public class ScreenUtils {
             field = c.getField("status_bar_height");
             x = Integer.parseInt(field.get(obj).toString());
             statusBarHeight = context.getResources().getDimensionPixelSize(x);
-        } catch (Exception e1) {
-            e1.printStackTrace();
+        } catch (IllegalAccessException e) {
+            Log.e(TAG, e.getMessage());
+        } catch (InstantiationException e) {
+            Log.e(TAG, e.getMessage());
+        } catch (NoSuchFieldException e) {
+            Log.e(TAG, e.getMessage());
+        } catch (ClassNotFoundException e) {
+            Log.e(TAG, e.getMessage());
         }
         return statusBarHeight;
     }
