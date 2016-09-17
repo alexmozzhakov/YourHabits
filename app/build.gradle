@@ -52,20 +52,20 @@ dependencies {
         exclude group: 'com.android.support'
     }
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:design:24.2.0'
-    compile 'com.android.support:recyclerview-v7:24.2.0'
-    compile 'com.android.support:percent:24.2.0'
+    compile 'com.android.support:design:24.2.1'
+    compile 'com.android.support:recyclerview-v7:24.2.1'
+    compile 'com.android.support:percent:24.2.1'
     compile 'com.android.volley:volley:1.0.0'
     compile 'com.google.firebase:firebase-database:9.4.0'
     compile 'com.google.firebase:firebase-auth:9.4.0'
     compile 'com.google.firebase:firebase-crash:9.4.0'
     compile 'com.squareup.picasso:picasso:2.5.1'
-    compile 'com.facebook.android:facebook-android-sdk:4.14.1'
+    compile 'com.facebook.android:facebook-android-sdk:4.15.0'
     compile 'com.ruesga.timeline-chart-view:timeline-chart-view:0.0.8'
     compile 'com.github.bumptech.glide:glide:3.7.0'
-    compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha6'
+    compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha8'
 
-    androidTestCompile 'com.android.support:support-annotations:24.2.0'
+    androidTestCompile 'com.android.support:support-annotations:24.2.1'
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2') {
         exclude group: 'com.android.support'
     }
