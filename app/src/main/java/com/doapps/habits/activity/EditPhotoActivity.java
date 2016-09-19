@@ -79,6 +79,10 @@ public class EditPhotoActivity extends Activity {
                     if (user != null) {
                         Toast.makeText(EditPhotoActivity.this, "Upload complete"
                                 , Toast.LENGTH_LONG).show();
+
+//                        ProfileFragmentAvatarListener mProfileFragmentAvatarListener
+//                                = new ProfileFragmentAvatarListener(getActivity().getSupportFragmentManager());
+//                        AvatarManager.listener.addObserver(mProfileFragmentAvatarListener);
                         AvatarManager.listener.setUri(Uri.parse(s), this);
                     } else {
                         Toast.makeText(EditPhotoActivity.this, s, Toast.LENGTH_LONG).show();

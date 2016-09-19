@@ -10,7 +10,7 @@ public class Alarm extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-
+        // Notification is handled in MainActivity
     }
 
     public void setAlarm(Context context) {

@@ -1,13 +1,12 @@
 package com.doapps.habits.services;
 
-
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 
 import com.doapps.habits.receivers.Alarm;
 
-public class YourService extends Service {
+public class NotificationService extends Service {
     private final Alarm alarm = new Alarm();
 
     @Override

@@ -34,7 +34,7 @@ public class HabitNotifier {
         Intent resultIntent = new Intent(mContext, MainActivity.class);
         PendingIntent resultPendingIntent =
                 PendingIntent.getActivity(
-                        mContext, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                        mContext, 0, resultIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
         // Setting up yesIntent
         Intent yesIntent = new Intent(mContext, MainActivity.class);
@@ -42,7 +42,7 @@ public class HabitNotifier {
         yesIntent.putExtra("id", mId);
         PendingIntent resultYesIntent =
                 PendingIntent.getActivity(
-                        mContext, 0, yesIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                        mContext, 0, yesIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
         // Setting up noIntent
         Intent noIntent = new Intent(mContext, MainActivity.class);
@@ -50,7 +50,7 @@ public class HabitNotifier {
         noIntent.putExtra("id", mId);
         PendingIntent resultNoIntent =
                 PendingIntent.getActivity(
-                        mContext, 0, noIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                        mContext, 0, noIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
         // Building notification
         NotificationCompat.Builder notification = new NotificationCompat.Builder(mContext)
@@ -66,7 +66,7 @@ public class HabitNotifier {
 
         NotificationManager notificationManager = (NotificationManager)
                 mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(1, notification.build());
+        notificationManager.notify((int) mId, notification.build());
         alarmMgr.set(AlarmManager.ELAPSED_REALTIME_WAKEUP,
                 SystemClock.elapsedRealtime() +
                         2000, alarmIntent);

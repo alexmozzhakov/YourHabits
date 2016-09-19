@@ -173,8 +173,7 @@ public class ProfileFragment extends Fragment {
 
                             @Override
                             public void onCancel() {
-                                Log.d(TAG, "facebook:onCancel");
-                                // ...
+                                Log.d(TAG, "Facebook login canceled");
                             }
 
                             @Override
@@ -194,7 +193,6 @@ public class ProfileFragment extends Fragment {
 
             btnDelete.setOnClickListener(view -> deleteUser(user));
         }
-
 
         return result;
     }
@@ -295,8 +293,6 @@ public class ProfileFragment extends Fragment {
 
     @Override
     public void onPause() {
-        AvatarManager.listener.deleteObserver(mProfileFragmentAvatarListener);
-        AvatarManager.listener.deleteObserver(mUserAvatarListener);
         super.onPause();
     }
 }

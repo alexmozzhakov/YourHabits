@@ -106,8 +106,8 @@ public class CreateFragment extends Fragment implements AdapterView.OnItemSelect
                     editQuestion.getText().toString(),
                     time,
                     Calendar.getInstance(),
-                    0, frequency
-            );
+                    0, frequency);
+
             HabitNotifier habitNotifier = new HabitNotifier(getContext(),
                     editQuestion.getText().toString(), id);
             habitNotifier.initiate();

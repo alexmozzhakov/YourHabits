@@ -40,7 +40,8 @@ public class HabitDatabaseHandler extends SQLiteOpenHelper implements IHabitsDat
     private static final String KEY_COST = "cost";
     private static final String KEY_FREQUENCY_ARRAY = "freq_arr";
     private static final String INTEGER = " INTEGER,";
-    private static boolean isSame = false;
+    private static final String TEXT = " TEXT,";
+    private static boolean isSame;
 
     public HabitDatabaseHandler(Context context) {
         super(context.getApplicationContext(), DATABASE_NAME, null, DATABASE_VERSION);
@@ -48,23 +49,22 @@ public class HabitDatabaseHandler extends SQLiteOpenHelper implements IHabitsDat
 
     private static int[] stringToIntArray(String str) {
         String[] temp = str.split(",");
-        int[] shorts = new int[temp.length];
-        for (int i = 0; i < shorts.length && i < temp.length; i++) {
-            shorts[i] = Short.valueOf(temp[i]);
+        int[] arr = new int[temp.length];
+        for (int i = 0; i < arr.length && i < temp.length; i++) {
+            arr[i] = Integer.valueOf(temp[i]);
         }
 
-        return shorts;
+        return arr;
     }
 
     @Override
     public boolean isEmpty() {
-        boolean flag;
         String quString = "select exists(select 1 from " + TABLE_HABIT + ");";
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery(quString, null);
         cursor.moveToFirst();
         int count = cursor.getInt(0);
-        flag = count != 1;
+        boolean flag = count != 1;
         cursor.close();
         db.close();
 
@@ -85,15 +85,15 @@ public class HabitDatabaseHandler extends SQLiteOpenHelper implements IHabitsDat
         String createLoginTable = "CREATE TABLE " +
                 TABLE_HABIT + '(' +
                 KEY_ID + " INTEGER PRIMARY KEY," +
-                KEY_NAME + " TEXT," +
-                KEY_QUESTION + " TEXT," +
+                KEY_NAME + TEXT +
+                KEY_QUESTION + TEXT +
                 KEY_TIME + INTEGER +
                 KEY_UPDATED_DATE + INTEGER +
                 KEY_UPDATED_MONTH + INTEGER +
                 KEY_FOLLOWING_FROM + INTEGER +
                 KEY_COST + INTEGER +
-                KEY_FREQUENCY_ARRAY + " TEXT," +
-                KEY_UPDATED_YEAR + INTEGER +
+                KEY_FREQUENCY_ARRAY + TEXT +
+                KEY_UPDATED_YEAR + "INTEGER DEFAULT 0" +
                 KEY_DONE + " INTEGER)";
 
         sqLiteDatabase.execSQL(createLoginTable);
@@ -126,7 +126,6 @@ public class HabitDatabaseHandler extends SQLiteOpenHelper implements IHabitsDat
         values.put(KEY_FOLLOWING_FROM, System.currentTimeMillis()); // Day last followed
         values.put(KEY_COST, cost); // cost
         values.put(KEY_FREQUENCY_ARRAY, integerArrayToString(frequency)); // frequency
-        values.put(KEY_DONE, 0);
         // Inserting Row
         long id = database.insert(TABLE_HABIT, null, values);
         // Closing database connection
@@ -155,7 +154,6 @@ public class HabitDatabaseHandler extends SQLiteOpenHelper implements IHabitsDat
         values.put(KEY_FOLLOWING_FROM, System.currentTimeMillis()); // Day last followed
         values.put(KEY_COST, cost); // cost
         values.put(KEY_FREQUENCY_ARRAY, frequency); // frequency
-        values.put(KEY_DONE, 0);
         // Inserting Row
         long id = database.insert(TABLE_HABIT, null, values);
         // Closing database connection
@@ -171,6 +169,23 @@ public class HabitDatabaseHandler extends SQLiteOpenHelper implements IHabitsDat
      * Getting habit data from database
      */
 
+    private static Habit cursorToHabit(Cursor cursor) {
+        return new Habit(
+                cursor.getInt(cursor.getColumnIndex(KEY_ID)), // id
+                cursor.getString(cursor.getColumnIndex(KEY_NAME)), // title
+                cursor.getString(cursor.getColumnIndex(KEY_QUESTION)), // question
+                cursor.getInt(cursor.getColumnIndex(KEY_DONE)) == 1, // if activity is done
+                cursor.getInt(cursor.getColumnIndex(KEY_UPDATED_DATE)), // last markerUpdatedDate done
+                cursor.getInt(cursor.getColumnIndex(KEY_UPDATED_MONTH)), // last done month
+                cursor.getInt(cursor.getColumnIndex(KEY_UPDATED_YEAR)), // last done year
+                cursor.getInt(cursor.getColumnIndex(KEY_TIME)), // time, that a habit takes
+                cursor.getInt(cursor.getColumnIndex(KEY_FOLLOWING_FROM)), // Day last followed
+                cursor.getInt(cursor.getColumnIndex(KEY_COST)), // cost
+                stringToIntArray(
+                        cursor.getString(cursor.getColumnIndex(KEY_FREQUENCY_ARRAY)))// frequency
+        );
+    }
+
     @Override
     public List<Habit> getHabitDetailsAsList() {
         Log.w("Database", "getHabitDetailsAsList()");
@@ -183,20 +198,7 @@ public class HabitDatabaseHandler extends SQLiteOpenHelper implements IHabitsDat
 
         cursor.moveToFirst();
         for (int i = 0; i < cursor.getCount(); i++) {
-            Habit temp = new Habit(
-                    cursor.getInt(cursor.getColumnIndex(KEY_ID)), // id
-                    cursor.getString(cursor.getColumnIndex(KEY_NAME)), // title
-                    cursor.getString(cursor.getColumnIndex(KEY_QUESTION)), // question
-                    cursor.getInt(cursor.getColumnIndex(KEY_DONE)) == 1, // if activity is done
-                    cursor.getInt(cursor.getColumnIndex(KEY_UPDATED_DATE)), // last markerUpdatedDate done
-                    cursor.getInt(cursor.getColumnIndex(KEY_UPDATED_MONTH)), // last done month
-                    cursor.getInt(cursor.getColumnIndex(KEY_UPDATED_YEAR)), // last done year
-                    cursor.getInt(cursor.getColumnIndex(KEY_TIME)), // time, that a habit takes
-                    cursor.getInt(cursor.getColumnIndex(KEY_FOLLOWING_FROM)), // Day last followed
-                    cursor.getInt(cursor.getColumnIndex(KEY_COST)), // cost
-                    stringToIntArray(
-                            cursor.getString(cursor.getColumnIndex(KEY_FREQUENCY_ARRAY)))// frequency
-            );
+            Habit temp = cursorToHabit(cursor);
 
             habitList.add(temp);
             if (BuildConfig.DEBUG) {
@@ -254,20 +256,7 @@ public class HabitDatabaseHandler extends SQLiteOpenHelper implements IHabitsDat
         SQLiteDatabase database = getReadableDatabase();
         Cursor cursor = database.rawQuery(selectQuery, null);
         cursor.moveToFirst();
-        Habit temp = new Habit(
-                cursor.getInt(cursor.getColumnIndex(KEY_ID)), // id
-                cursor.getString(cursor.getColumnIndex(KEY_NAME)), // title
-                cursor.getString(cursor.getColumnIndex(KEY_QUESTION)), // question
-                cursor.getInt(cursor.getColumnIndex(KEY_DONE)) == 1, // if activity is done
-                cursor.getInt(cursor.getColumnIndex(KEY_UPDATED_DATE)), // last markerUpdatedDate done
-                cursor.getInt(cursor.getColumnIndex(KEY_UPDATED_MONTH)), // last done month
-                cursor.getInt(cursor.getColumnIndex(KEY_UPDATED_YEAR)), // last done year
-                cursor.getInt(cursor.getColumnIndex(KEY_TIME)), // time, that a habit takes
-                cursor.getInt(cursor.getColumnIndex(KEY_FOLLOWING_FROM)), // Day last followed
-                cursor.getInt(cursor.getColumnIndex(KEY_COST)), // cost
-                stringToIntArray(
-                        cursor.getString(cursor.getColumnIndex(KEY_FREQUENCY_ARRAY)))// frequency
-        );
+        Habit temp = cursorToHabit(cursor);
 
         if (BuildConfig.DEBUG) {
             Log.d(TAG, temp.toString());

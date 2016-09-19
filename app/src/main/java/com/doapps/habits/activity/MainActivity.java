@@ -1,5 +1,6 @@
 package com.doapps.habits.activity;
 
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -29,9 +30,9 @@ import com.doapps.habits.fragments.ProfileFragment;
 import com.doapps.habits.fragments.ProgramsFragment;
 import com.doapps.habits.helper.AvatarManager;
 import com.doapps.habits.helper.HabitListManager;
-import com.doapps.habits.helper.NameChangeListener;
 import com.doapps.habits.helper.PicassoRoundedTransformation;
 import com.doapps.habits.listeners.MenuAvatarListener;
+import com.doapps.habits.listeners.NameChangeListener;
 import com.doapps.habits.models.Habit;
 import com.doapps.habits.models.IMenuAvatarUpdater;
 import com.doapps.habits.slider.swipeselector.PixelUtils;
@@ -82,6 +83,9 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
                 mLastFragment = R.id.nav_lists;
                 mToolbar.setTitle("List");
             }
+            NotificationManager notificationManager = (NotificationManager)
+                    getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.cancel((int) id);
         }
 
         if (savedInstanceState == null && mLastFragment != R.id.nav_lists) {
