@@ -21,6 +21,7 @@ import com.doapps.habits.activity.AuthActivity;
 import com.doapps.habits.activity.MainActivity;
 import com.doapps.habits.activity.PasswordRecoveryActivity;
 import com.doapps.habits.helper.AvatarManager;
+import com.doapps.habits.listeners.UserAvatarListener;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -137,9 +138,13 @@ public class LoginFragment extends Fragment {
                                                 .edit()
                                                 .putString(user.getUid(), token.getUserId())
                                                 .apply();
+                                        UserAvatarListener databaseUpdate = new UserAvatarListener();
+                                        AvatarManager.listener.addObserver(databaseUpdate);
+
                                         AvatarManager.listener.setUri(
                                                 Uri.parse(String.format("https://graph.facebook.com/%s/picture",
                                                         token.getUserId())), getActivity());
+                                        AvatarManager.listener.deleteObserver(databaseUpdate);
                                     }
                                 });
                     }

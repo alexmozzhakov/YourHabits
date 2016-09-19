@@ -1,10 +1,10 @@
-package com.doapps.habits.helper;
+package com.doapps.habits.listeners;
 
 import java.util.Observable;
 
 
 public class NameChangeListener extends Observable {
-    private volatile boolean mChanged;
+    private boolean mChanged;
     public static final NameChangeListener listener = new NameChangeListener();
 
     public void setChanged() {
@@ -13,7 +13,9 @@ public class NameChangeListener extends Observable {
     }
 
     @Override
-    public synchronized boolean hasChanged() {
-        return mChanged;
+    public boolean hasChanged() {
+        synchronized (this) {
+            return mChanged;
+        }
     }
 }

@@ -16,7 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.doapps.habits.R;
-import com.doapps.habits.helper.NameChangeListener;
+import com.doapps.habits.listeners.NameChangeListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;

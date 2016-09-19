@@ -15,19 +15,10 @@ import java.util.Observable;
 
 public class AvatarManager extends Observable {
     private static final String TAG = AvatarManager.class.getSimpleName();
-    private volatile boolean changed;
+    private boolean changed;
     private Uri mUri;
     private int version;
     public static final AvatarManager listener = new AvatarManager();
-
-    public void setVersion(int newVersion, Activity activity) {
-        version = newVersion;
-        saveVersion(activity);
-    }
-
-    private void saveVersion(Activity activity) {
-        activity.getSharedPreferences("pref", 0).edit().putInt("photo_version", version).apply();
-    }
 
     public void invalidateUrl() {
         if (mUri == null) {
@@ -56,7 +47,6 @@ public class AvatarManager extends Observable {
         mUri = uri;
         Picasso.with(activity.getApplicationContext()).invalidate(getMediumUri());
         Picasso.with(activity.getApplicationContext()).invalidate(getLargeUri());
-//        PicassoTools.clearCache(Picasso.with(activity));
 
         if (BuildConfig.DEBUG) {
             Log.i("AvatarManager", "Notifying " + countObservers()
@@ -71,7 +61,7 @@ public class AvatarManager extends Observable {
     }
 
     @Override
-    public synchronized boolean hasChanged() {
+    public boolean hasChanged() {
         return changed;
     }
 

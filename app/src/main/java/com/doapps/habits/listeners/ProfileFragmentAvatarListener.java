@@ -23,6 +23,7 @@ public class ProfileFragmentAvatarListener implements Observer {
         if (BuildConfig.DEBUG) {
             Log.i("update", String.valueOf(AvatarManager.listener.getLargeUri()));
         }
+
         mFragmentManager.beginTransaction()
                 .replace(R.id.content_frame, new ProfileFragment())
                 .commit();
