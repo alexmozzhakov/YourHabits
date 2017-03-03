@@ -2,8 +2,8 @@ package com.doapps.habits.helper;
 
 import android.util.Log;
 
-import com.doapps.habits.models.IDayManager;
 import com.doapps.habits.models.Habit;
+import com.doapps.habits.models.IDayManager;
 import com.doapps.habits.models.IUpdatableList;
 
 import java.util.ArrayList;
@@ -44,7 +44,7 @@ public class HomeDayManager implements IDayManager {
             } else {
                 if (freq.length > 2) { // not once type
                     boolean today = false;
-                    for (int i = 0; i < freq.length - 1; i++) {
+                    for (int i = 1; i < freq.length; i++) {
                         if (freq[i] == dayOfWeek) {
                             today = true;
                             break;
@@ -66,11 +66,11 @@ public class HomeDayManager implements IDayManager {
             int[] freq = habitIterator.next().getFrequencyArray();
             if (freq.length == 0) {
                 Log.w("filterListByDay()", "frequency not set");
-            } else if (freq[0] != freq[1]) {
+            } else if (!(freq.length == 2 && freq[0] == freq[1])) {
                 // if it's not every day
                 if (freq.length > 2) {
                     boolean today = false;
-                    for (int j = 0; j < freq.length - 1; j++) {
+                    for (int j = 1; j < freq.length; j++) {
                         if (freq[j] == dayOfWeek) {
                             today = true;
                             break;

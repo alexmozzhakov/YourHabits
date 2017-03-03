@@ -100,10 +100,10 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
         mNavigationView = (NavigationView) findViewById(R.id.navigationView);
 
         if (user == null) {
-            FirebaseAuth.getInstance().signInAnonymously().addOnCompleteListener(task -> {
-                user = FirebaseAuth.getInstance().getCurrentUser();
-                onSetupNavigationDrawer(user);
-            });
+            FirebaseAuth.getInstance().signInAnonymously().addOnCompleteListener(task ->
+                    user = FirebaseAuth.getInstance().getCurrentUser());
+
+            anonymousMenuSetup();
         } else {
             onSetupNavigationDrawer(user);
             NameChangeListener.listener.
@@ -225,6 +225,20 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
         avatar.invalidate();
     }
 
+    public void anonymousMenuSetup() {
+        mNavigationView.setNavigationItemSelectedListener(this);
+        mNavigationView.getMenu().getItem(0).setChecked(true);
+
+        Log.i("FirebaseAuth", "User is anonymous");
+        mNavigationView.getMenu().findItem(R.id.nav_logout).setVisible(true);
+        mNavigationView.getMenu().findItem(R.id.nav_logout).setTitle("Login");
+        mNavigationView.getHeaderView(0).setVisibility(View.GONE);
+
+        if (AvatarManager.listener.countObservers() == 0) {
+            AvatarManager.listener.addObserver(new MenuAvatarListener(this));
+        }
+    }
+
     public void onSetupNavigationDrawer(FirebaseUser user) {
 
         mNavigationView.setNavigationItemSelectedListener(this);
@@ -276,11 +290,13 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
 
     private void logoutUser() {
         // Sign out from account manager
-        if (user.isAnonymous()) {
-            user.delete();
-        } else {
-            FirebaseAuth.getInstance().signOut();
-            Log.i("FA", "user was signed out");
+        if (user != null) {
+            if (user.isAnonymous()) {
+                user.delete();
+            } else {
+                FirebaseAuth.getInstance().signOut();
+                Log.i("FA", "user was signed out");
+            }
         }
         // Launching the login activity
         Intent intent = new Intent(this, AuthActivity.class);

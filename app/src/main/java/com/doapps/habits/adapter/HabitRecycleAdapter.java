@@ -2,6 +2,7 @@ package com.doapps.habits.adapter;
 
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +38,7 @@ public class HabitRecycleAdapter extends RecyclerView.Adapter implements IMovabl
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
+        Log.d("HabitAdapter", "Position is: " + position);
         HabitViewHolder habitViewHolder = (HabitViewHolder) holder;
         Habit habit = mHabitList.get(position);
 

@@ -41,7 +41,8 @@ public class PatternTest {
                 "test@test@test.com", "test@test.com.1a"};
 
         for (final String email : invalid) {
-            Assert.assertThat(RegisterFragment.isValidPattern(email, EMAIL_PATTERN), CoreMatchers.not(CoreMatchers.is(false)));
+            Assert.assertThat(RegisterFragment.isValidPattern(email, EMAIL_PATTERN),
+                    CoreMatchers.not(CoreMatchers.is(false)));
         }
 
     }
@@ -50,20 +51,33 @@ public class PatternTest {
     @Test
     public void validNamesCheck() {
 
-        Assert.assertThat(RegisterFragment.isValidPattern("A B", NAME_PATTERN), CoreMatchers.is(true));
-        Assert.assertThat(RegisterFragment.isValidPattern("a b", NAME_PATTERN), CoreMatchers.is(true));
-        Assert.assertThat(RegisterFragment.isValidPattern("A B C", NAME_PATTERN), CoreMatchers.is(true));
-        Assert.assertThat(RegisterFragment.isValidPattern("James o'reilly", NAME_PATTERN), CoreMatchers.is(true));
-        Assert.assertThat(RegisterFragment.isValidPattern("a b c", NAME_PATTERN), CoreMatchers.is(true));
+        Assert.assertThat(RegisterFragment.isValidPattern("A B", NAME_PATTERN),
+                CoreMatchers.is(true));
+        Assert.assertThat(RegisterFragment.isValidPattern("a b", NAME_PATTERN),
+                CoreMatchers.is(true));
+        Assert.assertThat(RegisterFragment.isValidPattern("A B C", NAME_PATTERN),
+                CoreMatchers.is(true));
+        Assert.assertThat(RegisterFragment.isValidPattern("James o'reilly", NAME_PATTERN),
+                CoreMatchers.is(true));
+        Assert.assertThat(RegisterFragment.isValidPattern("a b c", NAME_PATTERN),
+                CoreMatchers.is(true));
 
     }
 
     @Test
     public void invalidNamesCheck() {
-
-        Assert.assertThat(RegisterFragment.isValidPattern("test1", NAME_PATTERN), CoreMatchers.not(CoreMatchers.is(false)));
-        Assert.assertThat(RegisterFragment.isValidPattern("12 com.doHabit.test", NAME_PATTERN), CoreMatchers.not(CoreMatchers.is(false)));
-
+        Assert.assertThat(RegisterFragment.isValidPattern("Hello Github!", NAME_PATTERN),
+                CoreMatchers.not(true));
+        Assert.assertThat(RegisterFragment.isValidPattern("@ @", NAME_PATTERN),
+                CoreMatchers.not(true));
+        Assert.assertThat(RegisterFragment.isValidPattern("-_-", NAME_PATTERN),
+                CoreMatchers.not(true));
+        Assert.assertThat(RegisterFragment.isValidPattern(".|.", NAME_PATTERN),
+                CoreMatchers.not(true));
+        Assert.assertThat(RegisterFragment.isValidPattern("a", NAME_PATTERN),
+                CoreMatchers.not(true));
+        Assert.assertThat(RegisterFragment.isValidPattern("12 com.doHabit.test", NAME_PATTERN),
+                CoreMatchers.not(true));
     }
 
 }

@@ -41,7 +41,7 @@ public class HabitDatabaseHandler extends SQLiteOpenHelper implements IHabitsDat
     private static final String KEY_FREQUENCY_ARRAY = "freq_arr";
     private static final String INTEGER = " INTEGER,";
     private static final String TEXT = " TEXT,";
-    private static boolean isSame;
+    private static boolean isSame = true;
 
     public HabitDatabaseHandler(Context context) {
         super(context.getApplicationContext(), DATABASE_NAME, null, DATABASE_VERSION);
@@ -90,10 +90,10 @@ public class HabitDatabaseHandler extends SQLiteOpenHelper implements IHabitsDat
                 KEY_TIME + INTEGER +
                 KEY_UPDATED_DATE + INTEGER +
                 KEY_UPDATED_MONTH + INTEGER +
+                KEY_UPDATED_YEAR + INTEGER +
                 KEY_FOLLOWING_FROM + INTEGER +
                 KEY_COST + INTEGER +
                 KEY_FREQUENCY_ARRAY + TEXT +
-                KEY_UPDATED_YEAR + "INTEGER DEFAULT 0" +
                 KEY_DONE + " INTEGER)";
 
         sqLiteDatabase.execSQL(createLoginTable);
