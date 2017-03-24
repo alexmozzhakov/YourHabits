@@ -18,6 +18,7 @@
             android:layout_height="@dimen/btn_height"
             android:layout_gravity="end"
             android:layout_marginRight="@dimen/margin_text"
+            android:layout_marginEnd="@dimen/margin_text"
             android:background="@drawable/btn_round_green_selector"
             android:gravity="center"
             android:minWidth="@dimen/min_button_width"
@@ -30,5 +31,5 @@
         android:id="@+id/cropImageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        custom:cropMode="ratio_1_1"/>
+        custom:scv_crop_mode="square"/>
 </LinearLayout>

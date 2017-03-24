@@ -1,6 +1,5 @@
 package com.doapps.habits.activity;
 
-import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -21,10 +20,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.util.Date;
 
 import static android.support.test.espresso.Espresso.closeSoftKeyboard;
 import static android.support.test.espresso.Espresso.onView;
@@ -33,7 +30,7 @@ import static android.support.test.espresso.action.ViewActions.pressImeActionBut
 import static android.support.test.espresso.action.ViewActions.swipeRight;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.contrib.DrawerActions.openDrawer;
+import static android.support.test.espresso.contrib.DrawerActions.open;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
@@ -41,6 +38,9 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 @RunWith(AndroidJUnit4.class)
 public class MainActivityTest {
 
+    /**
+     * TAG is defined for logging errors and debugging information
+     */
     private static final String TAG = MainActivityTest.class.getSimpleName();
 
     @Rule
@@ -49,82 +49,72 @@ public class MainActivityTest {
 
     @Test
     public void createAndDeleteHabit() {
-        takeScreenshot("start", mainActivityActivityTestRule.getActivity());
+
         onView(withId(R.id.fab)).perform(click());
-        takeScreenshot("creation", mainActivityActivityTestRule.getActivity());
+        takeScreenshot();
         onView(withId(R.id.edit_title)).perform(typeText("Running"));
-        takeScreenshot("title_typing", mainActivityActivityTestRule.getActivity());
+        takeScreenshot();
         onView(withId(R.id.edit_time)).perform(typeText("50")).perform(pressImeActionButton());
-        takeScreenshot("time_typing", mainActivityActivityTestRule.getActivity());
+        takeScreenshot();
         closeSoftKeyboard();
         onView(withId(R.id.btnCreate)).perform(click());
-        takeScreenshot("after_created", mainActivityActivityTestRule.getActivity());
+        takeScreenshot();
         onView(withId(R.id.habits_list)).check(matches(isDisplayed()));
         onView(withId(R.id.drawer_layout)).perform(swipeRight());
-        takeScreenshot("habit_deleted", mainActivityActivityTestRule.getActivity());
-        openDrawer(R.id.drawer_layout);
-        takeScreenshot("menu_open", mainActivityActivityTestRule.getActivity());
+        takeScreenshot();
+        onView(withId(R.id.drawer_layout)).perform(open());
+        takeScreenshot();
         onView(withText("Home")).perform(click());
-        takeScreenshot("to_home", mainActivityActivityTestRule.getActivity());
+        takeScreenshot();
         onView(withText("Running")).check(matches(isDisplayed()));
         doRestart(mainActivityActivityTestRule.getActivity());
-        openDrawer(R.id.drawer_layout);
-        takeScreenshot("second_menu_open", mainActivityActivityTestRule.getActivity());
+        onView(withId(R.id.drawer_layout)).perform(open());
+        takeScreenshot();
         onView(withText("Lists")).perform(click());
-        takeScreenshot("list_open", mainActivityActivityTestRule.getActivity());
+        takeScreenshot();
         onView(withId(R.id.habits_list))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(0, swipeRight()));
-        openDrawer(R.id.drawer_layout);
+        onView(withId(R.id.drawer_layout)).perform(open());
         onView(withText("Home")).perform(click());
-        takeScreenshot("back_home", mainActivityActivityTestRule.getActivity());
-        openDrawer(R.id.drawer_layout);
+        takeScreenshot();
+        onView(withId(R.id.drawer_layout)).perform(open());
         onView(withText("Lists")).perform(click());
-        takeScreenshot("back_list", mainActivityActivityTestRule.getActivity());
+        takeScreenshot();
         onView(withId(R.id.empty_view)).check(matches(isDisplayed()));
     }
 
-    public static void takeScreenshot(String name, Activity activity) {
-
-        // In Testdroid Cloud, taken screenshots are always stored
-        // under /test-screenshots/ folder and this ensures those screenshots
-        // be shown under Test Results
-        String path =
-                Environment.getExternalStorageDirectory().getAbsolutePath() + "/test-screenshots/" + name + ".png";
-
-        View scrView = activity.getWindow().getDecorView().getRootView();
-        scrView.setDrawingCacheEnabled(true);
-        Bitmap bitmap = Bitmap.createBitmap(scrView.getDrawingCache());
-        scrView.setDrawingCacheEnabled(false);
-
-        OutputStream out = null;
-        File imageFile = new File(path);
+    private void takeScreenshot() {
+        Date now = new Date();
+        android.text.format.DateFormat.format("yyyy-MM-dd_hh:mm:ss", now);
 
         try {
-            out = new FileOutputStream(imageFile);
-            bitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
-            out.flush();
-        } catch (FileNotFoundException e) {
-            // exception
-        } catch (IOException e) {
-            // exception
-        } finally {
+            // image naming and path  to include sd card  appending name you choose for file
+            String mPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString() + "/" + now + ".jpg";
+            Log.i("Path", mPath);
+            // create bitmap screen capture
+            View view = mainActivityActivityTestRule.getActivity().findViewById(android.R.id.content);
+            view.setDrawingCacheEnabled(true);
+            Bitmap bitmap = Bitmap.createBitmap(view.getDrawingCache());
+            view.setDrawingCacheEnabled(false);
 
-            try {
-                if (out != null) {
-                    out.close();
-                }
+            File imageFile = new File(mPath);
 
-            } catch (Exception exc) {
-            }
+            FileOutputStream outputStream = new FileOutputStream(imageFile);
+            int quality = 100;
+            bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream);
+            outputStream.flush();
+            outputStream.close();
 
+        } catch (Throwable e) {
+            // Several error may come out with file handling or OOM
+            e.printStackTrace();
         }
     }
-
     public static void doRestart(Context c) {
         try {
             //check if the context is given
             if (c != null) {
-                //fetch the packagemanager so we can get the default launch activity
+                //fetch the package manager so we can get the default launch activity
                 // (you can replace this intent with any other activity if you want
                 PackageManager pm = c.getPackageManager();
                 //check if we got the PackageManager

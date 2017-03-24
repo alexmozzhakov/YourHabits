@@ -18,7 +18,7 @@ import com.doapps.habits.viewholder.ProgramViewHolder;
 
 import java.util.List;
 
-public class ProgramRecycleAdapter extends RecyclerView.Adapter {
+public class ProgramRecycleAdapter extends RecyclerView.Adapter<ProgramViewHolder> {
     private final List<IProgramViewProvider> mProgramList;
     private final Context mContext;
     private final FragmentManager mFragmentManager;
@@ -61,15 +61,11 @@ public class ProgramRecycleAdapter extends RecyclerView.Adapter {
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder,
-                                 int position) {
-
-        ProgramViewHolder programViewHolder = (ProgramViewHolder) holder;
+    public void onBindViewHolder(ProgramViewHolder holder, int position) {
         IProgramViewProvider program = mProgramList.get(position);
-
-        programViewHolder.getTitleTextView().setText(program.getTitle());
-        programViewHolder.getPercentTextView().setText(program.getPercent());
-        programViewHolder.getTitleTextView().setOnClickListener(v -> {
+        holder.getTitleTextView().setText(program.getTitle());
+        holder.getPercentTextView().setText(program.getPercent());
+        holder.getTitleTextView().setOnClickListener(v -> {
             Glide.with(mContext.getApplicationContext())
                     .load(program.getImageLink())
                     .into(mImageTop);

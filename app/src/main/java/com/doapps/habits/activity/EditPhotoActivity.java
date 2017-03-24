@@ -23,7 +23,6 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.doapps.habits.helper.AvatarManager;
 import com.facebook.CallbackManager;
-import com.facebook.FacebookSdk;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.UserInfo;
 import com.yongchun.library.view.ImageSelectorActivity;
@@ -34,11 +33,19 @@ import java.util.List;
 import java.util.Map;
 
 public class EditPhotoActivity extends Activity {
-    @SuppressWarnings("HardCodedStringLiteral")
+    /**
+     * The {@link String} instance representing backend server API for base64 image uploading
+     */
     private static final String UPLOAD_URL = "http://habbitsapp.esy.es/upload.php";
+    /**
+     * Key which server parses as an image
+     */
     private static final String KEY_IMAGE = "image";
-    private Bitmap bitmap;
+    /**
+     * Defined for logging errors and debugging information
+     */
     private static final String TAG = EditPhotoActivity.class.getSimpleName();
+    private Bitmap bitmap;
     private final CallbackManager mCallbackManager = CallbackManager.Factory.create();
 
     @Override
@@ -47,7 +54,6 @@ public class EditPhotoActivity extends Activity {
         int permissionCheck =
                 ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
-            FacebookSdk.sdkInitialize(getApplicationContext());
             ImageSelectorActivity.start(this, 1, ImageSelectorActivity.MODE_SINGLE, true, true, true);
         } else {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
@@ -88,12 +94,10 @@ public class EditPhotoActivity extends Activity {
                         Toast.makeText(EditPhotoActivity.this, s, Toast.LENGTH_LONG).show();
                     }
                 },
-                volleyError -> {
-                    Toast.makeText(EditPhotoActivity.this,
-                            "Server error " + volleyError.networkResponse.statusCode,
-                            Toast.LENGTH_LONG).show();
-                }) {
-            @SuppressWarnings("ConstantConditions")
+                volleyError ->
+                        Toast.makeText(EditPhotoActivity.this,
+                                "Server error " + volleyError.networkResponse.statusCode,
+                                Toast.LENGTH_LONG).show()) {
             @Override
             protected Map<String, String> getParams() {
                 //Creating parameters

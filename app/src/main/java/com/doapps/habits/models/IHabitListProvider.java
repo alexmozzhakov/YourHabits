@@ -8,4 +8,5 @@ public interface IHabitListProvider extends IListProvider {
      */
     @Override
     List<Habit> getList();
+    CharSequence getDueCount();
 }

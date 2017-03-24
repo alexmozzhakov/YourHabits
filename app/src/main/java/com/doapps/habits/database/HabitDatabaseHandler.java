@@ -17,8 +17,10 @@ import java.util.Calendar;
 import java.util.List;
 
 @SuppressLint("DefaultLocale")
-@SuppressWarnings("HardCodedStringLiteral")
 public class HabitDatabaseHandler extends SQLiteOpenHelper implements IHabitsDatabase {
+    /**
+     * TAG is defined for logging errors and debugging information
+     */
     private static final String TAG = HabitDatabaseHandler.class.getSimpleName();
     // All Static variables
     // Database Version
@@ -41,6 +43,10 @@ public class HabitDatabaseHandler extends SQLiteOpenHelper implements IHabitsDat
     private static final String KEY_FREQUENCY_ARRAY = "freq_arr";
     private static final String INTEGER = " INTEGER,";
     private static final String TEXT = " TEXT,";
+    /**
+     * isSame is for managing table status, not to load every time from database, but use previously
+     * generated list in {@link:HabitListManager}
+     */
     private static boolean isSame = true;
 
     public HabitDatabaseHandler(Context context) {

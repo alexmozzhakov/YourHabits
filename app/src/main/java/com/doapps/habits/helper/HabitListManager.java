@@ -8,6 +8,7 @@ import com.doapps.habits.models.Habit;
 import com.doapps.habits.models.IHabitDatabaseMovableListProvider;
 import com.doapps.habits.models.IHabitsDatabase;
 
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
@@ -49,8 +50,9 @@ public class HabitListManager implements IHabitDatabaseMovableListProvider {
 
     @Override
     public void onItemDismiss(int position) {
+        final int id = mHabitsList.get(position).id;
         mHabitsList.remove(position);
-        mHabitsDatabase.delete(mHabitsList.get(position).id);
+        mHabitsDatabase.delete(id);
     }
 
     @Override
@@ -60,6 +62,24 @@ public class HabitListManager implements IHabitDatabaseMovableListProvider {
         mHabitsList.get(fromPosition).id = mHabitsList.get(toPosition).id;
         mHabitsList.get(toPosition).id = fromPositionId;
         mHabitsDatabase.move(mHabitsList.get(fromPosition).id, mHabitsList.get(toPosition).id);
+    }
+
+    /**
+     * @return String value of number of incomplete habits
+     */
+    public CharSequence getDueCount() {
+        Calendar calendar = Calendar.getInstance();
+        int date = calendar.get(Calendar.DATE);
+        int month = calendar.get(Calendar.MONTH);
+        int year = calendar.get(Calendar.YEAR);
+
+        int counter = 0;
+        for (Habit habit : mHabitsList) {
+            if (!habit.isDone(date, month, year)) {
+                counter++;
+            }
+        }
+        return String.valueOf(counter);
     }
 
     @Override

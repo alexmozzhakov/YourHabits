@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.doapps.habits.R;
+import com.doapps.habits.listeners.EmptyListListener;
 import com.doapps.habits.models.Habit;
 import com.doapps.habits.models.IHabitDatabaseMovableListProvider;
 import com.doapps.habits.models.IHabitsDatabase;
@@ -17,7 +18,7 @@ import com.doapps.habits.viewholder.HabitViewHolder;
 import java.util.Calendar;
 import java.util.List;
 
-public class HabitRecycleAdapter extends RecyclerView.Adapter implements IMovableList {
+public class HabitRecycleAdapter extends RecyclerView.Adapter<HabitViewHolder> implements IMovableList {
     private final List<Habit> mHabitList;
     private final IHabitsDatabase mHabitsDatabase;
     private final IHabitDatabaseMovableListProvider mMovableList;
@@ -36,28 +37,26 @@ public class HabitRecycleAdapter extends RecyclerView.Adapter implements IMovabl
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-
+    public void onBindViewHolder(HabitViewHolder holder, int position) {
         Log.d("HabitAdapter", "Position is: " + position);
-        HabitViewHolder habitViewHolder = (HabitViewHolder) holder;
         Habit habit = mHabitList.get(position);
 
-        habitViewHolder.txtTitle.setText(habit.title);
-        habitViewHolder.checkBox.setOnClickListener(view -> {
-            if (habitViewHolder.checkBox.isChecked()) {
+        holder.txtTitle.setText(habit.title);
+        holder.checkBox.setOnClickListener(view -> {
+            if (holder.checkBox.isChecked()) {
                 mHabitsDatabase.updateHabit(habit, 1);
                 mHabitList.get(position).setDoneMarker(true);
-                habitViewHolder.txtTitle.setTextColor(Color.GRAY);
+                holder.txtTitle.setTextColor(Color.GRAY);
             } else {
                 mHabitsDatabase.updateHabit(habit, 0);
                 mHabitList.get(position).setDoneMarker(false);
-                habitViewHolder.txtTitle.setTextColor(Color.BLACK);
+                holder.txtTitle.setTextColor(Color.BLACK);
             }
         });
 
         Calendar calendar = Calendar.getInstance();
 
-        habitViewHolder.checkBox.setChecked(habit.isDone(
+        holder.checkBox.setChecked(habit.isDone(
                 calendar.get(Calendar.DATE),
                 calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.YEAR)));
@@ -73,6 +72,7 @@ public class HabitRecycleAdapter extends RecyclerView.Adapter implements IMovabl
     public void onItemDismiss(int position) {
         mMovableList.onItemDismiss(position);
         notifyItemRemoved(position);
+        EmptyListListener.listener.isEmpty(getItemCount() == 0);
     }
 
     @Override

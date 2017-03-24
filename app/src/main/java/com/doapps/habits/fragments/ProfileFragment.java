@@ -32,7 +32,6 @@ import com.doapps.habits.slider.swipeselector.PixelUtils;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.google.firebase.auth.AuthCredential;
@@ -133,7 +132,6 @@ public class ProfileFragment extends Fragment {
             } else {
                 Button btnFacebook = (Button) result.findViewById(R.id.btn_connect_facebook);
                 btnFacebook.setVisibility(View.VISIBLE);
-                FacebookSdk.sdkInitialize(getContext().getApplicationContext());
                 CallbackManager callbackManager =
                         ((MainActivity) getActivity()).getCallbackManager();
                 LoginManager.getInstance().registerCallback(callbackManager,
@@ -199,7 +197,6 @@ public class ProfileFragment extends Fragment {
 
     private void deleteUser(FirebaseUser user) {
         if (MainActivity.isFacebook(user)) {
-            FacebookSdk.sdkInitialize(getContext().getApplicationContext());
             LoginManager.getInstance().
                     logInWithReadPermissions(getActivity(),
                             Arrays.asList("email", "public_profile"));

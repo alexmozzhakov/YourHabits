@@ -26,7 +26,6 @@ import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.google.firebase.auth.AuthCredential;
@@ -36,9 +35,10 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Arrays;
 
-@SuppressWarnings("ConstantConditions")
 public class LoginFragment extends Fragment {
-
+    /**
+     * TAG is defined for logging errors and debugging information
+     */
     private static final String TAG = LoginFragment.class.getSimpleName();
 
     private FirebaseAuth mAuth;
@@ -53,7 +53,6 @@ public class LoginFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        FacebookSdk.sdkInitialize(getContext().getApplicationContext());
         // Inflate the layout for this fragment
         View result = inflater.inflate(R.layout.fragment_login, container, false);
 
@@ -118,7 +117,6 @@ public class LoginFragment extends Fragment {
                         Log.d(TAG, "facebook:onError", error);
                     }
 
-                    @SuppressWarnings("ConstantConditions")
                     private void handleFacebookAccessToken(AccessToken token) {
                         AuthCredential credential =
                                 FacebookAuthProvider.getCredential(token.getToken());
@@ -131,7 +129,7 @@ public class LoginFragment extends Fragment {
                                 .addOnCompleteListener(task -> {
                                     FirebaseUser user =
                                             FirebaseAuth.getInstance().getCurrentUser();
-                                    if (getContext().getSharedPreferences("pref",
+                                    if (user != null && getContext().getSharedPreferences("pref",
                                             Context.MODE_PRIVATE).getString(user.getUid(), null) == null) {
                                         getContext()
                                                 .getSharedPreferences("pref", Context.MODE_PRIVATE)
@@ -210,7 +208,7 @@ public class LoginFragment extends Fragment {
         });
     }
 
-    private void anonymousLogin(@SuppressWarnings("UnusedParameters") View view) {
+    private void anonymousLogin(View view) {
         FirebaseAuth.getInstance().signInAnonymously().addOnCompleteListener(task -> {
             if (BuildConfig.DEBUG) {
                 Log.d(TAG, "signInAnonymously:onComplete:" + task.isSuccessful());

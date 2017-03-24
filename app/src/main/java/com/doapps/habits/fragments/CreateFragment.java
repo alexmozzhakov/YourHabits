@@ -24,7 +24,6 @@ import com.doapps.habits.models.IHabitsDatabase;
 import java.util.Arrays;
 import java.util.Calendar;
 
-@SuppressWarnings("FeatureEnvy")
 public class CreateFragment extends Fragment implements AdapterView.OnItemSelectedListener {
     private TextInputEditText editTime;
     private TextInputEditText editQuestion;

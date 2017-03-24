@@ -1,18 +1,20 @@
 apply plugin: 'com.android.application'
-apply plugin: 'me.tatarka.retrolambda'
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion '24.0.0'
+    compileSdkVersion 25
+    buildToolsVersion '25.0.2'
 
     defaultConfig {
         applicationId "com.doapps.habit"
         minSdkVersion 16
-        //noinspection OldTargetApi
-        targetSdkVersion 23
+        targetSdkVersion 25
         versionCode 1
-        versionName "0.5.4"
+        versionName "0.5.5"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        jackOptions {
+            enabled true
+        }
     }
 
     compileOptions {
@@ -39,45 +41,40 @@ android {
     }
 }
 
-repositories {
-    maven {
-        url "https://jitpack.io"
-    }
-}
-
 dependencies {
     // App's dependencies, including test
     compile(project(path: ':imageselector')) {
         exclude group: 'com.github.bumptech.glide'
         exclude group: 'com.android.support'
     }
-    testCompile 'junit:junit:4.12'
-    compile 'com.android.support:design:24.2.1'
-    compile 'com.android.support:recyclerview-v7:24.2.1'
-    compile 'com.android.support:percent:24.2.1'
+    compile 'com.github.vipulasri:timelineview:1.0.5'
+    compile "com.android.support:design:$supportLibraryVersion"
+    compile "com.android.support:recyclerview-v7:$supportLibraryVersion"
+    compile "com.android.support:percent:$supportLibraryVersion"
     compile 'com.android.volley:volley:1.0.0'
-    compile 'com.google.firebase:firebase-database:9.4.0'
-    compile 'com.google.firebase:firebase-auth:9.4.0'
-    compile 'com.google.firebase:firebase-crash:9.4.0'
+    compile "com.google.firebase:firebase-database:$firebaseVersion"
+    compile "com.google.firebase:firebase-auth:$firebaseVersion"
+    compile "com.google.firebase:firebase-crash:$firebaseVersion"
     compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.facebook.android:facebook-android-sdk:4.15.0'
-    compile 'com.ruesga.timeline-chart-view:timeline-chart-view:0.0.8'
+    compile 'com.facebook.android:facebook-android-sdk:4.20.0'
+    compile 'com.ruesga.timeline-chart-view:timeline-chart-view:1.0.1'
     compile 'com.github.bumptech.glide:glide:3.7.0'
-    compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha8'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
 
-    androidTestCompile 'com.android.support:support-annotations:24.2.1'
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2') {
+    testCompile "junit:junit:$junitVersion"
+    androidTestCompile "com.android.support:support-annotations:$supportLibraryVersion"
+    androidTestCompile("com.android.support.test.espresso:espresso-core:$espressoVersion") {
         exclude group: 'com.android.support'
     }
-    androidTestCompile('com.android.support.test.espresso:espresso-contrib:2.2.2') {
+    androidTestCompile("com.android.support.test.espresso:espresso-contrib:$espressoVersion") {
         exclude group: 'com.android.support'
     }
-    androidTestCompile 'com.android.support.test:runner:0.5'
+    androidTestCompile "com.android.support.test:runner:$rootProject.ext.runnerVersion"
 }
 
 tasks.whenTaskAdded {
     task ->
-        if (task.name.equals("lint")) {
+        if (task.name == "lint") {
             task.enabled = false
         }
 }

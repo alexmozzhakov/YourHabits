@@ -34,6 +34,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProgramsFragment extends Fragment {
+    /**
+     * TAG is defined for logging errors and debugging information
+     */
     private static final String TAG = ProgramsFragment.class.getSimpleName();
     public static boolean isShowing;
     private static boolean persistenceEnabled;

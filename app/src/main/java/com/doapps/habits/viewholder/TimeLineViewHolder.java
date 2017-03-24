@@ -5,19 +5,16 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.doapps.habits.R;
-import com.doapps.habits.helper.TimeLineView;
+import com.github.vipulasri.timelineview.TimelineView;
 
 public class TimeLineViewHolder extends RecyclerView.ViewHolder {
-    private final TextView name;
+
+    public TextView textView;
 
     public TimeLineViewHolder(View itemView, int viewType) {
         super(itemView);
-        name = (TextView) itemView.findViewById(R.id.habit_title);
-        TimeLineView timeLineView = (TimeLineView) itemView.findViewById(R.id.time_marker);
-        timeLineView.initLine(viewType);
-    }
-
-    public TextView getName() {
-        return name;
+        textView = (TextView) itemView.findViewById(R.id.habit_title);
+        TimelineView mTimelineView = (TimelineView) itemView.findViewById(R.id.time_marker);
+        mTimelineView.initLine(viewType);
     }
 }

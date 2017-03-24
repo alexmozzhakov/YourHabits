@@ -180,7 +180,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
         mDrawerToggle.syncState();
     }
 
-    public void toCreateFragment(@SuppressWarnings("UnusedParameters") View view) {
+    public void toCreateFragment(View view) {
         mNavigationView.getMenu().getItem(0).setChecked(false);
         mLastFragment = 5;
         mToolbar.setTitle("Create Habit");
@@ -192,7 +192,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
 
     }
 
-    private void toProfile(@SuppressWarnings("UnusedParameters") View view) {
+    private void toProfile(View view) {
         mDrawerLayout.closeDrawer(GravityCompat.START);
 
         if (mLastFragment == R.id.nav_profile) {

@@ -5,30 +5,30 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
     android:orientation="horizontal">
 
-    <com.doapps.habits.helper.TimeLineView
+    <com.github.vipulasri.timelineview.TimelineView
         android:id="@+id/time_marker"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingBottom="30dp"
-        android:paddingEnd="10dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingStart="10dp"
-        android:paddingTop="30dp"
+        android:layout_height="match_parent"
         app:line="@color/colorPrimary"
-        app:line_size="2dp"
-        app:marker_size="25dp"/>
+        app:linePadding="5dp"
+        app:lineSize="3dp"/>
 
     <TextView
         android:id="@+id/habit_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="start|center_vertical"
+        android:layout_marginBottom="15dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="15dp"
         android:gravity="start"
-        android:paddingLeft="30dp"
-        android:paddingStart="30dp"
+        android:paddingLeft="15dp"
+        android:paddingStart="15dp"
         android:text="@string/navigation_drawer_close"
         android:textColor="@color/black"
         android:textSize="20sp"
