@@ -1,9 +1,9 @@
 package com.doapps.habits.fragments;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -22,10 +22,10 @@ import com.doapps.habits.BuildConfig;
 import com.doapps.habits.R;
 import com.doapps.habits.activity.MainActivity;
 import com.doapps.habits.adapter.TimeLineAdapter;
+import com.doapps.habits.helper.ConnectionManager;
 import com.doapps.habits.helper.HabitListManager;
 import com.doapps.habits.helper.HomeDayManager;
 import com.doapps.habits.models.IDayManager;
-import com.doapps.habits.models.Habit;
 import com.doapps.habits.models.IHabitListProvider;
 import com.doapps.habits.models.IStringSelector;
 import com.google.firebase.auth.FirebaseAuth;
@@ -34,25 +34,12 @@ import com.google.firebase.auth.FirebaseUser;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 public class HomeFragment extends Fragment {
     private TextView weather;
     private TextView weatherBot;
-    @SuppressWarnings("HardCodedStringLiteral")
     private static final String URL_WEATHER_API = "http://habbitsapp.esy.es/weather.php";
-
-    /**
-     * @return true if user is connected to Internet
-     */
-    private static boolean isConnected(Context context) {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -62,24 +49,26 @@ public class HomeFragment extends Fragment {
 
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.timeline);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+//        TimelineView timelineView = (TimelineView) view.findViewById(R.id.timeline);
 
         IHabitListProvider habitListManager =
                 HabitListManager.getInstance(getContext());
 
-        List<Habit> habitList = new ArrayList<>(habitListManager.getList());
         // filter list for today
-        HomeDayManager.filterListForToday(habitList);
+        HomeDayManager.filterListForToday(habitListManager.getList());
 
+        // get list size
+        int habitListSize = habitListManager.getList().size();
         // set due count of filtered list
         TextView tasksDue = (TextView) view.findViewById(R.id.tasks_due);
-        tasksDue.setText(getDueCount(habitList));
+        tasksDue.setText(habitListManager.getDueCount());
 
         weather = (TextView) view.findViewById(R.id.weather);
         weatherBot = (TextView) view.findViewById(R.id.weatherBot);
-        if (isConnected(getContext())) {
-            getWeather(getContext(), habitList.size());
+        if (ConnectionManager.isConnected(getContext())) {
+            getWeather(getContext(), habitListSize);
         } else {
-            weather.setText(String.valueOf(habitList.size()));
+            weather.setText(String.valueOf(habitListSize));
             weatherBot.setText("All tasks");
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -92,7 +81,7 @@ public class HomeFragment extends Fragment {
                             @Override
                             public void onNetworkActive() {
                                 Log.i("HF", "onNetworkActive");
-                                getWeather(getContext(), habitList.size());
+                                getWeather(getContext(), habitListSize);
 
                                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                                 if (user == null) {
@@ -112,7 +101,7 @@ public class HomeFragment extends Fragment {
         }
 
         // set filtered list to adapter
-        TimeLineAdapter timeLineAdapter = new TimeLineAdapter(habitList);
+        TimeLineAdapter timeLineAdapter = new TimeLineAdapter(habitListManager.getList());
         timeLineAdapter.setHasStableIds(true);
         recyclerView.setAdapter(timeLineAdapter);
 
@@ -162,7 +151,8 @@ public class HomeFragment extends Fragment {
                 }
 
             } else {
-                int day = (dayOfWeek + value) % 7;
+                int daysFromWeekStart = dayOfWeek + value;
+                int day = daysFromWeekStart >  7 ? daysFromWeekStart % 7 : daysFromWeekStart;
 
                 if (BuildConfig.DEBUG) {
                     Log.i("HomeFragment", "Selected day = " + day);
@@ -173,26 +163,7 @@ public class HomeFragment extends Fragment {
         });
     }
 
-
-    /**
-     * @param habitsList is iterable list of {@link Habit}
-     * @return String value of number of incomplete habits
-     */
-    private static CharSequence getDueCount(Iterable<Habit> habitsList) {
-        Calendar calendar = Calendar.getInstance();
-        int date = calendar.get(Calendar.DATE);
-        int month = calendar.get(Calendar.MONTH);
-        int year = calendar.get(Calendar.YEAR);
-
-        int counter = 0;
-        for (Habit habit : habitsList) {
-            if (!habit.isDone(date, month, year)) {
-                counter++;
-            }
-        }
-        return String.valueOf(counter);
-    }
-
+    @SuppressLint("SetTextI18n")
     private void getWeather(Context context, int listSize) {
         Volley.newRequestQueue(context.getApplicationContext()).add(
                 new StringRequest(Request.Method.GET, URL_WEATHER_API,

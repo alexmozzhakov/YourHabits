@@ -89,7 +89,7 @@ public class AuthActivity extends AppCompatActivity {
         }
     }
 
-    public void toTerms(@SuppressWarnings("UnusedParameters") View view) {
+    public void toTerms(View view) {
         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://habbitsapp.esy.es/terms.txt")));
     }
 }

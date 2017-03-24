@@ -6,21 +6,23 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.3'
-        classpath 'me.tatarka:gradle-retrolambda:3.2.5'
-        classpath 'me.tatarka.retrolambda.projectlombok:lombok.ast:0.2.3.a2'
+        classpath 'com.android.tools.build:gradle:2.3.0'
         classpath 'com.google.gms:google-services:3.0.0'
     }
-
-    configurations.classpath.exclude group: 'com.android.tools.external.lombok'
 }
 
 allprojects {
     repositories {
         jcenter()
+        maven { url 'https://jitpack.io' }
     }
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '2.0'
+ext{
+    //dependencies
+    junitVersion = '4.12'
+    espressoVersion = '2.2.2'
+    supportLibraryVersion = '25.3.0'
+    firebaseVersion = '10.2.1'
+    runnerVersion = '0.5'
 }

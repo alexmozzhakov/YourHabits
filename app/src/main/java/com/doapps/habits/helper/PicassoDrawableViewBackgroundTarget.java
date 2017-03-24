@@ -10,6 +10,10 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 public class PicassoDrawableViewBackgroundTarget implements Target {
+    /**
+     * TAG is defined for logging errors and debugging information
+     */
+    private static final String TAG = PicassoDrawableViewBackgroundTarget.class.getSimpleName();
     private final ImageView mImageView;
 
     public PicassoDrawableViewBackgroundTarget(ImageView imageView) {
@@ -25,12 +29,11 @@ public class PicassoDrawableViewBackgroundTarget implements Target {
 
     @Override
     public void onBitmapFailed(final Drawable errorDrawable) {
-        Log.d("TAG", "FAILED");
+        Log.e(TAG, "Failed bitmap");
     }
 
     @Override
     public void onPrepareLoad(final Drawable placeHolderDrawable) {
-        Log.d("TAG", "Prepare Load");
-
+        Log.d(TAG, "Prepare Load");
     }
 }

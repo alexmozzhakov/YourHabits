@@ -59,7 +59,6 @@ public class HomeDayManager implements IDayManager {
         }
     }
 
-    @SuppressWarnings("LocalVariableOfConcreteClass")
     static void filterListByDay(Iterable<Habit> dayHabits, int dayOfWeek) {
         Iterator<Habit> habitIterator = dayHabits.iterator();
         while (habitIterator.hasNext()) {

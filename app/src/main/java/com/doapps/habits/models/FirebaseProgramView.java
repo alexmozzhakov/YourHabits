@@ -7,6 +7,7 @@ public class FirebaseProgramView implements IProgramViewProvider {
     private final String percent;
     private final String description;
     private final String imageLink;
+
     private final DataSnapshot snapshot;
 
     public FirebaseProgramView(DataSnapshot snapshot) {

@@ -11,6 +11,9 @@ import java.util.Observable;
 import java.util.Observer;
 
 public class UserAvatarListener implements Observer {
+    /**
+     * TAG is defined for logging errors and debugging information
+     */
     private static final String TAG = UserAvatarListener.class.getSimpleName();
 
     @Override

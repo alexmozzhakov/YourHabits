@@ -11,11 +11,10 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.github.chrisbanes.photoview.PhotoViewAttacher;
 import com.yongchun.library.R;
 
 import java.io.File;
-
-import uk.co.senab.photoview.PhotoViewAttacher;
 
 public class ImagePreviewFragment extends Fragment {
     private static final String PATH = "path";
@@ -33,7 +32,7 @@ public class ImagePreviewFragment extends Fragment {
                              Bundle savedInstanceState) {
         View contentView = inflater.inflate(R.layout.fragment_image_preview, container, false);
         ImageView imageView = (ImageView) contentView.findViewById(R.id.preview_image);
-        PhotoViewAttacher mAttacher = new PhotoViewAttacher(imageView);
+        final PhotoViewAttacher mAttacher = new PhotoViewAttacher(imageView);
         String path = getArguments().getString(PATH);
         if (path != null) {
             Glide.with(container.getContext())
@@ -41,12 +40,18 @@ public class ImagePreviewFragment extends Fragment {
                     .asBitmap()
                     .into(new ImagePreviewFragment.BitmapSimpleTarget(imageView, mAttacher));
         }
-        mAttacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
+        mAttacher.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onViewTap(View view, float x, float y) {
+            public void onClick(View v) {
                 ((ImagePreviewActivity) getActivity()).switchBarVisibility();
             }
         });
+//        mAttacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
+//            @Override
+//            public void onViewTap(View view, float x, float y) {
+//                ((ImagePreviewActivity) getActivity()).switchBarVisibility();
+//            }
+//        });
         return contentView;
     }
 

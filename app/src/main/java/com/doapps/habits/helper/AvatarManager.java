@@ -14,6 +14,9 @@ import com.squareup.picasso.Picasso;
 import java.util.Observable;
 
 public class AvatarManager extends Observable {
+    /**
+     * TAG is defined for logging errors and debugging information
+     */
     private static final String TAG = AvatarManager.class.getSimpleName();
     private boolean changed;
     private Uri mUri;

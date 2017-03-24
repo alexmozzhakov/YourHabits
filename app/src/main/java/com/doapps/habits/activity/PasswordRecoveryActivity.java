@@ -24,7 +24,7 @@ public class PasswordRecoveryActivity extends AppCompatActivity {
 
     }
 
-    public void recoverPassword(@SuppressWarnings("UnusedParameters") View view) {
+    public void recoverPassword(View view) {
         String newEmail = emailEdit.getText().toString().trim();
         if (newEmail.isEmpty()) {
             Toast.makeText(getApplicationContext(), "Email is empty", Toast.LENGTH_SHORT).show();

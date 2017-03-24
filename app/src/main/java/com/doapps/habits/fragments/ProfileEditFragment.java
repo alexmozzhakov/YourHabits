@@ -26,7 +26,6 @@ import com.doapps.habits.activity.MainActivity;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.google.firebase.auth.AuthCredential;
@@ -37,10 +36,12 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserInfo;
 import com.google.firebase.auth.UserProfileChangeRequest;
 
-@SuppressWarnings("FeatureEnvy")
 public class ProfileEditFragment extends Fragment {
 
     private String inputPassword = "";
+    /**
+     * TAG is defined for logging errors and debugging information
+     */
     private static final String TAG = ProfileEditFragment.class.getSimpleName();
     private FloatingActionButton fab;
     private ImageView avatar;
@@ -73,7 +74,6 @@ public class ProfileEditFragment extends Fragment {
                             // TODO: 14/07/2016 change to working solution
                             CallbackManager callbackManager =
                                     ((MainActivity) getActivity()).getCallbackManager();
-                            FacebookSdk.sdkInitialize(getContext().getApplicationContext());
                             LoginManager.getInstance().registerCallback(callbackManager,
                                     new FacebookCallback<LoginResult>() {
                                         @Override
@@ -148,9 +148,8 @@ public class ProfileEditFragment extends Fragment {
 
         // Set up the buttons
         builder.setPositiveButton("OK", (dialog, which) -> inputPassword = input.getText().toString());
-        builder.setNegativeButton("Cancel", (dialog, which) -> {
-            getFragmentManager().beginTransaction().remove(this).commit();
-        });
+        builder.setNegativeButton("Cancel", (dialog, which) ->
+                getFragmentManager().beginTransaction().remove(this).commit());
 
         builder.show();
     }
