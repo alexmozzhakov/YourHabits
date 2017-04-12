@@ -254,6 +254,7 @@ public class SwipeAdapter extends PagerAdapter implements View.OnClickListener, 
         }
     }
 
+    @SuppressWarnings("deprecation")
     private static void setTextAppearanceCompat(TextView textView, int appearanceRes) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             textView.setTextAppearance(appearanceRes);

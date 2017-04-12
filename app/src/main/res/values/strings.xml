@@ -22,6 +22,7 @@
     <string name="times_every">times every</string>
     <string name="days">days</string>
     <string name="delete_user">Delete user</string>
+    <string name="all_tasks">All tasks</string>
 
     <string-array name="days_of_week_array">
         <item>Sunday</item>
@@ -51,5 +52,12 @@
     <string name="move_left">Move left</string>
     <string name="move_right">Move right</string>
     <string name="avatar">avatar</string>
+
+    <!-- Menu items -->
+    <string name="home">Home</string>
+    <string name="programs">Programs</string>
+    <string name="lists">Lists</string>
+    <string name="profile">Profile</string>
+    <string name="logout">Logout</string>
 
 </resources>
