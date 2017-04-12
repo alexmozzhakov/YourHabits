@@ -7,19 +7,19 @@
         <item
             android:id="@+id/nav_home"
             android:icon="@drawable/ic_home"
-            android:title="Home"/>
+            android:title="@string/home"/>
         <item
             android:id="@+id/nav_programs"
             android:icon="@drawable/ic_groups"
-            android:title="Programs"/>
+            android:title="@string/programs"/>
         <item
             android:id="@+id/nav_lists"
             android:icon="@drawable/ic_lists"
-            android:title="Lists"/>
+            android:title="@string/lists"/>
         <item
             android:id="@+id/nav_profile"
             android:icon="@drawable/ic_profile"
-            android:title="Profile"
+            android:title="@string/profile"
             android:visible="false"/>
     </group>
 
@@ -30,6 +30,6 @@
         <item
             android:id="@+id/nav_logout"
             android:icon="@drawable/ic_logout"
-            android:title="Logout"/>
+            android:title="@string/logout"/>
     </group>
 </menu>

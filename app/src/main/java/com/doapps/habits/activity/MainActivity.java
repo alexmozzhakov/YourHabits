@@ -239,6 +239,11 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
         }
     }
 
+    public void setAvatarInvisible() {
+        mNavigationView.getHeaderView(0).findViewById(R.id.fields_info).setPadding(0, 0, 0, 0);
+    }
+
+
     public void onSetupNavigationDrawer(FirebaseUser user) {
 
         mNavigationView.setNavigationItemSelectedListener(this);
@@ -340,4 +345,22 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
         AvatarManager.listener.deleteObservers();
         super.onDestroy();
     }
+
+
+    @Override
+    public void onBackPressed() {
+        Log.d("CDA", "onBackPressed Called");
+        if (mLastFragment == R.id.nav_home)
+            finishAffinity();
+
+        if (mLastFragment == R.id.nav_profile) {
+            findViewById(R.id.toolbar_shadow).setVisibility(View.VISIBLE);
+        }
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.content_frame, new HomeFragment()).commit();
+        mToolbar.setTitle("Home");
+        mLastFragment = R.id.nav_home;
+        mNavigationView.getMenu().getItem(0).setChecked(true);
+    }
+
 }

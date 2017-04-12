@@ -49,7 +49,6 @@ public class HomeFragment extends Fragment {
 
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.timeline);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-//        TimelineView timelineView = (TimelineView) view.findViewById(R.id.timeline);
 
         IHabitListProvider habitListManager =
                 HabitListManager.getInstance(getContext());
@@ -69,7 +68,7 @@ public class HomeFragment extends Fragment {
             getWeather(getContext(), habitListSize);
         } else {
             weather.setText(String.valueOf(habitListSize));
-            weatherBot.setText("All tasks");
+            weatherBot.setText(R.string.all_tasks);
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 ConnectivityManager conMan = (ConnectivityManager)
@@ -95,6 +94,7 @@ public class HomeFragment extends Fragment {
                                 }
                                 conMan.removeDefaultNetworkActiveListener(this);
                             }
+
                         };
                 conMan.addDefaultNetworkActiveListener(activeListener);
             }
@@ -152,7 +152,7 @@ public class HomeFragment extends Fragment {
 
             } else {
                 int daysFromWeekStart = dayOfWeek + value;
-                int day = daysFromWeekStart >  7 ? daysFromWeekStart % 7 : daysFromWeekStart;
+                int day = daysFromWeekStart > 7 ? daysFromWeekStart % 7 : daysFromWeekStart;
 
                 if (BuildConfig.DEBUG) {
                     Log.i("HomeFragment", "Selected day = " + day);
@@ -169,35 +169,38 @@ public class HomeFragment extends Fragment {
                 new StringRequest(Request.Method.GET, URL_WEATHER_API,
                         response -> {
                             try {
-                                JSONObject o = new JSONObject(response);
+                                JSONObject jsonResponse = new JSONObject(response);
 
-                                if (o.has("error")) {
-                                    Log.e("JSONException", "Response got: " + o.getString("error"));
+                                if (jsonResponse.has("error")) {
+                                    onNetworkFail(
+                                            new Exception(jsonResponse.getString("error")), listSize);
                                 } else {
                                     if (getActivity() != null) {
                                         getActivity()
                                                 .getSharedPreferences("pref", Context.MODE_PRIVATE)
                                                 .edit()
-                                                .putString("location", o.getString("location"))
+                                                .putString("location", jsonResponse.getString("location"))
                                                 .apply();
                                     }
 
-                                    weather.setText(o.getString("celsius") + "˚C");
-                                    weatherBot.setText(o.getString("location"));
+                                    weather.setText(jsonResponse.getString("celsius") + "˚C");
+                                    weatherBot.setText(jsonResponse.getString("location"));
                                 }
 
-                            } catch (JSONException e) {
-                                Log.e("JSONException", "Response got: " + response, e);
-                                weather.setText(String.valueOf(listSize));
-                                weatherBot.setText("All tasks");
+                            } catch (JSONException error) {
+                                onNetworkFail(error, listSize);
                             }
 
                         },
-                        error -> {
-                            Log.e("StringRequest error", error.toString());
-                            weather.setText(String.valueOf(listSize));
-                            weatherBot.setText("All tasks");
-                        })
+                        error -> onNetworkFail(error, listSize))
         );
+    }
+
+    private void onNetworkFail(Exception error, int listSize) {
+        if (getActivity() == null) return;
+        Log.e("StringRequest error", error.toString());
+        weather.setText(String.valueOf(listSize));
+        weatherBot.setText(R.string.all_tasks);
+        ((MainActivity) getActivity()).setAvatarInvisible();
     }
 }

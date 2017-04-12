@@ -19,17 +19,16 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
-public class RemoveAllTest {
+public class RemoveHabitTest {
 
     @Rule
     public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
 
     @Test
-    public void removeAllTest() {
+    public void removeHabitTest() {
         onView(withId(R.id.drawer_layout)).perform(open());
         onView(withText("Lists")).perform(click());
         onView(withId(R.id.habits_list))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(0, swipeRight()));
     }
-
 }
