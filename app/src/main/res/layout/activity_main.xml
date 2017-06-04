@@ -24,9 +24,9 @@
         android:id="@+id/navigationView"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:paddingTop="20dp"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
+        android:paddingTop="20dp"
         app:headerLayout="@layout/nav_header_menu"
         app:menu="@menu/activity_menu_drawer"/>
 

@@ -29,7 +29,6 @@
         android:gravity="start"
         android:paddingLeft="15dp"
         android:paddingStart="15dp"
-        android:text="@string/navigation_drawer_close"
         android:textColor="@color/black"
         android:textSize="20sp"
         tools:ignore="RtlHardcoded,RtlSymmetry"/>

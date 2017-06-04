@@ -27,9 +27,9 @@ public class ListFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View result = inflater.inflate(R.layout.fragment_list, container, false);
-        RecyclerView recyclerView = (RecyclerView) result.findViewById(R.id.habits_list);
+        RecyclerView recyclerView = result.findViewById(R.id.habits_list);
         recyclerView.setHasFixedSize(true);
-        TextView emptyView = (TextView) result.findViewById(R.id.empty_view);
+        TextView emptyView = result.findViewById(R.id.empty_view);
         EmptyListListener.listener.addObserver((o, arg) -> {
             recyclerView.setVisibility(View.GONE);
             emptyView.setVisibility(View.VISIBLE);
@@ -39,13 +39,12 @@ public class ListFragment extends Fragment {
             recyclerView.setVisibility(View.GONE);
             emptyView.setVisibility(View.VISIBLE);
         } else {
-            Log.i("List size", String.valueOf(Arrays.toString(habitListManager.getList().toArray())));
+            Log.i("List", String.valueOf(Arrays.toString(habitListManager.getList().toArray())));
             recyclerView.setVisibility(View.VISIBLE);
             emptyView.setVisibility(View.GONE);
             LinearLayoutManager llm = new LinearLayoutManager(getActivity());
             recyclerView.setLayoutManager(llm);
-            HabitRecycleAdapter recycleAdapter =
-                    new HabitRecycleAdapter(habitListManager);
+            HabitRecycleAdapter recycleAdapter = new HabitRecycleAdapter(habitListManager);
             recyclerView.setAdapter(recycleAdapter);
             ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(recycleAdapter);
             ItemTouchHelper touchHelper = new ItemTouchHelper(callback);

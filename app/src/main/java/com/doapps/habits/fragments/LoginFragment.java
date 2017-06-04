@@ -1,12 +1,11 @@
 package com.doapps.habits.fragments;
 
+import android.arch.lifecycle.LifecycleFragment;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -20,8 +19,7 @@ import com.doapps.habits.R;
 import com.doapps.habits.activity.AuthActivity;
 import com.doapps.habits.activity.MainActivity;
 import com.doapps.habits.activity.PasswordRecoveryActivity;
-import com.doapps.habits.helper.AvatarManager;
-import com.doapps.habits.listeners.UserAvatarListener;
+import com.doapps.habits.data.AvatarData;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -35,7 +33,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Arrays;
 
-public class LoginFragment extends Fragment {
+public class LoginFragment extends LifecycleFragment {
     /**
      * TAG is defined for logging errors and debugging information
      */
@@ -56,15 +54,15 @@ public class LoginFragment extends Fragment {
         // Inflate the layout for this fragment
         View result = inflater.inflate(R.layout.fragment_login, container, false);
 
-        inputEmail = (TextInputEditText) result.findViewById(R.id.email);
-        inputPassword = (TextInputEditText) result.findViewById(R.id.password);
+        inputEmail = result.findViewById(R.id.email);
+        inputPassword = result.findViewById(R.id.password);
         setupFields();
 
-        btnLogin = (Button) result.findViewById(R.id.btn_login);
-        btnAnonymous = (Button) result.findViewById(R.id.btn_anonymous_login);
-        btnFacebook = (Button) result.findViewById(R.id.btn_login_facebook);
-        btnRecovery = (Button) result.findViewById(R.id.btn_recovery);
-        btnLinkToRegister = (Button) result.findViewById(R.id.btnLinkToRegisterScreen);
+        btnLogin = result.findViewById(R.id.btn_login);
+        btnAnonymous = result.findViewById(R.id.btn_anonymous_login);
+        btnFacebook = result.findViewById(R.id.btn_login_facebook);
+        btnRecovery = result.findViewById(R.id.btn_recovery);
+        btnLinkToRegister = result.findViewById(R.id.btnLinkToRegisterScreen);
 
         setupButtons();
 
@@ -136,13 +134,10 @@ public class LoginFragment extends Fragment {
                                                 .edit()
                                                 .putString(user.getUid(), token.getUserId())
                                                 .apply();
-                                        UserAvatarListener databaseUpdate = new UserAvatarListener();
-                                        AvatarManager.listener.addObserver(databaseUpdate);
 
-                                        AvatarManager.listener.setUri(
-                                                Uri.parse(String.format("https://graph.facebook.com/%s/picture",
-                                                        token.getUserId())), getActivity());
-                                        AvatarManager.listener.deleteObserver(databaseUpdate);
+                                        AvatarData.getInstance().setValue(
+                                                Uri.parse(String.format("https://graph.facebook.com/%s/picture?type=large",
+                                                        token.getUserId())));
                                     }
                                 });
                     }
@@ -187,12 +182,6 @@ public class LoginFragment extends Fragment {
     }
 
     private void setupFields() {
-        Typeface face =
-                Typeface.createFromAsset(getActivity().getApplicationContext().getAssets(),
-                        "Montserrat-Regular.ttf");
-
-        inputEmail.setTypeface(face);
-        inputPassword.setTypeface(face);
         inputPassword.setImeActionLabel("Login", KeyEvent.KEYCODE_ENTER);
         inputPassword.setOnKeyListener((final View view, final int keyCode, final KeyEvent event) -> {
             // If the event is a key-down event on the "enter" button
@@ -208,15 +197,16 @@ public class LoginFragment extends Fragment {
         });
     }
 
+    @SuppressWarnings("unused")
     private void anonymousLogin(View view) {
         FirebaseAuth.getInstance().signInAnonymously().addOnCompleteListener(task -> {
             if (BuildConfig.DEBUG) {
                 Log.d(TAG, "signInAnonymously:onComplete:" + task.isSuccessful());
             }
 
-            // If sign in fails, display a message to the user. If sign in succeeds
-            // the auth state listener will be notified and logic to handle the
-            // signed in user can be handled in the listener.
+            /* If sign in fails, display a message to the user. If sign in succeeds
+             the auth state listener will be notified and logic to handle the
+             signed in user can be handled in the listener. */
             if (task.isSuccessful()) {
                 if (getActivity() != null) {
                     Intent intent = new Intent(getActivity(), MainActivity.class);
@@ -229,8 +219,6 @@ public class LoginFragment extends Fragment {
                 Toast.makeText(getContext().getApplicationContext(), "Authentication failed.",
                         Toast.LENGTH_SHORT).show();
             }
-
-            // ...
         });
     }
 }

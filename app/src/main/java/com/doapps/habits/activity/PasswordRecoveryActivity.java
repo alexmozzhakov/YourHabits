@@ -20,8 +20,7 @@ public class PasswordRecoveryActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_password_recovery);
-        emailEdit = (TextInputEditText) findViewById(R.id.textInputEditText);
-
+        emailEdit = findViewById(R.id.textInputEditText);
     }
 
     public void recoverPassword(View view) {

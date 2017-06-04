@@ -1,2 +1,1 @@
-include ':app', ':imageselector';
-project(':imageselector').projectDir = new File('app/libs/imageselector');
+include ':app'

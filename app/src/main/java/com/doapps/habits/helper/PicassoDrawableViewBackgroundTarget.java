@@ -21,14 +21,15 @@ public class PicassoDrawableViewBackgroundTarget implements Target {
     }
 
     @Override
-    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+    public void onBitmapLoaded(final Bitmap bitmap, final Picasso.LoadedFrom from) {
         mImageView.setBackground(new BitmapDrawable(mImageView.getContext().getResources(), bitmap));
-        mImageView.getBackground().invalidateSelf();
         mImageView.invalidate();
     }
 
     @Override
     public void onBitmapFailed(final Drawable errorDrawable) {
+        mImageView.setBackground(errorDrawable);
+        mImageView.invalidate();
         Log.e(TAG, "Failed bitmap");
     }
 

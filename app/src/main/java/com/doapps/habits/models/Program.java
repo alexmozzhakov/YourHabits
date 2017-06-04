@@ -17,4 +17,23 @@ public class Program {
         this.achievements = achievements;
     }
 
+
+    public String getTitle() {
+        return title;
+    }
+
+    public long getHabitId() {
+        return habitId;
+    }
+
+    @Override
+    public String toString() {
+        return "Program{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", percent='" + percent + '\'' +
+                ", habitId=" + habitId +
+                ", achievements=" + achievements +
+                '}';
+    }
 }

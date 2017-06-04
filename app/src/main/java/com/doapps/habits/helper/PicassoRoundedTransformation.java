@@ -7,7 +7,9 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.Shader;
 
-public class PicassoRoundedTransformation implements com.squareup.picasso.Transformation {
+import com.squareup.picasso.Transformation;
+
+public class PicassoRoundedTransformation implements Transformation {
     private int radius;
 
     @Override

@@ -20,6 +20,7 @@
             android:id="@+id/email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_regular"
             android:inputType="textEmailAddress"
             android:textColor="@color/input_login"
             android:textColorHint="@color/input_login_hint"
@@ -42,6 +43,7 @@
             android:id="@+id/password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_regular"
             android:inputType="textPassword"
             android:textColor="@color/input_login"
             android:textColorHint="@color/input_login_hint"
@@ -55,8 +57,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:background="@color/colorAccent"
@@ -75,15 +75,18 @@
         android:background="@color/facebook"
         android:drawableLeft="@drawable/ic_facebook_icon"
         android:drawablePadding="-32dp"
+        android:drawableStart="@drawable/ic_facebook_icon"
         android:paddingBottom="16sp"
         android:paddingLeft="16dp"
+        android:paddingStart="16dp"
         android:paddingTop="16sp"
         android:scaleType="fitXY"
         android:text="@string/login_with_facebook"
         android:textColor="@color/white"
         tools:ignore="RtlSymmetry"/>
 
-    <android.support.percent.PercentFrameLayout
+
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingEnd="16dp"
@@ -97,28 +100,39 @@
             android:id="@+id/btn_recovery"
             style="?android:buttonBarButtonStyle"
             android:layout_width="0dp"
-            android:layout_height="40dp"
+            android:layout_height="wrap_content"
             android:gravity="start|center_vertical"
             android:text="@string/recover_password"
             android:textColor="@color/input_login_hint"
             android:textSize="12sp"
-            app:layout_widthPercent="50%"/>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/mid_guideline"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <android.support.constraint.Guideline
+            android:id="@+id/mid_guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent=".5"/>
 
         <!-- Link to Login Screen -->
-
         <Button
             android:id="@+id/btnLinkToRegisterScreen"
             style="?android:buttonBarButtonStyle"
             android:layout_width="0dp"
-            android:layout_height="40dp"
+            android:layout_height="wrap_content"
             android:gravity="end|center_vertical"
             android:text="@string/btn_register"
             android:textColor="@color/colorAccent"
             android:textSize="12sp"
-            app:layout_marginLeftPercent="50%"
-            app:layout_widthPercent="50%"/>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/mid_guideline"
+            app:layout_constraintTop_toTopOf="parent"/>
 
-    </android.support.percent.PercentFrameLayout>
+    </android.support.constraint.ConstraintLayout>
 
     <Button
         android:id="@+id/btn_anonymous_login"

@@ -39,8 +39,8 @@ public class CreateFragment extends Fragment implements AdapterView.OnItemSelect
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View result = inflater.inflate(R.layout.fragment_create, container, false);
-        editTitle = (TextInputEditText) result.findViewById(R.id.edit_title);
-        editQuestion = (TextInputEditText) result.findViewById(R.id.edit_question);
+        editTitle = result.findViewById(R.id.edit_title);
+        editQuestion = result.findViewById(R.id.edit_question);
         editTitle.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -63,11 +63,11 @@ public class CreateFragment extends Fragment implements AdapterView.OnItemSelect
                 }
             }
         });
-        editTime = (TextInputEditText) result.findViewById(R.id.edit_time);
-        sFrequency = (Spinner) result.findViewById(R.id.sFrequency);
-        tvFreqNum = (TextView) result.findViewById(R.id.input_freq_num);
-        tvFreqDen = (TextView) result.findViewById(R.id.input_freq_den);
-        llCustomFrequency = (ViewGroup) result.findViewById(R.id.llCustomFrequency);
+        editTime = result.findViewById(R.id.edit_time);
+        sFrequency = result.findViewById(R.id.sFrequency);
+        tvFreqNum = result.findViewById(R.id.input_freq_num);
+        tvFreqDen = result.findViewById(R.id.input_freq_den);
+        llCustomFrequency = result.findViewById(R.id.llCustomFrequency);
 
         sFrequency.setOnItemSelectedListener(this);
         result.findViewById(R.id.btnCreate).setOnClickListener(view -> onHabitCreate());
@@ -105,7 +105,7 @@ public class CreateFragment extends Fragment implements AdapterView.OnItemSelect
                     editQuestion.getText().toString(),
                     time,
                     Calendar.getInstance(),
-                    0, frequency);
+                    frequency);
 
             HabitNotifier habitNotifier = new HabitNotifier(getContext(),
                     editQuestion.getText().toString(), id);

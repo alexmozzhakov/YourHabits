@@ -10,4 +10,5 @@ public interface IUpdatableList<T> {
      * @param data List, which will be updated on function call
      */
     void updateList(List<T> data);
+    List<T> getList();
 }

@@ -11,7 +11,7 @@ public interface IStringSelector {
 
     /**
      * Returns the adapter currently associated with this selector.
-     * @return An adapter of strings
+     * @return An adapter of items
      */
     SwipeAdapter getAdapter();
 

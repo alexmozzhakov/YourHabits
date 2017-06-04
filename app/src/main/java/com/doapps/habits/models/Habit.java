@@ -6,35 +6,49 @@ import java.util.Calendar;
 public final class Habit {
 
     //Constant Habit values
-    public final String title;
+    private final String title;
     private final String question;
     private final int time;
     private final int cost;
     private final int[] frequencyArray;
+    private final boolean isProgram;
 
     // Changeable Habit values
-    public int id;
+    private int id;
     private boolean doneMarker;
     private int markerUpdatedDay;
     private int markerUpdatedMonth;
     private int markerUpdatedYear;
-    private final int daysFollowing;
+    private int followingFrom;
 
-    public Habit(int id, String title, String question, boolean doneMarker,
+    public Habit(int id, String title, String question, boolean isProgram, boolean doneMarker,
                  int markerUpdatedDay, int markerUpdatedMonth, int markerUpdatedYear,
                  int time, int followingFrom, int cost, int... frequencyArray) {
 
         this.id = id;
         this.title = title;
         this.question = question;
+        this.isProgram = isProgram;
         this.doneMarker = doneMarker;
         this.markerUpdatedDay = markerUpdatedDay;
         this.markerUpdatedMonth = markerUpdatedMonth;
         this.markerUpdatedYear = markerUpdatedYear;
         this.time = time;
-        daysFollowing = followingFrom;
+        this.followingFrom = followingFrom;
         this.cost = cost;
         this.frequencyArray = frequencyArray;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int[] getFrequencyArray() {
@@ -60,11 +74,20 @@ public final class Habit {
 
     @Override
     public String toString() {
-        return String.format("Habit{id=%d, title='%s', question='%s', time=%d, cost=%d," +
-                " frequencyArray=%s, doneMarker=%s, markerUpdatedDay=%d, markerUpdatedMonth=%d," +
-                " markerUpdatedYear=%d, daysFollowing=%d}",
-                id, title, question, time, cost, Arrays.toString(frequencyArray), doneMarker,
-                markerUpdatedDay, markerUpdatedMonth, markerUpdatedYear, daysFollowing);
+        return "Habit{" +
+                "title='" + title + '\'' +
+                ", question='" + question + '\'' +
+                ", time=" + time +
+                ", cost=" + cost +
+                ", frequencyArray=" + Arrays.toString(frequencyArray) +
+                ", isProgram=" + isProgram +
+                ", id=" + id +
+                ", doneMarker=" + doneMarker +
+                ", markerUpdatedDay=" + markerUpdatedDay +
+                ", markerUpdatedMonth=" + markerUpdatedMonth +
+                ", markerUpdatedYear=" + markerUpdatedYear +
+                ", followingFrom=" + followingFrom +
+                '}';
     }
 
     public int getMarkerUpdatedDay() {
@@ -79,4 +102,7 @@ public final class Habit {
         return markerUpdatedYear;
     }
 
+    public boolean isProgram() {
+        return isProgram;
+    }
 }

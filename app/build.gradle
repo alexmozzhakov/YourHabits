@@ -1,29 +1,23 @@
 apply plugin: 'com.android.application'
+//apply plugin: 'com.google.firebase.firebase-perf'
+apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion '25.0.2'
+    compileSdkVersion 'android-O'
+    buildToolsVersion '26.0.0-rc2'
 
     defaultConfig {
         applicationId "com.doapps.habit"
         minSdkVersion 16
-        targetSdkVersion 25
+        targetSdkVersion 26
         versionCode 1
-        versionName "0.5.5"
+        versionName "0.6"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
-        jackOptions {
-            enabled true
-        }
     }
 
     compileOptions {
-        targetCompatibility 1.8
-        sourceCompatibility 1.8
-    }
-
-    dexOptions {
-        javaMaxHeapSize "3g"
+        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_1_8
     }
 
     buildTypes {
@@ -43,23 +37,31 @@ android {
 
 dependencies {
     // App's dependencies, including test
-    compile(project(path: ':imageselector')) {
-        exclude group: 'com.github.bumptech.glide'
-        exclude group: 'com.android.support'
-    }
+    compile 'com.github.lovetuzitong:MultiImageSelector:1.2'
     compile 'com.github.vipulasri:timelineview:1.0.5'
     compile "com.android.support:design:$supportLibraryVersion"
     compile "com.android.support:recyclerview-v7:$supportLibraryVersion"
     compile "com.android.support:percent:$supportLibraryVersion"
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.volley:volley:1.0.0'
+    compile "android.arch.lifecycle:runtime:1.0.0-alpha1"
+    compile "android.arch.lifecycle:extensions:1.0.0-alpha1"
     compile "com.google.firebase:firebase-database:$firebaseVersion"
     compile "com.google.firebase:firebase-auth:$firebaseVersion"
     compile "com.google.firebase:firebase-crash:$firebaseVersion"
+//    compile "com.google.firebase:firebase-perf:$firebaseVersion"
     compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.facebook.android:facebook-android-sdk:4.20.0'
+    compile "com.facebook.android:facebook-android-sdk:$facebookVersion"
     compile 'com.ruesga.timeline-chart-view:timeline-chart-view:1.0.1'
+
+    //Image Selector dependencies
+    compile 'com.commit451:PhotoView:1.2.4'
+    compile 'com.isseiaoki:simplecropview:1.0.13'
     compile 'com.github.bumptech.glide:glide:3.7.0'
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'com.yongchun:com.yongchun.imageselector:1.1.0'
+
+
+    annotationProcessor "android.arch.lifecycle:compiler:1.0.0-alpha1"
 
     testCompile "junit:junit:$junitVersion"
     androidTestCompile "com.android.support:support-annotations:$supportLibraryVersion"
@@ -69,7 +71,8 @@ dependencies {
     androidTestCompile("com.android.support.test.espresso:espresso-contrib:$espressoVersion") {
         exclude group: 'com.android.support'
     }
-    androidTestCompile "com.android.support.test:runner:$rootProject.ext.runnerVersion"
+    androidTestCompile "com.android.support.test:runner:$runnerVersion"
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }
 
 tasks.whenTaskAdded {

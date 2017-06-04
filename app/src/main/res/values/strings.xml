@@ -23,6 +23,12 @@
     <string name="days">days</string>
     <string name="delete_user">Delete user</string>
     <string name="all_tasks">All tasks</string>
+    <string name="habit_create">Create habit</string>
+    <string name="title">Title</string>
+    <string name="question">Question</string>
+    <string name="time_needed">Time needed</string>
+    <string name="create">Create</string>
+
 
     <string-array name="days_of_week_array">
         <item>Sunday</item>
@@ -59,5 +65,4 @@
     <string name="lists">Lists</string>
     <string name="profile">Profile</string>
     <string name="logout">Logout</string>
-
 </resources>

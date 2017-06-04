@@ -31,25 +31,21 @@
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <activity
             android:name=".activity.PasswordRecoveryActivity"
             android:theme="@style/AppTheme.Auth"/>
-
-        <!--<activity-->
-            <!--android:name="com.facebook.FacebookActivity"-->
-            <!--android:configChanges=-->
-                <!--"keyboard|keyboardHidden|screenLayout|screenSize|orientation"-->
-            <!--android:label="@string/app_name"-->
-            <!--android:theme="@android:style/Theme.Translucent.NoTitleBar"/>-->
-
+        <activity android:name="com.yongchun.library.view.ImageSelectorActivity"
+                  android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name="com.yongchun.library.view.ImagePreviewActivity"
+                  android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name="com.yongchun.library.view.ImageCropActivity"
+                  android:theme="@style/AppTheme.NoActionBar"/>
         <meta-data
             android:name="android.support.PARENT_ACTIVITY"
             android:value=".activity.MainActivity"/>
-
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id"/>
@@ -57,21 +53,9 @@
         <receiver
             android:name=".receivers.Alarm"
             android:process=":remote"/>
-
         <service
             android:name=".services.NotificationService"
             android:enabled="true"
             android:process=":habit_notification_service"/>
-
-        <!--<activity-->
-            <!--android:name=".view.ImageSelectorActivity"-->
-            <!--android:theme="@style/Theme.AppCompat.NoActionBar"/>-->
-        <!--<activity-->
-            <!--android:name=".view.ImagePreviewActivity"-->
-            <!--android:theme="@style/Theme.AppCompat.NoActionBar"/>-->
-        <activity
-            android:name="com.yongchun.library.view.ImageCropActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar"/>
-
     </application>
 </manifest>

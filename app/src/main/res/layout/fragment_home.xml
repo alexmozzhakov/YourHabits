@@ -28,75 +28,85 @@
         android:layout_marginTop="167dp"
         android:background="#1f000000"/>
 
-    <android.support.percent.PercentFrameLayout
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="90dp"
         android:layout_marginTop="72dp">
 
         <TextView
-            android:id="@+id/tasks_due"
-            android:layout_width="match_parent"
+            android:id="@+id/tasks_due_num"
+            android:layout_width="0dp"
             android:layout_height="70dp"
             android:fontFamily="sans-serif-light"
             android:gravity="center"
             android:textColor="#000"
             android:textIsSelectable="false"
             android:textSize="56sp"
-            app:layout_widthPercent="50%"/>
+            app:layout_constraintEnd_toStartOf="@+id/mid_guideline"
+            app:layout_constraintStart_toStartOf="parent"/>
 
         <TextView
+            android:id="@+id/tasks_due"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
             android:gravity="center"
             android:text="@string/tasks_due"
             android:textColor="#000"
             android:textSize="14sp"
+            app:layout_constraintEnd_toStartOf="@+id/mid_guideline"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tasks_due_num"
             app:layout_widthPercent="50%"/>
+
+        <android.support.constraint.Guideline
+            android:id="@+id/mid_guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent=".5"/>
 
         <TextView
             android:id="@+id/weather"
             android:layout_width="0dp"
             android:layout_height="70dp"
-            android:layout_gravity="end"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
             android:fontFamily="sans-serif-light"
             android:gravity="center"
             android:textColor="#000"
             android:textIsSelectable="false"
             android:textSize="56sp"
-            app:layout_widthPercent="50%"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/mid_guideline"/>
 
         <TextView
             android:id="@+id/weatherBot"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
             android:gravity="center"
             android:text="@string/loading"
             android:textColor="#000"
             android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/mid_guideline"
+            app:layout_constraintTop_toBottomOf="@+id/weather"
             app:layout_marginLeftPercent="25%"
+            app:layout_marginPercent="25%"
             app:layout_widthPercent="50%"/>
-    </android.support.percent.PercentFrameLayout>
+    </android.support.constraint.ConstraintLayout>
 
-    <!--<com.github.vipulasri.timelineview.TimelineView-->
-        <!--android:id="@+id/timeline"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:layout_marginTop="167dp"-->
-        <!--app:line="@color/colorPrimary"-->
-        <!--app:linePadding="5dp"-->
-        <!--app:lineSize="2dp"-->
-        <!--app:markerSize="20dp"/>-->
 
     <android.support.v7.widget.RecyclerView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/timeline"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginTop="167dp"
-    android:background="@null"
-    android:scrollbars="vertical"/>
+        android:id="@+id/timeline"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="167dp"
+        android:background="@null"
+        android:scrollbars="vertical"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"

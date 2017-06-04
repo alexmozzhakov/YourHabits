@@ -1,14 +1,13 @@
 package com.doapps.habits.activity;
 
 import android.app.NotificationManager;
+import android.arch.lifecycle.LifecycleActivity;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -21,28 +20,25 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.doapps.habits.BuildConfig;
 import com.doapps.habits.R;
+import com.doapps.habits.data.AvatarData;
 import com.doapps.habits.fragments.CreateFragment;
 import com.doapps.habits.fragments.HomeFragment;
 import com.doapps.habits.fragments.ListFragment;
 import com.doapps.habits.fragments.ProfileFragment;
 import com.doapps.habits.fragments.ProgramsFragment;
-import com.doapps.habits.helper.AvatarManager;
 import com.doapps.habits.helper.HabitListManager;
 import com.doapps.habits.helper.PicassoRoundedTransformation;
 import com.doapps.habits.listeners.MenuAvatarListener;
 import com.doapps.habits.listeners.NameChangeListener;
 import com.doapps.habits.models.Habit;
-import com.doapps.habits.models.IMenuAvatarUpdater;
 import com.doapps.habits.slider.swipeselector.PixelUtils;
 import com.facebook.CallbackManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
 
-public class MainActivity extends FragmentActivity implements NavigationView.OnNavigationItemSelectedListener,
-        IMenuAvatarUpdater {
+public class MainActivity extends LifecycleActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static final long INFLATE_DELAY = 200L;
     private int mLastFragment = -1;
     private NavigationView mNavigationView;
@@ -58,7 +54,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
         setContentView(R.layout.activity_main);
         user = FirebaseAuth.getInstance().getCurrentUser();
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mToolbar = findViewById(R.id.toolbar);
 
         if (getIntent().getAction() != null) {
             long id = getIntent().getLongExtra("id", 0);
@@ -97,7 +93,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
             mToolbar.setTitle("Home");
         }
 
-        mNavigationView = (NavigationView) findViewById(R.id.navigationView);
+        mNavigationView = findViewById(R.id.navigationView);
 
         if (user == null) {
             FirebaseAuth.getInstance().signInAnonymously().addOnCompleteListener(task ->
@@ -108,13 +104,12 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
             onSetupNavigationDrawer(user);
             NameChangeListener.listener.
                     addObserver((observable, o) -> {
-                        TextView navName = (TextView)
-                                mNavigationView.getHeaderView(0).findViewById(R.id.name_info);
+                        TextView navName = mNavigationView.getHeaderView(0).findViewById(R.id.name_info);
                         navName.setText(user.getDisplayName());
                     });
         }
 
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerLayout = findViewById(R.id.drawer_layout);
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
             @Override
@@ -132,6 +127,8 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
             getActionBar().setHomeButtonEnabled(true);
         }
 
+        AvatarData.getInstance().observe(this,
+                new MenuAvatarListener(this, getApplicationContext(), mNavigationView));
     }
 
     @Override
@@ -154,17 +151,17 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
                         getSupportFragmentManager().beginTransaction();
                 if (id == R.id.nav_home) {
                     transaction.replace(R.id.content_frame, new HomeFragment()).commit();
-                    mToolbar.setTitle("Home");
+                    mToolbar.setTitle(R.string.home);
                 } else if (id == R.id.nav_programs) {
                     transaction.replace(R.id.content_frame, new ProgramsFragment()).commit();
-                    mToolbar.setTitle("Programs");
+                    mToolbar.setTitle(R.string.programs);
 
                 } else if (id == R.id.nav_lists) {
                     transaction.replace(R.id.content_frame, new ListFragment()).commit();
-                    mToolbar.setTitle("List");
+                    mToolbar.setTitle(R.string.lists);
                 } else if (id == R.id.nav_profile) {
                     transaction.replace(R.id.content_frame, new ProfileFragment()).commit();
-                    mToolbar.setTitle("Profile");
+                    mToolbar.setTitle(R.string.profile);
                 }
                 mLastFragment = id;
             }, INFLATE_DELAY);
@@ -183,7 +180,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
     public void toCreateFragment(View view) {
         mNavigationView.getMenu().getItem(0).setChecked(false);
         mLastFragment = 5;
-        mToolbar.setTitle("Create Habit");
+        mToolbar.setTitle(R.string.habit_create);
 
         getSupportFragmentManager()
                 .beginTransaction()
@@ -192,6 +189,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
 
     }
 
+    @SuppressWarnings("unused")
     private void toProfile(View view) {
         mDrawerLayout.closeDrawer(GravityCompat.START);
 
@@ -199,7 +197,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
             return;
         }
         new Handler().postDelayed(() -> {
-            mToolbar.setTitle("Profile");
+            mToolbar.setTitle(R.string.profile);
             mNavigationView.getMenu().getItem(3).setChecked(true);
 
             findViewById(R.id.toolbar_shadow).setVisibility(View.GONE);
@@ -211,20 +209,6 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
         }, INFLATE_DELAY);
     }
 
-    @Override
-    public void updateMenuAvatar(Uri uri) {
-        ImageView avatar =
-                (ImageView) mNavigationView.getHeaderView(0).findViewById(R.id.profile_photo);
-        if (BuildConfig.DEBUG) {
-            Log.i("updateMenuAvatar", String.valueOf(uri));
-        }
-        Picasso.with(getApplicationContext())
-                .load(uri)
-                .transform(new PicassoRoundedTransformation())
-                .into(avatar);
-        avatar.invalidate();
-    }
-
     public void anonymousMenuSetup() {
         mNavigationView.setNavigationItemSelectedListener(this);
         mNavigationView.getMenu().getItem(0).setChecked(true);
@@ -234,9 +218,6 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
         mNavigationView.getMenu().findItem(R.id.nav_logout).setTitle("Login");
         mNavigationView.getHeaderView(0).setVisibility(View.GONE);
 
-        if (AvatarManager.listener.countObservers() == 0) {
-            AvatarManager.listener.addObserver(new MenuAvatarListener(this));
-        }
     }
 
     public void setAvatarInvisible() {
@@ -258,9 +239,9 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
             mNavigationView.getMenu().findItem(R.id.nav_profile).setVisible(true);
             Log.i("FirebaseAuth", "Regular user");
             TextView navName =
-                    (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.name_info);
+                    mNavigationView.getHeaderView(0).findViewById(R.id.name_info);
             TextView navEmail =
-                    (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.email_info);
+                    mNavigationView.getHeaderView(0).findViewById(R.id.email_info);
             navName.setText(user.getDisplayName());
             navEmail.setText(user.getEmail());
             mNavigationView.getHeaderView(0).setOnClickListener(this::toProfile);
@@ -269,12 +250,11 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
                         .findViewById(R.id.fields_info).setPadding(
                         (int) PixelUtils.dpToPixel(this, 72), 0, 0, 0);
                 ImageView avatar =
-                        (ImageView) mNavigationView.getHeaderView(0).findViewById(R.id.profile_photo);
+                        mNavigationView.getHeaderView(0).findViewById(R.id.profile_photo);
 
-                AvatarManager.listener.invalidateUrl();
-                Log.i("updateMenuAvatar", String.valueOf(AvatarManager.listener.getMediumUri()));
+                Log.i("updateMenuAvatar", String.valueOf(user.getPhotoUrl()));
                 Picasso.with(getApplicationContext())
-                        .load(AvatarManager.listener.getMediumUri())
+                        .load(user.getPhotoUrl())
                         .transform(new PicassoRoundedTransformation())
                         .into(avatar);
                 avatar.setVisibility(View.VISIBLE);
@@ -283,9 +263,6 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
             Log.w("FirebaseAuth", "User is null");
             mNavigationView.getMenu().findItem(R.id.nav_logout).setVisible(false);
             mNavigationView.getHeaderView(0).setVisibility(View.GONE);
-        }
-        if (AvatarManager.listener.countObservers() == 0) {
-            AvatarManager.listener.addObserver(new MenuAvatarListener(this));
         }
     }
 
@@ -341,13 +318,6 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
     }
 
     @Override
-    protected void onDestroy() {
-        AvatarManager.listener.deleteObservers();
-        super.onDestroy();
-    }
-
-
-    @Override
     public void onBackPressed() {
         Log.d("CDA", "onBackPressed Called");
         if (mLastFragment == R.id.nav_home)
@@ -358,7 +328,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
         }
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.content_frame, new HomeFragment()).commit();
-        mToolbar.setTitle("Home");
+        mToolbar.setTitle(R.string.home);
         mLastFragment = R.id.nav_home;
         mNavigationView.getMenu().getItem(0).setChecked(true);
     }

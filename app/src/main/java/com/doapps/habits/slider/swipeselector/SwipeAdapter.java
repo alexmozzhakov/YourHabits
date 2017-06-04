@@ -54,9 +54,9 @@ public class SwipeAdapter extends PagerAdapter implements View.OnClickListener, 
 
     private int mCurrentPosition;
 
-    private SwipeAdapter(ViewPager viewPager, int leftButtonResource, int rightButtonResource,
-                         ImageView leftButton, ImageView rightButton,
-                         int titleTextAppearance) {
+    SwipeAdapter(ViewPager viewPager, int leftButtonResource, int rightButtonResource,
+                 ImageView leftButton, ImageView rightButton,
+                 int titleTextAppearance) {
         mContext = viewPager.getContext();
 
         mViewPager = viewPager;
@@ -84,66 +84,6 @@ public class SwipeAdapter extends PagerAdapter implements View.OnClickListener, 
         mLeftButton.setClickable(false);
 
         mLeftButton.setAlpha(0.0f);
-    }
-
-    /**
-     * Using the Java Builder Pattern here, because the SwipeStringSelector class was getting
-     * messy and that's where most will look at. This class contains no
-     * methods that the users can use, so it's OK for this to look like absolute vomit.
-     * <p/>
-     * At least that's my opinion. But my opinions are always right.
-     */
-    static class Builder {
-        private ViewPager viewPager;
-
-        private int leftButtonResource;
-        private int rightButtonResource;
-
-        private ImageView leftButton;
-        private ImageView rightButton;
-
-        private int titleTextAppearance;
-
-        SwipeAdapter.Builder viewPager(ViewPager viewPager) {
-            this.viewPager = viewPager;
-            return this;
-        }
-
-        SwipeAdapter.Builder leftButtonResource(int leftButtonResource) {
-            this.leftButtonResource = leftButtonResource;
-            return this;
-        }
-
-        SwipeAdapter.Builder rightButtonResource(int rightButtonResource) {
-            this.rightButtonResource = rightButtonResource;
-            return this;
-        }
-
-        SwipeAdapter.Builder leftButton(ImageView leftButton) {
-            this.leftButton = leftButton;
-            return this;
-        }
-
-        SwipeAdapter.Builder rightButton(ImageView rightButton) {
-            this.rightButton = rightButton;
-            return this;
-        }
-
-        SwipeAdapter.Builder titleTextAppearance(int titleTextAppearance) {
-            this.titleTextAppearance = titleTextAppearance;
-            return this;
-        }
-
-        SwipeAdapter build() {
-            return new SwipeAdapter(viewPager,
-                    leftButtonResource,
-                    rightButtonResource,
-                    leftButton,
-                    rightButton,
-                    titleTextAppearance
-            );
-        }
-
     }
 
     /**
