@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.doapps.habits.BuildConfig;
 import com.doapps.habits.R;
 import com.doapps.habits.helper.HabitListManager;
+import com.doapps.habits.helper.ProgramsManager;
 import com.doapps.habits.models.Achievement;
 import com.doapps.habits.models.IHabitsDatabase;
 import com.doapps.habits.models.Program;
@@ -26,7 +27,6 @@ import java.util.List;
 
 public class ProgramFragment extends Fragment {
 
-    private static final SparseArray<Program> programHashMap = new SparseArray<>();
     private DataSnapshot mSnapshot;
 
     @Override
@@ -35,9 +35,8 @@ public class ProgramFragment extends Fragment {
         // Inflate the layout for this fragment
         View result = inflater.inflate(R.layout.fragment_program, container, false);
 
-        FloatingActionButton fab = (FloatingActionButton) result.findViewById(R.id.fab);
-
-        TextView description = (TextView) result.findViewById(R.id.description);
+        FloatingActionButton fab = result.findViewById(R.id.fab);
+        TextView description = result.findViewById(R.id.description);
 
         description.setText(mSnapshot.child("habit").child("description").getValue(String.class));
         if (BuildConfig.DEBUG) {
@@ -47,10 +46,11 @@ public class ProgramFragment extends Fragment {
         if (fab != null) {
             fab.setOnClickListener(view -> {
                 int id = Integer.valueOf(mSnapshot.getKey());
-
-                if (programHashMap.get(id) == null) {
+                SparseArray<Program> programsAdded =
+                        ((ProgramsManager) HabitListManager.getInstance(getContext())).getProgramsAdded();
+                if (programsAdded.get(id) == null) {
                     Program program = onProgramApply(mSnapshot, getContext());
-                    programHashMap.put(id, program);
+                    programsAdded.put(id, program);
                     Toast.makeText(getActivity(), "New program added", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(getActivity(), "Program already added", Toast.LENGTH_SHORT).show();
@@ -68,7 +68,7 @@ public class ProgramFragment extends Fragment {
 
     private static Program onProgramApply(DataSnapshot dataSnapshot, Context context) {
         IHabitsDatabase habitsDatabase = HabitListManager.getInstance(context).getDatabase();
-        long habitId = habitsDatabase.addHabit(
+        long habitId = habitsDatabase.addProgram(
                 dataSnapshot.child("habit").child("title").getValue(String.class),
                 dataSnapshot.child("habit").child("question").getValue(String.class),
                 dataSnapshot.child("habit").child("time").getValue(Integer.class),
@@ -104,4 +104,5 @@ public class ProgramFragment extends Fragment {
         }
         return achievements;
     }
+
 }

@@ -5,6 +5,7 @@ import android.os.Environment;
 import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
 
@@ -79,7 +80,8 @@ public class MainActivityTest {
 
     private void takeScreenshot() {
         Date now = new Date();
-        android.text.format.DateFormat.format("yyyy-MM-dd_hh:mm:ss", now);
+        //TODO: assign value
+        DateFormat.format("yyyy-MM-dd_hh:mm:ss", now);
 
         try {
             // image naming and path  to include sd card  appending name you choose for file

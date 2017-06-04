@@ -74,14 +74,14 @@ public class AuthActivity extends AppCompatActivity {
         // Checks the orientation of the screen
         if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
             findViewById(R.id.top_image_text).setVisibility(View.VISIBLE);
-            FrameLayout layout = (FrameLayout) findViewById(R.id.frame_layout);
+            FrameLayout layout = findViewById(R.id.frame_layout);
             FrameLayout.LayoutParams params =
                     (FrameLayout.LayoutParams) layout.getLayoutParams();
             params.topMargin = (int) PixelUtils.dpToPixel(getApplicationContext(), 170);
             layout.setLayoutParams(params);
         } else if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             findViewById(R.id.top_image_text).setVisibility(View.INVISIBLE);
-            FrameLayout layout = (FrameLayout) findViewById(R.id.frame_layout);
+            FrameLayout layout = findViewById(R.id.frame_layout);
             FrameLayout.LayoutParams params =
                     (FrameLayout.LayoutParams) layout.getLayoutParams();
             params.topMargin = 0;
@@ -90,7 +90,7 @@ public class AuthActivity extends AppCompatActivity {
     }
 
     public void toTerms(View view) {
-        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://habbitsapp.esy.es/terms.txt")));
+        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://habit.esy.es/terms.txt")));
     }
 
     @Override

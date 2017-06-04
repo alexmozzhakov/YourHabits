@@ -48,11 +48,11 @@ public class RegisterFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View result = inflater.inflate(R.layout.fragment_register, container, false);
-        EditText inputFullName = (EditText) result.findViewById(R.id.full_name);
-        EditText inputEmail = (EditText) result.findViewById(R.id.email);
-        EditText inputPassword = (EditText) result.findViewById(R.id.password);
-        Button btnRegister = (Button) result.findViewById(R.id.btnCreate);
-        Button btnLinkToLogin = (Button) result.findViewById(R.id.btnLinkToLoginScreen);
+        EditText inputFullName = result.findViewById(R.id.full_name);
+        EditText inputEmail = result.findViewById(R.id.email);
+        EditText inputPassword = result.findViewById(R.id.password);
+        Button btnRegister = result.findViewById(R.id.btnCreate);
+        Button btnLinkToLogin = result.findViewById(R.id.btnLinkToLoginScreen);
 
         btnLinkToLogin.setOnClickListener(view -> toLoginActivity());
         inputEmail.setText(
@@ -113,8 +113,7 @@ public class RegisterFragment extends Fragment {
             user.updateProfile(changeRequest.build()).addOnCompleteListener(task -> {
                 if (NameChangeListener.listener.countObservers() == 0) {
                     if (getActivity() != null) {
-                        NavigationView nav = (NavigationView)
-                                getActivity().findViewById(R.id.navigationView);
+                        NavigationView nav = getActivity().findViewById(R.id.navigationView);
                         if (nav != null) {
                             ((TextView) nav.getHeaderView(0).findViewById(R.id.name_info)).setText(name);
                         } else {

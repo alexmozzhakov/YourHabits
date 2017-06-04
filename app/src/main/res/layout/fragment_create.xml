@@ -12,7 +12,7 @@
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Title"
+        android:hint="@string/title"
         android:paddingTop="10dp"
         android:textColorHint="@color/input_login_hint">
 
@@ -29,7 +29,7 @@
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Question"
+        android:hint="@string/question"
         android:paddingTop="10dp"
         android:textColorHint="@color/input_login_hint">
 
@@ -45,7 +45,7 @@
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Time needed"
+        android:hint="@string/time_needed"
         android:paddingTop="10dp"
         android:textColorHint="@color/input_login_hint">
 
@@ -95,7 +95,9 @@
                 style="@style/dialogFormText"
                 android:gravity="center_vertical"
                 android:paddingLeft="12dp"
-                android:text="@string/days"/>
+                android:paddingStart="12dp"
+                android:text="@string/days"
+                tools:ignore="RtlSymmetry"/>
 
         </LinearLayout>
     </LinearLayout>
@@ -107,7 +109,7 @@
         android:layout_gravity="bottom"
         android:layout_marginTop="20dp"
         android:background="@color/colorAccent"
-        android:text="Create"
+        android:text="@string/create"
         android:textColor="@color/white"/>
 
 </LinearLayout>

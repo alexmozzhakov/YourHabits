@@ -15,10 +15,8 @@ public class EmptyListListener extends Observable {
     }
 
     @Override
-    public boolean hasChanged() {
-        synchronized (this) {
-            return mChanged;
-        }
+    public synchronized boolean hasChanged() {
+        return mChanged;
     }
 
 }

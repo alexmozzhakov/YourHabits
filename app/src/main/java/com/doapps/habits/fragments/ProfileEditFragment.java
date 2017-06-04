@@ -2,8 +2,6 @@ package com.doapps.habits.fragments;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -51,8 +49,8 @@ public class ProfileEditFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View result = inflater.inflate(R.layout.fragment_edit_profile, container, false);
-        fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-        avatar = (ImageView) getActivity().findViewById(R.id.avatarImage);
+        fab = getActivity().findViewById(R.id.fab);
+        avatar = getActivity().findViewById(R.id.avatarImage);
         setUpPhotoEdition(avatar, getActivity(), this);
 
         fab.setImageResource(R.drawable.ic_check_white_24dp);
@@ -157,9 +155,9 @@ public class ProfileEditFragment extends Fragment {
     private static void updateUser(Activity activity, FirebaseUser user,
                                    String name, String email) {
         TextView nameView =
-                (TextView) activity.findViewById(R.id.name);
+                activity.findViewById(R.id.name);
         TextView emailView =
-                (TextView) activity.findViewById(R.id.email);
+                activity.findViewById(R.id.email);
 
         if (!name.isEmpty() && !name.equals(user.getDisplayName())) {
             UserProfileChangeRequest profileUpdates =
@@ -171,7 +169,7 @@ public class ProfileEditFragment extends Fragment {
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             NavigationView navigationView =
-                                    (NavigationView) activity.findViewById(R.id.navigationView);
+                                    activity.findViewById(R.id.navigationView);
 
                             ((TextView) navigationView
                                     .getHeaderView(0).findViewById(R.id.name_info))
@@ -188,7 +186,7 @@ public class ProfileEditFragment extends Fragment {
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             NavigationView navigationView =
-                                    (NavigationView) activity.findViewById(R.id.navigationView);
+                                    activity.findViewById(R.id.navigationView);
 
                             ((TextView) navigationView
                                     .getHeaderView(0).findViewById(R.id.email_info))
@@ -204,10 +202,8 @@ public class ProfileEditFragment extends Fragment {
     }
 
     private static void setUpPhotoEdition(ImageView avatar, Activity activity, Fragment fragment) {
-        avatar.setImageResource(R.drawable.ic_photo_plus);
-        if (avatar.getBackground() != null) {
-            avatar.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
-        }
+//        avatar.setImageResource(R.drawable.ic_photo_plus);
+//        avatar.setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
         avatar.setOnClickListener(view -> {
             fragment.getParentFragment().getChildFragmentManager().beginTransaction()
                     .remove(fragment).commit();
@@ -217,17 +213,9 @@ public class ProfileEditFragment extends Fragment {
     }
 
 
-    private static void removePhotoEdition(ImageView avatar) {
-        avatar.setImageResource(R.drawable.fix);
-        if (avatar.getBackground() != null) {
-            avatar.getBackground().clearColorFilter();
-        }
-        avatar.setOnClickListener(null);
-    }
-
     @Override
     public void onPause() {
-        removePhotoEdition(avatar);
+        avatar.setOnClickListener(null);
         // Set up fab back
         fab.setImageResource(R.drawable.ic_edit_white_24dp);
         fab.setOnClickListener(v -> {

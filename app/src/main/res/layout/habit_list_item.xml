@@ -20,13 +20,12 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:gravity="start"
-        android:text="@string/navigation_drawer_close"
         android:textColor="@color/black"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="@+id/constraintLayout"
         app:layout_constraintLeft_toRightOf="@+id/checkBox"
         app:layout_constraintTop_toTopOf="@+id/constraintLayout"
-        tools:ignore="RtlHardcoded,RtlSymmetry"/>
+        tools:ignore="RtlSymmetry"/>
 
     <CheckBox
         android:id="@+id/checkBox"

@@ -39,7 +39,7 @@ import java.util.Calendar;
 public class HomeFragment extends Fragment {
     private TextView weather;
     private TextView weatherBot;
-    private static final String URL_WEATHER_API = "http://habbitsapp.esy.es/weather.php";
+    private static final String URL_WEATHER_API = "http://habit.esy.es/weather.php";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -47,23 +47,30 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.timeline);
+        RecyclerView recyclerView = view.findViewById(R.id.timeline);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        IHabitListProvider habitListManager =
-                HabitListManager.getInstance(getContext());
+        IHabitListProvider habitListManager = HabitListManager.getInstance(getContext());
+
+        // set filtered list to adapter
+        TimeLineAdapter timeLineAdapter = new TimeLineAdapter(habitListManager.getList());
+        timeLineAdapter.setHasStableIds(true);
+        recyclerView.setAdapter(timeLineAdapter);
 
         // filter list for today
-        HomeDayManager.filterListForToday(habitListManager.getList());
+        HomeDayManager dayManager = new HomeDayManager(timeLineAdapter, habitListManager.getList());
+        dayManager.updateForToday();
+
+        // set due count of filtered list
+        TextView tasksDue = view.findViewById(R.id.tasks_due_num);
+        tasksDue.setText(dayManager.getDueCount());
+
+        weather = view.findViewById(R.id.weather);
+        weatherBot = view.findViewById(R.id.weatherBot);
 
         // get list size
         int habitListSize = habitListManager.getList().size();
-        // set due count of filtered list
-        TextView tasksDue = (TextView) view.findViewById(R.id.tasks_due);
-        tasksDue.setText(habitListManager.getDueCount());
 
-        weather = (TextView) view.findViewById(R.id.weather);
-        weatherBot = (TextView) view.findViewById(R.id.weatherBot);
         if (ConnectionManager.isConnected(getContext())) {
             getWeather(getContext(), habitListSize);
         } else {
@@ -100,15 +107,10 @@ public class HomeFragment extends Fragment {
             }
         }
 
-        // set filtered list to adapter
-        TimeLineAdapter timeLineAdapter = new TimeLineAdapter(habitListManager.getList());
-        timeLineAdapter.setHasStableIds(true);
-        recyclerView.setAdapter(timeLineAdapter);
-
         // get day of week
         int dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
 
-        IStringSelector swipeSelector = (IStringSelector) view.findViewById(R.id.sliding_tabs);
+        IStringSelector swipeSelector = view.findViewById(R.id.sliding_tabs);
         swipeSelector.setItems(getDaysOfWeekFromToday(dayOfWeek - 1));
 
         initDaysTabs(

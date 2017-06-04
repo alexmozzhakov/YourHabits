@@ -15,9 +15,9 @@ public interface IHabitsDatabase {
 
     List<Habit> getHabitDetailsAsList();
 
-    long addHabit(String name, String question, int time, Calendar upd, int cost, int... frequency);
+    long addHabit(String name, String question, int time, Calendar upd, int... frequency);
 
-    long addHabit(String name, String question, int time, Calendar upd, int cost, String frequency);
+    long addProgram(String name, String question, int time, Calendar upd, int cost, String frequency);
 
     boolean isEmpty();
 }

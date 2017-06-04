@@ -2,8 +2,6 @@ package com.doapps.habits.fragments;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.res.AssetManager;
-import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -18,7 +16,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.doapps.habits.R;
 import com.doapps.habits.adapter.ProgramRecycleAdapter;
 import com.doapps.habits.models.FirebaseProgramView;
@@ -29,6 +26,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,21 +43,9 @@ public class ProgramsFragment extends Fragment {
     private List<IProgramViewProvider> mProgramData;
     private TextView mTitleTop;
     private TextView mSuccessTop;
-    private Typeface mFaceLight;
-    private Typeface mFace;
     private ImageView mImageTop;
     private boolean isEmpty;
     private DatabaseReference mRootRef;
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        AssetManager assets = context.getAssets();
-        if (assets != null) {
-            mFaceLight = Typeface.createFromAsset(assets, "Montserrat-Light.otf");
-            mFace = Typeface.createFromAsset(assets, "Montserrat-Regular.ttf");
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -74,8 +60,8 @@ public class ProgramsFragment extends Fragment {
 
         mRootRef = FirebaseDatabase.getInstance().getReference().child("programs");
         View emptyView = result.findViewById(R.id.empty_view);
-        RecyclerView recyclerView = (RecyclerView) result.findViewById(R.id.recyclerView);
-        mImageTop = (ImageView) result.findViewById(R.id.imageViewTop);
+        RecyclerView recyclerView = result.findViewById(R.id.recyclerView);
+        mImageTop = result.findViewById(R.id.imageViewTop);
 
         ConnectivityManager conMan = (ConnectivityManager)
                 getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -107,9 +93,9 @@ public class ProgramsFragment extends Fragment {
 
         recyclerView.setAdapter(mAdapter);
 
-        mSuccessTop = (TextView) result.findViewById(R.id.percentTop);
+        mSuccessTop = result.findViewById(R.id.percentTop);
         mImageTop.setMaxHeight(result.getHeight() / 3);
-        mTitleTop = (TextView) result.findViewById(R.id.titleTop);
+        mTitleTop = result.findViewById(R.id.titleTop);
 
 
         mRootRef.addChildEventListener(new ChildEventListener() {
@@ -178,17 +164,15 @@ public class ProgramsFragment extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mTitleTop.setText(dataSnapshot.child("name").getValue(String.class));
-                String imageLink = String.format("http://habbitsapp.esy.es/img_progs/%s.jpg",
+                String imageLink = String.format("http://habit.esy.es/img_progs/%s.jpg",
                         dataSnapshot.child("image").getValue(String.class));
                 Log.v("IMG_URL", imageLink);
 
                 if (getActivity() != null) {
-                    Glide.with(getActivity().getApplicationContext())
+                    Picasso.with(getActivity().getApplicationContext())
                             .load(imageLink)
                             .into(mImageTop);
                 }
-
-                mTitleTop.setTypeface(mFaceLight);
 
                 if (isShowing) {
                     createProgramApplyFragment(dataSnapshot, getChildFragmentManager());
@@ -206,7 +190,6 @@ public class ProgramsFragment extends Fragment {
                 //Style percent view
                 mSuccessTop.setVisibility(View.VISIBLE);
                 mSuccessTop.setText(dataSnapshot.child("success").getValue(String.class));
-                mSuccessTop.setTypeface(mFace);
             }
 
             @Override

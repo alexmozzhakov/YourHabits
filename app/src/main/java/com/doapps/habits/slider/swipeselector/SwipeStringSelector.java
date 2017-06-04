@@ -77,21 +77,15 @@ public class SwipeStringSelector extends FrameLayout implements IStringSelector 
         LayoutInflater inflater = LayoutInflater.from(context);
         inflater.inflate(R.layout.swipeselector_layout, this);
 
-        ViewPager pager =
-                (ViewPager) findViewById(R.id.swipeselector_layout_swipePager);
-        ImageView leftButton =
-                (ImageView) findViewById(R.id.swipeselector_layout_leftButton);
-        ImageView rightButton =
-                (ImageView) findViewById(R.id.swipeselector_layout_rightButton);
+        ViewPager pager = findViewById(R.id.swipe_selector_layout_swipePager);
+        ImageView leftButton = findViewById(R.id.swipe_selector_layout_leftButton);
+        ImageView rightButton = findViewById(R.id.swipe_selector_layout_rightButton);
 
-        mAdapter = new SwipeAdapter.Builder()
-                .viewPager(pager)
-                .leftButtonResource(leftButtonResource)
-                .rightButtonResource(rightButtonResource)
-                .leftButton(leftButton)
-                .rightButton(rightButton)
-                .titleTextAppearance(titleTextAppearance)
-                .build();
+        mAdapter = new SwipeAdapter(pager,
+                leftButtonResource, rightButtonResource,
+                leftButton, rightButton,
+                titleTextAppearance);
+
         pager.setAdapter(mAdapter);
     }
 
@@ -109,7 +103,7 @@ public class SwipeStringSelector extends FrameLayout implements IStringSelector 
      * A method for giving this SwipeStringSelector something to show.
      *
      * @param strings an array of {@link String} to show
-     *                   inside this view.
+     *                inside this view.
      */
     @Override
     public void setItems(String... strings) {
