@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.util.Log;
 import android.view.Gravity;
@@ -53,6 +54,8 @@ public class ProfileFragment extends LifecycleFragment {
         getActivity().findViewById(R.id.toolbar_shadow).setVisibility(View.GONE);
         // Inflate the layout for this fragment
         View result = inflater.inflate(R.layout.fragment_profile, container, false);
+        Toolbar toolbar = ((MainActivity) getActivity()).getToolbar();
+        toolbar.setTitle(R.string.profile);
         TextView name = result.findViewById(R.id.name);
         TextView email = result.findViewById(R.id.email);
         TextView location = result.findViewById(R.id.location);

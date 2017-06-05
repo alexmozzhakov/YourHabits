@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.doapps.habits.R;
+import com.doapps.habits.activity.MainActivity;
 import com.doapps.habits.adapter.ProgramRecycleAdapter;
 import com.doapps.habits.models.FirebaseProgramView;
 import com.doapps.habits.models.IProgramViewProvider;
@@ -52,6 +54,8 @@ public class ProgramsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View result = inflater.inflate(R.layout.fragment_programs, container, false);
+        Toolbar toolbar = ((MainActivity) getActivity()).getToolbar();
+        toolbar.setTitle(R.string.programs);
 
         if (!persistenceEnabled) {
             FirebaseDatabase.getInstance().setPersistenceEnabled(true);
@@ -143,7 +147,6 @@ public class ProgramsFragment extends Fragment {
 
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                // mAdapter.notifyItemMoved();
                 Log.i(TAG, "onChildMoved: ()");
             }
 

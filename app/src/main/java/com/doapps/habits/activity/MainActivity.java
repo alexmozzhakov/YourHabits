@@ -151,17 +151,12 @@ public class MainActivity extends LifecycleActivity implements NavigationView.On
                         getSupportFragmentManager().beginTransaction();
                 if (id == R.id.nav_home) {
                     transaction.replace(R.id.content_frame, new HomeFragment()).commit();
-                    mToolbar.setTitle(R.string.home);
                 } else if (id == R.id.nav_programs) {
                     transaction.replace(R.id.content_frame, new ProgramsFragment()).commit();
-                    mToolbar.setTitle(R.string.programs);
-
                 } else if (id == R.id.nav_lists) {
                     transaction.replace(R.id.content_frame, new ListFragment()).commit();
-                    mToolbar.setTitle(R.string.lists);
                 } else if (id == R.id.nav_profile) {
                     transaction.replace(R.id.content_frame, new ProfileFragment()).commit();
-                    mToolbar.setTitle(R.string.profile);
                 }
                 mLastFragment = id;
             }, INFLATE_DELAY);

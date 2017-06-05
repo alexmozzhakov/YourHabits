@@ -65,4 +65,5 @@
     <string name="lists">Lists</string>
     <string name="profile">Profile</string>
     <string name="logout">Logout</string>
+    <string name="action_search">Search</string>
 </resources>

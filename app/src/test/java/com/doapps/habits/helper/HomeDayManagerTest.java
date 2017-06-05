@@ -17,7 +17,6 @@ import static com.doapps.habits.helper.DayFilter.filterListForToday;
 @SuppressWarnings("HardCodedStringLiteral")
 public class HomeDayManagerTest {
 
-
     private static List<Habit> generateListOfHabits() {
         final List<Habit> list = new ArrayList<>(15);
         //once types
@@ -50,6 +49,7 @@ public class HomeDayManagerTest {
 
         System.out.println("today : {");
         for (final Habit habit : list) {
+            System.out.println("\t" + habit);
             Assert.assertThat(String.format("  %s%n", habit.getTitle()),
                     habit.getTitle().contains("once") || habit.getTitle().contains(dayOfWeek)
                             || habit.getTitle().contains("every day"), CoreMatchers.is(true));
@@ -66,6 +66,7 @@ public class HomeDayManagerTest {
         filterListByDay(list, 1);
         System.out.println("sun : {");
         for (final Habit habit : list) {
+            System.out.println("\t" + habit);
             Assert.assertThat(String.format("  %s%n", habit.getTitle()), habit.getTitle().contains("sunday")
                     || habit.getTitle().contains("every day"), CoreMatchers.is(true));
         }
@@ -80,6 +81,7 @@ public class HomeDayManagerTest {
         filterListByDay(list, 2);
         System.out.println("mon : {");
         for (final Habit habit : list) {
+            System.out.println("\t" + habit);
             Assert.assertThat(String.format("  %s%n", habit.getTitle()),
                     habit.getTitle().contains("monday")
                             || habit.getTitle().contains("every day"), CoreMatchers.is(true));
@@ -95,6 +97,7 @@ public class HomeDayManagerTest {
         filterListByDay(list, 3);
         System.out.println("tue : {");
         for (final Habit habit : list) {
+            System.out.println("\t" + habit);
             Assert.assertThat(String.format("  %s%n", habit.getTitle()),
                     habit.getTitle().contains("tuesday")
                             || habit.getTitle().contains("every day"), CoreMatchers.is(true));
@@ -110,6 +113,7 @@ public class HomeDayManagerTest {
         filterListByDay(list, 4);
         System.out.println("wed : {");
         for (final Habit habit : list) {
+            System.out.println("\t" + habit);
             Assert.assertThat(String.format("  %s%n", habit.getTitle()),
                     habit.getTitle().contains("wednesday")
                             || habit.getTitle().contains("every day"), CoreMatchers.is(true));
@@ -125,6 +129,7 @@ public class HomeDayManagerTest {
         filterListByDay(list, 5);
         System.out.println("thu : {");
         for (final Habit habit : list) {
+            System.out.println("\t" + habit);
             Assert.assertThat(String.format("  %s%n", habit.getTitle()),
                     habit.getTitle().contains("thursday")
                             || habit.getTitle().contains("every day"), CoreMatchers.is(true));
@@ -140,6 +145,7 @@ public class HomeDayManagerTest {
         filterListByDay(list, 6);
         System.out.println("fri : {");
         for (final Habit habit : list) {
+            System.out.println("\t" + habit);
             Assert.assertThat(String.format("  %s%n", habit.getTitle()),
                     habit.getTitle().contains("friday")
                             || habit.getTitle().contains("every day"), CoreMatchers.is(true));
@@ -155,6 +161,7 @@ public class HomeDayManagerTest {
         filterListByDay(list, 7);
         System.out.println("sat : {");
         for (final Habit habit : list) {
+            System.out.println("\t" + habit);
             Assert.assertThat(String.format("  %s%n", habit.getTitle()),
                     habit.getTitle().contains("saturday")
                             || habit.getTitle().contains("every day"), CoreMatchers.is(true));
