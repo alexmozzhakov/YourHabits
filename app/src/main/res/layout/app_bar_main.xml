@@ -22,6 +22,15 @@
         android:layout_height="3dp"
         android:layout_below="@id/toolbar"
         android:layout_marginTop="?attr/actionBarSize"
-        android:background="@drawable/toolbar_dropshadow"/>
+        android:background="@drawable/toolbar_shadow"/>
+
+    <android.support.v7.widget.SearchView
+        android:id="@+id/toolbar_search"
+        style="@style/SearchViewStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginTop="4dp"
+        android:visibility="gone"/>
 
 </android.support.design.widget.CoordinatorLayout>

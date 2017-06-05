@@ -5,18 +5,21 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.doapps.habits.R
-import com.doapps.habits.listeners.EmptyListListener
 import com.doapps.habits.models.Habit
-import com.doapps.habits.models.IHabitDatabaseMovableListProvider
 import com.doapps.habits.models.IHabitsDatabase
 import com.doapps.habits.view.holders.HabitViewHolder
 import java.util.*
 
-class HabitRecycleAdapter(private val movableHabitList: IHabitDatabaseMovableListProvider)
+class HabitSearchAdapter(private val habitList: List<Habit>, private val habitsDatabase: IHabitsDatabase)
     : RecyclerView.Adapter<HabitViewHolder>(), IMovableListAdapter {
 
-    private val habitList: List<Habit> = movableHabitList.list
-    private val habitsDatabase: IHabitsDatabase = movableHabitList.database
+    override fun onItemMove(fromPosition: Int, toPosition: Int) {
+        //ignored
+    }
+
+    override fun onItemDismiss(position: Int) {
+        //ignored
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HabitViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.habit_list_item, parent, false)
@@ -51,16 +54,4 @@ class HabitRecycleAdapter(private val movableHabitList: IHabitDatabaseMovableLis
     override fun getItemCount(): Int {
         return habitList.size
     }
-
-    override fun onItemDismiss(position: Int) {
-        movableHabitList.onItemDismiss(position)
-        notifyItemRemoved(position)
-        EmptyListListener.listener.isEmpty(itemCount == 0)
-    }
-
-    override fun onItemMove(fromPosition: Int, toPosition: Int) {
-        movableHabitList.onItemMove(fromPosition, toPosition)
-        notifyItemMoved(fromPosition, toPosition)
-    }
 }
-
