@@ -29,6 +29,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
+    <ImageView
+        android:id="@+id/plus_overlay"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/avatar"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_add_profile_photo"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
     <TextView
         android:id="@+id/name"
         android:layout_width="match_parent"
@@ -66,6 +80,9 @@
         android:id="@+id/btn_connect_facebook"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         android:background="@color/facebook"
         android:drawableLeft="@drawable/ic_facebook_icon"
         android:drawablePadding="-32dp"
@@ -78,8 +95,10 @@
         android:text="@string/connect_with_facebook"
         android:textColor="@color/white"
         android:visibility="gone"
-        tools:ignore="RtlSymmetry"
-        />
+        app:layout_constraintBottom_toTopOf="@+id/btn_delete_user"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="RtlSymmetry"/>
 
     <!-- Delete user Button -->
     <Button
@@ -160,11 +179,11 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
         android:src="@drawable/ic_edit_white_24dp"
         app:layout_constraintBottom_toTopOf="@+id/mid_guideline"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/mid_guideline"
-        android:layout_marginRight="8dp"/>
+        app:layout_constraintTop_toTopOf="@+id/mid_guideline"/>
 
 
 </android.support.constraint.ConstraintLayout>

@@ -25,7 +25,7 @@ class RoundedImageView : AppCompatImageView {
         val b = (drawable as BitmapDrawable).bitmap
         val bitmap = b.copy(Bitmap.Config.ARGB_8888, true)
 
-        val roundBitmap = getRoundedCornerBitmap(bitmap, height)
+        val roundBitmap = getRoundedCornerBitmap(bitmap, width)
         canvas.drawBitmap(roundBitmap, 0f, 0f, null)
     }
 

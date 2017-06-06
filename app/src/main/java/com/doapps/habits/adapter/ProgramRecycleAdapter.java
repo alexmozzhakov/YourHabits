@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.doapps.habits.R;
-import com.doapps.habits.fragments.ProgramsFragment;
+import com.doapps.habits.helper.ClickableDataSnapshotFragment;
 import com.doapps.habits.models.IProgramViewProvider;
 import com.doapps.habits.view.holders.ProgramViewHolder;
 import com.squareup.picasso.Picasso;
@@ -21,18 +21,18 @@ public class ProgramRecycleAdapter extends RecyclerView.Adapter<ProgramViewHolde
     private final List<IProgramViewProvider> mProgramList;
     private final Context mContext;
     private final FragmentManager mFragmentManager;
-    private final ProgramsFragment mProgramsFragment;
+    private final ClickableDataSnapshotFragment mFragment;
     private ImageView mImageTop;
     private TextView mTitleTop;
     private TextView mSuccessTop;
 
     public ProgramRecycleAdapter(List<IProgramViewProvider> data, Context context,
                                  FragmentManager fragmentManager,
-                                 ProgramsFragment programsFragment) {
+                                 ClickableDataSnapshotFragment fragment) {
         mProgramList = data;
         mContext = context;
         mFragmentManager = fragmentManager;
-        mProgramsFragment = programsFragment;
+        mFragment = fragment;
     }
 
     @Override
@@ -59,8 +59,7 @@ public class ProgramRecycleAdapter extends RecyclerView.Adapter<ProgramViewHolde
             mTitleTop.setText(program.getTitle());
             mSuccessTop.setVisibility(View.VISIBLE);
             mSuccessTop.setText(program.getSnapshot().child("success").getValue(String.class));
-            // TODO: 11/08/2016 change onClick to something more abstract
-            mProgramsFragment.onClick(program.getSnapshot(), mFragmentManager);
+            mFragment.onClick(program.getSnapshot(), mFragmentManager);
         });
     }
 

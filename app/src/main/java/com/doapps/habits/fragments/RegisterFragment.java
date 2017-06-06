@@ -1,6 +1,5 @@
 package com.doapps.habits.fragments;
 
-
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
@@ -29,7 +28,6 @@ import java.util.regex.Pattern;
  */
 public class RegisterFragment extends Fragment {
 
-    public static final Pattern NAME_PATTERN = Pattern.compile("[\\s]^[0-9][^±!@£$%^&*_+§¡€#¢§¶•ªº«\\\\/<>?:;|=.,]{1,20}$");
     public static final Pattern EMAIL_PATTERN = Pattern.compile(
             "(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-" +
                     "\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\" +
@@ -67,24 +65,20 @@ public class RegisterFragment extends Fragment {
                     String password = inputPassword.getText().toString().trim();
 
                     if (!email.isEmpty() && !password.isEmpty() && !name.isEmpty()) {
-                        if (isValidPattern(name, NAME_PATTERN)) {
-                            if (isValidPattern(email, EMAIL_PATTERN)) {
-                                mAuth.createUserWithEmailAndPassword(email, password)
-                                        .addOnCompleteListener(getActivity(), task -> {
-                                            if (task.isSuccessful()) {
-                                                setUserName(name);
-                                                toLoginActivity();
-                                            } else {
-                                                handleRegisterError(task, getActivity());
-                                            }
-                                        });
-                            } else {
-                                Toast.makeText(getActivity(), "Invalid Email Address", Toast.LENGTH_SHORT).show();
-                            }
+                        if (isValidPattern(email, EMAIL_PATTERN)) {
+                            mAuth.createUserWithEmailAndPassword(email, password)
+                                    .addOnCompleteListener(getActivity(), task -> {
+                                        if (task.isSuccessful()) {
+                                            setUserName(name);
+                                            toLoginActivity();
+                                        } else {
+                                            handleRegisterError(task, getActivity());
+                                        }
+                                    });
                         } else {
-                            Toast.makeText(getActivity(), "Invalid Name", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "Invalid Email Address",
+                                    Toast.LENGTH_SHORT).show();
                         }
-
                     } else {
                         Toast.makeText(getActivity().getApplicationContext(),
                                 "Please enter your details!", Toast.LENGTH_LONG)
@@ -93,7 +87,6 @@ public class RegisterFragment extends Fragment {
                 }
 
         );
-
 
         return result;
     }

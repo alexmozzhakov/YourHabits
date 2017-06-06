@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.doapps.habits.activity.EditPhotoActivity;
@@ -22,15 +23,17 @@ public class ProfileAvatarListener implements LifecycleObserver, Observer<Uri> {
     public static final String TAG = ProfileAvatarListener.class.getSimpleName();
     private final Context context;
     private final ImageView avatar;
+    private final ImageView plus;
     private final Activity activity;
     private final Lifecycle lifecycle;
 
     public ProfileAvatarListener(Context context, ImageView avatar, Activity activity,
-                                 LifecycleOwner lifecycleOwner) {
+                                 LifecycleOwner lifecycleOwner, ImageView plus) {
         this.context = context;
         this.avatar = avatar;
         this.activity = activity;
         this.lifecycle = lifecycleOwner.getLifecycle();
+        this.plus = plus;
     }
 
 
@@ -53,7 +56,8 @@ public class ProfileAvatarListener implements LifecycleObserver, Observer<Uri> {
             avatar.invalidate();
         } else {
             Log.w(TAG, "no avatar");
-            avatar.setOnClickListener(view -> {
+            plus.setVisibility(View.VISIBLE);
+            plus.setOnClickListener(view -> {
                 Intent intent = new Intent(activity, EditPhotoActivity.class);
                 activity.startActivity(intent);
             });

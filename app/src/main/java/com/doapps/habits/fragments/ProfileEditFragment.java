@@ -42,7 +42,7 @@ public class ProfileEditFragment extends Fragment {
      */
     private static final String TAG = ProfileEditFragment.class.getSimpleName();
     private FloatingActionButton fab;
-    private ImageView avatar;
+    private ImageView plus;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -50,8 +50,8 @@ public class ProfileEditFragment extends Fragment {
         // Inflate the layout for this fragment
         View result = inflater.inflate(R.layout.fragment_edit_profile, container, false);
         fab = getActivity().findViewById(R.id.fab);
-        avatar = getActivity().findViewById(R.id.avatarImage);
-        setUpPhotoEdition(avatar, getActivity(), this);
+        plus = getActivity().findViewById(R.id.plus_overlay);
+        setUpPhotoEdition(plus, getActivity(), this);
 
         fab.setImageResource(R.drawable.ic_check_white_24dp);
         fab.setOnClickListener(view -> {
@@ -201,10 +201,9 @@ public class ProfileEditFragment extends Fragment {
 
     }
 
-    private static void setUpPhotoEdition(ImageView avatar, Activity activity, Fragment fragment) {
-//        avatar.setImageResource(R.drawable.ic_photo_plus);
-//        avatar.setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
-        avatar.setOnClickListener(view -> {
+    private static void setUpPhotoEdition(ImageView plus, Activity activity, Fragment fragment) {
+        plus.setVisibility(View.VISIBLE);
+        plus.setOnClickListener(view -> {
             fragment.getParentFragment().getChildFragmentManager().beginTransaction()
                     .remove(fragment).commit();
             Intent intent = new Intent(activity, EditPhotoActivity.class);
@@ -215,7 +214,8 @@ public class ProfileEditFragment extends Fragment {
 
     @Override
     public void onPause() {
-        avatar.setOnClickListener(null);
+        plus.setOnClickListener(null);
+        plus.setVisibility(View.GONE);
         // Set up fab back
         fab.setImageResource(R.drawable.ic_edit_white_24dp);
         fab.setOnClickListener(v -> {

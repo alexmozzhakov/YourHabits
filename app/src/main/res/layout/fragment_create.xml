@@ -57,42 +57,61 @@
     </android.support.design.widget.TextInputLayout>
 
 
-    <LinearLayout style="@style/dialogFormRow">
+    <LinearLayout
+        style="@style/dialogFormRow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp">
 
         <TextView
             style="@style/dialogFormLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
             android:text="@string/repeat"/>
 
         <android.support.v7.widget.AppCompatSpinner
             android:id="@+id/sFrequency"
             android:layout_width="wrap_content"
             android:layout_height="25dp"
+            android:layout_gravity="center"
             android:entries="@array/frequencyQuickSelect"
             android:minWidth="400dp"
-            android:theme="@style/dialogFormText"
-            android:visibility="visible"/>
+            android:theme="@style/dialogFormText"/>
 
         <LinearLayout
             android:id="@+id/llCustomFrequency"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone">
+            android:layout_marginLeft="2dp"
+            android:layout_marginStart="2dp"
+            android:visibility="visible">
 
             <EditText
                 android:id="@+id/input_freq_num"
-                style="@style/dialogFormInputSmallNumber"/>
+                style="@style/dialogFormInputSmallNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="number"/>
 
             <TextView
                 style="@style/dialogFormText"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
                 android:gravity="center"
                 android:text="@string/times_every"/>
 
             <EditText
                 android:id="@+id/input_freq_den"
-                style="@style/dialogFormInputSmallNumber"/>
+                style="@style/dialogFormInputSmallNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="number"/>
 
             <TextView
                 style="@style/dialogFormText"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:paddingLeft="12dp"
                 android:paddingStart="12dp"

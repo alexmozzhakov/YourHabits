@@ -174,8 +174,8 @@ public class MainActivity extends LifecycleActivity implements NavigationView.On
 
     public void toCreateFragment(View view) {
         mNavigationView.getMenu().getItem(0).setChecked(false);
+        mNavigationView.getMenu().getItem(2).setChecked(false);
         mLastFragment = 5;
-        mToolbar.setTitle(R.string.habit_create);
 
         getSupportFragmentManager()
                 .beginTransaction()
@@ -327,5 +327,4 @@ public class MainActivity extends LifecycleActivity implements NavigationView.On
         mLastFragment = R.id.nav_home;
         mNavigationView.getMenu().getItem(0).setChecked(true);
     }
-
 }

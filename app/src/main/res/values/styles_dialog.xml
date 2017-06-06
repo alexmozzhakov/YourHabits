@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="dialogFormInputMultiline">
+        match_parent
+        wrap_content
+        10
+        textMultiLine
+    </style>
+
+    <style name="dialogFormInputSmallNumber">
+        wrap_content
+        wrap_content
+        2
+        center
+        number
+        2
+    </style>
+
+    <style name="dialogFormText">
+        @style/regularTextSize
+        ?highContrastTextColor
+        wrap_content
+        wrap_content
+    </style>
+
+    <style name="dialogFormSpinnerDropDown">
+        12dp
+        ?highContrastTextColor
+    </style>
+
+    <style name="dialogFormInput">
+        0dp
+        wrap_content
+        10
+        10
+        textCapSentences
+    </style>
+
+    <style name="dialogFormLabel">
+        wrap_content
+        wrap_content
+        90dp
+        left
+        6dp
+        ?mediumContrastTextColor
+    </style>
+
+    <style name="dialogFormSpinner">
+        16sp
+        match_parent
+        wrap_content
+        400dp
+        ?highContrastTextColor
+        8dp
+    </style>
+
+    <style name="dialogFormRow">
+        match_parent
+        wrap_content
+        12dp
+        horizontal
+        300dp
+        start|center_vertical
+    </style>
+</resources>
