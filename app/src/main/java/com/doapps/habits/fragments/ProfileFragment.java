@@ -103,12 +103,14 @@ public class ProfileFragment extends LifecycleFragment {
                 topPanel.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
                     if (topPanel.getHeight() - PixelUtils.dpToPixel(getContext(), 50) < 200) {
                         avatar.setImageAlpha(0);
+                        plus.setImageAlpha(0);
                         name.setGravity(Gravity.CENTER);
                         location.setGravity(Gravity.CENTER);
                         Log.i("Top Panel", "I really can't fit on top panel, the view is only " +
                                 (topPanel.getHeight() - PixelUtils.dpToPixel(getContext(), 50)));
                     } else {
                         avatar.setImageAlpha(255);
+                        plus.setImageAlpha(255);
                         name.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
                         location.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
                         Log.i("Top Panel", "I fit on top panel");

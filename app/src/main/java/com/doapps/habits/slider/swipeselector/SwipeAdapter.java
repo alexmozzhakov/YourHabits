@@ -83,7 +83,7 @@ public class SwipeAdapter extends PagerAdapter implements View.OnClickListener, 
         mLeftButton.setTag(TAG_HIDDEN);
         mLeftButton.setClickable(false);
 
-        mLeftButton.setAlpha(0.0f);
+        mLeftButton.setAlpha(0f);
     }
 
     /**
