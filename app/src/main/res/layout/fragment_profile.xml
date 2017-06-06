@@ -123,15 +123,12 @@
         app:layout_constraintGuide_percent=".3"/>
 
 
-    <FrameLayout
+    <LinearLayout
         android:id="@+id/userInfo"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         android:orientation="vertical"
-        android:paddingEnd="16dp"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:paddingStart="16dp"
+        android:padding="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -143,7 +140,7 @@
             android:layout_gravity="end"
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="16dp"
             android:src="@drawable/ic_email_blue_24dp"
             tools:ignore="ContentDescription"/>
 
@@ -151,13 +148,13 @@
             android:id="@+id/email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="-24dp"
             android:ellipsize="end"
             android:gravity="center_horizontal"
-            android:paddingEnd="44dp"
-            android:paddingLeft="44dp"
-            android:paddingRight="44dp"
-            android:paddingStart="44dp"
+            android:layout_marginEnd="44dp"
+            android:layout_marginLeft="44dp"
+            android:layout_marginRight="44dp"
+            android:layout_marginStart="44dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textColor="#212121"
             android:textIsSelectable="true"/>
@@ -167,10 +164,10 @@
             android:layout_height="1dp"
             android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="70dp"
+            android:layout_marginTop="8dp"
             android:background="#ccc"
             android:paddingTop="50dp"/>
-    </FrameLayout>
+    </LinearLayout>
 
 
     <android.support.design.widget.FloatingActionButton

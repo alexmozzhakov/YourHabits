@@ -46,7 +46,7 @@ public class LoginFragment extends LifecycleFragment {
     private Button btnLogin;
     private Button btnRecovery;
     private Button btnLinkToRegister;
-    private Button btnAnonymous;
+    private Button btnSkip;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -59,7 +59,7 @@ public class LoginFragment extends LifecycleFragment {
         setupFields();
 
         btnLogin = result.findViewById(R.id.btn_login);
-        btnAnonymous = result.findViewById(R.id.btn_anonymous_login);
+        btnSkip = result.findViewById(R.id.btn_skip);
         btnFacebook = result.findViewById(R.id.btn_login_facebook);
         btnRecovery = result.findViewById(R.id.btn_recovery);
         btnLinkToRegister = result.findViewById(R.id.btnLinkToRegisterScreen);
@@ -70,8 +70,7 @@ public class LoginFragment extends LifecycleFragment {
     }
 
     private void setupButtons() {
-
-        btnAnonymous.setOnClickListener(this::anonymousLogin);
+        btnSkip.setOnClickListener(this::anonymousLogin);
         mAuth = FirebaseAuth.getInstance();
 
         // Login button Click Event
@@ -88,7 +87,6 @@ public class LoginFragment extends LifecycleFragment {
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
                         .replace(R.id.frame_layout, new RegisterFragment()).commit());
-
 
         btnRecovery.setOnClickListener(view -> {
             Intent intent = new Intent(getActivity().getApplicationContext(),
@@ -149,7 +147,6 @@ public class LoginFragment extends LifecycleFragment {
                                 Arrays.asList("email", "public_profile")));
     }
 
-
     private void checkInput(String email, String password) {
         // Check for empty data in the form
         if (email.isEmpty() || password.isEmpty()) {
@@ -204,21 +201,13 @@ public class LoginFragment extends LifecycleFragment {
                 Log.d(TAG, "signInAnonymously:onComplete:" + task.isSuccessful());
             }
 
-            /* If sign in fails, display a message to the user. If sign in succeeds
-             the auth state listener will be notified and logic to handle the
-             signed in user can be handled in the listener. */
-            if (task.isSuccessful()) {
-                if (getActivity() != null) {
-                    Intent intent = new Intent(getActivity(), MainActivity.class);
-                    startActivity(intent);
-                } else {
-                    Log.i("FA", "login page no longer exists");
-                }
+            if (getActivity() != null) {
+                Intent intent = new Intent(getActivity(), MainActivity.class);
+                startActivity(intent);
             } else {
-                Log.w(TAG, "signInAnonymously", task.getException());
-                Toast.makeText(getContext().getApplicationContext(), "Authentication failed.",
-                        Toast.LENGTH_SHORT).show();
+                Log.i("FA", "Login page no longer exists");
             }
         });
+
     }
 }

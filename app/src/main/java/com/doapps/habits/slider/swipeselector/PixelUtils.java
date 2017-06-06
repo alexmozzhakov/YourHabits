@@ -30,6 +30,6 @@ public class PixelUtils {
     public static float dpToPixel(Context context, float dp){
         Resources resources = context.getResources();
         DisplayMetrics metrics = resources.getDisplayMetrics();
-        return dp * (metrics.densityDpi / 160.0f);
+        return dp * (metrics.densityDpi / 160f);
     }
 }
