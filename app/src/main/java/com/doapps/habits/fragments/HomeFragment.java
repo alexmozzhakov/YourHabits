@@ -3,6 +3,7 @@ package com.doapps.habits.fragments;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -24,8 +25,10 @@ import com.doapps.habits.R;
 import com.doapps.habits.activity.MainActivity;
 import com.doapps.habits.adapter.TimeLineAdapter;
 import com.doapps.habits.helper.ConnectionManager;
+import com.doapps.habits.helper.ConnectionReceiver;
 import com.doapps.habits.helper.HabitListManager;
 import com.doapps.habits.helper.HomeDayManager;
+import com.doapps.habits.listeners.WeatherNetworkStateListener;
 import com.doapps.habits.models.IDayManager;
 import com.doapps.habits.models.IHabitListProvider;
 import com.doapps.habits.models.IStringSelector;
@@ -41,6 +44,10 @@ public class HomeFragment extends Fragment {
     private TextView weather;
     private TextView weatherBot;
     private static final String URL_WEATHER_API = "http://habit.esy.es/weather.php";
+    private static final String BROADCAST = "android.net.conn.CONNECTIVITY_CHANGE";
+    private static final String TAG = HomeFragment.class.getSimpleName();
+    private int habitListSize;
+    private ConnectionReceiver connectionReceiver;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -73,10 +80,10 @@ public class HomeFragment extends Fragment {
         weatherBot = view.findViewById(R.id.weatherBot);
 
         // get list size
-        int habitListSize = habitListManager.getList().size();
+        habitListSize = habitListManager.getList().size();
 
         if (ConnectionManager.isConnected(getContext())) {
-            getWeather(getContext(), habitListSize);
+            getWeather();
         } else {
             weather.setText(String.valueOf(habitListSize));
             weatherBot.setText(R.string.all_tasks);
@@ -84,14 +91,13 @@ public class HomeFragment extends Fragment {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 ConnectivityManager conMan = (ConnectivityManager)
                         getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-                Log.i("HomeFragment", "addDefaultNetworkActiveListener");
                 ConnectivityManager.OnNetworkActiveListener activeListener =
                         new ConnectivityManager.OnNetworkActiveListener() {
                             @TargetApi(Build.VERSION_CODES.LOLLIPOP)
                             @Override
                             public void onNetworkActive() {
                                 Log.i("HF", "onNetworkActive");
-                                getWeather(getContext(), habitListSize);
+                                getWeather();
 
                                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                                 if (user == null) {
@@ -108,6 +114,15 @@ public class HomeFragment extends Fragment {
 
                         };
                 conMan.addDefaultNetworkActiveListener(activeListener);
+                Log.i(TAG, "addDefaultNetworkActiveListener");
+            } else {
+                WeatherNetworkStateListener weatherNetworkStateListener
+                        = new WeatherNetworkStateListener(this);
+                connectionReceiver = new ConnectionReceiver(weatherNetworkStateListener);
+
+                IntentFilter intentFilter = new IntentFilter(BROADCAST);
+                getActivity().registerReceiver(connectionReceiver, intentFilter);
+                Log.i(TAG, "addDefaultNetworkActiveListener");
             }
         }
 
@@ -153,7 +168,7 @@ public class HomeFragment extends Fragment {
                 habitDayManager.updateForToday();
 
                 if (BuildConfig.DEBUG) {
-                    Log.i("HomeFragment", "Selected day (today) = " + dayOfWeek);
+                    Log.i(TAG, "Selected day (today) = " + dayOfWeek);
                 }
 
             } else {
@@ -161,7 +176,7 @@ public class HomeFragment extends Fragment {
                 int day = daysFromWeekStart > 7 ? daysFromWeekStart % 7 : daysFromWeekStart;
 
                 if (BuildConfig.DEBUG) {
-                    Log.i("HomeFragment", "Selected day = " + day);
+                    Log.i(TAG, "Selected day = " + day);
                 }
 
                 habitDayManager.updateListByDayOfWeek(day);
@@ -170,8 +185,8 @@ public class HomeFragment extends Fragment {
     }
 
     @SuppressLint("SetTextI18n")
-    private void getWeather(Context context, int listSize) {
-        Volley.newRequestQueue(context.getApplicationContext()).add(
+    public void getWeather() {
+        Volley.newRequestQueue(getContext().getApplicationContext()).add(
                 new StringRequest(Request.Method.GET, URL_WEATHER_API,
                         response -> {
                             try {
@@ -179,7 +194,7 @@ public class HomeFragment extends Fragment {
 
                                 if (jsonResponse.has("error")) {
                                     onNetworkFail(
-                                            new Exception(jsonResponse.getString("error")), listSize);
+                                            new Exception(jsonResponse.getString("error")), habitListSize);
                                 } else {
                                     if (getActivity() != null) {
                                         getActivity()
@@ -194,11 +209,11 @@ public class HomeFragment extends Fragment {
                                 }
 
                             } catch (JSONException error) {
-                                onNetworkFail(error, listSize);
+                                onNetworkFail(error, habitListSize);
                             }
 
                         },
-                        error -> onNetworkFail(error, listSize))
+                        error -> onNetworkFail(error, habitListSize))
         );
     }
 
@@ -208,5 +223,12 @@ public class HomeFragment extends Fragment {
         weather.setText(String.valueOf(listSize));
         weatherBot.setText(R.string.all_tasks);
         ((MainActivity) getActivity()).setAvatarInvisible();
+    }
+
+    @Override
+    public void onDestroy() {
+        if (connectionReceiver != null)
+            getActivity().unregisterReceiver(connectionReceiver);
+        super.onDestroy();
     }
 }

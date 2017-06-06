@@ -4,6 +4,7 @@
           package="com.doapps.habits">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
@@ -37,12 +38,16 @@
         <activity
             android:name=".activity.PasswordRecoveryActivity"
             android:theme="@style/AppTheme.Auth"/>
-        <activity android:name="com.yongchun.library.view.ImageSelectorActivity"
-                  android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name="com.yongchun.library.view.ImagePreviewActivity"
-                  android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name="com.yongchun.library.view.ImageCropActivity"
-                  android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name="com.yongchun.library.view.ImageSelectorActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name="com.yongchun.library.view.ImagePreviewActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name="com.yongchun.library.view.ImageCropActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
         <meta-data
             android:name="android.support.PARENT_ACTIVITY"
             android:value=".activity.MainActivity"/>
@@ -50,9 +55,13 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id"/>
 
-        <receiver
-            android:name=".receivers.Alarm"
-            android:process=":remote"/>
+        <receiver android:name=".receivers.Alarm">
+            <intent-filter>
+                <action
+                    android:name="android.net.conn.CONNECTIVITY_CHANGE"
+                    tools:ignore="BatteryLife"/>
+            </intent-filter>
+        </receiver>
         <service
             android:name=".services.NotificationService"
             android:enabled="true"
