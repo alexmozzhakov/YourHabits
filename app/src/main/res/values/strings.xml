@@ -46,11 +46,18 @@
 
     <!-- App introduction -->
 
+    <string-array name="frequencyQuickSelect">
+        <item>Every day</item>
+        <item>Every week</item>
+        <item>2 times per week</item>
+        <item>5 times per week</item>
+        <item>Custom …</item>
+    </string-array>
+
     <string name="every_day">Every day</string>
     <string name="every_week">Every week</string>
     <string name="two_times_per_week">2 times per week</string>
     <string name="five_times_per_week">5 times per week</string>
-
     <string name="custom_frequency">Custom …</string>
 
     <!-- Middle part of the sentence '1 time in xx days' -->

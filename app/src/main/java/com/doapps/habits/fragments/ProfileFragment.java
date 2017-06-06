@@ -61,6 +61,7 @@ public class ProfileFragment extends LifecycleFragment {
         TextView location = result.findViewById(R.id.location);
         Button btnDelete = result.findViewById(R.id.btn_delete_user);
         FloatingActionButton fab = result.findViewById(R.id.fab);
+        ImageView plus = result.findViewById(R.id.plus_overlay);
 
         fab.setOnClickListener(view -> {
             getChildFragmentManager()
@@ -90,13 +91,14 @@ public class ProfileFragment extends LifecycleFragment {
                         .into(avatar);
             } else {
                 Log.w(TAG, "no avatar");
-                avatar.setOnClickListener(view -> {
+                plus.setVisibility(View.VISIBLE);
+                plus.setOnClickListener(view -> {
                     Intent intent = new Intent(getActivity(), EditPhotoActivity.class);
                     startActivity(intent);
                 });
             }
 
-            if (MainActivity.isFacebook(user)) {
+            if (MainActivity.isFacebook(user) || user.getPhotoUrl() != null) {
                 View topPanel = result.findViewById(R.id.topPanel);
                 topPanel.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
                     if (topPanel.getHeight() - PixelUtils.dpToPixel(getContext(), 50) < 200) {
@@ -112,7 +114,8 @@ public class ProfileFragment extends LifecycleFragment {
                         Log.i("Top Panel", "I fit on top panel");
                     }
                 });
-            } else {
+            }
+            if(!MainActivity.isFacebook(user)) {
                 Button btnFacebook = result.findViewById(R.id.btn_connect_facebook);
                 btnFacebook.setVisibility(View.VISIBLE);
                 CallbackManager callbackManager =
@@ -173,7 +176,7 @@ public class ProfileFragment extends LifecycleFragment {
 
             btnDelete.setOnClickListener(view -> deleteUser(user));
             AvatarData.getInstance().observe(this,
-                    new ProfileAvatarListener(getContext(), avatar, getActivity(), this));
+                    new ProfileAvatarListener(getContext(), avatar, getActivity(), this, plus));
         }
 
         return result;

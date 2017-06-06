@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.doapps.habits.R;
 import com.doapps.habits.activity.MainActivity;
 import com.doapps.habits.adapter.ProgramRecycleAdapter;
+import com.doapps.habits.helper.ClickableDataSnapshotFragment;
 import com.doapps.habits.models.FirebaseProgramView;
 import com.doapps.habits.models.IProgramViewProvider;
 import com.google.firebase.database.ChildEventListener;
@@ -33,7 +34,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProgramsFragment extends Fragment {
+public class ProgramsFragment extends Fragment implements ClickableDataSnapshotFragment {
     /**
      * TAG is defined for logging errors and debugging information
      */

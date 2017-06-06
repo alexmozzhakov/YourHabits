@@ -28,9 +28,8 @@
         android:id="@+id/toolbar_search"
         style="@style/SearchViewStyle"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_gravity="end"
-        android:layout_marginTop="4dp"
+        android:layout_height="?attr/actionBarSize"
         android:visibility="gone"/>
 
 </android.support.design.widget.CoordinatorLayout>

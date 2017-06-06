@@ -71,6 +71,7 @@ public class CreateFragment extends Fragment implements AdapterView.OnItemSelect
 
         sFrequency.setOnItemSelectedListener(this);
         result.findViewById(R.id.btnCreate).setOnClickListener(view -> onHabitCreate());
+        ((MainActivity) getActivity()).getToolbar().setTitle(R.string.habit_create);
 
         return result;
     }
