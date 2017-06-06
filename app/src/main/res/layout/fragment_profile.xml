@@ -70,7 +70,7 @@
         android:textColor="#bfffffff"
         android:textIsSelectable="true"
         android:textSize="14sp"
-        app:layout_constraintBottom_toTopOf="@+id/userInfo"
+        app:layout_constraintBottom_toTopOf="@+id/user_info"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
 
@@ -122,13 +122,15 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent=".3"/>
 
-
-    <LinearLayout
-        android:id="@+id/userInfo"
-        android:layout_width="0dp"
+    <RelativeLayout
+        android:id="@+id/user_info"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="vertical"
-        android:padding="16dp"
+        android:paddingEnd="16dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingStart="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -137,10 +139,9 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/email"
             android:src="@drawable/ic_email_blue_24dp"
             tools:ignore="ContentDescription"/>
 
@@ -148,13 +149,13 @@
             android:id="@+id/email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="-24dp"
-            android:ellipsize="end"
-            android:gravity="center_horizontal"
             android:layout_marginEnd="44dp"
             android:layout_marginLeft="44dp"
             android:layout_marginRight="44dp"
             android:layout_marginStart="44dp"
+            android:layout_marginTop="40dp"
+            android:ellipsize="end"
+            android:gravity="center_horizontal"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textColor="#212121"
             android:textIsSelectable="true"/>
@@ -162,13 +163,11 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="16dp"
+            android:layout_below="@+id/email"
+            android:layout_centerHorizontal="true"
             android:layout_marginTop="8dp"
-            android:background="#ccc"
-            android:paddingTop="50dp"/>
-    </LinearLayout>
-
+            android:background="#ccc"/>
+    </RelativeLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
