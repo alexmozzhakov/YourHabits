@@ -45,8 +45,12 @@ import java.util.Arrays;
 public class ProfileFragment extends LifecycleFragment {
     private static final boolean[] editorOpened = new boolean[1];
     private static final String TAG = ProfileFragment.class.getSimpleName();
-    private static int mDialogTextLength;
     private static final int DIALOG_MIN_LENGTH = 6;
+    private static int mDialogTextLength;
+
+    static boolean[] getEditorOpened() {
+        return editorOpened;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -66,7 +70,7 @@ public class ProfileFragment extends LifecycleFragment {
         fab.setOnClickListener(view -> {
             getChildFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.userInfo, new ProfileEditFragment())
+                    .replace(R.id.user_info, new ProfileEditFragment())
                     .commit();
             editorOpened[0] = true;
         });
@@ -271,9 +275,5 @@ public class ProfileFragment extends LifecycleFragment {
                 return false;
             });
         }
-    }
-
-    static boolean[] getEditorOpened() {
-        return editorOpened;
     }
 }

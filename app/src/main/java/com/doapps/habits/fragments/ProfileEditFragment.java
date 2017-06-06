@@ -36,13 +36,78 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 
 public class ProfileEditFragment extends Fragment {
 
-    private String inputPassword = "";
     /**
      * TAG is defined for logging errors and debugging information
      */
     private static final String TAG = ProfileEditFragment.class.getSimpleName();
+    private String inputPassword = "";
     private FloatingActionButton fab;
     private ImageView plus;
+
+    private static boolean isUpdated(UserInfo user, String email, String name) {
+        boolean nameUpdated = !name.isEmpty() && !name.equals(user.getDisplayName());
+        boolean emailUpdated = !email.isEmpty() && !email.equals(user.getEmail());
+        return nameUpdated || emailUpdated;
+    }
+
+    private static void updateUser(Activity activity, FirebaseUser user,
+                                   String name, String email) {
+        TextView nameView =
+                activity.findViewById(R.id.name);
+        TextView emailView =
+                activity.findViewById(R.id.email);
+
+        if (!name.isEmpty() && !name.equals(user.getDisplayName())) {
+            UserProfileChangeRequest profileUpdates =
+                    new UserProfileChangeRequest.Builder()
+                            .setDisplayName(name)
+                            .build();
+
+            user.updateProfile(profileUpdates)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            NavigationView navigationView =
+                                    activity.findViewById(R.id.navigationView);
+
+                            ((TextView) navigationView
+                                    .getHeaderView(0).findViewById(R.id.name_info))
+                                    .setText(user.getDisplayName());
+
+                            nameView.setText(user.getDisplayName());
+
+                            Log.d(TAG, "User profile updated.");
+                        }
+                    });
+        }
+        if (!email.isEmpty() && !email.equals(user.getEmail())) {
+            user.updateEmail(email)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            NavigationView navigationView =
+                                    activity.findViewById(R.id.navigationView);
+
+                            ((TextView) navigationView
+                                    .getHeaderView(0).findViewById(R.id.email_info))
+                                    .setText(user.getEmail());
+
+                            emailView.setText(user.getEmail());
+
+                            Log.d(TAG, "User email address updated.");
+                        }
+                    });
+        }
+
+    }
+
+    private static void setUpPhotoEdition(ImageView plus, Activity activity, Fragment fragment) {
+        plus.setVisibility(View.VISIBLE);
+        plus.setOnClickListener(view -> {
+            fragment.getParentFragment().getChildFragmentManager().beginTransaction()
+                    .remove(fragment).commit();
+            Intent intent = new Intent(activity, EditPhotoActivity.class);
+            activity.startActivity(intent);
+        });
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -128,12 +193,6 @@ public class ProfileEditFragment extends Fragment {
         return result;
     }
 
-    private static boolean isUpdated(UserInfo user, String email, String name) {
-        boolean nameUpdated = !name.isEmpty() && !name.equals(user.getDisplayName());
-        boolean emailUpdated = !email.isEmpty() && !email.equals(user.getEmail());
-        return nameUpdated || emailUpdated;
-    }
-
     private void getPasswordFromUser() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Please re-enter your password");
@@ -152,66 +211,6 @@ public class ProfileEditFragment extends Fragment {
         builder.show();
     }
 
-    private static void updateUser(Activity activity, FirebaseUser user,
-                                   String name, String email) {
-        TextView nameView =
-                activity.findViewById(R.id.name);
-        TextView emailView =
-                activity.findViewById(R.id.email);
-
-        if (!name.isEmpty() && !name.equals(user.getDisplayName())) {
-            UserProfileChangeRequest profileUpdates =
-                    new UserProfileChangeRequest.Builder()
-                            .setDisplayName(name)
-                            .build();
-
-            user.updateProfile(profileUpdates)
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            NavigationView navigationView =
-                                    activity.findViewById(R.id.navigationView);
-
-                            ((TextView) navigationView
-                                    .getHeaderView(0).findViewById(R.id.name_info))
-                                    .setText(user.getDisplayName());
-
-                            nameView.setText(user.getDisplayName());
-
-                            Log.d(TAG, "User profile updated.");
-                        }
-                    });
-        }
-        if (!email.isEmpty() && !email.equals(user.getEmail())) {
-            user.updateEmail(email)
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            NavigationView navigationView =
-                                    activity.findViewById(R.id.navigationView);
-
-                            ((TextView) navigationView
-                                    .getHeaderView(0).findViewById(R.id.email_info))
-                                    .setText(user.getEmail());
-
-                            emailView.setText(user.getEmail());
-
-                            Log.d(TAG, "User email address updated.");
-                        }
-                    });
-        }
-
-    }
-
-    private static void setUpPhotoEdition(ImageView plus, Activity activity, Fragment fragment) {
-        plus.setVisibility(View.VISIBLE);
-        plus.setOnClickListener(view -> {
-            fragment.getParentFragment().getChildFragmentManager().beginTransaction()
-                    .remove(fragment).commit();
-            Intent intent = new Intent(activity, EditPhotoActivity.class);
-            activity.startActivity(intent);
-        });
-    }
-
-
     @Override
     public void onPause() {
         plus.setOnClickListener(null);
@@ -222,7 +221,7 @@ public class ProfileEditFragment extends Fragment {
             if (!ProfileFragment.getEditorOpened()[0]) {
                 getParentFragment().getChildFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.userInfo, new ProfileEditFragment())
+                        .replace(R.id.user_info, new ProfileEditFragment())
                         .commit();
                 ProfileFragment.getEditorOpened()[0] = true;
             }
