@@ -54,6 +54,7 @@ public class ProfileAvatarListener implements LifecycleObserver, Observer<Uri> {
                     .fit().centerInside()
                     .into(avatar);
             avatar.invalidate();
+            plus.setVisibility(View.INVISIBLE);
         } else {
             Log.w(TAG, "no avatar");
             plus.setVisibility(View.VISIBLE);
