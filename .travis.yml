@@ -1,5 +1,6 @@
 language: android
 jdk: oraclejdk8
+
 android:
   components:
     - platform-tools
@@ -9,12 +10,12 @@ android:
     - extra-google-google_play_services
     - extra-google-m2repository
     - extra-android-m2repository
-
+    - extra-android-support
+    - sys-img-armeabi-v7a-android-22
 
 before_script:
-  # Create and start emulator
-  - echo no | android create avd --force -n test -t android-26 --abi armeabi-v7a
-  - emulator -avd test -no-skin -no-audio -no-window &
+  - echo no | android create avd --force -n test -t android-22 --abi armeabi-v7a
+  - emulator -avd test -no-audio -no-window &
   - android-wait-for-emulator
   - adb shell input keyevent 82 &
 
@@ -25,9 +26,10 @@ before_install:
   - chmod +x gradlew
 
 before_cache:
-    - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
-
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
 cache:
   directories:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
+    - $HOME/.android/build-cache
