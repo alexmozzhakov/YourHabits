@@ -3,15 +3,15 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 'android-O'
-    buildToolsVersion '26.0.0-rc2'
+    compileSdkVersion 'android-26'
+    buildToolsVersion '26.0.0'
 
     defaultConfig {
         applicationId "com.doapps.habit"
         minSdkVersion 16
         targetSdkVersion 26
         versionCode 1
-        versionName "0.6.1"
+        versionName "0.6.8"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
