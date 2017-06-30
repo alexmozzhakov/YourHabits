@@ -5,15 +5,12 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.doapps.habits.R
 import com.doapps.habits.models.Habit
-import com.doapps.habits.models.IUpdatableList
+import com.doapps.habits.models.IListUpdater
 import com.doapps.habits.view.holders.TimeLineViewHolder
 import com.github.vipulasri.timelineview.TimelineView
 
 
-class TimeLineAdapter(var feedList: List<Habit>) : RecyclerView.Adapter<TimeLineViewHolder>(), IUpdatableList<Habit> {
-    override fun getList(): List<Habit> {
-        return feedList
-    }
+class TimeLineAdapter(var feedList: List<Habit>) : RecyclerView.Adapter<TimeLineViewHolder>(), IListUpdater<Habit> {
 
     override fun getItemViewType(position: Int): Int {
         return TimelineView.getTimeLineViewType(position, itemCount)

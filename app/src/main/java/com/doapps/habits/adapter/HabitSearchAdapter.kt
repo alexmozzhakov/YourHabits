@@ -5,12 +5,13 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.doapps.habits.R
+import com.doapps.habits.dao.HabitDao
+import com.doapps.habits.database.HabitsDatabase
 import com.doapps.habits.models.Habit
-import com.doapps.habits.models.IHabitsDatabase
 import com.doapps.habits.view.holders.HabitViewHolder
 import java.util.*
 
-class HabitSearchAdapter(private val habitList: List<Habit>, private val habitsDatabase: IHabitsDatabase)
+class HabitSearchAdapter(private val habitList: List<Habit>, private val habitsDatabase: HabitDao)
     : RecyclerView.Adapter<HabitViewHolder>(), IMovableListAdapter {
 
     override fun onItemMove(fromPosition: Int, toPosition: Int) {
@@ -28,16 +29,17 @@ class HabitSearchAdapter(private val habitList: List<Habit>, private val habitsD
 
     override fun onBindViewHolder(holder: HabitViewHolder, position: Int) {
         val habit = habitList[position]
-
         holder.titleTextView.text = habit.title
         holder.checkBox.setOnClickListener {
             if (holder.checkBox.isChecked) {
-                habitsDatabase.updateHabit(habit, 1)
-                habitList[position].setDoneMarker(true)
+                habit.isDoneMarker = true
+                if (HabitsDatabase.mustHaveFollowed(habit))
+                    habit.followingFrom = System.currentTimeMillis()
+                habitsDatabase.update(habit)
                 holder.titleTextView.setTextColor(Color.GRAY)
             } else {
-                habitsDatabase.updateHabit(habit, 0)
-                habitList[position].setDoneMarker(false)
+                habit.isDoneMarker = false
+                habitsDatabase.update(habit)
                 holder.titleTextView.setTextColor(Color.BLACK)
             }
         }

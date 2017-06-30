@@ -1,5 +1,7 @@
 package com.doapps.habits.fragments;
 
+import android.annotation.SuppressLint;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
@@ -17,9 +19,10 @@ import android.widget.Toast;
 import com.doapps.habits.BuildConfig;
 import com.doapps.habits.R;
 import com.doapps.habits.activity.MainActivity;
+import com.doapps.habits.dao.HabitDao;
 import com.doapps.habits.helper.HabitListManager;
 import com.doapps.habits.helper.HabitNotifier;
-import com.doapps.habits.models.IHabitsDatabase;
+import com.doapps.habits.models.Habit;
 
 import java.util.Arrays;
 import java.util.Calendar;
@@ -33,6 +36,7 @@ public class CreateFragment extends Fragment implements AdapterView.OnItemSelect
     private TextView tvFreqDen;
     private ViewGroup llCustomFrequency;
     private int lastSpinnerSelection;
+    private HabitDao habitsDatabase;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -100,20 +104,19 @@ public class CreateFragment extends Fragment implements AdapterView.OnItemSelect
             int time = editTime.getText().toString().isEmpty() ?
                     0 : Integer.valueOf(editTime.getText().toString());
             // Checks what data was entered and adds habit to habitsDatabase
-            IHabitsDatabase habitsDatabase = HabitListManager.getInstance(getContext()).getDatabase();
-            long id = habitsDatabase.addHabit(
+            habitsDatabase = HabitListManager.getInstance(getContext()).getDatabase().habitDao();
+            Calendar upd = Calendar.getInstance();
+            Habit habit = new Habit(
                     editTitle.getText().toString(),
                     editQuestion.getText().toString(),
+                    false,
+                    upd.get(Calendar.DATE),
+                    upd.get(Calendar.MONTH),
+                    upd.get(Calendar.YEAR),
                     time,
-                    Calendar.getInstance(),
-                    frequency);
-
-            HabitNotifier habitNotifier = new HabitNotifier(getContext(),
-                    editQuestion.getText().toString(), id);
-            habitNotifier.initiate();
-
-            ((MainActivity) getActivity()).getToolbar().setTitle("List");
-            getFragmentManager().beginTransaction().replace(R.id.content_frame, new ListFragment()).commit();
+                    System.currentTimeMillis(),
+                    0, frequency);
+            new InsertHabitTask().execute(habit);
         } else {
             Toast.makeText(getContext().getApplicationContext(), "Please enter habit's title",
                     Toast.LENGTH_SHORT).show();
@@ -130,7 +133,6 @@ public class CreateFragment extends Fragment implements AdapterView.OnItemSelect
         }
     }
 
-
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
         // ignored
@@ -140,5 +142,25 @@ public class CreateFragment extends Fragment implements AdapterView.OnItemSelect
     public void onPause() {
         ((MainActivity) getActivity()).closeImm();
         super.onPause();
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    private class InsertHabitTask extends AsyncTask<Habit, Void, Long> {
+        @Override
+        protected Long doInBackground(Habit... habit) {
+            Log.i("DatabaseContains", "New program added");
+            return habitsDatabase.insert(habit[0]);
+        }
+
+        @Override
+        protected void onPostExecute(Long id) {
+            HabitNotifier habitNotifier = new HabitNotifier(getContext(),
+                    editQuestion.getText().toString(), id);
+            habitNotifier.initiate();
+
+            ((MainActivity) getActivity()).getToolbar().setTitle("List");
+            getFragmentManager().beginTransaction().replace(R.id.content_frame, new ListFragment()).commit();
+            super.onPostExecute(id);
+        }
     }
 }

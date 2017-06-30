@@ -1,8 +1,0 @@
-<root>
-    <item name='android.graphics.Color'>
-        <annotation name='org.jetbrains.annotations.NonNls'/>
-    </item>
-    <item name='android.graphics.Typeface'>
-      <annotation name='org.jetbrains.annotations.NonNls'/>
-    </item>
-</root>

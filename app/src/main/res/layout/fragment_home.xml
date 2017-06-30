@@ -57,8 +57,7 @@
             android:textSize="14sp"
             app:layout_constraintEnd_toStartOf="@+id/mid_guideline"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tasks_due_num"
-            app:layout_widthPercent="50%"/>
+            app:layout_constraintTop_toBottomOf="@+id/tasks_due_num"/>
 
         <android.support.constraint.Guideline
             android:id="@+id/mid_guideline"
@@ -93,12 +92,8 @@
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/mid_guideline"
-            app:layout_constraintTop_toBottomOf="@+id/weather"
-            app:layout_marginLeftPercent="25%"
-            app:layout_marginPercent="25%"
-            app:layout_widthPercent="50%"/>
+            app:layout_constraintTop_toBottomOf="@+id/weather"/>
     </android.support.constraint.ConstraintLayout>
-
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/timeline"

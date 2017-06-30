@@ -5,6 +5,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -24,13 +25,14 @@ import com.doapps.habits.BuildConfig;
 import com.doapps.habits.R;
 import com.doapps.habits.activity.MainActivity;
 import com.doapps.habits.adapter.TimeLineAdapter;
+import com.doapps.habits.database.HabitsDatabase;
 import com.doapps.habits.helper.ConnectionManager;
 import com.doapps.habits.helper.ConnectionReceiver;
 import com.doapps.habits.helper.HabitListManager;
 import com.doapps.habits.helper.HomeDayManager;
 import com.doapps.habits.listeners.WeatherNetworkStateListener;
+import com.doapps.habits.models.Habit;
 import com.doapps.habits.models.IDayManager;
-import com.doapps.habits.models.IHabitListProvider;
 import com.doapps.habits.models.IStringSelector;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -39,15 +41,51 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Calendar;
+import java.util.List;
 
 public class HomeFragment extends Fragment {
-    private TextView weather;
-    private TextView weatherBot;
     private static final String URL_WEATHER_API = "http://habit.esy.es/weather.php";
     private static final String BROADCAST = "android.net.conn.CONNECTIVITY_CHANGE";
     private static final String TAG = HomeFragment.class.getSimpleName();
+    private static HabitsDatabase habitsDatabase;
+    private TextView weather;
+    private TextView weatherBot;
     private int habitListSize;
     private ConnectionReceiver connectionReceiver;
+
+    /**
+     * Initiates
+     *
+     * @param swipeStringSelector by using
+     * @param habitDayManager     for filtering list
+     * @param dayOfWeek           for getting dayOfWeek from number of selected item
+     */
+    private static void initDaysTabs(
+            int dayOfWeek,
+            IStringSelector swipeStringSelector,
+            IDayManager habitDayManager) {
+
+        swipeStringSelector.setOnItemSelectedListener(item -> {
+            int value = swipeStringSelector.getAdapter().getCurrentPosition();
+            if (value == 0) {
+                habitDayManager.updateForToday();
+
+                if (BuildConfig.DEBUG) {
+                    Log.i(TAG, "Selected day (today) = " + dayOfWeek);
+                }
+
+            } else {
+                int daysFromWeekStart = dayOfWeek + value;
+                int day = daysFromWeekStart > 7 ? daysFromWeekStart % 7 : daysFromWeekStart;
+
+                if (BuildConfig.DEBUG) {
+                    Log.i(TAG, "Selected day = " + day);
+                }
+
+                habitDayManager.updateListByDayOfWeek(day);
+            }
+        });
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -58,29 +96,11 @@ public class HomeFragment extends Fragment {
         Toolbar toolbar = ((MainActivity) getActivity()).getToolbar();
         toolbar.setTitle(R.string.home);
 
-        RecyclerView recyclerView = view.findViewById(R.id.timeline);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-        IHabitListProvider habitListManager = HabitListManager.getInstance(getContext());
-
-        // set filtered list to adapter
-        TimeLineAdapter timeLineAdapter = new TimeLineAdapter(habitListManager.getList());
-        timeLineAdapter.setHasStableIds(true);
-        recyclerView.setAdapter(timeLineAdapter);
-
-        // filter list for today
-        HomeDayManager dayManager = new HomeDayManager(timeLineAdapter, habitListManager.getList());
-        dayManager.updateForToday();
-
-        // set due count of filtered list
-        TextView tasksDue = view.findViewById(R.id.tasks_due_num);
-        tasksDue.setText(dayManager.getDueCount());
-
         weather = view.findViewById(R.id.weather);
         weatherBot = view.findViewById(R.id.weatherBot);
 
-        // get list size
-        habitListSize = habitListManager.getList().size();
+        habitsDatabase = HabitListManager.getInstance(getContext()).getDatabase();
+        new GetTask(view).execute();
 
         if (ConnectionManager.isConnected(getContext())) {
             getWeather();
@@ -125,20 +145,7 @@ public class HomeFragment extends Fragment {
                 Log.i(TAG, "addDefaultNetworkActiveListener");
             }
         }
-
-        // get day of week
-        int dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
-
-        IStringSelector swipeSelector = view.findViewById(R.id.sliding_tabs);
-        swipeSelector.setItems(getDaysOfWeekFromToday(dayOfWeek - 1));
-
-        initDaysTabs(
-                dayOfWeek,
-                swipeSelector,
-                new HomeDayManager(timeLineAdapter,
-                        HabitListManager.getInstance(getContext()).getList()));
         return view;
-
     }
 
     private String[] getDaysOfWeekFromToday(int dayOfWeek) {
@@ -148,40 +155,6 @@ public class HomeFragment extends Fragment {
             daysOfWeek[i] = daysOfWeekNames[(dayOfWeek + i) % 7];
         }
         return daysOfWeek;
-    }
-
-    /**
-     * Initiates
-     *
-     * @param swipeStringSelector by using
-     * @param habitDayManager     for filtering list
-     * @param dayOfWeek           for getting dayOfWeek from number of selected item
-     */
-    private static void initDaysTabs(
-            int dayOfWeek,
-            IStringSelector swipeStringSelector,
-            IDayManager habitDayManager) {
-
-        swipeStringSelector.setOnItemSelectedListener(item -> {
-            int value = swipeStringSelector.getAdapter().getCurrentPosition();
-            if (value == 0) {
-                habitDayManager.updateForToday();
-
-                if (BuildConfig.DEBUG) {
-                    Log.i(TAG, "Selected day (today) = " + dayOfWeek);
-                }
-
-            } else {
-                int daysFromWeekStart = dayOfWeek + value;
-                int day = daysFromWeekStart > 7 ? daysFromWeekStart % 7 : daysFromWeekStart;
-
-                if (BuildConfig.DEBUG) {
-                    Log.i(TAG, "Selected day = " + day);
-                }
-
-                habitDayManager.updateListByDayOfWeek(day);
-            }
-        });
     }
 
     @SuppressLint("SetTextI18n")
@@ -230,5 +203,55 @@ public class HomeFragment extends Fragment {
         if (connectionReceiver != null)
             getActivity().unregisterReceiver(connectionReceiver);
         super.onDestroy();
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    private class GetTask extends AsyncTask<Void, Void, List<Habit>> {
+        private final View view;
+
+        GetTask(View view) {
+            this.view = view;
+        }
+
+        @Override
+        protected List<Habit> doInBackground(Void... voids) {
+            return habitsDatabase.habitDao().getAll();
+        }
+
+        @Override
+        protected void onPostExecute(List<Habit> habits) {
+            super.onPostExecute(habits);
+
+            // set filtered list to adapter
+            TimeLineAdapter timeLineAdapter = new TimeLineAdapter(habits);
+            timeLineAdapter.setHasStableIds(true);
+            RecyclerView recyclerView = view.findViewById(R.id.timeline);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            recyclerView.setAdapter(timeLineAdapter);
+
+            // filter list for today
+            HomeDayManager dayManager = new HomeDayManager(timeLineAdapter, habits);
+            dayManager.updateForToday();
+
+            // set due count of filtered list
+            TextView tasksDue = view.findViewById(R.id.tasks_due_num);
+            tasksDue.setText(dayManager.getDueCount());
+
+            // get list size
+            habitListSize = habits.size();
+
+            // get day of week
+            int dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+
+            IStringSelector swipeSelector = view.findViewById(R.id.sliding_tabs);
+            swipeSelector.setItems(getDaysOfWeekFromToday(dayOfWeek - 1));
+
+            initDaysTabs(
+                    dayOfWeek,
+                    swipeSelector,
+                    new HomeDayManager(timeLineAdapter,
+                            habits));
+
+        }
     }
 }

@@ -1,10 +1,10 @@
-package com.doapps.habits.models;
+package com.doapps.habits.models
 
 @FunctionalInterface
-public interface IOnItemSelectedListener<T> {
+interface IOnItemSelectedListener<T> {
     /**
      * Callback method to be invoked when an item has been selected.
      * @param item An item that is selected
      */
-    void onItemSelected(T item);
+    fun onItemSelected(item: T)
 }
