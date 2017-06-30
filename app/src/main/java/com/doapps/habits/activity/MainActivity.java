@@ -1,6 +1,5 @@
 package com.doapps.habits.activity;
 
-import android.app.NotificationManager;
 import android.arch.lifecycle.LifecycleActivity;
 import android.content.Context;
 import android.content.Intent;
@@ -27,11 +26,9 @@ import com.doapps.habits.fragments.HomeFragment;
 import com.doapps.habits.fragments.ListFragment;
 import com.doapps.habits.fragments.ProfileFragment;
 import com.doapps.habits.fragments.ProgramsFragment;
-import com.doapps.habits.helper.HabitListManager;
 import com.doapps.habits.helper.PicassoRoundedTransformation;
 import com.doapps.habits.listeners.MenuAvatarListener;
 import com.doapps.habits.listeners.NameChangeListener;
-import com.doapps.habits.models.Habit;
 import com.doapps.habits.slider.swipeselector.PixelUtils;
 import com.facebook.CallbackManager;
 import com.google.firebase.auth.FirebaseAuth;
@@ -40,13 +37,24 @@ import com.squareup.picasso.Picasso;
 
 public class MainActivity extends LifecycleActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static final long INFLATE_DELAY = 200L;
+    private final CallbackManager mCallbackManager = CallbackManager.Factory.create();
     private int mLastFragment = -1;
     private NavigationView mNavigationView;
     private FirebaseUser user;
     private ActionBarDrawerToggle mDrawerToggle;
     private Toolbar mToolbar;
     private DrawerLayout mDrawerLayout;
-    private final CallbackManager mCallbackManager = CallbackManager.Factory.create();
+
+    public static boolean isFacebook(FirebaseUser user) {
+        if (user.getProviders() != null) {
+            for (String provider : user.getProviders()) {
+                if (provider.contains("facebook")) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,33 +64,33 @@ public class MainActivity extends LifecycleActivity implements NavigationView.On
 
         mToolbar = findViewById(R.id.toolbar);
 
-        if (getIntent().getAction() != null) {
-            long id = getIntent().getLongExtra("id", 0);
-            if (getIntent().getAction().equals("no")) {
-                Log.i("Action", "No");
-                Habit habit = HabitListManager.getInstance(this).getDatabase().getHabit(id);
-                HabitListManager.getInstance(this).getDatabase().updateHabit(habit, 0);
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .add(R.id.content_frame, new ListFragment())
-                        .commit();
-                mLastFragment = R.id.nav_lists;
-                mToolbar.setTitle("List");
-            } else if (getIntent().getAction().equals("yes")) {
-                Log.i("Action", "Yes");
-                Habit habit = HabitListManager.getInstance(this).getDatabase().getHabit(id);
-                HabitListManager.getInstance(this).getDatabase().updateHabit(habit, 1);
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .add(R.id.content_frame, new ListFragment())
-                        .commit();
-                mLastFragment = R.id.nav_lists;
-                mToolbar.setTitle("List");
-            }
-            NotificationManager notificationManager = (NotificationManager)
-                    getSystemService(Context.NOTIFICATION_SERVICE);
-            notificationManager.cancel((int) id);
-        }
+//        if (getIntent().getAction() != null) {
+//            long id = getIntent().getLongExtra("id", 0);
+//            Habit habit = HabitListManager.getInstance(this).getDatabase().habitDao().get(id);
+//            if (getIntent().getAction().equals("no")) {
+//                Log.i("Action", "No");
+//                habit.setDoneMarker(false);
+//                HabitListManager.getInstance(this).getDatabase().habitDao().update(habit);
+//                getSupportFragmentManager()
+//                        .beginTransaction()
+//                        .add(R.id.content_frame, new ListFragment())
+//                        .commit();
+//                mLastFragment = R.id.nav_lists;
+//            } else if (getIntent().getAction().equals("yes")) {
+//                Log.i("Action", "Yes");
+//                habit.setDoneMarker(true);
+//                HabitListManager.getInstance(this).getDatabase().habitDao().update(habit);
+//                getSupportFragmentManager()
+//                        .beginTransaction()
+//                        .add(R.id.content_frame, new ListFragment())
+//                        .commit();
+//                mLastFragment = R.id.nav_lists;
+//            }
+//            mToolbar.setTitle("List");
+//            NotificationManager notificationManager = (NotificationManager)
+//                    getSystemService(Context.NOTIFICATION_SERVICE);
+//            notificationManager.cancel((int) id);
+//        }
 
         if (savedInstanceState == null && mLastFragment != R.id.nav_lists) {
             getSupportFragmentManager()
@@ -219,7 +227,6 @@ public class MainActivity extends LifecycleActivity implements NavigationView.On
         mNavigationView.getHeaderView(0).findViewById(R.id.fields_info).setPadding(0, 0, 0, 0);
     }
 
-
     public void onSetupNavigationDrawer(FirebaseUser user) {
 
         mNavigationView.setNavigationItemSelectedListener(this);
@@ -280,7 +287,6 @@ public class MainActivity extends LifecycleActivity implements NavigationView.On
         startActivity(intent);
     }
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -299,17 +305,6 @@ public class MainActivity extends LifecycleActivity implements NavigationView.On
         }
 
         Log.i("IMM", "Closed imm");
-    }
-
-    public static boolean isFacebook(FirebaseUser user) {
-        if (user.getProviders() != null) {
-            for (String provider : user.getProviders()) {
-                if (provider.contains("facebook")) {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
     @Override

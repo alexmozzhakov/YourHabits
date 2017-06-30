@@ -2,18 +2,18 @@ package com.doapps.habits.helper;
 
 import com.doapps.habits.models.Habit;
 import com.doapps.habits.models.IDayManager;
-import com.doapps.habits.models.IUpdatableList;
+import com.doapps.habits.models.IListUpdater;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 public class HomeDayManager implements IDayManager, DueCounter {
-    private final IUpdatableList<Habit> mTimeLineAdapter;
+    private final IListUpdater<Habit> mTimeLineAdapter;
     private final List<Habit> mHabitList;
     private int dueCount;
 
-    public HomeDayManager(IUpdatableList<Habit> timeLineAdapter, List<Habit> habitList) {
+    public HomeDayManager(IListUpdater<Habit> timeLineAdapter, List<Habit> habitList) {
         mTimeLineAdapter = timeLineAdapter;
         mHabitList = habitList;
     }

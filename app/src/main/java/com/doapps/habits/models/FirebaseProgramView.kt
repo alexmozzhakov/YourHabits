@@ -9,23 +9,13 @@ class FirebaseProgramView(private val snapshot: DataSnapshot) : IProgramViewProv
     private val imageLink: String? = String.format("http://habit.esy.es/img_progs/%s.jpg",
             snapshot.child("image").getValue(String::class.java))
 
-    override fun getTitle(): String? {
-        return title
-    }
+    override fun getTitle(): String? = title
 
-    override fun getDescription(): String? {
-        return description
-    }
+    override fun getDescription(): String? = description
 
-    override fun getPercent(): String? {
-        return percent
-    }
+    override fun getPercent(): String? = percent
 
-    override fun getImageLink(): String? {
-        return imageLink
-    }
+    override fun getImageLink(): String? = imageLink
 
-    override fun getSnapshot(): DataSnapshot {
-        return snapshot
-    }
+    override fun getSnapshot(): DataSnapshot = snapshot
 }

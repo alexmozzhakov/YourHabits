@@ -1,34 +1,40 @@
 package com.doapps.habits.models;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
+
 import java.util.Arrays;
 import java.util.Calendar;
 
+@Entity(tableName = "habits")
 public final class Habit {
 
-    //Constant Habit values
-    private final String title;
-    private final String question;
-    private final int time;
-    private final int cost;
     private final int[] frequencyArray;
-    private final boolean isProgram;
+    @PrimaryKey
+    private int id;
+    //Constant Habit values
+    private String title;
+    private String question;
+    private int time;
+    private int cost;
+    @ColumnInfo(name = "program_id")
+    private int programId;
 
     // Changeable Habit values
-    private int id;
     private boolean doneMarker;
     private int markerUpdatedDay;
     private int markerUpdatedMonth;
     private int markerUpdatedYear;
-    private int followingFrom;
+    private long followingFrom;
 
-    public Habit(int id, String title, String question, boolean isProgram, boolean doneMarker,
+    public Habit(String title, String question, boolean doneMarker,
                  int markerUpdatedDay, int markerUpdatedMonth, int markerUpdatedYear,
-                 int time, int followingFrom, int cost, int... frequencyArray) {
+                 int time, long followingFrom, int cost, int... frequencyArray) {
 
-        this.id = id;
         this.title = title;
         this.question = question;
-        this.isProgram = isProgram;
+        this.programId = -1;
         this.doneMarker = doneMarker;
         this.markerUpdatedDay = markerUpdatedDay;
         this.markerUpdatedMonth = markerUpdatedMonth;
@@ -43,26 +49,12 @@ public final class Habit {
         return title;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public int[] getFrequencyArray() {
         return frequencyArray;
-    }
-
-    public void setDoneMarker(boolean doneMarker) {
-        this.doneMarker = doneMarker;
-        if (doneMarker) {
-            Calendar calendar = Calendar.getInstance();
-            markerUpdatedDay = calendar.get(Calendar.DATE);
-            markerUpdatedMonth = calendar.get(Calendar.MONTH);
-            markerUpdatedYear = calendar.get(Calendar.YEAR);
-        }
     }
 
     public boolean isDone(int markerUpdatedDay, int markerUpdatedMonth, int markerUpdatedYear) {
@@ -80,8 +72,7 @@ public final class Habit {
                 ", time=" + time +
                 ", cost=" + cost +
                 ", frequencyArray=" + Arrays.toString(frequencyArray) +
-                ", isProgram=" + isProgram +
-                ", id=" + id +
+                ", programId=" + programId +
                 ", doneMarker=" + doneMarker +
                 ", markerUpdatedDay=" + markerUpdatedDay +
                 ", markerUpdatedMonth=" + markerUpdatedMonth +
@@ -90,19 +81,93 @@ public final class Habit {
                 '}';
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getQuestion() {
+        return question;
+    }
+
+    public void setQuestion(String question) {
+        this.question = question;
+    }
+
+    public int getTime() {
+        return time;
+    }
+
+    public void setTime(int time) {
+        this.time = time;
+    }
+
+    public int getCost() {
+        return cost;
+    }
+
+    public void setCost(int cost) {
+        this.cost = cost;
+    }
+
+    public int getProgramId() {
+        return programId;
+    }
+
+    public void setProgramId(int programId) {
+        this.programId = programId;
+    }
+
+    public boolean isDoneMarker() {
+        return doneMarker;
+    }
+
+    public void setDoneMarker(boolean doneMarker) {
+        this.doneMarker = doneMarker;
+        if (doneMarker) {
+            Calendar calendar = Calendar.getInstance();
+            markerUpdatedDay = calendar.get(Calendar.DATE);
+            markerUpdatedMonth = calendar.get(Calendar.MONTH);
+            markerUpdatedYear = calendar.get(Calendar.YEAR);
+        }
+    }
+
     public int getMarkerUpdatedDay() {
         return markerUpdatedDay;
+    }
+
+    public void setMarkerUpdatedDay(int markerUpdatedDay) {
+        this.markerUpdatedDay = markerUpdatedDay;
     }
 
     public int getMarkerUpdatedMonth() {
         return markerUpdatedMonth;
     }
 
+    public void setMarkerUpdatedMonth(int markerUpdatedMonth) {
+        this.markerUpdatedMonth = markerUpdatedMonth;
+    }
+
     public int getMarkerUpdatedYear() {
         return markerUpdatedYear;
     }
 
+    public void setMarkerUpdatedYear(int markerUpdatedYear) {
+        this.markerUpdatedYear = markerUpdatedYear;
+    }
+
+    public long getFollowingFrom() {
+        return followingFrom;
+    }
+
+    public void setFollowingFrom(long followingFrom) {
+        this.followingFrom = followingFrom;
+    }
+
     public boolean isProgram() {
-        return isProgram;
+        return programId == -1;
     }
 }

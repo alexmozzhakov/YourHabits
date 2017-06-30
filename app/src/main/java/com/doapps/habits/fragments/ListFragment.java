@@ -23,12 +23,12 @@ import com.doapps.habits.helper.HabitListManager;
 import com.doapps.habits.helper.SimpleItemTouchHelperCallback;
 import com.doapps.habits.listeners.EmptyListListener;
 import com.doapps.habits.models.Habit;
-import com.doapps.habits.models.IHabitDatabaseMovableListProvider;
 import com.doapps.habits.view.holders.HabitViewHolder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class ListFragment extends Fragment implements SearchView.OnQueryTextListener, SearchView.OnCloseListener {
 
@@ -53,43 +53,57 @@ public class ListFragment extends Fragment implements SearchView.OnQueryTextList
                 searchView.setVisibility(View.GONE);
         });
 
-        IHabitDatabaseMovableListProvider habitListManager = HabitListManager.getInstance(getContext());
-        if (habitListManager.isEmpty()) {
-            recyclerView.setVisibility(View.GONE);
-            emptyView.setVisibility(View.VISIBLE);
-        } else {
-            Log.i("List", String.valueOf(Arrays.toString(habitListManager.getList().toArray())));
-            recyclerView.setVisibility(View.VISIBLE);
-            emptyView.setVisibility(View.GONE);
-            LinearLayoutManager llm = new LinearLayoutManager(getActivity());
-            recyclerView.setLayoutManager(llm);
-            recycleAdapter = new HabitRecycleAdapter(habitListManager);
-            recyclerView.setAdapter(recycleAdapter);
-            Callback callback = new SimpleItemTouchHelperCallback((IMovableListAdapter) recycleAdapter);
-            ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
-            touchHelper.attachToRecyclerView(recyclerView);
-            searchView = toolbar.getRootView().findViewById(R.id.toolbar_search);
-            searchView.setVisibility(View.VISIBLE);
-            searchView.setOnQueryTextListener(this);
-            searchView.setOnCloseListener(this);
+        HabitListManager habitListManager = HabitListManager.getInstance(getContext());
+        try {
+            if (habitListManager.getList().isEmpty()) {
+                recyclerView.setVisibility(View.GONE);
+                emptyView.setVisibility(View.VISIBLE);
+            } else {
+                try {
+                    Log.i("List", String.valueOf(Arrays.toString(habitListManager.getList().toArray())));
+                } catch (InterruptedException | ExecutionException e) {
+                    e.printStackTrace();
+                }
+                recyclerView.setVisibility(View.VISIBLE);
+                emptyView.setVisibility(View.GONE);
+                LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+                recyclerView.setLayoutManager(llm);
+                recycleAdapter = new HabitRecycleAdapter(habitListManager);
+                recyclerView.setAdapter(recycleAdapter);
+                Callback callback = new SimpleItemTouchHelperCallback((IMovableListAdapter) recycleAdapter);
+                ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
+                touchHelper.attachToRecyclerView(recyclerView);
+                searchView = toolbar.getRootView().findViewById(R.id.toolbar_search);
+                searchView.setVisibility(View.VISIBLE);
+                searchView.setOnQueryTextListener(this);
+                searchView.setOnCloseListener(this);
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
         }
 
         return result;
     }
 
-
     @Override
     public boolean onQueryTextSubmit(String s) {
         s = s.toLowerCase();
-        List<Habit> habitList = HabitListManager.getInstance(getContext()).getList();
-        List<Habit> searchResult = new ArrayList<>(habitList.size());
-        for (int i = 0; i < habitList.size(); i++) {
-            if (habitList.get(i).getTitle().toLowerCase().contains(s)) {
-                searchResult.add(habitList.get(i));
+        List<Habit> habitList;
+        try {
+            habitList = HabitListManager.getInstance(getContext()).getList();
+            List<Habit> searchResult = new ArrayList<>(habitList.size());
+            for (int i = 0; i < habitList.size(); i++) {
+                if (habitList.get(i).getTitle().toLowerCase().contains(s)) {
+                    searchResult.add(habitList.get(i));
+                }
             }
+            recycleAdapter = new HabitSearchAdapter(searchResult, HabitListManager.getInstance(getContext()).getDatabase().habitDao());
+            recyclerView.setAdapter(recycleAdapter);
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
         }
-        recycleAdapter = new HabitSearchAdapter(searchResult, HabitListManager.getInstance(getContext()).getDatabase());
-        recyclerView.setAdapter(recycleAdapter);
         return false;
     }
 

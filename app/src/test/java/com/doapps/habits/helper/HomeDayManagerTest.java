@@ -20,23 +20,23 @@ public class HomeDayManagerTest {
     private static List<Habit> generateListOfHabits() {
         final List<Habit> list = new ArrayList<>(15);
         //once types
-        list.add(new Habit(1, "once", "", false, false, 12, 12, 12, 60, 30, 30, 1, 0));
-        list.add(new Habit(1, "once a week", "", false, false, 12, 12, 12, 60, 30, 30, 1, 7));
-        list.add(new Habit(1, "once a year", "", false, false, 12, 12, 12, 60, 30, 30, 1, 365));
+        list.add(new Habit("once", "", false, 12, 12, 12, 60, 30, 30, 1, 0));
+        list.add(new Habit("once a week", "", false, 12, 12, 12, 60, 30, 30, 1, 7));
+        list.add(new Habit("once a year", "", false, 12, 12, 12, 60, 30, 30, 1, 365));
         //every ... types
-        list.add(new Habit(1, "every sunday", "", false, false, 12, 12, 12, 60, 30, 30, 1, 1, 0));
-        list.add(new Habit(1, "every monday", "", false, false, 12, 12, 12, 60, 30, 30, 1, 2, 0));
-        list.add(new Habit(1, "every tuesday", "", false, false, 12, 12, 12, 60, 30, 30, 1, 3, 0));
-        list.add(new Habit(1, "every wednesday", "", false, false, 12, 12, 12, 60, 30, 30, 1, 4, 0));
-        list.add(new Habit(1, "every thursday", "", false, false, 12, 12, 12, 60, 30, 30, 1, 5, 0));
-        list.add(new Habit(1, "every friday", "", false, false, 12, 12, 12, 60, 30, 30, 1, 6, 0));
-        list.add(new Habit(1, "every saturday", "", false, false, 12, 12, 12, 60, 30, 30, 1, 7, 0));
-        list.add(new Habit(1, "every day", "", false, false, 12, 12, 12, 60, 30, 30, 1, 1));
+        list.add(new Habit("every sunday", "", false, 12, 12, 12, 60, 30, 30, 1, 1, 0));
+        list.add(new Habit("every monday", "", false, 12, 12, 12, 60, 30, 30, 1, 2, 0));
+        list.add(new Habit("every tuesday", "", false, 12, 12, 12, 60, 30, 30, 1, 3, 0));
+        list.add(new Habit("every wednesday", "", false, 12, 12, 12, 60, 30, 30, 1, 4, 0));
+        list.add(new Habit("every thursday", "", false, 12, 12, 12, 60, 30, 30, 1, 5, 0));
+        list.add(new Habit("every friday", "", false, 12, 12, 12, 60, 30, 30, 1, 6, 0));
+        list.add(new Habit("every saturday", "", false, 12, 12, 12, 60, 30, 30, 1, 7, 0));
+        list.add(new Habit("every day", "", false, 12, 12, 12, 60, 30, 30, 1, 1));
         //every ... and ... types
-        list.add(new Habit(1, "every sunday and saturday", "", false, false, 12, 12, 12, 60, 30, 30, 1, 1, 7));
-        list.add(new Habit(1, "every monday and friday", "", false, false, 12, 12, 12, 60, 30, 30, 1, 2, 6));
-        list.add(new Habit(1, "every tuesday and thursday", "", false, false, 12, 12, 12, 60, 30, 30, 1, 3, 5));
-        list.add(new Habit(1, "every wednesday and thursday", "", false, false, 12, 12, 12, 60, 30, 30, 1, 4, 5));
+        list.add(new Habit("every sunday and saturday", "", false, 12, 12, 12, 60, 30, 30, 1, 1, 7));
+        list.add(new Habit("every monday and friday", "", false, 12, 12, 12, 60, 30, 30, 1, 2, 6));
+        list.add(new Habit("every tuesday and thursday", "", false, 12, 12, 12, 60, 30, 30, 1, 3, 5));
+        list.add(new Habit("every wednesday and thursday", "", false, 12, 12, 12, 60, 30, 30, 1, 4, 5));
         return list;
     }
 
@@ -58,7 +58,6 @@ public class HomeDayManagerTest {
                 list.size(), list), list.size() == 6, CoreMatchers.is(true));
         System.out.println("}");
     }
-
 
     @Test
     public void filterListForSun() {

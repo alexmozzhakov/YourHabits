@@ -1,17 +1,17 @@
-package com.doapps.habits.models;
+package com.doapps.habits.models
 
 /**
  * Manages days changes
  */
-public interface IDayManager {
+interface IDayManager {
     /**
      * Updates lists content by day of week
      * @param dayOfWeek Number of day from 1 to 7
      */
-    void updateListByDayOfWeek(int dayOfWeek);
+    fun updateListByDayOfWeek(dayOfWeek: Int)
 
     /**
      * Updates lists content for today
      */
-    void updateForToday();
+    fun updateForToday()
 }

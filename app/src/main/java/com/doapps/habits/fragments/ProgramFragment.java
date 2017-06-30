@@ -1,93 +1,37 @@
 package com.doapps.habits.fragments;
 
-import android.content.Context;
+import android.annotation.SuppressLint;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.doapps.habits.BuildConfig;
 import com.doapps.habits.R;
+import com.doapps.habits.converters.IntegerArrayConverter;
+import com.doapps.habits.dao.HabitDao;
+import com.doapps.habits.database.ProgramsDatabase;
 import com.doapps.habits.helper.HabitListManager;
-import com.doapps.habits.helper.ProgramsManager;
 import com.doapps.habits.models.Achievement;
-import com.doapps.habits.models.IHabitsDatabase;
+import com.doapps.habits.models.Habit;
 import com.doapps.habits.models.Program;
 import com.google.firebase.database.DataSnapshot;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
 public class ProgramFragment extends Fragment {
 
+    public static ProgramsDatabase database;
+    public static HabitDao habitDatabase;
     private DataSnapshot mSnapshot;
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View result = inflater.inflate(R.layout.fragment_program, container, false);
-
-        FloatingActionButton fab = result.findViewById(R.id.fab);
-        TextView description = result.findViewById(R.id.description);
-
-        description.setText(mSnapshot.child("habit").child("description").getValue(String.class));
-        if (BuildConfig.DEBUG) {
-            Log.i("Program fragment", mSnapshot.toString());
-        }
-
-        if (fab != null) {
-            fab.setOnClickListener(view -> {
-                int id = Integer.valueOf(mSnapshot.getKey());
-                SparseArray<Program> programsAdded =
-                        ((ProgramsManager) HabitListManager.getInstance(getContext())).getProgramsAdded();
-                if (programsAdded.get(id) == null) {
-                    Program program = onProgramApply(mSnapshot, getContext());
-                    programsAdded.put(id, program);
-                    Toast.makeText(getActivity(), "New program added", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getActivity(), "Program already added", Toast.LENGTH_SHORT).show();
-                }
-
-            });
-        }
-
-        return result;
-    }
-
-    void setSnapshot(DataSnapshot snapshot) {
-        mSnapshot = snapshot;
-    }
-
-    private static Program onProgramApply(DataSnapshot dataSnapshot, Context context) {
-        IHabitsDatabase habitsDatabase = HabitListManager.getInstance(context).getDatabase();
-        long habitId = habitsDatabase.addProgram(
-                dataSnapshot.child("habit").child("title").getValue(String.class),
-                dataSnapshot.child("habit").child("question").getValue(String.class),
-                dataSnapshot.child("habit").child("time").getValue(Integer.class),
-                Calendar.getInstance(),
-                dataSnapshot.child("habit").child("cost").getValue(Integer.class),
-                dataSnapshot.child("habit").child("frequency").getValue(String.class)
-        );
-
-        List<Achievement> achievements =
-                createAchievementList(dataSnapshot.child("achievements"));
-
-        return new Program(
-                Integer.valueOf(dataSnapshot.getKey()),
-                dataSnapshot.child("name").getValue(String.class),
-                String.format("%s SUCCESS", dataSnapshot.child("success").getValue(String.class)),
-                habitId,
-                achievements
-        );
-    }
 
     private static List<Achievement> createAchievementList(DataSnapshot dataSnapshot) {
         List<Achievement> achievements = new ArrayList<>((int) dataSnapshot.getChildrenCount());
@@ -105,4 +49,109 @@ public class ProgramFragment extends Fragment {
         return achievements;
     }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View result = inflater.inflate(R.layout.fragment_program, container, false);
+
+        FloatingActionButton fab = result.findViewById(R.id.fab);
+        TextView description = result.findViewById(R.id.description);
+        database = HabitListManager.getInstance(getContext()).getProgramDatabase();
+        habitDatabase = HabitListManager.getInstance(getContext()).getDatabase().habitDao();
+        description.setText(mSnapshot.child("habit").child("description").getValue(String.class));
+        if (BuildConfig.DEBUG) {
+            Log.i("Program fragment", mSnapshot.toString());
+        }
+
+        if (fab != null) {
+            fab.setOnClickListener(view -> new InsertIfNotExists(mSnapshot).execute());
+        }
+
+        return result;
+    }
+
+    void setSnapshot(DataSnapshot snapshot) {
+        mSnapshot = snapshot;
+    }
+
+    private static class InsertTask extends AsyncTask<Program, Void, Void> {
+        @Override
+        protected Void doInBackground(Program... programs) {
+            Log.i("DatabaseContains", "New program added");
+            database.programDao().insertAll(programs);
+            new DatabasePrintTask().execute();
+            return null;
+        }
+    }
+
+    private static class InsertIfNotExists extends AsyncTask<Void, Void, Void> {
+        private final DataSnapshot mSnapshot;
+
+        InsertIfNotExists(DataSnapshot snapshot) {
+            mSnapshot = snapshot;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            if (database.programDao().idExists(Integer.parseInt(mSnapshot.getKey())) == 0) {
+                new InsertHabitTask(mSnapshot).execute();
+            } else {
+                Log.i("DatabaseContains", "Program already added");
+            }
+            return null;
+        }
+    }
+
+    private static class DatabasePrintTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... voids) {
+            Log.i("New Database: ", Arrays.toString(database.programDao().getAll().toArray()));
+            return null;
+        }
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    private static class InsertHabitTask extends AsyncTask<Void, Void, Long> {
+        private final DataSnapshot dataSnapshot;
+
+        InsertHabitTask(DataSnapshot dataSnapshot) {
+            this.dataSnapshot = dataSnapshot;
+        }
+
+        @Override
+        protected Long doInBackground(Void... voids) {
+            Log.i("DatabaseContains", "New program added");
+            Calendar upd = Calendar.getInstance();
+            Habit habit = new Habit(
+                    dataSnapshot.child("habit").child("title").getValue(String.class),
+                    dataSnapshot.child("habit").child("question").getValue(String.class),
+                    false,
+                    upd.get(Calendar.DATE),
+                    upd.get(Calendar.MONTH),
+                    upd.get(Calendar.YEAR),
+                    dataSnapshot.child("habit").child("time").getValue(Integer.class),
+                    System.currentTimeMillis(),
+                    dataSnapshot.child("habit").child("cost").getValue(Integer.class),
+                    IntegerArrayConverter.fromArray(
+                            dataSnapshot.child("habit").child("frequency").getValue(String.class)));
+            return habitDatabase.insert(habit);
+        }
+
+        @Override
+        protected void onPostExecute(Long id) {
+            super.onPostExecute(id);
+            List<Achievement> achievements =
+                    createAchievementList(dataSnapshot.child("achievements"));
+
+            Program program = new Program(
+                    Integer.valueOf(dataSnapshot.getKey()),
+                    dataSnapshot.child("name").getValue(String.class),
+                    String.format("%s SUCCESS", dataSnapshot.child("success").getValue(String.class)),
+                    id,
+                    achievements
+            );
+            new InsertTask().execute(program);
+        }
+    }
 }
