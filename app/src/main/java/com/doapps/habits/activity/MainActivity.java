@@ -223,7 +223,7 @@ public class MainActivity extends LifecycleActivity implements NavigationView.On
 
     }
 
-    public void setAvatarInvisible() {
+    public void removeAvatarPadding() {
         mNavigationView.getHeaderView(0).findViewById(R.id.fields_info).setPadding(0, 0, 0, 0);
     }
 

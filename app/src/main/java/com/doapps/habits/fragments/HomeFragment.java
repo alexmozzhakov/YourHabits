@@ -34,6 +34,7 @@ import com.doapps.habits.listeners.WeatherNetworkStateListener;
 import com.doapps.habits.models.Habit;
 import com.doapps.habits.models.IDayManager;
 import com.doapps.habits.models.IStringSelector;
+import com.doapps.habits.models.IWeatherUpdater;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -43,7 +44,7 @@ import org.json.JSONObject;
 import java.util.Calendar;
 import java.util.List;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements IWeatherUpdater {
     private static final String URL_WEATHER_API = "http://habit.esy.es/weather.php";
     private static final String BROADCAST = "android.net.conn.CONNECTIVITY_CHANGE";
     private static final String TAG = HomeFragment.class.getSimpleName();
@@ -137,7 +138,7 @@ public class HomeFragment extends Fragment {
                 Log.i(TAG, "addDefaultNetworkActiveListener");
             } else {
                 WeatherNetworkStateListener weatherNetworkStateListener
-                        = new WeatherNetworkStateListener(this);
+                        = new WeatherNetworkStateListener(this, getActivity());
                 connectionReceiver = new ConnectionReceiver(weatherNetworkStateListener);
 
                 IntentFilter intentFilter = new IntentFilter(BROADCAST);
@@ -195,7 +196,7 @@ public class HomeFragment extends Fragment {
         Log.e("StringRequest error", error.toString());
         weather.setText(String.valueOf(listSize));
         weatherBot.setText(R.string.all_tasks);
-        ((MainActivity) getActivity()).setAvatarInvisible();
+        ((MainActivity) getActivity()).removeAvatarPadding();
     }
 
     @Override

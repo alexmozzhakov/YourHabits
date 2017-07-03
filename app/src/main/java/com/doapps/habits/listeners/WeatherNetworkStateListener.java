@@ -1,31 +1,32 @@
 package com.doapps.habits.listeners;
 
+import android.app.Activity;
+
 import com.doapps.habits.activity.MainActivity;
-import com.doapps.habits.fragments.HomeFragment;
+import com.doapps.habits.models.IWeatherUpdater;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-//TODO: change to something more abstract
 public class WeatherNetworkStateListener {
 
-    private final HomeFragment homeFragment;
+    private final IWeatherUpdater weatherUpdater;
+    private final Activity activity;
 
-    public WeatherNetworkStateListener(HomeFragment homeFragment) {
-        this.homeFragment = homeFragment;
+    public WeatherNetworkStateListener(IWeatherUpdater weatherUpdater, Activity activity) {
+        this.weatherUpdater = weatherUpdater;
+        this.activity = activity;
     }
 
     public void update() {
-        homeFragment.getWeather();
+        weatherUpdater.getWeather();
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null) {
-            FirebaseAuth.getInstance().signInAnonymously().addOnCompleteListener(task -> {
-                MainActivity ac = (MainActivity) homeFragment.getActivity();
-                ac.onSetupNavigationDrawer(
-                        FirebaseAuth.getInstance().getCurrentUser());
-            });
+            FirebaseAuth.getInstance().signInAnonymously().addOnCompleteListener(task ->
+                    ((MainActivity) activity).onSetupNavigationDrawer(
+                            FirebaseAuth.getInstance().getCurrentUser()));
         } else {
-            ((MainActivity) homeFragment.getActivity()).onSetupNavigationDrawer(user);
+            ((MainActivity) activity).onSetupNavigationDrawer(user);
         }
     }
 }
