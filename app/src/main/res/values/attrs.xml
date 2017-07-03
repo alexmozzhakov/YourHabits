@@ -23,4 +23,7 @@
     <attr name="highContrastTextColor" format="reference"/>
     <attr name="mediumContrastTextColor" format="reference"/>
     <attr name="lowContrastTextColor" format="reference"/>
+
+    <declare-styleable name="CircleCheckboxWithProgressbar"/>
+
 </resources>
