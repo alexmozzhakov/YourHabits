@@ -4,89 +4,90 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
-
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 public class Program {
-    @Ignore
-    private final List<Achievement> achievements;
-    @PrimaryKey
-    private int id;
-    @ColumnInfo(name = "program_id")
-    private int programId;
-    @ColumnInfo(name = "title")
-    private String title;
-    @ColumnInfo(name = "percent")
-    private String percent;
-    @ColumnInfo(name = "habit_id")
-    private long habitId;
 
-    public Program(int id, String title, String percent, long habitId, List<Achievement> achievements) {
-        this.id = id;
-        this.title = title;
-        this.percent = percent;
-        this.habitId = habitId;
-        this.achievements = achievements;
-    }
+  @Ignore
+  private final List<Achievement> achievements;
+  @PrimaryKey
+  private int id;
+  @ColumnInfo(name = "program_id")
+  private int programId;
+  @ColumnInfo(name = "title")
+  private String title;
+  @ColumnInfo(name = "percent")
+  private String percent;
+  @ColumnInfo(name = "habit_id")
+  private long habitId;
 
-    public Program(int id, String title, String percent, long habitId) {
-        programId = id;
-        this.title = title;
-        this.percent = percent;
-        this.habitId = habitId;
-        this.achievements = new ArrayList<>();
-    }
+  public Program(int id, String title, String percent, long habitId,
+      List<Achievement> achievements) {
+    this.id = id;
+    this.title = title;
+    this.percent = percent;
+    this.habitId = habitId;
+    this.achievements = achievements;
+  }
 
-    public int getId() {
-        return id;
-    }
+  public Program(int id, String title, String percent, long habitId) {
+    programId = id;
+    this.title = title;
+    this.percent = percent;
+    this.habitId = habitId;
+    this.achievements = new ArrayList<>();
+  }
 
-    public void setId(int id) {
-        this.id = id;
-    }
+  public int getId() {
+    return id;
+  }
 
-    public String getTitle() {
-        return title;
-    }
+  public void setId(int id) {
+    this.id = id;
+  }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+  public String getTitle() {
+    return title;
+  }
 
-    public String getPercent() {
-        return percent;
-    }
+  public void setTitle(String title) {
+    this.title = title;
+  }
 
-    public void setPercent(String percent) {
-        this.percent = percent;
-    }
+  public String getPercent() {
+    return percent;
+  }
 
-    public long getHabitId() {
-        return habitId;
-    }
+  public void setPercent(String percent) {
+    this.percent = percent;
+  }
 
-    public void setHabitId(long habitId) {
-        this.habitId = habitId;
-    }
+  public long getHabitId() {
+    return habitId;
+  }
 
-    public int getProgramId() {
-        return programId;
-    }
+  public void setHabitId(long habitId) {
+    this.habitId = habitId;
+  }
 
-    public void setProgramId(int programId) {
-        this.programId = programId;
-    }
+  public int getProgramId() {
+    return programId;
+  }
 
-    @Override
-    public String toString() {
-        return "Program{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", percent='" + percent + '\'' +
-                ", habitId=" + habitId +
-                ", achievements=" + achievements +
-                '}';
-    }
+  public void setProgramId(int programId) {
+    this.programId = programId;
+  }
+
+  @Override
+  public String toString() {
+    return "Program{" +
+        "id=" + id +
+        ", title='" + title + '\'' +
+        ", percent='" + percent + '\'' +
+        ", habitId=" + habitId +
+        ", achievements=" + achievements +
+        '}';
+  }
 }

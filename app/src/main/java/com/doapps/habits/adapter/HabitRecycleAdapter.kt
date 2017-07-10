@@ -13,60 +13,53 @@ import com.doapps.habits.view.holders.HabitViewHolder
 import java.util.*
 
 class HabitRecycleAdapter(private val movableHabitList: HabitListManager)
-    : RecyclerView.Adapter<HabitViewHolder>(), IMovableListAdapter {
+  : RecyclerView.Adapter<HabitViewHolder>(), IMovableListAdapter {
 
-    private val habitList: List<Habit> = movableHabitList.list
-    private val habitsDatabase: HabitsDatabase = movableHabitList.database
+  private val habitList: List<Habit> = movableHabitList.list
+  private val habitsDatabase: HabitsDatabase = movableHabitList.database
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HabitViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.habit_list_item, parent, false)
-        return HabitViewHolder(view)
+  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HabitViewHolder {
+    val view = LayoutInflater.from(parent.context).inflate(R.layout.habit_list_item, parent, false)
+    return HabitViewHolder(view)
+  }
+
+  override fun onBindViewHolder(holder: HabitViewHolder, position: Int) {
+    val habit = habitList[position]
+
+    holder.titleTextView.text = habit.title
+    holder.checkBox.setOnClickListener {
+      if (holder.checkBox.isChecked) {
+        habit.isDoneMarker = true
+        UpdateTask(habitsDatabase).execute(habit)
+        holder.titleTextView.setTextColor(Color.GRAY)
+      } else {
+        habit.isDoneMarker = false
+        UpdateTask(habitsDatabase).execute(habit)
+        holder.titleTextView.setTextColor(Color.BLACK)
+      }
     }
 
-    override fun onBindViewHolder(holder: HabitViewHolder, position: Int) {
-        val habit = habitList[position]
+    val calendar = Calendar.getInstance()
 
-        holder.titleTextView.text = habit.title
-        holder.checkBox.setOnClickListener {
-            if (holder.checkBox.isChecked) {
-                habit.isDoneMarker = true
-                UpdateTask(habitsDatabase).execute(habit)
-                holder.titleTextView.setTextColor(Color.GRAY)
-            } else {
-                habit.isDoneMarker = false
-                UpdateTask(habitsDatabase).execute(habit)
-                holder.titleTextView.setTextColor(Color.BLACK)
-            }
-        }
+    holder.checkBox.isChecked = habit.isDone(
+        calendar.get(Calendar.DAY_OF_MONTH),
+        calendar.get(Calendar.MONTH),
+        calendar.get(Calendar.YEAR))
 
-        val calendar = Calendar.getInstance()
+  }
 
-        holder.checkBox.isChecked = habit.isDone(
-                calendar.get(Calendar.DAY_OF_MONTH),
-                calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.YEAR))
+  override fun getItemCount() = habitList.size
 
-    }
+  override fun onItemDismiss(position: Int) {
+    movableHabitList.onItemDismiss(position, this)
+  }
 
-    override fun getItemCount(): Int {
-        return habitList.size
-    }
+  override fun onItemMove(fromPosition: Int, toPosition: Int) {
+    movableHabitList.onItemMove(fromPosition, toPosition, this)
+  }
 
-    override fun onItemDismiss(position: Int) {
-        movableHabitList.onItemDismiss(position, this)
-    }
-
-    override fun onItemMove(fromPosition: Int, toPosition: Int) {
-        movableHabitList.onItemMove(fromPosition, toPosition)
-        notifyItemMoved(fromPosition, toPosition)
-    }
-
-    private class UpdateTask(val habitsDatabase: HabitsDatabase) : AsyncTask<Habit, Unit, Unit>() {
-
-        override fun doInBackground(vararg habits: Habit): Unit? {
-            habitsDatabase.habitDao().update(habits[0])
-            return null
-        }
-    }
+  private class UpdateTask(val habitsDatabase: HabitsDatabase) : AsyncTask<Habit, Unit, Unit>() {
+    override fun doInBackground(vararg habits: Habit) = habitsDatabase.habitDao().update(habits[0])
+  }
 }
 

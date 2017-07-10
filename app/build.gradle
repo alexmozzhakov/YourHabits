@@ -49,7 +49,8 @@ dependencies {
     implementation "com.google.firebase:firebase-database:$firebaseVersion"
     implementation "com.google.firebase:firebase-auth:$firebaseVersion"
     implementation "com.google.firebase:firebase-crash:$firebaseVersion"
-//    implementation "com.google.firebase:firebase-perf:$firebaseVersion"
+    implementation "com.google.firebase:firebase-perf:$firebaseVersion"
+    implementation 'com.firebase:firebase-jobdispatcher:0.7.0'
     implementation 'com.squareup.picasso:picasso:2.5.2'
     implementation "com.facebook.android:facebook-android-sdk:$facebookVersion"
     implementation 'com.ruesga.timeline-chart-view:timeline-chart-view:1.0.1'
@@ -65,6 +66,7 @@ dependencies {
     annotationProcessor "android.arch.lifecycle:compiler:$architectureComponentsVersion"
 
     testImplementation "junit:junit:$junitVersion"
+    testImplementation 'org.mockito:mockito-core:2.8.9'
     androidTestImplementation "com.android.support:support-annotations:$supportLibraryVersion"
     androidTestImplementation("com.android.support.test.espresso:espresso-core:$espressoVersion") {
         exclude group: 'com.android.support'
