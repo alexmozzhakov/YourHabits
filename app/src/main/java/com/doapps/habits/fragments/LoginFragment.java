@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
-
 import com.doapps.habits.BuildConfig;
 import com.doapps.habits.R;
 import com.doapps.habits.activity.AuthActivity;
@@ -30,184 +29,184 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
 import java.util.Arrays;
 
 public class LoginFragment extends LifecycleFragment {
-    /**
-     * TAG is defined for logging errors and debugging information
-     */
-    private static final String TAG = LoginFragment.class.getSimpleName();
 
-    private FirebaseAuth mAuth;
-    private TextInputEditText inputPassword;
-    private TextInputEditText inputEmail;
-    private Button btnFacebook;
-    private Button btnLogin;
-    private Button btnRecovery;
-    private Button btnLinkToRegister;
-    private Button btnSkip;
+  /**
+   * TAG is defined for logging errors and debugging information
+   */
+  private static final String TAG = LoginFragment.class.getSimpleName();
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View result = inflater.inflate(R.layout.fragment_login, container, false);
+  private FirebaseAuth mAuth;
+  private TextInputEditText inputPassword;
+  private TextInputEditText inputEmail;
+  private Button btnFacebook;
+  private Button btnLogin;
+  private Button btnRecovery;
+  private Button btnLinkToRegister;
+  private Button btnSkip;
 
-        inputEmail = result.findViewById(R.id.email);
-        inputPassword = result.findViewById(R.id.password);
-        setupFields();
+  @Override
+  public View onCreateView(LayoutInflater inflater, ViewGroup container,
+      Bundle savedInstanceState) {
+    // Inflate the layout for this fragment
+    View result = inflater.inflate(R.layout.fragment_login, container, false);
 
-        btnLogin = result.findViewById(R.id.btn_login);
-        btnSkip = result.findViewById(R.id.btn_skip);
-        btnFacebook = result.findViewById(R.id.btn_login_facebook);
-        btnRecovery = result.findViewById(R.id.btn_recovery);
-        btnLinkToRegister = result.findViewById(R.id.btnLinkToRegisterScreen);
+    inputEmail = result.findViewById(R.id.email);
+    inputPassword = result.findViewById(R.id.password);
+    setupFields();
 
-        setupButtons();
+    btnLogin = result.findViewById(R.id.btn_login);
+    btnSkip = result.findViewById(R.id.btn_skip);
+    btnFacebook = result.findViewById(R.id.btn_login_facebook);
+    btnRecovery = result.findViewById(R.id.btn_recovery);
+    btnLinkToRegister = result.findViewById(R.id.btnLinkToRegisterScreen);
 
-        return result;
-    }
+    setupButtons();
 
-    private void setupButtons() {
-        btnSkip.setOnClickListener(this::anonymousLogin);
-        mAuth = FirebaseAuth.getInstance();
+    return result;
+  }
 
-        // Login button Click Event
-        btnLogin.setOnClickListener(view -> {
-            String email = inputEmail != null ? inputEmail.getText().toString().trim() : null;
-            String password = inputPassword != null ? inputPassword.getText().toString().trim() : null;
+  private void setupButtons() {
+    btnSkip.setOnClickListener(this::anonymousLogin);
+    mAuth = FirebaseAuth.getInstance();
 
-            // Check for empty data in the form
-            checkInput(email, password);
-        });
+    // Login button Click Event
+    btnLogin.setOnClickListener(view -> {
+      String email = inputEmail != null ? inputEmail.getText().toString().trim() : null;
+      String password = inputPassword != null ? inputPassword.getText().toString().trim() : null;
 
-        // Link to Register Screen
-        btnLinkToRegister.setOnClickListener(view ->
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-                        .replace(R.id.frame_layout, new RegisterFragment()).commit());
+      // Check for empty data in the form
+      checkInput(email, password);
+    });
 
-        btnRecovery.setOnClickListener(view -> {
-            Intent intent = new Intent(getActivity().getApplicationContext(),
-                    PasswordRecoveryActivity.class);
-            startActivity(intent);
-        });
+    // Link to Register Screen
+    btnLinkToRegister.setOnClickListener(view ->
+        getActivity().getSupportFragmentManager().beginTransaction()
+            .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
+            .replace(R.id.frame_layout, new RegisterFragment()).commit());
 
-        CallbackManager callbackManager = ((AuthActivity) getActivity()).getCallbackManager();
+    btnRecovery.setOnClickListener(view -> {
+      Intent intent = new Intent(getActivity().getApplicationContext(),
+          PasswordRecoveryActivity.class);
+      startActivity(intent);
+    });
 
-        LoginManager.getInstance().registerCallback(callbackManager,
-                new FacebookCallback<LoginResult>() {
-                    @Override
-                    public void onSuccess(LoginResult result) {
-                        handleFacebookAccessToken(result.getAccessToken());
-                    }
+    CallbackManager callbackManager = ((AuthActivity) getActivity()).getCallbackManager();
 
-                    @Override
-                    public void onCancel() {
-                        Log.d(TAG, "facebook:onCancel");
-                    }
+    LoginManager.getInstance().registerCallback(callbackManager,
+        new FacebookCallback<LoginResult>() {
+          @Override
+          public void onSuccess(LoginResult result) {
+            handleFacebookAccessToken(result.getAccessToken());
+          }
 
-                    @Override
-                    public void onError(FacebookException error) {
-                        Log.d(TAG, "facebook:onError", error);
-                    }
+          @Override
+          public void onCancel() {
+            Log.d(TAG, "facebook:onCancel");
+          }
 
-                    private void handleFacebookAccessToken(AccessToken token) {
-                        AuthCredential credential =
-                                FacebookAuthProvider.getCredential(token.getToken());
-                        mAuth.signInWithCredential(credential)
-                                .addOnFailureListener(e -> {
-                                    Log.w(TAG, "signInWithCredential", e);
-                                    Toast.makeText(getContext(), "Authentication failed.",
-                                            Toast.LENGTH_SHORT).show();
-                                })
-                                .addOnCompleteListener(task -> {
-                                    FirebaseUser user =
-                                            FirebaseAuth.getInstance().getCurrentUser();
-                                    if (user != null && getContext().getSharedPreferences("pref",
-                                            Context.MODE_PRIVATE).getString(user.getUid(), null) == null) {
-                                        getContext()
-                                                .getSharedPreferences("pref", Context.MODE_PRIVATE)
-                                                .edit()
-                                                .putString(user.getUid(), token.getUserId())
-                                                .apply();
+          @Override
+          public void onError(FacebookException error) {
+            Log.d(TAG, "facebook:onError", error);
+          }
 
-                                        AvatarData.getInstance().setValue(
-                                                Uri.parse(String.format("https://graph.facebook.com/%s/picture?type=large",
-                                                        token.getUserId())));
-                                    }
-                                });
-                    }
+          private void handleFacebookAccessToken(AccessToken token) {
+            AuthCredential credential =
+                FacebookAuthProvider.getCredential(token.getToken());
+            mAuth.signInWithCredential(credential)
+                .addOnFailureListener(e -> {
+                  Log.w(TAG, "signInWithCredential", e);
+                  Toast.makeText(getContext(), "Authentication failed.",
+                      Toast.LENGTH_SHORT).show();
+                })
+                .addOnCompleteListener(task -> {
+                  FirebaseUser user =
+                      FirebaseAuth.getInstance().getCurrentUser();
+                  if (user != null && getContext().getSharedPreferences("pref",
+                      Context.MODE_PRIVATE).getString(user.getUid(), null) == null) {
+                    getContext()
+                        .getSharedPreferences("pref", Context.MODE_PRIVATE)
+                        .edit()
+                        .putString(user.getUid(), token.getUserId())
+                        .apply();
 
+                    AvatarData.getInstance().setValue(
+                        Uri.parse(String.format("https://graph.facebook.com/%s/picture?type=large",
+                            token.getUserId())));
+                  }
                 });
-        btnFacebook.setOnClickListener(view ->
-                LoginManager.getInstance().
-                        logInWithReadPermissions(getActivity(),
-                                Arrays.asList("email", "public_profile")));
-    }
+          }
 
-    private void checkInput(String email, String password) {
-        // Check for empty data in the form
-        if (email.isEmpty() || password.isEmpty()) {
-            // Prompt user to enter credentials
-            Toast.makeText(getContext().getApplicationContext(),
-                    "Please enter the credentials!", Toast.LENGTH_LONG)
-                    .show();
-        }
-        // Check for valid email
-        else if (!RegisterFragment.isValidPattern(email, RegisterFragment.EMAIL_PATTERN)) {
-            // Prompt user to enter valid credentials
-            Toast.makeText(getContext().getApplicationContext(),
-                    "Please enter valid credentials!", Toast.LENGTH_LONG)
-                    .show();
-        } else {
-            // login user
-            FirebaseAuth auth = FirebaseAuth.getInstance();
-            auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
-                if (!task.isSuccessful()) {
-                    Toast.makeText
-                            (getActivity().getApplicationContext(),
-                                    "Email or password isn't correct",
-                                    Toast.LENGTH_SHORT).show();
-
-                    getActivity().getSharedPreferences("pref", Context.MODE_PRIVATE)
-                            .edit().putString("last email", email).apply();
-                }
-            });
-        }
-    }
-
-    private void setupFields() {
-        inputPassword.setImeActionLabel("Login", KeyEvent.KEYCODE_ENTER);
-        inputPassword.setOnKeyListener((final View view, final int keyCode, final KeyEvent event) -> {
-            // If the event is a key-down event on the "enter" button
-            if (keyCode == KeyEvent.KEYCODE_ENTER) {
-                String email = inputEmail.getText().toString().trim();
-                String password = inputPassword.getText().toString().trim();
-
-                checkInput(email, password);
-
-                return true;
-            }
-            return false;
         });
+    btnFacebook.setOnClickListener(view ->
+        LoginManager.getInstance().
+            logInWithReadPermissions(getActivity(),
+                Arrays.asList("email", "public_profile")));
+  }
+
+  private void checkInput(String email, String password) {
+    // Check for empty data in the form
+    if (email.isEmpty() || password.isEmpty()) {
+      // Prompt user to enter credentials
+      Toast.makeText(getContext().getApplicationContext(),
+          "Please enter the credentials!", Toast.LENGTH_LONG)
+          .show();
     }
+    // Check for valid email
+    else if (!RegisterFragment.isValidEmail(email)) {
+      // Prompt user to enter valid credentials
+      Toast.makeText(getContext().getApplicationContext(),
+          "Please enter valid credentials!", Toast.LENGTH_LONG)
+          .show();
+    } else {
+      // login user
+      FirebaseAuth auth = FirebaseAuth.getInstance();
+      auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
+        if (!task.isSuccessful()) {
+          Toast.makeText
+              (getActivity().getApplicationContext(),
+                  "Email or password isn't correct",
+                  Toast.LENGTH_SHORT).show();
 
-    @SuppressWarnings("unused")
-    private void anonymousLogin(View view) {
-        FirebaseAuth.getInstance().signInAnonymously().addOnCompleteListener(task -> {
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG, "signInAnonymously:onComplete:" + task.isSuccessful());
-            }
-
-            if (getActivity() != null) {
-                Intent intent = new Intent(getActivity(), MainActivity.class);
-                startActivity(intent);
-            } else {
-                Log.i("FA", "Login page no longer exists");
-            }
-        });
-
+          getActivity().getSharedPreferences("pref", Context.MODE_PRIVATE)
+              .edit().putString("last email", email).apply();
+        }
+      });
     }
+  }
+
+  private void setupFields() {
+    inputPassword.setImeActionLabel("Login", KeyEvent.KEYCODE_ENTER);
+    inputPassword.setOnKeyListener((final View view, final int keyCode, final KeyEvent event) -> {
+      // If the event is a key-down event on the "enter" button
+      if (keyCode == KeyEvent.KEYCODE_ENTER) {
+        String email = inputEmail.getText().toString().trim();
+        String password = inputPassword.getText().toString().trim();
+
+        checkInput(email, password);
+
+        return true;
+      }
+      return false;
+    });
+  }
+
+  @SuppressWarnings("unused")
+  private void anonymousLogin(View view) {
+    FirebaseAuth.getInstance().signInAnonymously().addOnCompleteListener(task -> {
+      if (BuildConfig.DEBUG) {
+        Log.d(TAG, "signInAnonymously:onComplete:" + task.isSuccessful());
+      }
+
+      if (getActivity() != null) {
+        Intent intent = new Intent(getActivity(), MainActivity.class);
+        startActivity(intent);
+      } else {
+        Log.i("FA", "Login page no longer exists");
+      }
+    });
+
+  }
 }

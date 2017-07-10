@@ -21,15 +21,17 @@ import android.util.DisplayMetrics;
  *    limitations under the License.
  */
 public class PixelUtils {
-    /**
-     * Converts dps to pixels nicely.
-     * @param context the Context for getting the resources
-     * @param dp dimension in dps
-     * @return dimension in pixels
-     */
-    public static float dpToPixel(Context context, float dp){
-        Resources resources = context.getResources();
-        DisplayMetrics metrics = resources.getDisplayMetrics();
-        return dp * (metrics.densityDpi / 160f);
-    }
+
+  /**
+   * Converts dps to pixels nicely.
+   *
+   * @param context the Context for getting the resources
+   * @param dp dimension in dps
+   * @return dimension in pixels
+   */
+  public static float dpToPixel(Context context, float dp) {
+    Resources resources = context.getResources();
+    DisplayMetrics metrics = resources.getDisplayMetrics();
+    return dp * (metrics.densityDpi / 160f);
+  }
 }

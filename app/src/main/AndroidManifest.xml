@@ -16,6 +16,7 @@
         android:fullBackupContent="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
+      android:name=".App"
         android:screenOrientation="landscape"
         android:supportsRtl="true"
         tools:ignore="GoogleAppIndexingWarning">
@@ -23,12 +24,12 @@
             android:name=".activity.EditPhotoActivity"
             android:theme="@style/AppTheme.Auth"/>
         <activity
-            android:name=".activity.AuthActivity"
             android:configChanges="orientation|screenSize"
+          android:name=".activity.AuthActivity"
             android:theme="@style/AppTheme.Auth"/>
         <activity
-            android:name=".activity.MainActivity"
             android:launchMode="standard"
+          android:name=".activity.MainActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
@@ -64,8 +65,15 @@
             </intent-filter>
         </receiver>
         <service
-            android:name=".services.NotificationService"
             android:enabled="true"
+          android:name=".services.NotificationService"
             android:process=":habit_notification_service"/>
+      <service
+        android:exported="false"
+        android:name=".MyJobService">
+        <intent-filter>
+          <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE"/>
+        </intent-filter>
+      </service>
     </application>
 </manifest>

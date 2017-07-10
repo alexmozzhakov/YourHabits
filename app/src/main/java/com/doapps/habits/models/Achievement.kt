@@ -1,3 +1,3 @@
 package com.doapps.habits.models
 
-class Achievement(private val rating: Int, private val templates: List<String>)
+data class Achievement(private val rating: Int?, private val templates: List<String>)
