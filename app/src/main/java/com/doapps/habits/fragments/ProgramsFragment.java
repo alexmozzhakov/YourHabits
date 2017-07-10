@@ -51,7 +51,7 @@ public class ProgramsFragment extends Fragment implements ClickableDataSnapshotF
 
   private static void createProgramApplyFragment(int position, FragmentManager fragmentManager) {
 
-//     delete previous fragment if showing
+    // delete previous fragment if showing
     if (isShowing) {
       fragmentManager.beginTransaction()
           .remove(fragmentManager.findFragmentById(R.id.recyclerLayout))
