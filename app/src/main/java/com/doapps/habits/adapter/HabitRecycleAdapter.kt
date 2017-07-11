@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import com.doapps.habits.R
 import com.doapps.habits.database.HabitsDatabase
 import com.doapps.habits.helper.HabitListManager
+import com.doapps.habits.listeners.EmptyListListener
 import com.doapps.habits.models.Habit
 import com.doapps.habits.view.holders.HabitViewHolder
 import java.util.*
@@ -15,7 +16,7 @@ import java.util.*
 class HabitRecycleAdapter(private val movableHabitList: HabitListManager)
   : RecyclerView.Adapter<HabitViewHolder>(), IMovableListAdapter {
 
-  private val habitList: List<Habit> = movableHabitList.list
+  private val habitList: MutableList<Habit> = movableHabitList.list
   private val habitsDatabase: HabitsDatabase = movableHabitList.database
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HabitViewHolder {
@@ -51,11 +52,19 @@ class HabitRecycleAdapter(private val movableHabitList: HabitListManager)
   override fun getItemCount() = habitList.size
 
   override fun onItemDismiss(position: Int) {
-    movableHabitList.onItemDismiss(position, this)
+    movableHabitList.onItemDismiss(position)
+    habitList.removeAt(position)
+    EmptyListListener.listener.isEmpty(habitList.size == 0)
+    notifyItemRemoved(position)
   }
 
   override fun onItemMove(fromPosition: Int, toPosition: Int) {
-    movableHabitList.onItemMove(fromPosition, toPosition, this)
+    Collections.swap(habitList, fromPosition, toPosition)
+    movableHabitList.onItemMove(fromPosition, toPosition)
+//    val fromPositionId = habitList[fromPosition].id
+//    habitList[fromPosition].id = habitList[toPosition].id
+//    habitList[toPosition].id = fromPositionId
+    notifyItemMoved(fromPosition, toPosition)
   }
 
   private class UpdateTask(val habitsDatabase: HabitsDatabase) : AsyncTask<Habit, Unit, Unit>() {

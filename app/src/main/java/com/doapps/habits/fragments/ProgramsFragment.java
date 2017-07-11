@@ -198,11 +198,11 @@ public class ProgramsFragment extends Fragment implements ClickableDataSnapshotF
         }
 
         mImageTop.setOnClickListener(view -> {
-          onClick(0);
+          onClick(-1);
           isTop = true;
         });
         mTitleTop.setOnClickListener(view -> {
-          onClick(0);
+          onClick(-1);
           isTop = true;
         });
 
@@ -229,7 +229,7 @@ public class ProgramsFragment extends Fragment implements ClickableDataSnapshotF
           .commit();
       isShowing = false;
     } else {
-      createProgramApplyFragment(position, fragmentManager);
+      createProgramApplyFragment(++position, fragmentManager);
       isTop = false;
     }
   }

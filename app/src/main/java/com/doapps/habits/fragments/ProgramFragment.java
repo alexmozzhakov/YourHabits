@@ -1,6 +1,5 @@
 package com.doapps.habits.fragments;
 
-import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -33,7 +32,6 @@ public class ProgramFragment extends Fragment {
 
   public static ProgramsDatabase database;
   public static HabitDao habitDatabase;
-  private DatabaseReference programRef;
 
   private static List<Achievement> createAchievementList(DataSnapshot dataSnapshot) {
     List<Achievement> achievements = new ArrayList<>((int) dataSnapshot.getChildrenCount());
@@ -63,7 +61,7 @@ public class ProgramFragment extends Fragment {
     habitDatabase = HabitListManager.getInstance(getContext()).getDatabase().habitDao();
 
     int position = getArguments().getInt("pos", 0);
-    programRef = FirebaseDatabase.getInstance().getReference().child("programs")
+    DatabaseReference programRef = FirebaseDatabase.getInstance().getReference().child("programs")
         .child(Integer.toString(position));
     programRef.addListenerForSingleValueEvent(new ValueEventListener() {
       @Override
@@ -75,16 +73,14 @@ public class ProgramFragment extends Fragment {
           Log.i("Program fragment", dataSnapshot.toString());
         }
 
-        if (fab != null) {
-          fab.setOnClickListener(view -> new InsertIfNotExists(dataSnapshot).execute());
-        }
-
+        fab.setOnClickListener(view -> new InsertIfNotExists(dataSnapshot).execute());
       }
 
       @Override
       public void onCancelled(DatabaseError databaseError) {
         Log.e("onCancelled", databaseError.getMessage());
-        getActivity().getSupportFragmentManager().beginTransaction().remove(ProgramFragment.this)
+        getActivity().getSupportFragmentManager().beginTransaction()
+            .remove(ProgramFragment.this)
             .commit();
       }
     });
@@ -125,12 +121,11 @@ public class ProgramFragment extends Fragment {
 
     @Override
     protected Void doInBackground(Void... voids) {
-      Log.i("New Database: ", Arrays.toString(database.programDao().getAll().toArray()));
+      Log.i("New Database", Arrays.toString(database.programDao().getAll().toArray()));
       return null;
     }
   }
 
-  @SuppressLint("StaticFieldLeak")
   private static class InsertHabitTask extends AsyncTask<Void, Void, Long> {
 
     private final DataSnapshot dataSnapshot;
@@ -163,6 +158,7 @@ public class ProgramFragment extends Fragment {
       super.onPostExecute(id);
       List<Achievement> achievements = createAchievementList(dataSnapshot.child("achievements"));
 
+      Log.i("ID", dataSnapshot.getKey());
       Program program = new Program(
           Integer.valueOf(dataSnapshot.getKey()),
           dataSnapshot.child("name").getValue(String.class),
