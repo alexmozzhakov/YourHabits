@@ -60,10 +60,10 @@ class HabitRecycleAdapter(private val movableHabitList: HabitListManager)
 
   override fun onItemMove(fromPosition: Int, toPosition: Int) {
     Collections.swap(habitList, fromPosition, toPosition)
-    movableHabitList.onItemMove(fromPosition, toPosition)
-//    val fromPositionId = habitList[fromPosition].id
-//    habitList[fromPosition].id = habitList[toPosition].id
-//    habitList[toPosition].id = fromPositionId
+    val fromPositionId = habitList[fromPosition].id
+    habitList[fromPosition].id = habitList[toPosition].id
+    habitList[toPosition].id = fromPositionId
+    movableHabitList.onItemMove(habitList[fromPosition], habitList[toPosition])
     notifyItemMoved(fromPosition, toPosition)
   }
 

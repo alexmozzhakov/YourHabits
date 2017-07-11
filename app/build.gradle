@@ -54,19 +54,15 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.5.2'
     implementation "com.facebook.android:facebook-android-sdk:$facebookVersion"
     implementation 'com.ruesga.timeline-chart-view:timeline-chart-view:1.0.1'
-
     //Image Selector dependencies
     implementation 'com.commit451:PhotoView:1.2.4'
     implementation 'com.isseiaoki:simplecropview:1.0.13'
     implementation 'com.github.bumptech.glide:glide:3.7.0'
     implementation 'com.yongchun:com.yongchun.imageselector:1.1.0'
-
-//    kapt "android.arch.persistence.room:compiler:$architectureComponentsVersion"
+    //    kapt "android.arch.persistence.room:compiler:$architectureComponentsVersion"
     annotationProcessor "android.arch.persistence.room:compiler:$architectureComponentsVersion"
     annotationProcessor "android.arch.lifecycle:compiler:$architectureComponentsVersion"
-
     testImplementation "junit:junit:$junitVersion"
-    testImplementation 'org.mockito:mockito-core:2.8.9'
     androidTestImplementation "com.android.support:support-annotations:$supportLibraryVersion"
     androidTestImplementation("com.android.support.test.espresso:espresso-core:$espressoVersion") {
         exclude group: 'com.android.support'
@@ -76,7 +72,6 @@ dependencies {
     }
     androidTestImplementation "com.android.support.test:runner:$runnerVersion"
     androidTestImplementation 'tools.fastlane:screengrab:1.0.3'
-
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
 

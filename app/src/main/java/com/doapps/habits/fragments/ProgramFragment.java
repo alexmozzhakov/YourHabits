@@ -148,8 +148,8 @@ public class ProgramFragment extends Fragment {
           dataSnapshot.child("habit").child("time").getValue(Integer.class),
           System.currentTimeMillis(),
           dataSnapshot.child("habit").child("cost").getValue(Integer.class),
-          IntegerArrayConverter.fromArray(
-              dataSnapshot.child("habit").child("frequency").getValue(String.class)));
+          IntegerArrayConverter
+              .toArray(dataSnapshot.child("habit").child("frequency").getValue(String.class)));
       return habitDatabase.insert(habit);
     }
 
