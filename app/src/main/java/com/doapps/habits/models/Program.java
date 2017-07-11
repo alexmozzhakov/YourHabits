@@ -14,8 +14,6 @@ public class Program {
   private final List<Achievement> achievements;
   @PrimaryKey
   private int id;
-  @ColumnInfo(name = "program_id")
-  private int programId;
   @ColumnInfo(name = "title")
   private String title;
   @ColumnInfo(name = "percent")
@@ -33,7 +31,7 @@ public class Program {
   }
 
   public Program(int id, String title, String percent, long habitId) {
-    programId = id;
+    this.id = id;
     this.title = title;
     this.percent = percent;
     this.habitId = habitId;
@@ -70,14 +68,6 @@ public class Program {
 
   public void setHabitId(long habitId) {
     this.habitId = habitId;
-  }
-
-  public int getProgramId() {
-    return programId;
-  }
-
-  public void setProgramId(int programId) {
-    this.programId = programId;
   }
 
   @Override

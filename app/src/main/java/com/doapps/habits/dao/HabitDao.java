@@ -5,6 +5,7 @@ import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
+import android.util.Log;
 import com.doapps.habits.models.Habit;
 import java.util.List;
 
@@ -25,12 +26,15 @@ public interface HabitDao {
   long insert(Habit habit);
 
   default void move(int fromPosition, int toPosition) {
-    updateId(0, fromPosition);
-    updateId(fromPosition, toPosition);
-    updateId(toPosition, 0);
+    updateId(fromPosition, 0); // fromPosition -> 0
+    Log.i("DAO", "UPDATE habits SET id = 0 WHERE id = fromPosition");
+    updateId(toPosition, fromPosition); // toPosition -> fromPosition
+    Log.i("DAO", "UPDATE habits SET id = fromPosition WHERE id = toPosition");
+    updateId(0, toPosition); // 0 -> fromPosition
+    Log.i("DAO", "UPDATE habits SET id = toPosition WHERE id = 0");
   }
 
-  @Query("UPDATE habits SET id = :fromPosition WHERE id = :toPosition")
+  @Query("UPDATE habits SET id = :toPosition WHERE id = :fromPosition")
   void updateId(int fromPosition, int toPosition);
 
   @Delete
