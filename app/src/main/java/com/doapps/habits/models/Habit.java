@@ -19,7 +19,6 @@ public final class Habit {
   private int cost;
   @ColumnInfo(name = "program_id")
   private int programId;
-
   // Changeable Habit values
   private boolean doneMarker;
   private int markerUpdatedDay;
@@ -62,6 +61,7 @@ public final class Habit {
         markerUpdatedYear == this.markerUpdatedYear &&
         doneMarker;
   }
+
 
   @Override
   public String toString() {

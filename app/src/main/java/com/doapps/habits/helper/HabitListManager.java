@@ -43,7 +43,7 @@ public class HabitListManager {
     new DeleteTask().execute(position);
   }
 
-  public void onItemMove(int fromPosition, int toPosition) {
+  public void onItemMove(Habit fromPosition, Habit toPosition) {
     new MoveTask().execute(fromPosition, toPosition);
   }
 
@@ -65,13 +65,12 @@ public class HabitListManager {
     }
   }
 
-  private static class MoveTask extends AsyncTask<Integer, Void, Void> {
+  private static class MoveTask extends AsyncTask<Habit, Void, Void> {
 
     @Override
-    protected Void doInBackground(Integer... integers) {
-      int fromPosition = integers[0];
-      int toPosition = integers[1];
-      habitsDatabase.habitDao().move(fromPosition, toPosition);
+    protected Void doInBackground(Habit... habits) {
+      habitsDatabase.habitDao().update(habits[0]);
+      habitsDatabase.habitDao().update(habits[1]);
       return null;
     }
   }
