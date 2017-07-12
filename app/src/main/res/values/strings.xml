@@ -1,76 +1,76 @@
 <resources>
-    <string name="app_name" translatable="false">doHabits</string>
-    <string name="hint_email">Email</string>
-    <string name="hint_password">Password</string>
-    <string name="hint_name">Full name</string>
-    <string name="btn_login">Login</string>
-    <string name="btn_register">Register</string>
-    <string name="btn_link_to_login">Login</string>
-    <string name="btn_terms_and_conditions">Terms &amp; Conditions</string>
-    <string name="facebook_app_id">838204572968918</string>
+  <string name="app_name" translatable="false">doHabits</string>
+  <string name="hint_email">Email</string>
+  <string name="hint_password">Password</string>
+  <string name="hint_name">Full name</string>
+  <string name="btn_login">Login</string>
+  <string name="btn_register">Register</string>
+  <string name="btn_link_to_login">Login</string>
+  <string name="btn_terms_and_conditions">Terms &amp; Conditions</string>
+  <string name="facebook_app_id">838204572968918</string>
 
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
+  <string name="navigation_drawer_open">Open navigation drawer</string>
+  <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="loading">Loading…</string>
-    <string name="tasks_due">Tasks due</string>
-    <string name="recover_password">Recover password</string>
-    <string name="log_in_anonymously">Skip registration</string>
-    <string name="no_habits_available">There are no habits to show</string>
-    <string name="no_connection_available">This function requires an active Internet connection</string>
-    <string name="repeat">Repeat</string>
-    <string name="times_every">times every</string>
-    <string name="days">days</string>
-    <string name="delete_user">Delete user</string>
-    <string name="all_tasks">All tasks</string>
-    <string name="habit_create">Create habit</string>
-    <string name="title">Title</string>
-    <string name="question">Question</string>
-    <string name="time_needed">Time needed</string>
-    <string name="create">Create</string>
-
-
-    <string-array name="days_of_week_array">
-        <item>Sunday</item>
-        <item>Monday</item>
-        <item>Tuesday</item>
-        <item>Wednesday</item>
-        <item>Thursday</item>
-        <item>Friday</item>
-        <item>Saturday</item>
-    </string-array>
-
-    <string name="login_with_facebook">Login using Facebook</string>
-    <string name="connect_with_facebook">Connect to Facebook</string>
+  <string name="loading">Loading…</string>
+  <string name="tasks_due">Tasks due</string>
+  <string name="recover_password">Recover password</string>
+  <string name="log_in_anonymously">Skip registration</string>
+  <string name="no_habits_available">There are no habits to show</string>
+  <string name="no_connection_available">This function requires an active Internet connection</string>
+  <string name="repeat">Repeat</string>
+  <string name="times_every">times every</string>
+  <string name="days">days</string>
+  <string name="delete_user">Delete user</string>
+  <string name="all_tasks">All tasks</string>
+  <string name="habit_create">Create habit</string>
+  <string name="title">Title</string>
+  <string name="question">Question</string>
+  <string name="time_needed">Time needed</string>
+  <string name="create">Create</string>
 
 
-    <!-- App introduction -->
+  <string-array name="days_of_week_array">
+    <item>Sunday</item>
+    <item>Monday</item>
+    <item>Tuesday</item>
+    <item>Wednesday</item>
+    <item>Thursday</item>
+    <item>Friday</item>
+    <item>Saturday</item>
+  </string-array>
 
-    <string-array name="frequencyQuickSelect">
-        <item>Every day</item>
-        <item>Every week</item>
-        <item>2 times per week</item>
-        <item>5 times per week</item>
-        <item>Custom …</item>
-    </string-array>
+  <string name="login_with_facebook">Login using Facebook</string>
+  <string name="connect_with_facebook">Connect to Facebook</string>
 
-    <string name="every_day">Every day</string>
-    <string name="every_week">Every week</string>
-    <string name="two_times_per_week">2 times per week</string>
-    <string name="five_times_per_week">5 times per week</string>
-    <string name="custom_frequency">Custom …</string>
 
-    <!-- Middle part of the sentence '1 time in xx days' -->
+  <!-- App introduction -->
 
-    <string name="move_left">Move left</string>
-    <string name="move_right">Move right</string>
-    <string name="avatar">avatar</string>
+  <string-array name="frequencyQuickSelect">
+    <item>Every day</item>
+    <item>Every week</item>
+    <item>2 times per week</item>
+    <item>5 times per week</item>
+    <item>Custom …</item>
+  </string-array>
 
-    <!-- Menu items -->
-    <string name="home">Home</string>
-    <string name="programs">Programs</string>
-    <string name="lists">Lists</string>
-    <string name="profile">Profile</string>
-    <string name="logout">Logout</string>
-    <string name="action_search">Search</string>
+  <string name="every_day">Every day</string>
+  <string name="every_week">Every week</string>
+  <string name="two_times_per_week">2 times per week</string>
+  <string name="five_times_per_week">5 times per week</string>
+  <string name="custom_frequency">Custom …</string>
+
+  <!-- Middle part of the sentence '1 time in xx days' -->
+
+  <string name="move_left">Move left</string>
+  <string name="move_right">Move right</string>
+  <string name="avatar">avatar</string>
+
+  <!-- Menu items -->
+  <string name="home">Home</string>
+  <string name="programs">Programs</string>
+  <string name="lists">Lists</string>
+  <string name="profile">Profile</string>
+  <string name="logout">Logout</string>
+  <string name="action_search">Search</string>
 </resources>
