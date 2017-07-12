@@ -4,7 +4,7 @@ import android.util.Log
 import com.doapps.habits.models.Habit
 import java.util.*
 
-internal object DayFilter {
+object DayFilter {
 
   @JvmStatic
   fun filterListForToday(todayHabits: MutableCollection<Habit>) {

@@ -1,36 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:layout_marginLeft="10dp"
+  android:layout_marginRight="10dp"
+  android:orientation="horizontal">
+
+  <com.github.vipulasri.timelineview.TimelineView
+    android:id="@+id/time_marker"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    app:line="?colorPrimary"
+    app:linePadding="5dp"
+    app:lineSize="3dp"/>
+
+  <TextView
+    android:id="@+id/habit_title"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:layout_marginTop="15dp"
+    android:layout_marginBottom="15dp"
+    android:layout_marginStart="10dp"
     android:layout_marginLeft="10dp"
-    android:layout_marginRight="10dp"
-    android:orientation="horizontal">
-
-    <com.github.vipulasri.timelineview.TimelineView
-        android:id="@+id/time_marker"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        app:line="@color/colorPrimary"
-        app:linePadding="5dp"
-        app:lineSize="3dp"/>
-
-    <TextView
-        android:id="@+id/habit_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start|center_vertical"
-        android:layout_marginBottom="15dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="15dp"
-        android:gravity="start"
-        android:paddingLeft="15dp"
-        android:paddingStart="15dp"
-        android:textColor="@color/black"
-        android:textSize="20sp"
-        tools:ignore="RtlHardcoded,RtlSymmetry"/>
+    android:layout_gravity="start|center_vertical"
+    android:paddingStart="15dp"
+    android:paddingLeft="15dp"
+    android:gravity="start"
+    android:textColor="@color/black"
+    android:textSize="20sp"
+    tools:ignore="RtlHardcoded,RtlSymmetry"/>
 
 </LinearLayout>

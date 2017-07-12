@@ -9,7 +9,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import com.doapps.habits.R
-import com.doapps.habits.fragments.RegisterFragment
+import com.doapps.habits.helper.EmailTextWatcher
 import com.google.firebase.auth.FirebaseAuth
 
 class PasswordRecoveryActivity : AppCompatActivity() {
@@ -18,14 +18,14 @@ class PasswordRecoveryActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_password_recovery)
-    emailEdit = findViewById<TextInputEditText>(R.id.textInputEditText)
+    emailEdit = findViewById(R.id.textInputEditText)
   }
 
   fun recoverPassword(view: View) {
     val newEmail = emailEdit.text.toString().trim { it <= ' ' }
     if (newEmail.isEmpty())
       Toast.makeText(applicationContext, "Email is empty", Toast.LENGTH_SHORT).show()
-    else if (RegisterFragment.isValidEmail(newEmail)) {
+    else if (EmailTextWatcher.isValidEmail(newEmail)) {
       FirebaseAuth.getInstance().sendPasswordResetEmail(newEmail)
       Toast.makeText(applicationContext, "Recovery mail sent", Toast.LENGTH_SHORT).show()
       startActivity(Intent(applicationContext, AuthActivity::class.java))

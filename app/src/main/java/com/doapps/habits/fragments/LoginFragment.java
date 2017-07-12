@@ -19,6 +19,8 @@ import com.doapps.habits.activity.AuthActivity;
 import com.doapps.habits.activity.MainActivity;
 import com.doapps.habits.activity.PasswordRecoveryActivity;
 import com.doapps.habits.data.AvatarData;
+import com.doapps.habits.helper.EmailTextWatcher;
+import com.doapps.habits.helper.PasswordTextWatcher;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -54,7 +56,9 @@ public class LoginFragment extends LifecycleFragment {
     View result = inflater.inflate(R.layout.fragment_login, container, false);
 
     inputEmail = result.findViewById(R.id.email);
+    inputEmail.addTextChangedListener(new EmailTextWatcher(inputEmail));
     inputPassword = result.findViewById(R.id.password);
+    inputPassword.addTextChangedListener(new PasswordTextWatcher(inputPassword));
     setupFields();
 
     btnLogin = result.findViewById(R.id.btn_login);
@@ -155,7 +159,7 @@ public class LoginFragment extends LifecycleFragment {
           .show();
     }
     // Check for valid email
-    else if (!RegisterFragment.isValidEmail(email)) {
+    else if (!EmailTextWatcher.Companion.isValidEmail(email)) {
       // Prompt user to enter valid credentials
       Toast.makeText(getContext().getApplicationContext(),
           "Please enter valid credentials!", Toast.LENGTH_LONG)

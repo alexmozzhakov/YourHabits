@@ -1,59 +1,59 @@
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="highContrastTextColor">@color/grey_300</item>
-        <item name="mediumContrastTextColor">@color/grey_500</item>
-        <item name="lowContrastTextColor">@color/grey_800</item>
-    </style>
+  <!-- Base application theme. -->
+  <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <!-- Customize your theme here. -->
+    <item name="colorPrimary">@color/colorPrimary</item>
+    <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+    <item name="colorAccent">@color/colorAccent</item>
+    <item name="highContrastTextColor">@color/grey_300</item>
+    <item name="mediumContrastTextColor">@color/grey_500</item>
+    <item name="lowContrastTextColor">@color/grey_800</item>
+  </style>
 
-    <style name="EditTextTheme">
-        <item name="android:maxLines">1</item>
-        <item name="colorControlNormal">#80cbc4</item>
-        <item name="colorControlActivated">#80cbc4</item>
-        <item name="colorControlHighlight">#80cbc4</item>
-    </style>
+  <style name="EditTextTheme">
+    <item name="android:maxLines">1</item>
+    <item name="colorControlNormal">#80cbc4</item>
+    <item name="colorControlActivated">#80cbc4</item>
+    <item name="colorControlHighlight">#80cbc4</item>
+  </style>
 
-    <style name="AppTheme.NoShadow" parent="AppTheme.NoActionBar">
-        <item name="android:windowContentOverlay">@null</item>
-    </style>
+  <style name="AppTheme.NoShadow" parent="AppTheme.NoActionBar">
+    <item name="android:windowContentOverlay">@null</item>
+  </style>
 
-    <style name="AppTheme.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-        <item name="highContrastTextColor">@color/grey_800</item>
-        <item name="mediumContrastTextColor">@color/grey_500</item>
-        <item name="lowContrastTextColor">@color/grey_300</item>
-    </style>
+  <style name="AppTheme.NoActionBar">
+    <item name="windowActionBar">false</item>
+    <item name="windowNoTitle">true</item>
+    <item name="highContrastTextColor">@color/grey_800</item>
+    <item name="mediumContrastTextColor">@color/grey_500</item>
+    <item name="lowContrastTextColor">@color/grey_300</item>
+  </style>
 
-    <style name="AppTheme.Auth" parent="AppTheme.NoActionBar">
-        <item name="colorAccent">#80cbc4</item>
-        <item name="colorPrimaryDark">#5d6694</item>
-    </style>
+  <style name="AppTheme.Auth" parent="AppTheme.NoActionBar">
+    <item name="colorAccent">#80cbc4</item>
+    <item name="colorPrimaryDark">#5d6694</item>
+  </style>
 
-    <style name="noAnimTheme" parent="AppTheme.NoActionBar">
-        <item name="android:windowAnimationStyle">@null</item>
-    </style>
+  <style name="noAnimTheme" parent="AppTheme.NoActionBar">
+    <item name="android:windowAnimationStyle">@null</item>
+  </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+  <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+  <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
 
-    <style name="SearchViewStyle" parent="Widget.AppCompat.SearchView">
-        <!-- Gets rid of the search icon -->
-        <item name="searchIcon">@drawable/ic_search_white_24dp</item>
-        <!-- Gets rid of the "underline" in the text -->
-        <item name="queryBackground">@color/colorPrimary</item>
-        <!-- Gets rid of the search icon when the SearchView is expanded -->
-        <item name="searchHintIcon">@null</item>
-        <!-- Text color -->
-        <item name="android:textColor">@color/white</item>
-    </style>
+  <style name="SearchViewStyle" parent="Widget.AppCompat.SearchView">
+    <!-- Gets rid of the search icon -->
+    <item name="searchIcon">@drawable/ic_search_white_24dp</item>
+    <!-- Gets rid of the "underline" in the text -->
+    <item name="queryBackground">@color/colorPrimary</item>
+    <!-- Gets rid of the search icon when the SearchView is expanded -->
+    <item name="searchHintIcon">@null</item>
+    <!-- Text color -->
+    <item name="android:textColor">@color/white</item>
+  </style>
 
 
 </resources>

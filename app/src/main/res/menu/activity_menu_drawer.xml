@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group
-        android:checkableBehavior="single">
+  <group
+    android:checkableBehavior="single">
 
-        <item
-            android:id="@+id/nav_home"
-            android:icon="@drawable/ic_home"
-            android:title="@string/home"/>
-        <item
-            android:id="@+id/nav_programs"
-            android:icon="@drawable/ic_groups"
-            android:title="@string/programs"/>
-        <item
-            android:id="@+id/nav_lists"
-            android:icon="@drawable/ic_lists"
-            android:title="@string/lists"/>
-        <item
-            android:id="@+id/nav_profile"
-            android:icon="@drawable/ic_profile"
-            android:title="@string/profile"
-            android:visible="false"/>
-    </group>
+    <item
+      android:id="@+id/nav_home"
+      android:icon="@drawable/ic_home"
+      android:title="@string/home"/>
+    <item
+      android:id="@+id/nav_programs"
+      android:icon="@drawable/ic_groups"
+      android:title="@string/programs"/>
+    <item
+      android:id="@+id/nav_lists"
+      android:icon="@drawable/ic_lists"
+      android:title="@string/lists"/>
+    <item
+      android:id="@+id/nav_profile"
+      android:icon="@drawable/ic_profile"
+      android:title="@string/profile"
+      android:visible="false"/>
+  </group>
 
-    <group
-        android:id="@+id/bottom_menu"
-        >
+  <group
+    android:id="@+id/bottom_menu"
+    >
 
-        <item
-            android:id="@+id/nav_logout"
-            android:icon="@drawable/ic_logout"
-            android:title="@string/logout"/>
-    </group>
+    <item
+      android:id="@+id/nav_logout"
+      android:icon="@drawable/ic_logout"
+      android:title="@string/logout"/>
+  </group>
 </menu>

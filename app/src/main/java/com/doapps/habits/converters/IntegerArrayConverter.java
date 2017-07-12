@@ -19,7 +19,7 @@ public class IntegerArrayConverter {
 
   @TypeConverter
   public static int[] toArray(String str) {
-    String[] temp = str.substring(0, str.length()).split(",");
+    String[] temp = str.split(",");
     int[] arr = new int[temp.length];
     for (int i = 0; i < arr.length && i < temp.length; i++) {
       arr[i] = Integer.valueOf(temp[i]);

@@ -1,49 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="100dp">
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="100dp">
 
-    <ImageView
-        android:id="@+id/profile_photo"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:layout_gravity="center_vertical"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
-        android:contentDescription="@string/avatar"/>
+  <ImageView
+    android:id="@+id/profile_photo"
+    android:layout_width="56dp"
+    android:layout_height="56dp"
+    android:layout_marginStart="16dp"
+    android:layout_marginLeft="16dp"
+    android:layout_gravity="center_vertical"
+    android:contentDescription="@string/avatar"/>
 
-    <FrameLayout
-        android:id="@+id/fields_info"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp">
+  <FrameLayout
+    android:id="@+id/fields_info"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:layout_marginStart="16dp"
+    android:layout_marginLeft="16dp">
 
-        <TextView
-            android:id="@+id/name_info"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginBottom="10dp"
-            android:textColor="@color/black"
-            android:textIsSelectable="false"
-            android:textSize="20sp"
-            tools:ignore="SelectableText"/>
+    <TextView
+      android:id="@+id/name_info"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="10dp"
+      android:layout_gravity="center_vertical"
+      android:textColor="@color/black"
+      android:textIsSelectable="false"
+      android:textSize="20sp"
+      tools:ignore="SelectableText"/>
 
-        <TextView
-            android:id="@+id/email_info"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginTop="16dp"
-            android:textIsSelectable="true"/>
+    <TextView
+      android:id="@+id/email_info"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="16dp"
+      android:layout_gravity="center_vertical"
+      android:textIsSelectable="true"/>
 
-    </FrameLayout>
+  </FrameLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_gravity="bottom"
-        android:background="@drawable/ic_line"/>
+  <View
+    android:layout_width="match_parent"
+    android:layout_height="1dp"
+    android:layout_gravity="bottom"
+    android:background="@drawable/ic_line"/>
 </FrameLayout>

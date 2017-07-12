@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +14,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.doapps.habits.R;
+import com.doapps.habits.helper.EmailTextWatcher;
+import com.doapps.habits.helper.PasswordTextWatcher;
 import com.doapps.habits.listeners.NameChangeListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -25,10 +26,6 @@ import com.google.firebase.auth.UserProfileChangeRequest;
  * A simple {@link Fragment} subclass.
  */
 public class RegisterFragment extends Fragment {
-
-  public static boolean isValidEmail(CharSequence sequence) {
-    return Patterns.EMAIL_ADDRESS.matcher(sequence).matches();
-  }
 
   private static void handleRegisterError(Task task, Activity activity) {
     task.addOnFailureListener(activity, fail -> {
@@ -50,6 +47,7 @@ public class RegisterFragment extends Fragment {
     EditText inputFullName = result.findViewById(R.id.full_name);
     EditText inputEmail = result.findViewById(R.id.email);
     EditText inputPassword = result.findViewById(R.id.password);
+    inputPassword.addTextChangedListener(new PasswordTextWatcher(inputPassword));
     Button btnRegister = result.findViewById(R.id.btnCreate);
     Button btnLinkToLogin = result.findViewById(R.id.btnLinkToLoginScreen);
 
@@ -57,6 +55,7 @@ public class RegisterFragment extends Fragment {
     inputEmail.setText(
         getActivity().getSharedPreferences("pref", Context.MODE_PRIVATE)
             .getString("last email", ""));
+    inputEmail.addTextChangedListener(new EmailTextWatcher(inputEmail));
 
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     // Register Button Click event
@@ -66,7 +65,6 @@ public class RegisterFragment extends Fragment {
           String password = inputPassword.getText().toString().trim();
 
           if (!email.isEmpty() && !password.isEmpty() && !name.isEmpty()) {
-            if (isValidEmail(email)) {
               mAuth.createUserWithEmailAndPassword(email, password)
                   .addOnCompleteListener(getActivity(), task -> {
                     if (task.isSuccessful()) {
@@ -76,10 +74,6 @@ public class RegisterFragment extends Fragment {
                       handleRegisterError(task, getActivity());
                     }
                   });
-            } else {
-              Toast.makeText(getActivity(), "Invalid Email Address",
-                  Toast.LENGTH_SHORT).show();
-            }
           } else {
             Toast.makeText(getActivity().getApplicationContext(),
                 "Please enter your details!", Toast.LENGTH_LONG)

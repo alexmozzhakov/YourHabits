@@ -1,38 +1,38 @@
 <FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="100dp"
+  android:background="@null"
+  android:clickable="true"
+  android:focusable="true">
+
+  <TextView
+    android:id="@+id/program_title"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="20dp"
+    android:layout_gravity="top|center_horizontal"
+    android:fontFamily="@font/montserrat_regular"
+    android:gravity="center"
+    android:textColor="@color/black"
+    android:textIsSelectable="false"
+    android:textSize="26sp"/>
+
+  <TextView
+    android:id="@+id/program_percent"
+    android:layout_width="wrap_content"
+    android:layout_height="50dp"
+    android:layout_gravity="bottom|center_horizontal"
+    android:fontFamily="@font/montserrat_light"
+    android:gravity="center"
+    android:textColor="#801D1D26"
+    android:textIsSelectable="false"
+    android:textSize="12sp"/>
+
+  <View
     android:layout_width="match_parent"
-    android:layout_height="100dp"
-    android:background="@null"
-    android:clickable="true"
-    android:focusable="true">
-
-    <TextView
-        android:id="@+id/program_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top|center_horizontal"
-        android:layout_marginTop="20dp"
-        android:fontFamily="@font/montserrat_regular"
-        android:gravity="center"
-        android:textColor="@color/black"
-        android:textIsSelectable="false"
-        android:textSize="26sp"/>
-
-    <TextView
-        android:id="@+id/program_percent"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:layout_gravity="bottom|center_horizontal"
-        android:fontFamily="@font/montserrat_light"
-        android:gravity="center"
-        android:textColor="#801D1D26"
-        android:textIsSelectable="false"
-        android:textSize="12sp"/>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="99dp"
-        android:background="#B6B6B6"/>
+    android:layout_height="1dp"
+    android:layout_marginTop="99dp"
+    android:background="#B6B6B6"/>
 
 </FrameLayout>

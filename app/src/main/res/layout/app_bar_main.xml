@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                                 xmlns:app="http://schemas.android.com/apk/res-auto"
-                                                 xmlns:tools="http://schemas.android.com/tools"
-                                                 android:layout_width="match_parent"
-                                                 android:layout_height="match_parent"
-                                                 android:fitsSystemWindows="true"
-                                                 tools:context="com.doapps.habits.activity.MainActivity">
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:fitsSystemWindows="true"
+  tools:context="com.doapps.habits.activity.MainActivity">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        android:theme="@style/AppTheme.AppBarOverlay"
-        app:elevation="0dp"
-        app:popupTheme="@style/AppTheme.PopupOverlay"/>
+  <android.support.v7.widget.Toolbar
+    android:id="@+id/toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="?android:attr/actionBarSize"
+    android:background="?colorPrimary"
+    android:theme="@style/AppTheme.AppBarOverlay"
+    app:elevation="0dp"
+    app:popupTheme="@style/AppTheme.PopupOverlay"/>
 
-    <View
-        android:id="@+id/toolbar_shadow"
-        android:layout_width="match_parent"
-        android:layout_height="3dp"
-        android:layout_below="@id/toolbar"
-        android:layout_marginTop="?attr/actionBarSize"
-        android:background="@drawable/toolbar_shadow"/>
+  <View
+    android:id="@+id/toolbar_shadow"
+    android:layout_width="match_parent"
+    android:layout_height="3dp"
+    android:layout_marginTop="?android:attr/actionBarSize"
+    android:layout_below="@id/toolbar"
+    android:background="@drawable/toolbar_shadow"/>
 
-    <android.support.v7.widget.SearchView
-        android:id="@+id/toolbar_search"
-        style="@style/SearchViewStyle"
-        android:layout_width="wrap_content"
-        android:layout_gravity="end"
-        android:layout_height="?attr/actionBarSize"
-        android:visibility="gone"/>
+  <android.support.v7.widget.SearchView
+    android:id="@+id/toolbar_search"
+    style="@style/SearchViewStyle"
+    android:layout_width="wrap_content"
+    android:layout_height="?android:attr/actionBarSize"
+    android:layout_gravity="end"
+    android:visibility="gone"/>
 
 </android.support.design.widget.CoordinatorLayout>

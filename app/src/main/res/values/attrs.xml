@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="timeline_style">
-        <attr name="marker" format="color|reference"/>
-        <attr name="line" format="color|reference"/>
-        <attr name="marker_size" format="dimension"/>
-        <attr name="line_size" format="dimension"/>
-    </declare-styleable>
+  <declare-styleable name="timeline_style">
+    <attr format="color|reference" name="marker"/>
+    <attr format="color|reference" name="line"/>
+    <attr format="dimension" name="marker_size"/>
+    <attr format="dimension" name="line_size"/>
+  </declare-styleable>
 
-    <declare-styleable name="SwipeStringSelector">
-        <attr name="swipe_leftButtonResource" format="reference"/>
-        <attr name="swipe_rightButtonResource" format="reference"/>
-        <attr name="swipe_titleTextAppearance" format="reference"/>
-        <attr name="swipe_descriptionTextAppearance" format="reference"/>
+  <declare-styleable name="SwipeStringSelector">
+    <attr format="reference" name="swipe_leftButtonResource"/>
+    <attr format="reference" name="swipe_rightButtonResource"/>
+    <attr format="reference" name="swipe_titleTextAppearance"/>
+    <attr format="reference" name="swipe_descriptionTextAppearance"/>
 
-        <attr name="swipe_descriptionGravity" format="enum">
-            <enum name="left" value="0"/>
-            <enum name="center" value="1"/>
-            <enum name="right" value="2"/>
-        </attr>
-    </declare-styleable>
+    <attr format="enum" name="swipe_descriptionGravity">
+      <enum name="left" value="0"/>
+      <enum name="center" value="1"/>
+      <enum name="right" value="2"/>
+    </attr>
+  </declare-styleable>
 
-    <attr name="highContrastTextColor" format="reference"/>
-    <attr name="mediumContrastTextColor" format="reference"/>
-    <attr name="lowContrastTextColor" format="reference"/>
+  <attr format="reference" name="highContrastTextColor"/>
+  <attr format="reference" name="mediumContrastTextColor"/>
+  <attr format="reference" name="lowContrastTextColor"/>
 
-    <declare-styleable name="CircleCheckboxWithProgressbar"/>
+  <declare-styleable name="CircleCheckboxWithProgressbar"/>
 
 </resources>
