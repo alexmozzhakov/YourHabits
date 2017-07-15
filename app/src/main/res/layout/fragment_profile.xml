@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
@@ -7,17 +8,66 @@
   android:layout_marginTop="?android:attr/actionBarSize"
   android:orientation="vertical">
 
+  <android.support.constraint.Guideline
+    android:id="@+id/top_padding"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    app:layout_constraintGuide_percent=".3"/>
+
   <View
     android:id="@+id/topPanel"
     android:layout_width="0dp"
     android:layout_height="0dp"
     android:background="@color/colorPrimary"
-    app:layout_constraintBottom_toTopOf="@+id/top_padding"
+    app:layout_constraintBottom_toTopOf="@id/top_padding"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent"/>
 
-  <com.doapps.habits.view.holders.SquareByHeightImageView
+  <ImageView
+    android:id="@+id/triangle"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:src="@drawable/white_triangle"
+    android:tint="@color/white"
+    app:layout_constraintBottom_toBottomOf="@id/top_padding"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    tools:ignore="ContentDescription"/>
+
+  <TextView
+    android:id="@+id/location"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="8dp"
+    android:layout_marginStart="8dp"
+    android:layout_marginEnd="8dp"
+    android:layout_gravity="bottom"
+    android:gravity="center_horizontal"
+    android:textColor="#bfffffff"
+    android:textIsSelectable="true"
+    android:textSize="14sp"
+    app:layout_constraintBottom_toTopOf="@id/triangle"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"/>
+
+  <TextView
+    android:id="@+id/name"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="8dp"
+    android:layout_marginEnd="8dp"
+    android:layout_gravity="bottom"
+    android:gravity="center_horizontal"
+    android:textColor="@color/white"
+    android:textIsSelectable="true"
+    android:textSize="18sp"
+    app:layout_constraintBottom_toTopOf="@id/location"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"/>
+
+  <ImageView
     android:id="@+id/avatarImage"
     android:layout_width="0dp"
     android:layout_height="0dp"
@@ -43,34 +93,18 @@
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent"/>
 
-  <TextView
-    android:id="@+id/name"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="8dp"
-    android:layout_marginEnd="8dp"
-    android:layout_gravity="bottom"
-    android:gravity="center_horizontal"
-    android:textColor="@color/white"
-    android:textIsSelectable="true"
-    android:textSize="18sp"
-    app:layout_constraintBottom_toTopOf="@+id/location"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"/>
-
-  <TextView
-    android:id="@+id/location"
+  <!-- Delete user Button -->
+  <Button
+    android:id="@+id/btn_delete_user"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="8dp"
     android:layout_marginStart="8dp"
     android:layout_marginEnd="8dp"
-    android:layout_gravity="bottom"
-    android:gravity="center_horizontal"
-    android:textColor="#bfffffff"
-    android:textIsSelectable="true"
-    android:textSize="14sp"
-    app:layout_constraintBottom_toTopOf="@+id/user_info"
+    android:background="@color/colorRed"
+    android:text="@string/delete_user"
+    android:textColor="@color/white"
+    app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"/>
 
@@ -95,32 +129,11 @@
     android:text="@string/connect_with_facebook"
     android:textColor="@color/white"
     android:visibility="gone"
-    app:layout_constraintBottom_toTopOf="@+id/btn_delete_user"
+    app:layout_constraintBottom_toTopOf="@id/btn_delete_user"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     tools:ignore="RtlSymmetry"/>
 
-  <!-- Delete user Button -->
-  <Button
-    android:id="@+id/btn_delete_user"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginBottom="8dp"
-    android:layout_marginStart="8dp"
-    android:layout_marginEnd="8dp"
-    android:background="@color/colorRed"
-    android:text="@string/delete_user"
-    android:textColor="@color/white"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"/>
-
-  <android.support.constraint.Guideline
-    android:id="@+id/top_padding"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    app:layout_constraintGuide_percent=".3"/>
 
   <RelativeLayout
     android:id="@+id/user_info"
@@ -134,7 +147,7 @@
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="@+id/top_padding">
+    app:layout_constraintTop_toTopOf="@id/top_padding">
 
     <ImageView
       android:layout_width="wrap_content"
@@ -177,9 +190,9 @@
     android:layout_marginEnd="8dp"
     android:layout_marginRight="8dp"
     android:src="@drawable/ic_edit_white_24dp"
-    app:layout_constraintBottom_toTopOf="@+id/top_padding"
+    app:layout_constraintBottom_toTopOf="@id/top_padding"
     app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintTop_toTopOf="@+id/top_padding"/>
+    app:layout_constraintTop_toTopOf="@id/top_padding"/>
 
 
 </android.support.constraint.ConstraintLayout>

@@ -25,9 +25,9 @@ class ProgramRecycleAdapter(private val mProgramList: List<IProgramViewProvider>
     val view = LayoutInflater.from(parent.context)
         .inflate(R.layout.program_list_item, parent, false)
 
-    mTitleTop = parent.rootView.findViewById<TextView>(R.id.titleTop)
-    mImageTop = parent.rootView.findViewById<ImageView>(R.id.imageViewTop)
-    mSuccessTop = parent.rootView.findViewById<TextView>(R.id.percentTop)
+    mTitleTop = parent.rootView.findViewById(R.id.titleTop)
+    mImageTop = parent.rootView.findViewById(R.id.imageViewTop)
+    mSuccessTop = parent.rootView.findViewById(R.id.percentTop)
 
     return ProgramViewHolder(view)
   }
@@ -36,6 +36,7 @@ class ProgramRecycleAdapter(private val mProgramList: List<IProgramViewProvider>
     val program = mProgramList[position]
     holder.titleTextView.text = program.title
     holder.percentTextView.text = program.percent
+
     holder.titleTextView.setOnClickListener {
       Picasso.with(mContext.applicationContext)
           .load(program.imageLink)
