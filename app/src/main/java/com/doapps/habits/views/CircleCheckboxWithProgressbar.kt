@@ -13,13 +13,12 @@ class CircleCheckboxWithProgressbar(context: Context?,
 
   override fun onDraw(canvas: Canvas) {
     super.onDraw(canvas)
-    val viewWidthHalf = this.measuredWidth / 2f
-    val viewHeightHalf = this.measuredHeight / 2f
-    val radius: Float
-    if (viewWidthHalf > viewHeightHalf)
-      radius = viewHeightHalf - 10f
-    else
-      radius = viewWidthHalf - 10f
+    val viewWidthHalf = measuredWidth / 2f
+    val viewHeightHalf = measuredHeight / 2f
+    val radius =
+        if (viewWidthHalf > viewHeightHalf) viewHeightHalf - 10f
+        else viewWidthHalf - 10f
+
     circlePaint.style = Paint.Style.FILL
     circlePaint.isAntiAlias = true
     circlePaint.color = Color.parseColor("#000000")

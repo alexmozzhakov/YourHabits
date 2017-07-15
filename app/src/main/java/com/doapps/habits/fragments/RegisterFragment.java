@@ -65,15 +65,15 @@ public class RegisterFragment extends Fragment {
           String password = inputPassword.getText().toString().trim();
 
           if (!email.isEmpty() && !password.isEmpty() && !name.isEmpty()) {
-              mAuth.createUserWithEmailAndPassword(email, password)
-                  .addOnCompleteListener(getActivity(), task -> {
-                    if (task.isSuccessful()) {
-                      setUserName(name);
-                      toLoginActivity();
-                    } else {
-                      handleRegisterError(task, getActivity());
-                    }
-                  });
+            mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(getActivity(), task -> {
+                  if (task.isSuccessful()) {
+                    setUserName(name);
+                    toLoginActivity();
+                  } else {
+                    handleRegisterError(task, getActivity());
+                  }
+                });
           } else {
             Toast.makeText(getActivity().getApplicationContext(),
                 "Please enter your details!", Toast.LENGTH_LONG)

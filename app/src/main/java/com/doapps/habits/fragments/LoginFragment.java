@@ -56,9 +56,7 @@ public class LoginFragment extends LifecycleFragment {
     View result = inflater.inflate(R.layout.fragment_login, container, false);
 
     inputEmail = result.findViewById(R.id.email);
-    inputEmail.addTextChangedListener(new EmailTextWatcher(inputEmail));
     inputPassword = result.findViewById(R.id.password);
-    inputPassword.addTextChangedListener(new PasswordTextWatcher(inputPassword));
     setupFields();
 
     btnLogin = result.findViewById(R.id.btn_login);
@@ -182,6 +180,9 @@ public class LoginFragment extends LifecycleFragment {
   }
 
   private void setupFields() {
+    inputEmail.addTextChangedListener(new EmailTextWatcher(inputEmail));
+    inputPassword.addTextChangedListener(new PasswordTextWatcher(inputPassword));
+
     inputPassword.setImeActionLabel("Login", KeyEvent.KEYCODE_ENTER);
     inputPassword.setOnKeyListener((final View view, final int keyCode, final KeyEvent event) -> {
       // If the event is a key-down event on the "enter" button
