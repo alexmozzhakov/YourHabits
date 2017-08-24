@@ -1,10 +1,10 @@
 apply plugin: 'com.android.application'
-//apply plugin: 'com.google.firebase.firebase-perf'
+apply plugin: 'com.google.firebase.firebase-perf'
 apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion 'android-26'
-    buildToolsVersion '26.0.0'
+    buildToolsVersion '26.0.1'
 
     defaultConfig {
         applicationId "com.doapps.habit"
@@ -37,11 +37,10 @@ android {
 
 dependencies {
     // App's dependencies, including test
-    implementation 'com.github.lovetuzitong:MultiImageSelector:1.2'
     implementation 'com.github.vipulasri:timelineview:1.0.5'
     implementation "com.android.support:design:$supportLibraryVersion"
     implementation "com.android.support:recyclerview-v7:$supportLibraryVersion"
-    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.0-beta1'
     implementation 'com.android.volley:volley:1.0.0'
     implementation "android.arch.lifecycle:runtime:$architectureComponentsVersion"
     implementation "android.arch.lifecycle:extensions:$architectureComponentsVersion"
@@ -53,7 +52,7 @@ dependencies {
     implementation 'com.firebase:firebase-jobdispatcher:0.7.0'
     implementation 'com.squareup.picasso:picasso:2.5.2'
     implementation "com.facebook.android:facebook-android-sdk:$facebookVersion"
-    implementation 'com.ruesga.timeline-chart-view:timeline-chart-view:1.0.1'
+    implementation 'com.github.jakob-grabner:Circle-Progress-View:v1.3'
     //Image Selector dependencies
     implementation 'com.commit451:PhotoView:1.2.4'
     implementation 'com.isseiaoki:simplecropview:1.0.13'

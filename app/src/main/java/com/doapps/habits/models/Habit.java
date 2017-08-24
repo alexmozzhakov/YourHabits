@@ -9,6 +9,7 @@ import java.util.Calendar;
 @Entity(tableName = "habits")
 public final class Habit {
 
+  // TODO: 7/15/17 document frequency array behavior
   private final int[] frequencyArray;
   @PrimaryKey(autoGenerate = true)
   private int id;
@@ -25,6 +26,7 @@ public final class Habit {
   private int markerUpdatedMonth;
   private int markerUpdatedYear;
   private long followingFrom;
+  private int doneCounter = 0;
 
   public Habit(String title, String question, boolean doneMarker,
       int markerUpdatedDay, int markerUpdatedMonth, int markerUpdatedYear,
@@ -131,7 +133,18 @@ public final class Habit {
       markerUpdatedDay = calendar.get(Calendar.DATE);
       markerUpdatedMonth = calendar.get(Calendar.MONTH);
       markerUpdatedYear = calendar.get(Calendar.YEAR);
+      doneCounter++;
+    } else {
+      doneCounter--;
     }
+  }
+
+  public int getDoneCounter() {
+    return doneCounter;
+  }
+
+  public void setDoneCounter(int doneCounter) {
+    this.doneCounter = doneCounter;
   }
 
   public int getMarkerUpdatedDay() {

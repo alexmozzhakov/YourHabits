@@ -79,9 +79,7 @@ public class ListFragment extends Fragment implements SearchView.OnQueryTextList
         searchView.setOnQueryTextListener(this);
         searchView.setOnCloseListener(this);
       }
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    } catch (ExecutionException e) {
+    } catch (InterruptedException | ExecutionException e) {
       e.printStackTrace();
     }
 

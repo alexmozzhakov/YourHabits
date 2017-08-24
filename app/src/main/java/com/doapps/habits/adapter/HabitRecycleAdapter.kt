@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import com.doapps.habits.R
 import com.doapps.habits.database.HabitsDatabase
 import com.doapps.habits.helper.HabitListManager
+import com.doapps.habits.helper.Progressing
 import com.doapps.habits.listeners.EmptyListListener
 import com.doapps.habits.models.Habit
 import com.doapps.habits.view.holders.HabitViewHolder
@@ -29,16 +30,13 @@ class HabitRecycleAdapter(private val movableHabitList: HabitListManager)
 
     holder.titleTextView.text = habit.title
     holder.checkBox.setOnClickListener {
-      if (holder.checkBox.isChecked) {
-        habit.isDoneMarker = true
-        UpdateTask(habitsDatabase).execute(habit)
-        holder.titleTextView.setTextColor(Color.GRAY)
-      } else {
-        habit.isDoneMarker = false
-        UpdateTask(habitsDatabase).execute(habit)
-        holder.titleTextView.setTextColor(Color.BLACK)
-      }
+      habit.isDoneMarker = holder.checkBox.isChecked
+      UpdateTask(habitsDatabase).execute(habit)
+      holder.titleTextView.setTextColor(if (habit.isDoneMarker) Color.GRAY else Color.BLACK)
+      setProgressBar(habit, holder.progressBar)
     }
+    holder.titleTextView.setTextColor(if (habit.isDoneMarker) Color.GRAY else Color.BLACK)
+    setProgressBar(habit, holder.progressBar)
 
     val calendar = Calendar.getInstance()
 
@@ -65,6 +63,24 @@ class HabitRecycleAdapter(private val movableHabitList: HabitListManager)
     habitList[toPosition].id = fromPositionId
     movableHabitList.onItemMove(habitList[fromPosition], habitList[toPosition])
     notifyItemMoved(fromPosition, toPosition)
+  }
+
+  private fun setProgressBar(habit: Habit, progressBar: Progressing) {
+    if (habit.doneCounter != 0) {
+      val progress = when (habit.frequencyArray.size) {
+        2 -> habit.doneCounter * 100 / habit.frequencyArray[0]
+        else -> {
+          val daysCount = when (habit.frequencyArray.last()) {
+            0 -> 1
+            else -> habit.frequencyArray.size - 1
+          }
+          habit.doneCounter * 100 / daysCount
+        }
+      }
+      progressBar.setProgress(progress)
+    } else {
+      progressBar.setProgress(0)
+    }
   }
 
   private class UpdateTask(val habitsDatabase: HabitsDatabase) : AsyncTask<Habit, Unit, Unit>() {
