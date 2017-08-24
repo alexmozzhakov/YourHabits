@@ -2,7 +2,7 @@ package com.doapps.habits
 
 import android.app.Application
 
-
+// TODO: implement Notification logic
 class App : Application() {
   override fun onCreate() {
     super.onCreate()

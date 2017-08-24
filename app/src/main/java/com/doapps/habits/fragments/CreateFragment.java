@@ -85,15 +85,15 @@ public class CreateFragment extends Fragment implements AdapterView.OnItemSelect
       if (lastSpinnerSelection == 0) {
         frequency = new int[]{1, 1};
       } else if (lastSpinnerSelection == 1) {
-        frequency = new int[]{7, 1};
+        frequency = new int[]{1, 7};
       } else if (lastSpinnerSelection == 2) {
-        frequency = new int[]{7, 2};
+        frequency = new int[]{2, 7};
       } else if (lastSpinnerSelection == 3) {
-        frequency = new int[]{7, 5};
+        frequency = new int[]{5, 7};
       } else {
-        frequency = new int[2];
-        frequency[0] = Integer.valueOf(tvFreqDen.getText().toString());
-        frequency[1] = Integer.valueOf(tvFreqNum.getText().toString());
+        frequency = new int[]{
+            Integer.valueOf(tvFreqNum.getText().toString()),
+            Integer.valueOf(tvFreqDen.getText().toString())};
       }
 
       if (BuildConfig.DEBUG) {
