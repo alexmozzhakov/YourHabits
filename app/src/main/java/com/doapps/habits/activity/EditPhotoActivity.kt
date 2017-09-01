@@ -1,8 +1,8 @@
 package com.doapps.habits.activity
 
 import android.Manifest
-import android.app.Activity
 import android.arch.lifecycle.LifecycleActivity
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.graphics.Bitmap
@@ -28,32 +28,36 @@ import java.util.*
 
 class EditPhotoActivity : LifecycleActivity() {
   private lateinit var bitmap: Bitmap
-
+  private val REQUEST_IMAGE: Int = ImageSelectorActivity.REQUEST_IMAGE
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     val permissionCheck = ContextCompat
         .checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
     when (permissionCheck) {
-      PERMISSION_GRANTED ->
-        ImageSelectorActivity.start(this, 1, ImageSelectorActivity.MODE_SINGLE, true, false, true)
+      PERMISSION_GRANTED -> openImageSelector()
       else ->
         ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
     }
   }
 
+  private fun deniedToast() =
+      Toast.makeText(this, "This function needs read/write permission", Toast.LENGTH_SHORT).show()
+
+
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
     super.onActivityResult(requestCode, resultCode, data)
-    if (requestCode == ImageSelectorActivity.REQUEST_IMAGE) {
-      if (resultCode == Activity.RESULT_OK) {
+    if (requestCode == REQUEST_IMAGE) {
+      if (resultCode == RESULT_OK) {
         // Get the result list of select image paths
 
         @Suppress("UNCHECKED_CAST")
         val images = data.getSerializableExtra(ImageSelectorActivity.REQUEST_OUTPUT) as ArrayList<String>
+        getSharedPreferences("pref", Context.MODE_PRIVATE).edit().putString("avatar", images[0]).apply()
         bitmap = BitmapFactory.decodeFile(images[0])
-        Log.i(TAG, bitmap.byteCount.toString())
+        Log.i(TAG, String.format("%.2f Mb image is going to upload", bitmap.byteCount / 10e6))
         uploadImage()
-      } else if (resultCode == Activity.RESULT_CANCELED) {
+      } else {
         finish()
       }
     }
@@ -65,18 +69,17 @@ class EditPhotoActivity : LifecycleActivity() {
         { s ->
           val user = FirebaseAuth.getInstance().currentUser
           if (user != null) {
-            Toast.makeText(this@EditPhotoActivity, "Upload complete", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "Upload complete", Toast.LENGTH_LONG).show()
 
             val uri = Uri.parse(s)
-            AvatarData.getInstance().value = uri
+            AvatarData.setValue(uri)
             Picasso.with(applicationContext).invalidate(uri)
           } else {
-            Toast.makeText(this@EditPhotoActivity, s, Toast.LENGTH_LONG).show()
+            Toast.makeText(this, s, Toast.LENGTH_LONG).show()
           }
         },
         { volleyError ->
-          Toast.makeText(this@EditPhotoActivity,
-              "Server error " + volleyError.networkResponse.statusCode,
+          Toast.makeText(this, "Server error " + volleyError.networkResponse.statusCode,
               Toast.LENGTH_LONG).show()
         }) {
       override fun getParams(): Map<String, String> {
@@ -108,10 +111,9 @@ class EditPhotoActivity : LifecycleActivity() {
   override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
                                           grantResults: IntArray) {
     super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-    if (requestCode == 1) {
-      ImageSelectorActivity.start(this, 1, ImageSelectorActivity.MODE_SINGLE, true, false, true)
-    } else {
-      Toast.makeText(this, "This function needs read/write permission", Toast.LENGTH_SHORT).show()
+    when (requestCode) {
+      1 -> openImageSelector()
+      else -> deniedToast()
     }
   }
 
@@ -135,5 +137,9 @@ class EditPhotoActivity : LifecycleActivity() {
       val imageBytes = stream.toByteArray()
       return Base64.encodeToString(imageBytes, Base64.DEFAULT)
     }
+  }
+
+  private fun openImageSelector() {
+    ImageSelectorActivity.start(this, 1, ImageSelectorActivity.MODE_SINGLE, true, false, true)
   }
 }

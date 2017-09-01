@@ -20,8 +20,8 @@ import com.doapps.habits.R;
 import com.doapps.habits.activity.MainActivity;
 import com.doapps.habits.dao.HabitDao;
 import com.doapps.habits.helper.HabitListManager;
-import com.doapps.habits.helper.HabitNotifier;
 import com.doapps.habits.models.Habit;
+import com.doapps.habits.receivers.NotificationReceiver;
 import java.util.Arrays;
 import java.util.Calendar;
 
@@ -154,10 +154,8 @@ public class CreateFragment extends Fragment implements AdapterView.OnItemSelect
 
     @Override
     protected void onPostExecute(Long id) {
-      HabitNotifier habitNotifier = new HabitNotifier(getContext(),
-          editQuestion.getText().toString(), id);
-      habitNotifier.initiate();
-
+      NotificationReceiver notificationService = new NotificationReceiver();
+      notificationService.setAlarm(getContext(), id, editQuestion.getText().toString());
       ((MainActivity) getActivity()).getToolbar().setTitle("List");
       getFragmentManager().beginTransaction().replace(R.id.content_frame, new ListFragment())
           .commit();

@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.TextInputEditText
 import android.support.v7.app.AppCompatActivity
-import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import com.doapps.habits.R
@@ -21,19 +20,19 @@ class PasswordRecoveryActivity : AppCompatActivity() {
     emailEdit = findViewById(R.id.textInputEditText)
   }
 
-  fun recoverPassword(view: View) {
+  fun recoverPassword() {
     val newEmail = emailEdit.text.toString().trim { it <= ' ' }
-    if (newEmail.isEmpty())
-      Toast.makeText(applicationContext, "Email is empty", Toast.LENGTH_SHORT).show()
-    else if (EmailTextWatcher.isValidEmail(newEmail)) {
-      FirebaseAuth.getInstance().sendPasswordResetEmail(newEmail)
-      Toast.makeText(applicationContext, "Recovery mail sent", Toast.LENGTH_SHORT).show()
-      startActivity(Intent(applicationContext, AuthActivity::class.java))
-    } else
-      Toast.makeText(applicationContext, "Recovery email isn't valid", Toast.LENGTH_SHORT).show()
+    when {
+      newEmail.isEmpty() -> Toast.makeText(applicationContext, "Email is empty", Toast.LENGTH_SHORT).show()
+      EmailTextWatcher.isValidEmail(newEmail) -> {
+        FirebaseAuth.getInstance().sendPasswordResetEmail(newEmail)
+        Toast.makeText(applicationContext, "Recovery mail sent", Toast.LENGTH_SHORT).show()
+        startActivity(Intent(applicationContext, AuthActivity::class.java))
+      }
+      else -> Toast.makeText(applicationContext, "Recovery email isn't valid", Toast.LENGTH_SHORT).show()
+    }
 
-    val imm = applicationContext
-        .getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    val imm = applicationContext.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 
     imm.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
   }

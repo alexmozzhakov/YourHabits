@@ -1,16 +1,14 @@
 package com.doapps.habits.helper;
 
-import android.app.AlarmManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
 import com.doapps.habits.R;
 import com.doapps.habits.activity.MainActivity;
-import com.doapps.habits.receivers.Alarm;
+import com.doapps.habits.receivers.NotificationReceiver;
 
 public class HabitNotifier {
 
@@ -25,12 +23,8 @@ public class HabitNotifier {
   }
 
   public void initiate() {
-    AlarmManager alarmMgr = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
-
-    // Setting up pendingIntent
-    Intent intent = new Intent(mContext, Alarm.class);
+    Intent intent = new Intent(mContext, NotificationReceiver.class);
     intent.putExtra("id", mId);
-    PendingIntent alarmIntent = PendingIntent.getBroadcast(mContext, 0, intent, 0);
     Intent resultIntent = new Intent(mContext, MainActivity.class);
     PendingIntent resultPendingIntent = PendingIntent.getActivity(
         mContext, 0, resultIntent, PendingIntent.FLAG_CANCEL_CURRENT);
@@ -50,7 +44,7 @@ public class HabitNotifier {
         mContext, 0, noIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
     // Building notification
-    NotificationCompat.Builder notification = new NotificationCompat.Builder(mContext)
+    NotificationCompat.Builder notification = new NotificationCompat.Builder(mContext, "habits")
         .setContentText(mQuestion)
         .setContentTitle("doHabits")
         .setColor(Color.parseColor("#2CACE1"))
@@ -64,8 +58,5 @@ public class HabitNotifier {
     NotificationManager notificationManager = (NotificationManager)
         mContext.getSystemService(Context.NOTIFICATION_SERVICE);
     notificationManager.notify((int) mId, notification.build());
-    alarmMgr.set(AlarmManager.ELAPSED_REALTIME_WAKEUP,
-        SystemClock.elapsedRealtime() +
-            2000, alarmIntent);
   }
 }

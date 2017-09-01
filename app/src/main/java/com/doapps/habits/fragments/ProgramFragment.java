@@ -1,5 +1,7 @@
 package com.doapps.habits.fragments;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -9,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.doapps.habits.BuildConfig;
 import com.doapps.habits.R;
 import com.doapps.habits.converters.IntegerArrayConverter;
@@ -18,6 +21,7 @@ import com.doapps.habits.helper.HabitListManager;
 import com.doapps.habits.models.Achievement;
 import com.doapps.habits.models.Habit;
 import com.doapps.habits.models.Program;
+import com.doapps.habits.receivers.NotificationReceiver;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -27,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class ProgramFragment extends Fragment {
 
@@ -36,8 +41,7 @@ public class ProgramFragment extends Fragment {
   private static List<Achievement> createAchievementList(DataSnapshot dataSnapshot) {
     List<Achievement> achievements = new ArrayList<>((int) dataSnapshot.getChildrenCount());
     for (DataSnapshot achievementSnapshot : dataSnapshot.getChildren()) {
-      List<String> templates =
-          new ArrayList<>((int) achievementSnapshot.getChildrenCount());
+      List<String> templates = new ArrayList<>((int) achievementSnapshot.getChildrenCount());
       for (DataSnapshot templatesSnapshot : achievementSnapshot.child("templates").getChildren()) {
         templates.add(templatesSnapshot.child("name").getValue(String.class));
       }
@@ -63,17 +67,35 @@ public class ProgramFragment extends Fragment {
     int position = getArguments().getInt("pos", 0);
     DatabaseReference programRef = FirebaseDatabase.getInstance().getReference().child("programs")
         .child(Integer.toString(position));
-    programRef.addListenerForSingleValueEvent(new ValueEventListener() {
+    programRef.child("habit").child("description").addValueEventListener(new ValueEventListener() {
       @Override
       public void onDataChange(DataSnapshot dataSnapshot) {
-        description
-            .setText(dataSnapshot.child("habit").child("description").getValue(String.class));
+        description.setText(dataSnapshot.getValue(String.class));
+      }
 
+      @Override
+      public void onCancelled(DatabaseError databaseError) {
+        Log.e("onCancelled", databaseError.getMessage());
+      }
+    });
+    programRef.addValueEventListener(new ValueEventListener() {
+      @Override
+      public void onDataChange(DataSnapshot dataSnapshot) {
         if (BuildConfig.DEBUG) {
           Log.i("Program fragment", dataSnapshot.toString());
         }
 
-        fab.setOnClickListener(view -> new InsertIfNotExists(dataSnapshot).execute());
+        fab.setOnClickListener(view -> {
+          try {
+            boolean isInserted = new InsertIfNotExists(dataSnapshot, getContext()).execute().get();
+            if (!isInserted) {
+              Toast.makeText(getContext().getApplicationContext(), "Already added",
+                  Toast.LENGTH_SHORT).show();
+            }
+          } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+          }
+        });
       }
 
       @Override
@@ -98,22 +120,24 @@ public class ProgramFragment extends Fragment {
     }
   }
 
-  private static class InsertIfNotExists extends AsyncTask<Void, Void, Void> {
+  @SuppressLint("StaticFieldLeak")
+  private static class InsertIfNotExists extends AsyncTask<Void, Void, Boolean> {
 
     private final DataSnapshot mSnapshot;
+    private final Context mContext;
 
-    InsertIfNotExists(DataSnapshot snapshot) {
+    InsertIfNotExists(DataSnapshot snapshot, Context context) {
       mSnapshot = snapshot;
+      mContext = context;
     }
 
     @Override
-    protected Void doInBackground(Void... voids) {
-      if (database.programDao().idExists(Integer.parseInt(mSnapshot.getKey())) == 0) {
-        new InsertHabitTask(mSnapshot).execute();
-      } else {
-        Log.i("DatabaseContains", "Program already added");
+    protected Boolean doInBackground(Void... voids) {
+      boolean exists = database.programDao().idExists(Integer.parseInt(mSnapshot.getKey())) == 0;
+      if (exists) {
+        new InsertHabitTask(mSnapshot, mContext).execute();
       }
-      return null;
+      return exists;
     }
   }
 
@@ -126,14 +150,18 @@ public class ProgramFragment extends Fragment {
     }
   }
 
+  @SuppressLint("StaticFieldLeak")
   private static class InsertHabitTask extends AsyncTask<Void, Void, Long> {
 
     private final DataSnapshot dataSnapshot;
+    private final Context context;
 
-    InsertHabitTask(DataSnapshot dataSnapshot) {
+    InsertHabitTask(DataSnapshot dataSnapshot, Context context) {
       this.dataSnapshot = dataSnapshot;
+      this.context = context;
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Override
     protected Long doInBackground(Void... voids) {
       Log.i("DatabaseContains", "New program added");
@@ -156,13 +184,17 @@ public class ProgramFragment extends Fragment {
     @Override
     protected void onPostExecute(Long id) {
       super.onPostExecute(id);
+      NotificationReceiver notificationService = new NotificationReceiver();
+      notificationService.setAlarm(context, id,
+          dataSnapshot.child("habit").child("question").getValue(String.class));
+
       List<Achievement> achievements = createAchievementList(dataSnapshot.child("achievements"));
 
       Log.i("ID", dataSnapshot.getKey());
       Program program = new Program(
           Integer.valueOf(dataSnapshot.getKey()),
           dataSnapshot.child("name").getValue(String.class),
-          String.format("%s SUCCESS", dataSnapshot.child("success").getValue(String.class)),
+          dataSnapshot.child("success").getValue(String.class),
           id,
           achievements
       );

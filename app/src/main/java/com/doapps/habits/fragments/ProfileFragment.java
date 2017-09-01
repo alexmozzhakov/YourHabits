@@ -1,7 +1,5 @@
 package com.doapps.habits.fragments;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.arch.lifecycle.LifecycleFragment;
 import android.content.Context;
 import android.content.Intent;
@@ -9,14 +7,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.Toolbar;
-import android.text.InputType;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,7 +23,7 @@ import com.doapps.habits.activity.MainActivity;
 import com.doapps.habits.data.AvatarData;
 import com.doapps.habits.helper.PicassoRoundedTransformation;
 import com.doapps.habits.listeners.ProfileAvatarListener;
-import com.doapps.habits.models.DeleteCompleteListener;
+import com.doapps.habits.models.UserRemoveCompleteListener;
 import com.doapps.habits.slider.swipeselector.PixelUtils;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -35,20 +31,18 @@ import com.facebook.FacebookException;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
+import java.io.File;
 import java.util.Arrays;
 
 public class ProfileFragment extends LifecycleFragment {
 
   private static final boolean[] editorOpened = new boolean[1];
   private static final String TAG = ProfileFragment.class.getSimpleName();
-  private static final int DIALOG_MIN_LENGTH = 6;
   public static FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-  private static int mDialogTextLength;
 
   static boolean[] getEditorOpened() {
     return editorOpened;
@@ -84,14 +78,29 @@ public class ProfileFragment extends LifecycleFragment {
           .getSharedPreferences("pref", Context.MODE_PRIVATE)
           .getString("location", ""));
 
-      Uri avatarUri = AvatarData.getInstance().getValue();
+      Uri avatarUri = AvatarData.INSTANCE.getValue(getContext().getApplicationContext());
       if (avatarUri != null) {
-        Log.i(TAG, String.valueOf(avatarUri));
-        Picasso.with(getContext().getApplicationContext())
-            .load(avatarUri)
-            .transform(new PicassoRoundedTransformation())
-            .fit().centerInside()
-            .into(avatar);
+        String localAvatarUri =
+            getActivity().getApplicationContext().getSharedPreferences("pref", Context.MODE_PRIVATE)
+                .getString("avatar", null);
+
+        if (localAvatarUri != null) {
+          File optimalFile = new File(localAvatarUri);
+          Log.i(TAG, String.valueOf(localAvatarUri));
+          Picasso.with(getContext().getApplicationContext())
+              .load(optimalFile)
+              .transform(new PicassoRoundedTransformation())
+              .fit().centerInside()
+              .into(avatar);
+        } else {
+          Log.i(TAG, String.valueOf(avatarUri));
+          Picasso.with(getContext().getApplicationContext())
+              .load(avatarUri)
+              .transform(new PicassoRoundedTransformation())
+              .fit().centerInside()
+              .into(avatar);
+
+        }
       } else {
         Log.w(TAG, "no avatar");
         plus.setVisibility(View.VISIBLE);
@@ -141,21 +150,13 @@ public class ProfileFragment extends LifecycleFragment {
                         Log.d("FA", "linkWithCredential:onComplete:" + task.isSuccessful());
                       }
 
-                      getActivity()
-                          .getSharedPreferences("pref", Context.MODE_PRIVATE)
-                          .edit()
-                          .putString(user.getUid(), result.getAccessToken().getUserId())
-                          .apply();
-
                       if (task.isSuccessful()) {
                         Toast.makeText(getContext().getApplicationContext(),
-                            task.getResult() +
-                                " Successfully connected with Facebook",
+                            task.getResult() + " Successfully connected with Facebook",
                             Toast.LENGTH_SHORT).show();
                       } else {
                         Toast.makeText(getContext().getApplicationContext(),
-                            "Authentication failed.",
-                            Toast.LENGTH_SHORT).show();
+                            "Authentication failed", Toast.LENGTH_SHORT).show();
                       }
                     });
               }
@@ -180,87 +181,12 @@ public class ProfileFragment extends LifecycleFragment {
       name.setText(user.getDisplayName());
       email.setText(user.getEmail());
 
-      btnDelete.setOnClickListener(view -> deleteUser(user));
-      AvatarData.getInstance().observe(this,
+      btnDelete.setOnClickListener(view -> user.delete()
+          .addOnCompleteListener(new UserRemoveCompleteListener(getActivity())));
+      AvatarData.INSTANCE.observe(this,
           new ProfileAvatarListener(getContext(), avatar, getActivity(), this, plus));
     }
 
     return result;
-  }
-
-  private void deleteUser(FirebaseUser user) {
-    if (MainActivity.Companion.isFacebook(user)) {
-      LoginManager.getInstance().logInWithReadPermissions(getActivity(),
-          Arrays.asList("email", "public_profile"));
-      CallbackManager callbackManager = ((MainActivity) getActivity()).getCallbackManager();
-      LoginManager.getInstance().registerCallback(callbackManager, new FacebookCall(getActivity()));
-    } else {
-      AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-      builder.setTitle("Please re-enter your password");
-      EditText input = new EditText(getContext());
-
-      input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-      builder.setView(input);
-
-      // Set up the buttons
-      builder.setPositiveButton("OK", (dialog, which) -> {
-        String inputPassword = input.getText().toString();
-        if (!inputPassword.isEmpty() && user.getEmail() != null) {
-          AuthCredential credential = EmailAuthProvider
-              .getCredential(user.getEmail(), inputPassword);
-          user.reauthenticate(credential).addOnCompleteListener(task ->
-              user.delete().addOnCompleteListener(
-                  new DeleteCompleteListener(getActivity(), user)));
-        } else if (inputPassword.isEmpty()) {
-          Toast.makeText(getContext().getApplicationContext(), "Password was empty",
-              Toast.LENGTH_SHORT).show();
-        }
-      }).setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
-      AlertDialog dialog = builder.create();
-      dialog.show();
-
-      input.setOnKeyListener((view, i, keyEvent) -> {
-        mDialogTextLength++;
-        if (mDialogTextLength > DIALOG_MIN_LENGTH) {
-          dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(true);
-        }
-        return false;
-      });
-    }
-  }
-
-  private static final class FacebookCall implements FacebookCallback<LoginResult> {
-
-    private final Activity activity;
-
-    private FacebookCall(Activity activity) {
-      this.activity = activity;
-    }
-
-    @Override
-    public void onSuccess(LoginResult result) {
-      if (BuildConfig.DEBUG) {
-        Log.d(TAG, "facebook:onSuccess:" + result);
-      }
-      AuthCredential credential = FacebookAuthProvider.getCredential(
-          result.getAccessToken().getToken());
-      user.reauthenticate(credential).addOnCompleteListener(task -> {
-        if (task.isSuccessful()) {
-          user.delete().addOnCompleteListener(new DeleteCompleteListener(activity, user));
-        } else if (BuildConfig.DEBUG) {
-          Log.i("FA", "error reauthorizing user");
-        }
-      });
-    }
-
-    @Override
-    public void onCancel() {
-      Log.d(TAG, "facebook:onCancel");
-    }
-
-    @Override
-    public void onError(FacebookException error) {
-      Log.d(TAG, "facebook:onError", error);
-    }
   }
 }

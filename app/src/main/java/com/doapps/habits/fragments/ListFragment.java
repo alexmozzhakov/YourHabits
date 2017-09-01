@@ -1,5 +1,6 @@
 package com.doapps.habits.fragments;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 import com.doapps.habits.R;
 import com.doapps.habits.activity.MainActivity;
@@ -78,6 +80,9 @@ public class ListFragment extends Fragment implements SearchView.OnQueryTextList
         searchView.setVisibility(View.VISIBLE);
         searchView.setOnQueryTextListener(this);
         searchView.setOnCloseListener(this);
+        EditText searchEditText = searchView
+            .findViewById(android.support.v7.appcompat.R.id.search_src_text);
+        searchEditText.setTextColor(Color.WHITE);
       }
     } catch (InterruptedException | ExecutionException e) {
       e.printStackTrace();
@@ -88,6 +93,16 @@ public class ListFragment extends Fragment implements SearchView.OnQueryTextList
 
   @Override
   public boolean onQueryTextSubmit(String s) {
+    return false;
+  }
+
+  @Override
+  public boolean onQueryTextChange(String s) {
+    performSearch(s);
+    return false;
+  }
+
+  private void performSearch(String s) {
     s = s.toLowerCase();
     List<Habit> habitList;
     try {
@@ -99,17 +114,11 @@ public class ListFragment extends Fragment implements SearchView.OnQueryTextList
         }
       }
       recycleAdapter = new HabitSearchAdapter(searchResult,
-          HabitListManager.getInstance(getContext()).getDatabase().habitDao());
+          HabitListManager.getInstance(getContext()));
       recyclerView.setAdapter(recycleAdapter);
     } catch (InterruptedException | ExecutionException e) {
       e.printStackTrace();
     }
-    return false;
-  }
-
-  @Override
-  public boolean onQueryTextChange(String s) {
-    return false;
   }
 
   @Override

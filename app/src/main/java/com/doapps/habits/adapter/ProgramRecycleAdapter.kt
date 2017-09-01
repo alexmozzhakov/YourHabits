@@ -44,7 +44,7 @@ class ProgramRecycleAdapter(private val mProgramList: List<IProgramViewProvider>
       mTitleTop.text = program.title
       mSuccessTop.visibility = View.VISIBLE
       mSuccessTop.text = program.snapshot.child("success").getValue(String::class.java)
-      mFragment.onClick(position)
+      mFragment.onClick(position + 1, program.snapshot)
     }
   }
 

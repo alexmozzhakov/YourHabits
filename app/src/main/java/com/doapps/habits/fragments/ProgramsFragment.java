@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -27,7 +28,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +47,7 @@ public class ProgramsFragment extends Fragment implements ClickableDataSnapshotF
   private TextView mSuccessTop;
   private ImageView mImageTop;
   private boolean isEmpty;
-  private DatabaseReference mRootRef;
+  private DataSnapshot topDataSnapshot;
 
   private static void createProgramApplyFragment(int position, FragmentManager fragmentManager) {
 
@@ -80,7 +80,7 @@ public class ProgramsFragment extends Fragment implements ClickableDataSnapshotF
       persistenceEnabled = true;
     }
 
-    mRootRef = FirebaseDatabase.getInstance().getReference().child("programs");
+    DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference().child("programs");
     View emptyView = result.findViewById(R.id.empty_view);
     RecyclerView recyclerView = result.findViewById(R.id.recyclerView);
     mImageTop = result.findViewById(R.id.imageViewTop);
@@ -90,7 +90,7 @@ public class ProgramsFragment extends Fragment implements ClickableDataSnapshotF
     SharedPreferences sharedPreferences = getActivity()
         .getSharedPreferences("pref", Context.MODE_PRIVATE);
 
-    NetworkInfo activeNetwork = conMan.getActiveNetworkInfo();
+    NetworkInfo activeNetwork = conMan != null ? conMan.getActiveNetworkInfo() : null;
     if (activeNetwork != null && activeNetwork.isConnected()) {
       sharedPreferences.edit().putBoolean("downloaded", true).apply();
       Log.i("FD", "User downloaded database");
@@ -118,7 +118,7 @@ public class ProgramsFragment extends Fragment implements ClickableDataSnapshotF
     mImageTop.setMaxHeight(result.getHeight() / 3);
     mTitleTop = result.findViewById(R.id.titleTop);
 
-    mRootRef.addChildEventListener(new ChildEventListener() {
+    rootRef.addChildEventListener(new ChildEventListener() {
       @Override
       public void onChildAdded(DataSnapshot dataSnapshot, String s) {
         int position = Integer.parseInt(dataSnapshot.getKey());
@@ -130,12 +130,12 @@ public class ProgramsFragment extends Fragment implements ClickableDataSnapshotF
             recyclerView.setVisibility(View.VISIBLE);
             mImageTop.setVisibility(View.VISIBLE);
           }
-          generateTopProgram();
+          topDataSnapshot = dataSnapshot;
+          generateTopProgram(topDataSnapshot);
         } else {
-          mProgramData.add(position - 1, new FirebaseProgramView(dataSnapshot));
+          mProgramData.add(--position, new FirebaseProgramView(dataSnapshot));
+          mAdapter.notifyItemInserted(position);
         }
-
-        mAdapter.notifyItemInserted(position - 1);
       }
 
       @Override
@@ -143,12 +143,14 @@ public class ProgramsFragment extends Fragment implements ClickableDataSnapshotF
         Log.i(TAG, "onChildChanged: ()");
         int position = Integer.parseInt(dataSnapshot.getKey()) - 1;
 
-        if (position >= 0) {
+        if (position > 0) {
           mProgramData.remove(position);
           mProgramData.add(position, new FirebaseProgramView(dataSnapshot));
+          mAdapter.notifyItemChanged(position);
+        } else {
+          topDataSnapshot = dataSnapshot;
+          generateTopProgram(topDataSnapshot);
         }
-
-        mAdapter.notifyItemChanged(position);
       }
 
       @Override
@@ -157,8 +159,24 @@ public class ProgramsFragment extends Fragment implements ClickableDataSnapshotF
         int position = Integer.parseInt(dataSnapshot.getKey()) - 1;
         if (position >= 0) {
           mProgramData.remove(position);
+          mAdapter.notifyItemRemoved(position);
+        } else {
+          IProgramViewProvider programViewProvider = mProgramData.get(0);
+          mTitleTop.setText(programViewProvider.getTitle());
+          String imageLink = programViewProvider.getImageLink();
+          Log.v("IMG_URL", imageLink);
+
+          if (getActivity() != null) {
+            Picasso.with(getActivity().getApplicationContext())
+                .load(imageLink)
+                .into(mImageTop);
+          }
+
+          //Style percent view
+          mSuccessTop.setText(programViewProvider.getPercent());
+          mProgramData.remove(0);
+          mAdapter.notifyItemRemoved(0);
         }
-        mAdapter.notifyItemRemoved(position);
       }
 
       @Override
@@ -175,61 +193,44 @@ public class ProgramsFragment extends Fragment implements ClickableDataSnapshotF
     return result;
   }
 
-  private void generateTopProgram() {
-    DatabaseReference programRef = mRootRef.child("0");
+  private void generateTopProgram(DataSnapshot dataSnapshot) {
+    mTitleTop.setText(dataSnapshot.child("name").getValue(String.class));
+    String imageLink = String.format("http://habit.esy.es/img_progs/%s.jpg",
+        dataSnapshot.child("image").getValue(String.class));
+    Log.v("IMG_URL", imageLink);
 
-    programRef.addValueEventListener(new ValueEventListener() {
+    if (getActivity() != null) {
+      Picasso.with(getActivity().getApplicationContext())
+          .load(imageLink)
+          .into(mImageTop);
+    }
 
-      @Override
-      public void onDataChange(DataSnapshot dataSnapshot) {
-        mTitleTop.setText(dataSnapshot.child("name").getValue(String.class));
-        String imageLink = String.format("http://habit.esy.es/img_progs/%s.jpg",
-            dataSnapshot.child("image").getValue(String.class));
-        Log.v("IMG_URL", imageLink);
-
-        if (getActivity() != null) {
-          Picasso.with(getActivity().getApplicationContext())
-              .load(imageLink)
-              .into(mImageTop);
-        }
-
-        if (isShowing) {
-          createProgramApplyFragment(0, getChildFragmentManager());
-        }
-
-        mImageTop.setOnClickListener(view -> {
-          onClick(-1);
-          isTop = true;
-        });
-        mTitleTop.setOnClickListener(view -> {
-          onClick(-1);
-          isTop = true;
-        });
-
-        //Style percent view
-        mSuccessTop.setVisibility(View.VISIBLE);
-        mSuccessTop.setText(dataSnapshot.child("success").getValue(String.class));
-      }
-
-      @Override
-      public void onCancelled(DatabaseError databaseError) {
-        Log.e("FirebaseError", databaseError.toString());
-      }
+    mImageTop.setOnClickListener(view -> {
+      onClick(0, dataSnapshot);
+      isTop = true;
     });
+    mTitleTop.setOnClickListener(view -> {
+      onClick(0, dataSnapshot);
+      isTop = true;
+    });
+
+    //Style percent view
+    mSuccessTop.setVisibility(View.VISIBLE);
+    mSuccessTop.setText(dataSnapshot.child("success").getValue(String.class));
   }
 
-  public void onClick(int position) {
+  public void onClick(int position, @NonNull DataSnapshot dataSnapshot) {
     FragmentManager fragmentManager = getChildFragmentManager();
     if (isShowing) {
       if (!isTop) {
-        generateTopProgram();
+        generateTopProgram(topDataSnapshot);
       }
       fragmentManager.beginTransaction()
           .remove(fragmentManager.findFragmentById(R.id.recyclerLayout))
           .commit();
       isShowing = false;
     } else {
-      createProgramApplyFragment(++position, fragmentManager);
+      createProgramApplyFragment(position, fragmentManager);
       isTop = false;
     }
   }

@@ -134,7 +134,6 @@ public class ProfileEditFragment extends Fragment {
               return;
             }
             if (MainActivity.Companion.isFacebook(user)) {
-              // TODO: 14/07/2016 change to working solution
               CallbackManager callbackManager =
                   ((MainActivity) getActivity()).getCallbackManager();
               LoginManager.getInstance().registerCallback(callbackManager,
@@ -154,7 +153,6 @@ public class ProfileEditFragment extends Fragment {
                     @Override
                     public void onCancel() {
                       Log.d(TAG, "facebook:onCancel");
-                      // ...
                     }
 
                     @Override
