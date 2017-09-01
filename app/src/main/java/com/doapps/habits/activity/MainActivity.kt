@@ -1,5 +1,6 @@
 package com.doapps.habits.activity
 
+import android.app.NotificationManager
 import android.arch.lifecycle.LifecycleActivity
 import android.content.Context
 import android.content.Intent
@@ -19,10 +20,12 @@ import android.widget.TextView
 import com.doapps.habits.R
 import com.doapps.habits.data.AvatarData
 import com.doapps.habits.fragments.*
+import com.doapps.habits.helper.HabitListManager
 import com.doapps.habits.helper.PicassoRoundedTransformation
 import com.doapps.habits.listeners.MenuAvatarListener
 import com.doapps.habits.listeners.NameChangeListener
-import com.doapps.habits.slider.swipeselector.PixelUtils
+import com.doapps.habits.models.Habit
+import com.doapps.habits.slider.swipeselector.dpToPixel
 import com.facebook.CallbackManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -42,35 +45,8 @@ class MainActivity : LifecycleActivity(), NavigationView.OnNavigationItemSelecte
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
     user = FirebaseAuth.getInstance().currentUser
-    toolbar = findViewById<Toolbar>(R.id.toolbar)
-
-    //        if (getIntent().getAction() != null) {
-    //            long id = getIntent().getLongExtra("id", 0);
-    //            Habit habit = HabitListManager.getInstance(this).getDatabase().habitDao().get(id);
-    //            if (getIntent().getAction().equals("no")) {
-    //                Log.i("Action", "No");
-    //                habit.setDoneMarker(false);
-    //                HabitListManager.getInstance(this).getDatabase().habitDao().update(habit);
-    //                getSupportFragmentManager()
-    //                        .beginTransaction()
-    //                        .add(R.id.content_frame, new ListFragment())
-    //                        .commit();
-    //                mLastFragment = R.id.nav_lists;
-    //            } else if (getIntent().getAction().equals("yes")) {
-    //                Log.i("Action", "Yes");
-    //                habit.setDoneMarker(true);
-    //                HabitListManager.getInstance(this).getDatabase().habitDao().update(habit);
-    //                getSupportFragmentManager()
-    //                        .beginTransaction()
-    //                        .add(R.id.content_frame, new ListFragment())
-    //                        .commit();
-    //                mLastFragment = R.id.nav_lists;
-    //            }
-    //            mToolbar.setTitle("List");
-    //            NotificationManager notificationManager = (NotificationManager)
-    //                    getSystemService(Context.NOTIFICATION_SERVICE);
-    //            notificationManager.cancel((int) id);
-    //        }
+    toolbar = findViewById(R.id.toolbar)
+    handleIntentAction()
 
     if (savedInstanceState == null && mLastFragment != R.id.nav_lists) {
       supportFragmentManager
@@ -81,7 +57,7 @@ class MainActivity : LifecycleActivity(), NavigationView.OnNavigationItemSelecte
       toolbar.title = "Home"
     }
 
-    mNavigationView = findViewById<NavigationView>(R.id.navigationView)
+    mNavigationView = findViewById(R.id.navigationView)
 
     if (user == null) {
       FirebaseAuth.getInstance().signInAnonymously().addOnCompleteListener { user = FirebaseAuth.getInstance().currentUser }
@@ -95,7 +71,7 @@ class MainActivity : LifecycleActivity(), NavigationView.OnNavigationItemSelecte
       }
     }
 
-    mDrawerLayout = findViewById<DrawerLayout>(R.id.drawer_layout)
+    mDrawerLayout = findViewById(R.id.drawer_layout)
     mDrawerToggle = object : ActionBarDrawerToggle(this, mDrawerLayout, toolbar,
         R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
       override fun onDrawerOpened(drawerView: View?) {
@@ -112,8 +88,28 @@ class MainActivity : LifecycleActivity(), NavigationView.OnNavigationItemSelecte
       actionBar!!.setHomeButtonEnabled(true)
     }
 
-    AvatarData.getInstance().observe(this,
-        MenuAvatarListener(this, applicationContext, mNavigationView))
+    AvatarData.observe(this, MenuAvatarListener(this, applicationContext, mNavigationView))
+  }
+
+  private fun handleIntentAction() {
+    if (intent.action == "no" || intent.action == "yes") {
+      val id: Long = intent.getLongExtra("id", 0)
+      val habit: Habit = HabitListManager.getInstance(this).get(id)
+      Log.i("Notification Action", intent.action)
+      when (intent.action) {
+        "yes" -> habit.isDoneMarker = true
+        "no" -> habit.isDoneMarker = false
+      }
+      HabitListManager.getInstance(this).update(habit)
+      val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+      notificationManager.cancel(id.toInt())
+      supportFragmentManager
+          .beginTransaction()
+          .add(R.id.content_frame, ListFragment())
+          .commit()
+      mLastFragment = R.id.nav_lists
+      toolbar.title = "List"
+    }
   }
 
   override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -132,14 +128,11 @@ class MainActivity : LifecycleActivity(), NavigationView.OnNavigationItemSelecte
 
       Handler().postDelayed({
         val transaction = supportFragmentManager.beginTransaction()
-        if (id == R.id.nav_home) {
-          transaction.replace(R.id.content_frame, HomeFragment()).commit()
-        } else if (id == R.id.nav_programs) {
-          transaction.replace(R.id.content_frame, ProgramsFragment()).commit()
-        } else if (id == R.id.nav_lists) {
-          transaction.replace(R.id.content_frame, ListFragment()).commit()
-        } else if (id == R.id.nav_profile) {
-          transaction.replace(R.id.content_frame, ProfileFragment()).commit()
+        when (id) {
+          R.id.nav_home -> transaction.replace(R.id.content_frame, HomeFragment()).commit()
+          R.id.nav_programs -> transaction.replace(R.id.content_frame, ProgramsFragment()).commit()
+          R.id.nav_lists -> transaction.replace(R.id.content_frame, ListFragment()).commit()
+          R.id.nav_profile -> transaction.replace(R.id.content_frame, ProfileFragment()).commit()
         }
         mLastFragment = id
       }, INFLATE_DELAY)
@@ -154,6 +147,7 @@ class MainActivity : LifecycleActivity(), NavigationView.OnNavigationItemSelecte
     mDrawerToggle.syncState()
   }
 
+  @Suppress("UNUSED_PARAMETER")
   fun toCreateFragment(view: View) {
     mNavigationView.menu.getItem(0).isChecked = false
     mNavigationView.menu.getItem(2).isChecked = false
@@ -165,6 +159,8 @@ class MainActivity : LifecycleActivity(), NavigationView.OnNavigationItemSelecte
         .commit()
 
   }
+
+  @Suppress("UNUSED_PARAMETER")
 
   private fun toProfile(view: View) {
     mDrawerLayout!!.closeDrawer(GravityCompat.START)
@@ -185,7 +181,7 @@ class MainActivity : LifecycleActivity(), NavigationView.OnNavigationItemSelecte
     }, INFLATE_DELAY)
   }
 
-  fun anonymousMenuSetup() {
+  private fun anonymousMenuSetup() {
     mNavigationView.setNavigationItemSelectedListener(this)
     mNavigationView.menu.getItem(0).isChecked = true
 
@@ -217,16 +213,17 @@ class MainActivity : LifecycleActivity(), NavigationView.OnNavigationItemSelecte
       val navEmail = mNavigationView.getHeaderView(0).findViewById<TextView>(R.id.email_info)
       navName.text = user.displayName
       navEmail.text = user.email
-      mNavigationView.getHeaderView(0).setOnClickListener({ this.toProfile(it) })
-      if (user.photoUrl != null) {
+      mNavigationView.getHeaderView(0).setOnClickListener({ toProfile(it) })
+      val uri = AvatarData.getValue(applicationContext)
+      if (uri != null) {
         mNavigationView.getHeaderView(0)
             .findViewById<View>(R.id.fields_info).setPadding(
-            PixelUtils.dpToPixel(this, 72f).toInt(), 0, 0, 0)
+            72f.dpToPixel(applicationContext), 0, 0, 0)
         val avatar = mNavigationView.getHeaderView(0).findViewById<ImageView>(R.id.profile_photo)
 
-        Log.i("updateMenuAvatar", user.photoUrl.toString())
+        Log.i("onSetupNavigationDrawer", uri.toString())
         Picasso.with(applicationContext)
-            .load(user.photoUrl)
+            .load(uri)
             .transform(PicassoRoundedTransformation())
             .into(avatar)
         avatar.visibility = View.VISIBLE
@@ -269,14 +266,10 @@ class MainActivity : LifecycleActivity(), NavigationView.OnNavigationItemSelecte
 
   override fun onBackPressed() {
     Log.d("CDA", "onBackPressed Called")
-    if (mLastFragment == R.id.nav_home)
-      finishAffinity()
+    if (mLastFragment == R.id.nav_home) finishAffinity()
+    if (mLastFragment == R.id.nav_profile) findViewById<View>(R.id.toolbar_shadow).visibility = View.VISIBLE
 
-    if (mLastFragment == R.id.nav_profile) {
-      findViewById<View>(R.id.toolbar_shadow).visibility = View.VISIBLE
-    }
-    supportFragmentManager.beginTransaction()
-        .replace(R.id.content_frame, HomeFragment()).commit()
+    supportFragmentManager.beginTransaction().replace(R.id.content_frame, HomeFragment()).commit()
     toolbar.setTitle(R.string.home)
     mLastFragment = R.id.nav_home
     mNavigationView.menu.getItem(0).isChecked = true

@@ -1,5 +1,6 @@
 package com.doapps.habits.helper;
 
+import android.annotation.SuppressLint;
 import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.os.AsyncTask;
@@ -39,6 +40,14 @@ public class HabitListManager {
     return (new GetTask()).execute().get();
   }
 
+  public Habit get(Long id) throws InterruptedException, ExecutionException {
+    return (new GetHabitTask()).execute(id).get();
+  }
+
+  public void update(Habit habit) throws InterruptedException, ExecutionException {
+    new UpdateTask().execute(habit);
+  }
+
   public void onItemDismiss(int position) {
     new DeleteTask().execute(position);
   }
@@ -57,10 +66,7 @@ public class HabitListManager {
     protected Void doInBackground(Integer... integers) {
       List<Habit> habits = habitsDatabase.habitDao().getAll();
       Habit habit = habits.get(integers[0]);
-//      if (habit.isProgram()) {
-        habitsDatabase.habitDao().delete(habit);
-//      }
-//      habits.remove(habit);
+      habitsDatabase.habitDao().delete(habit);
       return null;
     }
   }
@@ -80,6 +86,25 @@ public class HabitListManager {
     @Override
     protected List<Habit> doInBackground(Void... voids) {
       return habitsDatabase.habitDao().getAll();
+    }
+  }
+
+  private static class GetHabitTask extends AsyncTask<Long, Void, Habit> {
+
+    @Override
+    protected Habit doInBackground(Long... longs) {
+      return habitsDatabase.habitDao().get(longs[0]);
+    }
+  }
+
+
+  @SuppressLint("StaticFieldLeak")
+  private class UpdateTask extends AsyncTask<Habit, Void, Void> {
+
+    @Override
+    protected Void doInBackground(Habit[] habits) {
+      habitsDatabase.habitDao().update(habits[0]);
+      return null;
     }
   }
 }

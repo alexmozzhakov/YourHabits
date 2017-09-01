@@ -120,21 +120,15 @@ public class LoginFragment extends LifecycleFragment {
             mAuth.signInWithCredential(credential)
                 .addOnFailureListener(e -> {
                   Log.w(TAG, "signInWithCredential", e);
-                  Toast.makeText(getContext(), "Authentication failed.",
-                      Toast.LENGTH_SHORT).show();
+                  Toast.makeText(getContext(), "Authentication failed.", Toast.LENGTH_SHORT).show();
                 })
-                .addOnCompleteListener(task -> {
+                .addOnSuccessListener(task -> {
                   FirebaseUser user =
                       FirebaseAuth.getInstance().getCurrentUser();
-                  if (user != null && getContext().getSharedPreferences("pref",
-                      Context.MODE_PRIVATE).getString(user.getUid(), null) == null) {
-                    getContext()
-                        .getSharedPreferences("pref", Context.MODE_PRIVATE)
-                        .edit()
-                        .putString(user.getUid(), token.getUserId())
-                        .apply();
+                  if (user != null && user.getPhotoUrl() != null
+                      && user.getPhotoUrl().toString().contains("fbcdn.net")) {
 
-                    AvatarData.getInstance().setValue(
+                    AvatarData.INSTANCE.setValue(
                         Uri.parse(String.format("https://graph.facebook.com/%s/picture?type=large",
                             token.getUserId())));
                   }

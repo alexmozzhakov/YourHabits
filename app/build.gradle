@@ -11,7 +11,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 26
         versionCode 1
-        versionName "0.7.3"
+        versionName "0.8.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
@@ -45,19 +45,17 @@ dependencies {
     implementation "android.arch.lifecycle:runtime:$architectureComponentsVersion"
     implementation "android.arch.lifecycle:extensions:$architectureComponentsVersion"
     implementation "android.arch.persistence.room:runtime:$architectureComponentsVersion"
+    implementation 'com.squareup.picasso:picasso:2.5.2'
+    implementation "com.facebook.android:facebook-android-sdk:$facebookVersion"
+    implementation 'com.github.jakob-grabner:Circle-Progress-View:v1.3'
+    // Image Selector dependencies
+    implementation 'com.github.Nicrob64:ImageSelector:1.0.13'
+    // Firebase
     implementation "com.google.firebase:firebase-database:$firebaseVersion"
     implementation "com.google.firebase:firebase-auth:$firebaseVersion"
     implementation "com.google.firebase:firebase-crash:$firebaseVersion"
     implementation "com.google.firebase:firebase-perf:$firebaseVersion"
-    implementation 'com.firebase:firebase-jobdispatcher:0.7.0'
-    implementation 'com.squareup.picasso:picasso:2.5.2'
-    implementation "com.facebook.android:facebook-android-sdk:$facebookVersion"
-    implementation 'com.github.jakob-grabner:Circle-Progress-View:v1.3'
-    //Image Selector dependencies
-    implementation 'com.commit451:PhotoView:1.2.4'
-    implementation 'com.isseiaoki:simplecropview:1.0.13'
-    implementation 'com.github.bumptech.glide:glide:3.7.0'
-    implementation 'com.yongchun:com.yongchun.imageselector:1.1.0'
+
 
     annotationProcessor "android.arch.persistence.room:compiler:$architectureComponentsVersion"
     annotationProcessor "android.arch.lifecycle:compiler:$architectureComponentsVersion"

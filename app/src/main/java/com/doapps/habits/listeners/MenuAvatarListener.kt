@@ -13,6 +13,7 @@ import com.doapps.habits.R
 import com.doapps.habits.helper.PicassoRoundedTransformation
 import com.doapps.habits.slider.swipeselector.dpToPixel
 import com.squareup.picasso.Picasso
+import java.io.File
 
 class MenuAvatarListener(lifecycleOwner: LifecycleOwner, private val context: Context,
                          private val navigationView: NavigationView)
@@ -26,16 +27,29 @@ class MenuAvatarListener(lifecycleOwner: LifecycleOwner, private val context: Co
   internal fun cleanup() = lifecycle.removeObserver(this)
 
   override fun onChanged(uri: Uri?) {
+    val localAvatarUri =
+        context.applicationContext.getSharedPreferences("pref", Context.MODE_PRIVATE).getString("avatar", null)
+
+    val optimalFile = if (localAvatarUri != null) File(localAvatarUri) else null
+
     if (uri != null) {
       val avatar = navigationView.getHeaderView(0).findViewById<ImageView>(R.id.profile_photo)
       if (BuildConfig.DEBUG) {
-        Log.i("updateMenuAvatar", uri.toString())
+        Log.i("updateMenuAvatar", if (optimalFile == null) uri.toString() else localAvatarUri)
       }
-      Picasso.with(context.applicationContext).invalidate(uri)
-      Picasso.with(context.applicationContext)
-          .load(uri)
-          .transform(PicassoRoundedTransformation())
-          .into(avatar)
+      if (optimalFile == null) {
+        Picasso.with(context.applicationContext).invalidate(uri)
+        Picasso.with(context.applicationContext)
+            .load(uri)
+            .transform(PicassoRoundedTransformation())
+            .into(avatar)
+      } else {
+        Picasso.with(context.applicationContext)
+            .load(optimalFile)
+            .transform(PicassoRoundedTransformation())
+            .into(avatar)
+
+      }
       avatar.invalidate()
 
       val padding = 68f.dpToPixel(context)

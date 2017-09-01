@@ -1,12 +1,10 @@
 package com.doapps.habits.adapter
 
 import android.graphics.Color
-import android.os.AsyncTask
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.doapps.habits.R
-import com.doapps.habits.database.HabitsDatabase
 import com.doapps.habits.helper.HabitListManager
 import com.doapps.habits.helper.Progressing
 import com.doapps.habits.listeners.EmptyListListener
@@ -18,7 +16,6 @@ class HabitRecycleAdapter(private val movableHabitList: HabitListManager)
   : RecyclerView.Adapter<HabitViewHolder>(), IMovableListAdapter {
 
   private val habitList: MutableList<Habit> = movableHabitList.list
-  private val habitsDatabase: HabitsDatabase = movableHabitList.database
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HabitViewHolder {
     val view = LayoutInflater.from(parent.context).inflate(R.layout.habit_list_item, parent, false)
@@ -31,7 +28,7 @@ class HabitRecycleAdapter(private val movableHabitList: HabitListManager)
     holder.titleTextView.text = habit.title
     holder.checkBox.setOnClickListener {
       habit.isDoneMarker = holder.checkBox.isChecked
-      UpdateTask(habitsDatabase).execute(habit)
+      movableHabitList.update(habit)
       holder.titleTextView.setTextColor(if (habit.isDoneMarker) Color.GRAY else Color.BLACK)
       setProgressBar(habit, holder.progressBar)
     }
@@ -81,10 +78,6 @@ class HabitRecycleAdapter(private val movableHabitList: HabitListManager)
     } else {
       progressBar.setProgress(0)
     }
-  }
-
-  private class UpdateTask(val habitsDatabase: HabitsDatabase) : AsyncTask<Habit, Unit, Unit>() {
-    override fun doInBackground(vararg habits: Habit) = habitsDatabase.habitDao().update(habits[0])
   }
 }
 

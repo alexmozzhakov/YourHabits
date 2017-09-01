@@ -11,6 +11,7 @@ import android.widget.ImageView
 import com.doapps.habits.activity.EditPhotoActivity
 import com.doapps.habits.helper.PicassoRoundedTransformation
 import com.squareup.picasso.Picasso
+import java.io.File
 
 
 class ProfileAvatarListener(private val context: Context, private val avatar: ImageView,
@@ -23,15 +24,29 @@ class ProfileAvatarListener(private val context: Context, private val avatar: Im
   internal fun cleanup() = lifecycle.removeObserver(this)
 
   override fun onChanged(uri: Uri?) {
+    val localAvatarUri =
+        context.applicationContext.getSharedPreferences("pref", Context.MODE_PRIVATE).getString("avatar", null)
+
+    val optimalFile = if (localAvatarUri != null) File(localAvatarUri) else null
+
     if (uri != null) {
       Log.i(TAG, "Avatar update detected")
-      Picasso.with(context.applicationContext)
-          .invalidate(uri)
-      Picasso.with(context.applicationContext)
-          .load(uri)
-          .transform(PicassoRoundedTransformation())
-          .fit().centerInside()
-          .into(avatar)
+
+      if (optimalFile == null) {
+        Picasso.with(context.applicationContext).invalidate(uri)
+        Picasso.with(context.applicationContext)
+            .load(uri)
+            .transform(PicassoRoundedTransformation())
+            .fit().centerInside()
+            .into(avatar)
+      } else {
+        Picasso.with(context.applicationContext)
+            .load(optimalFile)
+            .transform(PicassoRoundedTransformation())
+            .fit().centerInside()
+            .into(avatar)
+
+      }
       avatar.invalidate()
       plus.visibility = View.INVISIBLE
     } else {

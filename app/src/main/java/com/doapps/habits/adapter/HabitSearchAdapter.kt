@@ -5,13 +5,13 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.doapps.habits.R
-import com.doapps.habits.dao.HabitDao
 import com.doapps.habits.database.HabitsDatabase
+import com.doapps.habits.helper.HabitListManager
 import com.doapps.habits.models.Habit
 import com.doapps.habits.view.holders.HabitViewHolder
 import java.util.*
 
-class HabitSearchAdapter(private val habitList: List<Habit>, private val habitsDatabase: HabitDao)
+class HabitSearchAdapter(private val habitList: List<Habit>, private val habitsDatabase: HabitListManager)
   : RecyclerView.Adapter<HabitViewHolder>(), IMovableListAdapter {
 
   // ignored
@@ -30,8 +30,7 @@ class HabitSearchAdapter(private val habitList: List<Habit>, private val habitsD
     holder.checkBox.setOnClickListener {
       if (holder.checkBox.isChecked) {
         habit.isDoneMarker = true
-        if (HabitsDatabase.mustHaveFollowed(habit))
-          habit.followingFrom = System.currentTimeMillis()
+        if (HabitsDatabase.mustHaveFollowed(habit)) habit.followingFrom = System.currentTimeMillis()
         habitsDatabase.update(habit)
         holder.titleTextView.setTextColor(Color.GRAY)
       } else {

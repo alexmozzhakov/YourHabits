@@ -34,9 +34,7 @@ public class MainActivityTest {
 
   @Test
   public void createAndDeleteHabit() {
-//        Screengrab.screenshot("app_open");
     onView(withId(R.id.fab)).perform(click());
-//        Screengrab.screenshot("after_click");
     onView(withId(R.id.edit_title)).perform(typeText("Running"));
     onView(withId(R.id.edit_time)).perform(typeText("50"));
     onView(withId(R.id.edit_time)).perform(pressImeActionButton());
