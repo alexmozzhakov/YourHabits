@@ -66,6 +66,9 @@ public class HabitListManager {
     protected Void doInBackground(Integer... integers) {
       List<Habit> habits = habitsDatabase.habitDao().getAll();
       Habit habit = habits.get(integers[0]);
+      if (habit.isProgram()) {
+        programDatabase.programDao().delete(habit.getId());
+      }
       habitsDatabase.habitDao().delete(habit);
       return null;
     }
