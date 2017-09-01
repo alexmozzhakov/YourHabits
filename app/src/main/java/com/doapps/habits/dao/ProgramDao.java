@@ -18,4 +18,7 @@ public interface ProgramDao {
 
   @Query("SELECT EXISTS(SELECT 1 FROM program WHERE id = :id LIMIT 1)")
   int idExists(int id);
+
+  @Query("DELETE FROM program WHERE habit_id = :habitId")
+  void delete(int habitId);
 }
