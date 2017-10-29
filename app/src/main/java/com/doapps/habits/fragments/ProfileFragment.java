@@ -1,11 +1,10 @@
 package com.doapps.habits.fragments;
 
-import android.arch.lifecycle.LifecycleFragment;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
@@ -21,7 +20,6 @@ import com.doapps.habits.R;
 import com.doapps.habits.activity.EditPhotoActivity;
 import com.doapps.habits.activity.MainActivity;
 import com.doapps.habits.data.AvatarData;
-import com.doapps.habits.helper.PicassoRoundedTransformation;
 import com.doapps.habits.listeners.ProfileAvatarListener;
 import com.doapps.habits.models.UserRemoveCompleteListener;
 import com.doapps.habits.slider.swipeselector.PixelUtils;
@@ -34,11 +32,9 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.squareup.picasso.Picasso;
-import java.io.File;
 import java.util.Arrays;
 
-public class ProfileFragment extends LifecycleFragment {
+public class ProfileFragment extends Fragment {
 
   private static final boolean[] editorOpened = new boolean[1];
   private static final String TAG = ProfileFragment.class.getSimpleName();
@@ -78,36 +74,15 @@ public class ProfileFragment extends LifecycleFragment {
           .getSharedPreferences("pref", Context.MODE_PRIVATE)
           .getString("location", ""));
 
-      Uri avatarUri = AvatarData.INSTANCE.getValue(getContext().getApplicationContext());
-      if (avatarUri != null) {
-        String localAvatarUri =
-            getActivity().getApplicationContext().getSharedPreferences("pref", Context.MODE_PRIVATE)
-                .getString("avatar", null);
-
-        if (localAvatarUri != null) {
-          File optimalFile = new File(localAvatarUri);
-          Log.i(TAG, String.valueOf(localAvatarUri));
-          Picasso.with(getContext().getApplicationContext())
-              .load(optimalFile)
-              .transform(new PicassoRoundedTransformation())
-              .fit().centerInside()
-              .into(avatar);
-        } else {
-          Log.i(TAG, String.valueOf(avatarUri));
-          Picasso.with(getContext().getApplicationContext())
-              .load(avatarUri)
-              .transform(new PicassoRoundedTransformation())
-              .fit().centerInside()
-              .into(avatar);
-
-        }
-      } else {
+      if (!AvatarData.INSTANCE.hasAvatar(getContext().getApplicationContext())) {
         Log.w(TAG, "no avatar");
         plus.setVisibility(View.VISIBLE);
         plus.setOnClickListener(view -> {
           Intent intent = new Intent(getActivity(), EditPhotoActivity.class);
           startActivity(intent);
         });
+      } else {
+        AvatarData.INSTANCE.getAvatar(getContext().getApplicationContext(), avatar);
       }
 
       if (MainActivity.Companion.isFacebook(user) || user.getPhotoUrl() != null) {
@@ -174,8 +149,7 @@ public class ProfileFragment extends LifecycleFragment {
         // set up facebook btn
         btnFacebook.setOnClickListener(view ->
             LoginManager.getInstance().
-                logInWithReadPermissions(getActivity(),
-                    Arrays.asList("email", "public_profile")));
+                logInWithReadPermissions(getActivity(), Arrays.asList("email", "public_profile")));
       }
 
       name.setText(user.getDisplayName());

@@ -56,7 +56,6 @@ class ProfileAvatarListener(private val context: Context, private val avatar: Im
         activity.startActivity(Intent(activity, EditPhotoActivity::class.java))
       }
     }
-
   }
 
   companion object {

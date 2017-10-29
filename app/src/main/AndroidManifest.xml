@@ -14,7 +14,7 @@
     android:allowBackup="true"
     android:configChanges="orientation"
     android:fullBackupContent="true"
-    android:icon="@drawable/ic_launcher"
+    android:icon="@mipmap/ic_launcher"
     android:label="@string/app_name"
     android:screenOrientation="landscape"
     android:supportsRtl="true"
@@ -57,7 +57,7 @@
 
     <service
       android:exported="false"
-      android:name=".receivers.NotificationIntentService">
+      android:name=".services.NotificationIntentService">
     </service>
 
   </application>

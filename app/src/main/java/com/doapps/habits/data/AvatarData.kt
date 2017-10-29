@@ -4,8 +4,13 @@ import android.arch.lifecycle.LiveData
 import android.content.Context
 import android.net.Uri
 import android.util.Log
+import android.view.View
+import android.widget.ImageView
+import com.doapps.habits.helper.PicassoRoundedTransformation
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
+import com.squareup.picasso.Picasso
+import java.io.File
 
 object AvatarData : LiveData<Uri>() {
   private var value: Uri? = null
@@ -20,20 +25,31 @@ object AvatarData : LiveData<Uri>() {
     else -> value
   }
 
+  fun hasAvatar(context: Context): Boolean = context.getSharedPreferences("pref", Context.MODE_PRIVATE).getString("avatar", null) != null || FirebaseAuth.getInstance().currentUser?.photoUrl != null
 
-  fun getValue(context: Context): Uri? {
-    if (value == null) {
+  fun getAvatar(context: Context, imageView: ImageView) {
+    val localAvatarUri = context.getSharedPreferences("pref", Context.MODE_PRIVATE).getString("avatar", null)
+    if (localAvatarUri != null) {
+      val optimalFile = File(localAvatarUri)
+      Log.i(TAG, localAvatarUri.toString())
+      Picasso.with(context)
+          .load(optimalFile)
+          .transform(PicassoRoundedTransformation())
+          .fit().centerInside()
+          .into(imageView)
+    } else {
       val user = FirebaseAuth.getInstance().currentUser
       if (user != null) {
-        val avatarLocalPath = context.getSharedPreferences("pref", Context.MODE_PRIVATE).getString("avatar", null)
-        value = when (avatarLocalPath) {
-          null -> user.photoUrl
-          else -> Uri.parse(avatarLocalPath)
+        value = user.photoUrl
+        if (value != null) {
+          Picasso.with(context)
+              .load(value)
+              .transform(PicassoRoundedTransformation())
+              .into(imageView)
+          imageView.visibility = View.VISIBLE
         }
       }
-
     }
-    return value
   }
 
   public override fun setValue(value: Uri) {
@@ -48,5 +64,10 @@ object AvatarData : LiveData<Uri>() {
     }
     Log.i(TAG, "New value is " + value)
     super.setValue(value)
+  }
+
+  fun clear(context: Context) {
+    this.value = null
+    context.getSharedPreferences("pref", Context.MODE_PRIVATE).edit().remove("avatar").apply()
   }
 }
