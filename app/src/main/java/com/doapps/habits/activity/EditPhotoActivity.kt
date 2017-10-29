@@ -1,7 +1,6 @@
 package com.doapps.habits.activity
 
 import android.Manifest
-import android.arch.lifecycle.LifecycleActivity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager.PERMISSION_GRANTED
@@ -11,6 +10,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
+import android.support.v7.app.AppCompatActivity
 import android.util.Base64
 import android.util.Log
 import android.widget.Toast
@@ -26,9 +26,9 @@ import com.yongchun.library.view.ImageSelectorActivity
 import java.io.ByteArrayOutputStream
 import java.util.*
 
-class EditPhotoActivity : LifecycleActivity() {
+class EditPhotoActivity : AppCompatActivity() {
   private lateinit var bitmap: Bitmap
-  private val REQUEST_IMAGE: Int = ImageSelectorActivity.REQUEST_IMAGE
+  private val requestImage: Int = ImageSelectorActivity.REQUEST_IMAGE
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -47,7 +47,7 @@ class EditPhotoActivity : LifecycleActivity() {
 
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
     super.onActivityResult(requestCode, resultCode, data)
-    if (requestCode == REQUEST_IMAGE) {
+    if (requestCode == requestImage) {
       if (resultCode == RESULT_OK) {
         // Get the result list of select image paths
 

@@ -8,19 +8,17 @@ import android.support.design.widget.NavigationView
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
-import com.doapps.habits.BuildConfig
 import com.doapps.habits.R
 import com.doapps.habits.helper.PicassoRoundedTransformation
 import com.doapps.habits.slider.swipeselector.dpToPixel
 import com.squareup.picasso.Picasso
 import java.io.File
 
-class MenuAvatarListener(lifecycleOwner: LifecycleOwner, private val context: Context,
-                         private val navigationView: NavigationView)
-  : LifecycleObserver, Observer<Uri> {
 
-  private val lifecycle: Lifecycle =
-      lifecycleOwner.lifecycle.apply { addObserver(this@MenuAvatarListener) }
+class MenuAvatarListener(lifecycleOwner: LifecycleOwner,
+                         private val context: Context,
+                         private val navigationView: NavigationView) : LifecycleObserver, Observer<Uri> {
+  private val lifecycle: Lifecycle = lifecycleOwner.lifecycle
 
 
   @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
@@ -33,10 +31,9 @@ class MenuAvatarListener(lifecycleOwner: LifecycleOwner, private val context: Co
     val optimalFile = if (localAvatarUri != null) File(localAvatarUri) else null
 
     if (uri != null) {
+      Log.i(TAG, "Avatar update detected")
+
       val avatar = navigationView.getHeaderView(0).findViewById<ImageView>(R.id.profile_photo)
-      if (BuildConfig.DEBUG) {
-        Log.i("updateMenuAvatar", if (optimalFile == null) uri.toString() else localAvatarUri)
-      }
       if (optimalFile == null) {
         Picasso.with(context.applicationContext).invalidate(uri)
         Picasso.with(context.applicationContext)

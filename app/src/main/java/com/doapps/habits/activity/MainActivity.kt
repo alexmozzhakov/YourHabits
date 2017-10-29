@@ -1,7 +1,6 @@
 package com.doapps.habits.activity
 
 import android.app.NotificationManager
-import android.arch.lifecycle.LifecycleActivity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -10,6 +9,7 @@ import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.MenuItem
@@ -21,7 +21,6 @@ import com.doapps.habits.R
 import com.doapps.habits.data.AvatarData
 import com.doapps.habits.fragments.*
 import com.doapps.habits.helper.HabitListManager
-import com.doapps.habits.helper.PicassoRoundedTransformation
 import com.doapps.habits.listeners.MenuAvatarListener
 import com.doapps.habits.listeners.NameChangeListener
 import com.doapps.habits.models.Habit
@@ -29,9 +28,8 @@ import com.doapps.habits.slider.swipeselector.dpToPixel
 import com.facebook.CallbackManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.squareup.picasso.Picasso
 
-class MainActivity : LifecycleActivity(), NavigationView.OnNavigationItemSelectedListener {
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
   val callbackManager: CallbackManager = CallbackManager.Factory.create()
   private var mLastFragment = -1
   private lateinit var mNavigationView: NavigationView
@@ -74,7 +72,7 @@ class MainActivity : LifecycleActivity(), NavigationView.OnNavigationItemSelecte
     mDrawerLayout = findViewById(R.id.drawer_layout)
     mDrawerToggle = object : ActionBarDrawerToggle(this, mDrawerLayout, toolbar,
         R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
-      override fun onDrawerOpened(drawerView: View?) {
+      override fun onDrawerOpened(drawerView: View) {
         if (mLastFragment == R.id.nav_profile) {
           closeImm()
         }
@@ -161,7 +159,6 @@ class MainActivity : LifecycleActivity(), NavigationView.OnNavigationItemSelecte
   }
 
   @Suppress("UNUSED_PARAMETER")
-
   private fun toProfile(view: View) {
     mDrawerLayout!!.closeDrawer(GravityCompat.START)
 
@@ -214,19 +211,12 @@ class MainActivity : LifecycleActivity(), NavigationView.OnNavigationItemSelecte
       navName.text = user.displayName
       navEmail.text = user.email
       mNavigationView.getHeaderView(0).setOnClickListener({ toProfile(it) })
-      val uri = AvatarData.getValue(applicationContext)
-      if (uri != null) {
+      val avatar = mNavigationView.getHeaderView(0).findViewById<ImageView>(R.id.profile_photo)
+      if (AvatarData.hasAvatar(applicationContext)) {
+        AvatarData.getAvatar(applicationContext, avatar)
         mNavigationView.getHeaderView(0)
             .findViewById<View>(R.id.fields_info).setPadding(
             72f.dpToPixel(applicationContext), 0, 0, 0)
-        val avatar = mNavigationView.getHeaderView(0).findViewById<ImageView>(R.id.profile_photo)
-
-        Log.i("onSetupNavigationDrawer", uri.toString())
-        Picasso.with(applicationContext)
-            .load(uri)
-            .transform(PicassoRoundedTransformation())
-            .into(avatar)
-        avatar.visibility = View.VISIBLE
       }
     } else {
       Log.w("FirebaseAuth", "User is null")
@@ -241,6 +231,7 @@ class MainActivity : LifecycleActivity(), NavigationView.OnNavigationItemSelecte
       if (user!!.isAnonymous) {
         user!!.delete()
       } else {
+        AvatarData.clear(this)
         FirebaseAuth.getInstance().signOut()
         Log.i("FA", "user was signed out")
       }
@@ -273,6 +264,11 @@ class MainActivity : LifecycleActivity(), NavigationView.OnNavigationItemSelecte
     toolbar.setTitle(R.string.home)
     mLastFragment = R.id.nav_home
     mNavigationView.menu.getItem(0).isChecked = true
+  }
+
+  override fun onDestroy() {
+    super.onDestroy()
+    if (user!!.isAnonymous) user!!.delete()
   }
 
   companion object {

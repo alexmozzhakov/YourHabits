@@ -1,4 +1,4 @@
-package com.doapps.habits.receivers
+package com.doapps.habits.services
 
 import android.app.IntentService
 import android.app.NotificationManager

@@ -12,7 +12,7 @@
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
     android:hint="@string/hint_name"
-    android:textColorHint="@color/input_login_hint">
+    android:textColorHint="@color/grey_500">
 
     <android.support.design.widget.TextInputEditText
       android:id="@+id/full_name"
@@ -22,8 +22,8 @@
       android:paddingTop="5dp"
       android:paddingBottom="15dp"
       android:inputType="textCapWords"
-      android:textColor="@color/input_login"
-      android:textColorHint="@color/input_login_hint"
+      android:textColor="@color/grey_900"
+      android:textColorHint="@color/grey_500"
       android:textSize="20sp"
       android:theme="@style/EditTextTheme"/>
   </android.support.design.widget.TextInputLayout>
@@ -36,7 +36,7 @@
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
     android:hint="@string/hint_email"
-    android:textColorHint="@color/input_login_hint">
+    android:textColorHint="@color/grey_500">
 
     <android.support.design.widget.TextInputEditText
       android:id="@+id/email"
@@ -46,8 +46,8 @@
       android:paddingTop="5dp"
       android:paddingBottom="15dp"
       android:inputType="textEmailAddress"
-      android:textColor="@color/input_login"
-      android:textColorHint="@color/input_login_hint"
+      android:textColor="@color/grey_900"
+      android:textColorHint="@color/grey_500"
       android:textSize="20sp"
       android:theme="@style/EditTextTheme"/>
   </android.support.design.widget.TextInputLayout>
@@ -60,7 +60,7 @@
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
     android:hint="@string/hint_password"
-    android:textColorHint="@color/input_login_hint">
+    android:textColorHint="@color/grey_500">
 
     <android.support.design.widget.TextInputEditText
       android:id="@+id/password"
@@ -69,8 +69,8 @@
       android:paddingTop="5dp"
       android:paddingBottom="15dp"
       android:inputType="textPassword"
-      android:textColor="@color/input_login"
-      android:textColorHint="@color/input_login_hint"
+      android:textColor="@color/grey_900"
+      android:textColorHint="@color/grey_500"
       android:textSize="20sp"
       android:theme="@style/EditTextTheme"/>
   </android.support.design.widget.TextInputLayout>
@@ -109,7 +109,7 @@
       android:gravity="start|center_vertical"
       android:onClick="toTerms"
       android:text="@string/btn_terms_and_conditions"
-      android:textColor="@color/input_login_hint"
+      android:textColor="@color/grey_500"
       android:textSize="12sp"/>
 
     <!-- Link to Login Screen -->

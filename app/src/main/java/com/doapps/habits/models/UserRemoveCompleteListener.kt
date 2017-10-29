@@ -1,6 +1,7 @@
 package com.doapps.habits.models
 
 import android.app.AlertDialog
+import android.content.Intent
 import android.support.v4.app.FragmentActivity
 import android.text.InputType
 import android.util.Log
@@ -8,6 +9,7 @@ import android.widget.EditText
 import android.widget.Toast
 import com.doapps.habits.BuildConfig
 import com.doapps.habits.activity.MainActivity
+import com.doapps.habits.data.AvatarData
 import com.facebook.FacebookCallback
 import com.facebook.FacebookException
 import com.facebook.login.LoginManager
@@ -22,8 +24,8 @@ import java.util.*
 
 class UserRemoveCompleteListener(private val activity: FragmentActivity) : OnCompleteListener<Void> {
 
-  private val DIALOG_MIN_LENGTH = 6
   private var mDialogTextLength: Int = 0
+  private val dialogMinLength = 6
   private val user = FirebaseAuth.getInstance().currentUser!!
 
   override fun onComplete(task: Task<Void>) = when {
@@ -58,8 +60,6 @@ class UserRemoveCompleteListener(private val activity: FragmentActivity) : OnCom
               Log.d(TAG, "facebook:onError", error)
             }
           })
-//      LoginManager.getInstance()
-//          .registerCallback(callbackManager, ProfileFragment.FacebookRemoveCallback(activity))
     } else {
       val builder = AlertDialog.Builder(activity)
       builder.setTitle("Please re-enter your password")
@@ -84,7 +84,7 @@ class UserRemoveCompleteListener(private val activity: FragmentActivity) : OnCom
 
       input.setOnKeyListener { _, _, _ ->
         mDialogTextLength++
-        if (mDialogTextLength > DIALOG_MIN_LENGTH) {
+        if (mDialogTextLength > dialogMinLength) {
           dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = true
         }
         false
@@ -94,6 +94,7 @@ class UserRemoveCompleteListener(private val activity: FragmentActivity) : OnCom
 
   private fun onSuccess() {
     Log.d("FA", "User account deleted.")
-    activity.recreate()
+    AvatarData.clear(activity)
+    activity.startActivity(Intent(activity, MainActivity::class.java))
   }
 }

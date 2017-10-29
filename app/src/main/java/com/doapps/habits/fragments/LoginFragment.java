@@ -115,22 +115,24 @@ public class LoginFragment extends LifecycleFragment {
           }
 
           private void handleFacebookAccessToken(AccessToken token) {
-            AuthCredential credential =
-                FacebookAuthProvider.getCredential(token.getToken());
+            AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
             mAuth.signInWithCredential(credential)
-                .addOnFailureListener(e -> {
-                  Log.w(TAG, "signInWithCredential", e);
-                  Toast.makeText(getContext(), "Authentication failed.", Toast.LENGTH_SHORT).show();
-                })
-                .addOnSuccessListener(task -> {
-                  FirebaseUser user =
-                      FirebaseAuth.getInstance().getCurrentUser();
-                  if (user != null && user.getPhotoUrl() != null
-                      && user.getPhotoUrl().toString().contains("fbcdn.net")) {
+                .addOnCompleteListener(task -> {
+                  if (task.isSuccessful()) {
+                    FirebaseUser user =
+                        FirebaseAuth.getInstance().getCurrentUser();
+                    if (user != null && user.getPhotoUrl() != null && user.getPhotoUrl().toString()
+                        .contains("fbcdn.net")) {
 
-                    AvatarData.INSTANCE.setValue(
-                        Uri.parse(String.format("https://graph.facebook.com/%s/picture?type=large",
-                            token.getUserId())));
+                      AvatarData.INSTANCE.setValue(
+                          Uri.parse(
+                              String.format("https://graph.facebook.com/%s/picture?type=large",
+                                  token.getUserId())));
+                    }
+                  } else {
+                    Log.w(TAG, "signInWithCredential", task.getException());
+                    Toast.makeText(getContext(), "Authentication failed.", Toast.LENGTH_SHORT)
+                        .show();
                   }
                 });
           }
