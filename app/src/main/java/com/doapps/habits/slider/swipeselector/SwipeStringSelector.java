@@ -99,7 +99,7 @@ public class SwipeStringSelector extends FrameLayout implements IStringSelector 
    * @param listener the listener that gets fired on item selection
    */
   @Override
-  public void setOnItemSelectedListener(@NonNull IOnItemSelectedListener<String> listener) {
+  public void setOnItemSelectedListener(@NonNull IOnItemSelectedListener<? super String> listener) {
     mAdapter.setOnItemSelectedListener(listener);
   }
 

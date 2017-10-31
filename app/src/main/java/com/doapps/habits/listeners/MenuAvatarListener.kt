@@ -8,6 +8,7 @@ import android.support.design.widget.NavigationView
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
+import com.doapps.habits.BuildConfig
 import com.doapps.habits.R
 import com.doapps.habits.helper.PicassoRoundedTransformation
 import com.doapps.habits.slider.swipeselector.dpToPixel
@@ -31,7 +32,7 @@ class MenuAvatarListener(lifecycleOwner: LifecycleOwner,
     val optimalFile = if (localAvatarUri != null) File(localAvatarUri) else null
 
     if (uri != null) {
-      Log.i(TAG, "Avatar update detected")
+      if (BuildConfig.DEBUG) Log.i(TAG, "Avatar update detected")
 
       val avatar = navigationView.getHeaderView(0).findViewById<ImageView>(R.id.profile_photo)
       if (optimalFile == null) {
@@ -57,9 +58,8 @@ class MenuAvatarListener(lifecycleOwner: LifecycleOwner,
       } else {
         fieldsInfo.setPadding(padding, 0, 0, 0)
       }
-    } else {
-      Log.e(TAG, "URI is null")
-    }
+    } else if (BuildConfig.DEBUG) Log.e(TAG, "URI is null")
+
   }
 
   companion object {

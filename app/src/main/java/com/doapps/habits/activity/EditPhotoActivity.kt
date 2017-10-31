@@ -19,6 +19,7 @@ import com.android.volley.RetryPolicy
 import com.android.volley.VolleyError
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import com.doapps.habits.BuildConfig
 import com.doapps.habits.data.AvatarData
 import com.google.firebase.auth.FirebaseAuth
 import com.squareup.picasso.Picasso
@@ -55,7 +56,7 @@ class EditPhotoActivity : AppCompatActivity() {
         val images = data.getSerializableExtra(ImageSelectorActivity.REQUEST_OUTPUT) as ArrayList<String>
         getSharedPreferences("pref", Context.MODE_PRIVATE).edit().putString("avatar", images[0]).apply()
         bitmap = BitmapFactory.decodeFile(images[0])
-        Log.i(TAG, String.format("%.2f Mb image is going to upload", bitmap.byteCount / 10e6))
+        if (BuildConfig.DEBUG) Log.i(TAG, String.format("%.2f Mb image is going to upload", bitmap.byteCount / 10e6))
         uploadImage()
       } else {
         finish()

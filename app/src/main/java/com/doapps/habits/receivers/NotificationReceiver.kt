@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import com.doapps.habits.BuildConfig
 import com.doapps.habits.services.NotificationIntentService
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -13,7 +14,8 @@ import java.util.concurrent.TimeUnit
 class NotificationReceiver : BroadcastReceiver() {
 
   override fun onReceive(context: Context, intent: Intent) {
-    Log.i("NotificationReceiver", "received for id = ${intent.extras.getLong("id")}")
+    if (BuildConfig.DEBUG)
+      Log.i("NotificationReceiver", "received for id = ${intent.extras.getLong("id")}")
     val notificationIntent = Intent(context, NotificationIntentService::class.java)
     notificationIntent.putExtra("id", intent.extras.getLong("id"))
     notificationIntent.putExtra("question", intent.extras.getString("question"))
@@ -43,7 +45,7 @@ class NotificationReceiver : BroadcastReceiver() {
     val minuteOff = 0
     val startMs = TimeUnit.MINUTES.toMillis((60L + minuteOff - minute) % 60) +
         TimeUnit.HOURS.toMillis((24L + hourOff - hour) % 24)
-    Log.i(TAG, "Starts in ${startMs / 1000} seconds")
+    if (BuildConfig.DEBUG) Log.i(TAG, "Starts in ${startMs / 1000} seconds")
     am.setRepeating(AlarmManager.RTC, System.currentTimeMillis() + startMs, AlarmManager.INTERVAL_DAY, pi)
   }
 

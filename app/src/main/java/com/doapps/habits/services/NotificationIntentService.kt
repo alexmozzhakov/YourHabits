@@ -8,15 +8,19 @@ import android.content.Intent
 import android.graphics.Color
 import android.support.v4.app.NotificationCompat
 import android.util.Log
+import com.doapps.habits.BuildConfig
 import com.doapps.habits.R
 import com.doapps.habits.activity.MainActivity
 
 class NotificationIntentService : IntentService("NotificationIntentService") {
   override fun onHandleIntent(intent: Intent) {
     val id = intent.extras.getLong("id", 0)
-    Log.i("NotificationService", "Passed id = $id")
     val question = intent.extras.getString("question", "")
-    Log.i("NotificationService", "Passed question = $question")
+    if (BuildConfig.DEBUG) {
+      Log.i("NotificationService", "Passed id = $id")
+      Log.i("NotificationService", "Passed question = $question")
+    }
+
     val resultIntent = Intent(this, MainActivity::class.java)
     val resultPendingIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_CANCEL_CURRENT)
 
