@@ -15,7 +15,7 @@ object DayFilter {
       val freq = habitIterator.next().frequencyArray
 
       if (!freq.isEmpty() && freq.size > 2 && notToday(freq, dayOfWeek)) habitIterator.remove()
-      else if (BuildConfig.DEBUG) Log.w("filterListByDay()", "frequency not set")
+      else if (freq.isEmpty() && BuildConfig.DEBUG) Log.w("filterListByDay()", "frequency not set")
     }
   }
 
@@ -26,7 +26,7 @@ object DayFilter {
       val freq = habitIterator.next().frequencyArray
 
       if (!freq.isEmpty() && !isEveryday(freq) && (once(freq) || notToday(freq, dayOfWeek))) habitIterator.remove()
-      else if (BuildConfig.DEBUG) Log.w("filterListByDay()", "frequency not set")
+      else if (freq.isEmpty() && BuildConfig.DEBUG) Log.w("filterListByDay()", "frequency not set")
     }
   }
 
