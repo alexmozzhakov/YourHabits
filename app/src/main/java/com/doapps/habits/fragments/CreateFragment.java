@@ -148,7 +148,9 @@ public class CreateFragment extends Fragment implements AdapterView.OnItemSelect
 
     @Override
     protected Long doInBackground(Habit... habit) {
-      Log.i("DatabaseContains", "New program added");
+      if (BuildConfig.DEBUG) {
+        Log.i("DatabaseContains", "New program added");
+      }
       return habitsDatabase.insert(habit[0]);
     }
 

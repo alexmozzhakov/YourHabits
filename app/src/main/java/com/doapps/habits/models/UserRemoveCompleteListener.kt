@@ -43,9 +43,7 @@ class UserRemoveCompleteListener(private val activity: FragmentActivity) : OnCom
             private val TAG: String = "FacebookCallback"
 
             override fun onSuccess(result: LoginResult) {
-              if (BuildConfig.DEBUG) {
-                Log.d(TAG, "facebook:onSuccess:" + result)
-              }
+              if (BuildConfig.DEBUG) Log.d(TAG, "facebook:onSuccess:" + result)
               val credential = FacebookAuthProvider.getCredential(result.accessToken.token)
               user.reauthenticate(credential).addOnCompleteListener {
                 user.delete().addOnCompleteListener(this@UserRemoveCompleteListener)
@@ -53,11 +51,11 @@ class UserRemoveCompleteListener(private val activity: FragmentActivity) : OnCom
             }
 
             override fun onCancel() {
-              Log.d(TAG, "Facebook login canceled")
+              if (BuildConfig.DEBUG) Log.d(TAG, "Facebook login canceled")
             }
 
             override fun onError(error: FacebookException) {
-              Log.d(TAG, "facebook:onError", error)
+              if (BuildConfig.DEBUG) Log.d(TAG, "facebook:onError", error)
             }
           })
     } else {
@@ -93,7 +91,7 @@ class UserRemoveCompleteListener(private val activity: FragmentActivity) : OnCom
   }
 
   private fun onSuccess() {
-    Log.d("FA", "User account deleted.")
+    if (BuildConfig.DEBUG) Log.d("FA", "User account deleted.")
     AvatarData.clear(activity)
     activity.startActivity(Intent(activity, MainActivity::class.java))
   }

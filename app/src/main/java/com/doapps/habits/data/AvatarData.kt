@@ -6,6 +6,7 @@ import android.net.Uri
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
+import com.doapps.habits.BuildConfig
 import com.doapps.habits.helper.PicassoRoundedTransformation
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
@@ -31,7 +32,7 @@ object AvatarData : LiveData<Uri>() {
     val localAvatarUri = context.getSharedPreferences("pref", Context.MODE_PRIVATE).getString("avatar", null)
     if (localAvatarUri != null) {
       val optimalFile = File(localAvatarUri)
-      Log.i(TAG, localAvatarUri.toString())
+      if (BuildConfig.DEBUG) Log.i(TAG, localAvatarUri.toString())
       Picasso.with(context)
           .load(optimalFile)
           .transform(PicassoRoundedTransformation())
@@ -58,7 +59,7 @@ object AvatarData : LiveData<Uri>() {
     if (user != null && value != user.photoUrl) {
       val changeRequest = UserProfileChangeRequest.Builder().setPhotoUri(value).build()
       user.updateProfile(changeRequest)
-          .addOnFailureListener { e -> Log.e("fail", e.message) }
+          .apply { if (BuildConfig.DEBUG) addOnFailureListener { e -> Log.e("fail", e.message) } }
     } else {
       Log.i(TAG, "URL hasn't changed")
     }

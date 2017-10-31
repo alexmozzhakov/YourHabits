@@ -8,6 +8,7 @@ import android.net.Uri
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
+import com.doapps.habits.BuildConfig
 import com.doapps.habits.activity.EditPhotoActivity
 import com.doapps.habits.helper.PicassoRoundedTransformation
 import com.squareup.picasso.Picasso
@@ -30,7 +31,7 @@ class ProfileAvatarListener(private val context: Context, private val avatar: Im
     val optimalFile = if (localAvatarUri != null) File(localAvatarUri) else null
 
     if (uri != null) {
-      Log.i(TAG, "Avatar update detected")
+      if (BuildConfig.DEBUG) Log.i(TAG, "Avatar update detected")
 
       if (optimalFile == null) {
         Picasso.with(context.applicationContext).invalidate(uri)
@@ -50,7 +51,7 @@ class ProfileAvatarListener(private val context: Context, private val avatar: Im
       avatar.invalidate()
       plus.visibility = View.INVISIBLE
     } else {
-      Log.w(TAG, "no avatar")
+      if (BuildConfig.DEBUG) Log.w(TAG, "no avatar")
       plus.visibility = View.VISIBLE
       plus.setOnClickListener {
         activity.startActivity(Intent(activity, EditPhotoActivity::class.java))

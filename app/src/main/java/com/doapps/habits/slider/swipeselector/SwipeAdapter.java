@@ -3,6 +3,7 @@ package com.doapps.habits.slider.swipeselector;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -50,7 +51,7 @@ public class SwipeAdapter extends PagerAdapter
   private final int mContentLeftPadding;
   private final int mContentRightPadding;
 
-  private IOnItemSelectedListener<String> mOnItemSelectedListener;
+  private IOnItemSelectedListener<? super String> mOnItemSelectedListener;
   private String[] mItems;
 
   private int mCurrentPosition;
@@ -106,7 +107,7 @@ public class SwipeAdapter extends PagerAdapter
   /**
    * methods used by SwipeStringSelector
    */
-  void setOnItemSelectedListener(IOnItemSelectedListener<String> listener) {
+  void setOnItemSelectedListener(IOnItemSelectedListener<? super String> listener) {
     mOnItemSelectedListener = listener;
   }
 
@@ -135,8 +136,9 @@ public class SwipeAdapter extends PagerAdapter
   /**
    * Override methods / listeners
    */
+  @NonNull
   @Override
-  public Object instantiateItem(ViewGroup container, int position) {
+  public Object instantiateItem(@NonNull ViewGroup container, int position) {
     TextView layout =
         (TextView) View.inflate(mContext, R.layout.swipeselector_content_item, null);
 
@@ -156,7 +158,7 @@ public class SwipeAdapter extends PagerAdapter
   }
 
   @Override
-  public void destroyItem(ViewGroup container, int position, Object object) {
+  public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
     container.removeView((View) object);
   }
 
@@ -166,7 +168,7 @@ public class SwipeAdapter extends PagerAdapter
   }
 
   @Override
-  public boolean isViewFromObject(View view, Object object) {
+  public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
     return view.equals(object);
   }
 

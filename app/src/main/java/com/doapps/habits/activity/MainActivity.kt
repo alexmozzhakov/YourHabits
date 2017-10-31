@@ -17,6 +17,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.TextView
+import com.doapps.habits.BuildConfig
 import com.doapps.habits.R
 import com.doapps.habits.data.AvatarData
 import com.doapps.habits.fragments.*
@@ -93,7 +94,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     if (intent.action == "no" || intent.action == "yes") {
       val id: Long = intent.getLongExtra("id", 0)
       val habit: Habit = HabitListManager.getInstance(this).get(id)
-      Log.i("Notification Action", intent.action)
+      if (BuildConfig.DEBUG) Log.i("Notification Action", intent.action)
       when (intent.action) {
         "yes" -> habit.isDoneMarker = true
         "no" -> habit.isDoneMarker = false
@@ -182,7 +183,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     mNavigationView.setNavigationItemSelectedListener(this)
     mNavigationView.menu.getItem(0).isChecked = true
 
-    Log.i("FirebaseAuth", "User is anonymous")
+    if (BuildConfig.DEBUG) Log.i("FirebaseAuth", "User is anonymous")
     mNavigationView.menu.findItem(R.id.nav_logout).isVisible = true
     mNavigationView.menu.findItem(R.id.nav_logout).title = "Login"
     mNavigationView.getHeaderView(0).visibility = View.GONE
@@ -198,14 +199,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     mNavigationView.setNavigationItemSelectedListener(this)
     mNavigationView.menu.getItem(0).isChecked = true
     if (user != null && user.isAnonymous) {
-      Log.i("FirebaseAuth", "User is anonymous")
+      if (BuildConfig.DEBUG) Log.i("FirebaseAuth", "User is anonymous")
       mNavigationView.menu.findItem(R.id.nav_logout).isVisible = true
       mNavigationView.menu.findItem(R.id.nav_logout).title = "Login"
       mNavigationView.getHeaderView(0).visibility = View.GONE
     } else if (user != null) {
       mNavigationView.menu.findItem(R.id.nav_logout).isVisible = true
       mNavigationView.menu.findItem(R.id.nav_profile).isVisible = true
-      Log.i("FirebaseAuth", "Regular user")
+      if (BuildConfig.DEBUG) Log.i("FirebaseAuth", "Regular user")
       val navName = mNavigationView.getHeaderView(0).findViewById<TextView>(R.id.name_info)
       val navEmail = mNavigationView.getHeaderView(0).findViewById<TextView>(R.id.email_info)
       navName.text = user.displayName
@@ -219,7 +220,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             72f.dpToPixel(applicationContext), 0, 0, 0)
       }
     } else {
-      Log.w("FirebaseAuth", "User is null")
+      if (BuildConfig.DEBUG) Log.w("FirebaseAuth", "User is null")
       mNavigationView.menu.findItem(R.id.nav_logout).isVisible = false
       mNavigationView.getHeaderView(0).visibility = View.GONE
     }
@@ -233,7 +234,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
       } else {
         AvatarData.clear(this)
         FirebaseAuth.getInstance().signOut()
-        Log.i("FA", "user was signed out")
+        if (BuildConfig.DEBUG) Log.i("FA", "user was signed out")
       }
     }
     // Launching the login activity
@@ -252,11 +253,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
       imm.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
     }
 
-    Log.i("IMM", "Closed imm")
+    if (BuildConfig.DEBUG) Log.i("IMM", "Closed imm")
   }
 
   override fun onBackPressed() {
-    Log.d("CDA", "onBackPressed Called")
+    if (BuildConfig.DEBUG) Log.d("CDA", "onBackPressed Called")
     if (mLastFragment == R.id.nav_home) finishAffinity()
     if (mLastFragment == R.id.nav_profile) findViewById<View>(R.id.toolbar_shadow).visibility = View.VISIBLE
 
@@ -268,7 +269,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
   override fun onDestroy() {
     super.onDestroy()
-    if (user!!.isAnonymous) user!!.delete()
+    if (user != null && user?.isAnonymous!!) user!!.delete()
   }
 
   companion object {

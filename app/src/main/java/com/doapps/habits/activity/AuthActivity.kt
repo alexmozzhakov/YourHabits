@@ -70,7 +70,7 @@ class AuthActivity : AppCompatActivity() {
     }
   }
 
-  fun setTopMargin(margin: Float) {
+  private fun setTopMargin(margin: Float) {
     val layout = findViewById<FrameLayout>(R.id.frame_layout)
     val params = layout.layoutParams as FrameLayout.LayoutParams
     params.topMargin =
