@@ -17,6 +17,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.TextView
+import com.crashlytics.android.Crashlytics
 import com.doapps.habits.BuildConfig
 import com.doapps.habits.R
 import com.doapps.habits.data.AvatarData
@@ -29,6 +30,7 @@ import com.doapps.habits.slider.swipeselector.dpToPixel
 import com.facebook.CallbackManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import io.fabric.sdk.android.Fabric
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
   val callbackManager: CallbackManager = CallbackManager.Factory.create()
@@ -42,6 +44,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+    Fabric.with(this, Crashlytics())
     setContentView(R.layout.activity_main)
     user = FirebaseAuth.getInstance().currentUser
     toolbar = findViewById(R.id.toolbar)

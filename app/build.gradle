@@ -1,6 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'com.google.firebase.firebase-perf'
+apply plugin: 'io.fabric'
 
 android {
     compileSdkVersion 'android-26'
@@ -11,8 +11,14 @@ android {
         minSdkVersion 16
         targetSdkVersion 26
         versionCode 1
-        versionName "0.9.1"
+        versionName "0.9.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
+            }
+        }
     }
 
     compileOptions {
@@ -37,27 +43,29 @@ android {
 
 dependencies {
     // App's dependencies, including test
-    implementation 'com.github.vipulasri:timelineview:1.0.5'
     implementation "com.android.support:design:$supportLibraryVersion"
     implementation "com.android.support:recyclerview-v7:$supportLibraryVersion"
-    implementation 'com.android.support.constraint:constraint-layout:1.1.0-beta3'
-    implementation 'com.android.volley:volley:1.0.0'
-    implementation "android.arch.lifecycle:runtime:$architectureComponentsVersion"
+    implementation "com.android.support.constraint:constraint-layout:1.1.0-beta3"
+    implementation "com.android.volley:volley:1.0.0"
+
     implementation "android.arch.lifecycle:extensions:$architectureComponentsVersion"
+    implementation "android.arch.lifecycle:common-java8:1.0.0"
     implementation "android.arch.persistence.room:runtime:$architectureComponentsVersion"
+
     implementation 'com.squareup.picasso:picasso:2.5.2'
+    implementation 'com.github.vipulasri:timelineview:1.0.5'
     implementation "com.facebook.android:facebook-android-sdk:$facebookVersion"
     implementation 'com.github.jakob-grabner:Circle-Progress-View:v1.3'
+
     // Image Selector dependencies
     implementation 'com.github.Nicrob64:ImageSelector:1.0.13'
+
     // Firebase
     implementation "com.google.firebase:firebase-database:$firebaseVersion"
     implementation "com.google.firebase:firebase-auth:$firebaseVersion"
-    implementation "com.google.firebase:firebase-crash:$firebaseVersion"
-    implementation "com.google.firebase:firebase-perf:$firebaseVersion"
+    implementation('com.crashlytics.sdk.android:crashlytics:2.7.1@aar') { transitive = true }
 
     annotationProcessor "android.arch.persistence.room:compiler:$architectureComponentsVersion"
-    annotationProcessor "android.arch.lifecycle:compiler:$architectureComponentsVersion"
     testImplementation "junit:junit:$junitVersion"
     androidTestImplementation "com.android.support:support-annotations:$supportLibraryVersion"
     androidTestImplementation("com.android.support.test.espresso:espresso-core:$espressoVersion") {
@@ -68,8 +76,7 @@ dependencies {
     }
     androidTestImplementation "com.android.support.test:runner:$runnerVersion"
     androidTestImplementation 'tools.fastlane:screengrab:1.1.0'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
 }
 
 tasks.whenTaskAdded {
@@ -80,6 +87,3 @@ tasks.whenTaskAdded {
 }
 
 apply plugin: 'com.google.gms.google-services'
-repositories {
-    mavenCentral()
-}

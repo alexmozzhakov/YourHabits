@@ -39,8 +39,8 @@ class NotificationReceiver : BroadcastReceiver() {
     val pi = PendingIntent.getBroadcast(context, 0, intent, 0)
 
     val calendar = Calendar.getInstance()
-    val hour = calendar.get(Calendar.HOUR_OF_DAY) // 14 24-14 = 10 + 9 = 19:7
-    val minute = calendar.get(Calendar.MINUTE) // 53 60-53 = 7 + 0 = 7
+    val hour = calendar.get(Calendar.HOUR_OF_DAY)
+    val minute = calendar.get(Calendar.MINUTE)
     val hourOff = 9
     val minuteOff = 0
     val startMs = TimeUnit.MINUTES.toMillis((60L + minuteOff - minute) % 60) +
