@@ -46,6 +46,9 @@
     <meta-data
       android:name="com.facebook.sdk.ApplicationId"
       android:value="@string/facebook_app_id"/>
+    <meta-data
+      android:name="io.fabric.ApiKey"
+      android:value="8bc9b90775695010010f33ba4511eafaccc57b46"/>
 
     <receiver android:name=".receivers.NotificationReceiver">
       <intent-filter>

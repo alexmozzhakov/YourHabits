@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
-import com.doapps.habits.BuildConfig;
 import com.doapps.habits.R;
 import com.doapps.habits.activity.AuthActivity;
 import com.doapps.habits.activity.MainActivity;
@@ -196,18 +195,7 @@ public class LoginFragment extends LifecycleFragment {
 
   @SuppressWarnings("unused")
   private void anonymousLogin(View view) {
-    FirebaseAuth.getInstance().signInAnonymously().addOnCompleteListener(task -> {
-      if (BuildConfig.DEBUG) {
-        Log.d(TAG, "signInAnonymously:onComplete:" + task.isSuccessful());
-      }
-
-      if (getActivity() != null) {
-        Intent intent = new Intent(getActivity(), MainActivity.class);
-        startActivity(intent);
-      } else {
-        Log.i("FA", "Login page no longer exists");
-      }
-    });
-
+    Intent intent = new Intent(getActivity(), MainActivity.class);
+    startActivity(intent);
   }
 }

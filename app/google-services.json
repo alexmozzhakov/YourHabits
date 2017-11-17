@@ -1,35 +1,27 @@
 {
   "project_info": {
-    "project_number": "319206083040",
-    "firebase_url": "https://habits-1.firebaseio.com",
-    "project_id": "habits-1",
-    "storage_bucket": "habits-1.appspot.com"
+    "project_number": "864613832407",
+    "firebase_url": "https://habit-0.firebaseio.com",
+    "project_id": "habit-0",
+    "storage_bucket": "habit-0.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:319206083040:android:c494961321cbed51",
+        "mobilesdk_app_id": "1:864613832407:android:c494961321cbed51",
         "android_client_info": {
           "package_name": "com.doapps.habit"
         }
       },
       "oauth_client": [
         {
-          "client_id": "319206083040-45237jq431sfd8f1grsfebh3gj7nibvp.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.doapps.habit",
-            "certificate_hash": "24201383296b308720dbe92dae5b5b1164d9a945"
-          }
-        },
-        {
-          "client_id": "319206083040-c86k1lvmop6cioo71k7est3ingi591ps.apps.googleusercontent.com",
+          "client_id": "864613832407-9dk359nb9hvrb778p0bpvahl4ij10j5b.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyA_Dc49Jiobxw6o8Kc6U4vY2qA_JU7LA5g"
+          "current_key": "AIzaSyAAdBXoc6grpc-Gkkrno1F-kyVDf9E3iZQ"
         }
       ],
       "services": {
