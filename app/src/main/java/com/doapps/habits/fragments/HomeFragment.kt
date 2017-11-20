@@ -42,18 +42,20 @@ class HomeFragment : Fragment(), IWeatherUpdater {
   private var habitListSize: Int = 0
   private var connectionReceiver: ConnectionReceiver? = null
 
+  override fun onResume() {
+    (activity as MainActivity).toolbar.setTitle(R.string.home)
+    super.onResume()
+  }
+
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                             savedInstanceState: Bundle?): View? {
     // Inflate the layout for this fragment
     val view = inflater.inflate(R.layout.fragment_home, container, false)
 
-    val toolbar = (activity as MainActivity).toolbar
-    toolbar.setTitle(R.string.home)
-
     weather = view.findViewById(R.id.weather)
     weatherBot = view.findViewById(R.id.weatherBot)
 
-    habitsDatabase = HabitListManager.getInstance(context).database
+    habitsDatabase = HabitListManager.getInstance(context).habitsDatabase
     GetTask(view).execute()
 
     if (ConnectionManager.isConnected(activity!!)) {
@@ -105,7 +107,7 @@ class HomeFragment : Fragment(), IWeatherUpdater {
 
   @SuppressLint("SetTextI18n")
   override fun getWeather() {
-    Volley.newRequestQueue(context!!.applicationContext).add(
+    Volley.newRequestQueue(context?.applicationContext).add(
         StringRequest(Request.Method.GET, URL_WEATHER_API,
             { response ->
               try {
@@ -156,9 +158,7 @@ class HomeFragment : Fragment(), IWeatherUpdater {
   @SuppressLint("StaticFieldLeak")
   private inner class GetTask internal constructor(private val view: View) : AsyncTask<Void, Void, List<Habit>>() {
 
-    override fun doInBackground(vararg voids: Void): List<Habit> {
-      return habitsDatabase!!.habitDao().all
-    }
+    override fun doInBackground(vararg voids: Void): MutableList<Habit> = habitsDatabase!!.habitDao().all
 
     override fun onPostExecute(habits: List<Habit>) {
       super.onPostExecute(habits)
@@ -213,7 +213,7 @@ class HomeFragment : Fragment(), IWeatherUpdater {
         dayOfWeek: Int,
         swipeStringSelector: IStringSelector,
         habitDayManager: IDayManager) {
-      swipeStringSelector.setOnItemSelectedListener(object : IOnItemSelectedListener<String>() {
+      swipeStringSelector.setOnItemSelectedListener(object : IOnItemSelectedListener<String> {
         override fun onItemSelected(item: String) {
           val value = swipeStringSelector.adapter.currentPosition
           if (value == 0) {

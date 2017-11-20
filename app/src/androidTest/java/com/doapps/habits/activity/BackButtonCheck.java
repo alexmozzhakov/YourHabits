@@ -26,7 +26,7 @@ public class BackButtonCheck {
   @Test
   public void checkBackButton() {
     onView(withId(R.id.drawer_layout)).perform(open());
-    onView(withText(R.string.lists)).perform(click());
+    onView(withText(R.string.list)).perform(click());
     mActivityTestRule.getActivity().runOnUiThread(() ->
         mActivityTestRule.getActivity().onBackPressed());
     onView(withText(R.string.tasks_due)).check(matches(isDisplayed()));
@@ -35,7 +35,7 @@ public class BackButtonCheck {
   @Test
   public void checkBackButtonOnFragmentSequence() {
     onView(withId(R.id.drawer_layout)).perform(open());
-    onView(withText(R.string.lists)).perform(click());
+    onView(withText(R.string.list)).perform(click());
     onView(withId(R.id.drawer_layout)).perform(open());
     onView(withText(R.string.programs)).perform(click());
     mActivityTestRule.getActivity().runOnUiThread(() ->
