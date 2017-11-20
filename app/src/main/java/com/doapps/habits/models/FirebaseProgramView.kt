@@ -2,21 +2,16 @@ package com.doapps.habits.models
 
 import com.google.firebase.database.DataSnapshot
 
-class FirebaseProgramView(private val snapshot: DataSnapshot) : IProgramViewProvider {
-  private val title: String? = snapshot.child("name").getValue(String::class.java)
-  private val percent: String? =
+class FirebaseProgramView(override val snapshot: DataSnapshot) : IProgramViewProvider {
+  override val title: String? =
+      snapshot.child("name").getValue(String::class.java)
+
+  override val percent: String? =
       "${snapshot.child("success").getValue(String::class.java)} SUCCESS"
-  private val description: String? = snapshot.child("description").getValue(String::class.java)
-  private val imageLink: String? = "http://habit.esy.es/img_progs/" +
+
+  override val description: String? =
+      snapshot.child("description").getValue(String::class.java)
+
+  override val imageLink: String? = "http://habit.esy.es/img_progs/" +
       "${snapshot.child("image").getValue(String::class.java)}.jpg"
-
-  override fun getTitle(): String? = title
-
-  override fun getDescription(): String? = description
-
-  override fun getPercent(): String? = percent
-
-  override fun getImageLink(): String? = imageLink
-
-  override fun getSnapshot(): DataSnapshot = snapshot
 }

@@ -48,6 +48,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     setContentView(R.layout.activity_main)
     user = FirebaseAuth.getInstance().currentUser
     toolbar = findViewById(R.id.toolbar)
+    setSupportActionBar(toolbar)
     handleIntentAction()
 
     if (savedInstanceState == null && mLastFragment != R.id.nav_lists) {
@@ -56,7 +57,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
           .add(R.id.content_frame, HomeFragment())
           .commit()
       mLastFragment = R.id.nav_home
-      toolbar.title = "Home"
     }
 
     mNavigationView = findViewById(R.id.navigationView)
@@ -96,7 +96,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
   private fun handleIntentAction() {
     if (intent.action == "no" || intent.action == "yes") {
       val id: Long = intent.getLongExtra("id", 0)
-      val habit: Habit = HabitListManager.getInstance(this).get(id)
+      val habit: Habit = HabitListManager.getInstance(this)[id]
       if (BuildConfig.DEBUG) Log.i("Notification Action", intent.action)
       when (intent.action) {
         "yes" -> habit.isDoneMarker = true
@@ -147,6 +147,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     super.onPostCreate(savedInstanceState)
     // Sync the toggle state after onRestoreInstanceState has occurred.
     mDrawerToggle.syncState()
+  }
+
+  fun setChecked(index: Int) {
+    mNavigationView.menu.getItem(index).isChecked = true
   }
 
   @Suppress("UNUSED_PARAMETER")

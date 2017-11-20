@@ -10,12 +10,10 @@ import com.doapps.habits.view.holders.TimeLineViewHolder
 import com.github.vipulasri.timelineview.TimelineView
 
 
-class TimeLineAdapter(var feedList: List<Habit>)
+class TimeLineAdapter(private var feedList: List<Habit>)
   : RecyclerView.Adapter<TimeLineViewHolder>(), IListUpdater<Habit> {
 
-  override fun getItemViewType(position: Int): Int {
-    return TimelineView.getTimeLineViewType(position, itemCount)
-  }
+  override fun getItemViewType(position: Int): Int = TimelineView.getTimeLineViewType(position, itemCount)
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TimeLineViewHolder {
     val layoutInflater = LayoutInflater.from(parent.context)

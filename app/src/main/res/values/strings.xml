@@ -28,6 +28,7 @@
   <string name="question">Question</string>
   <string name="time_needed">Time needed</string>
   <string name="create">Create</string>
+  <string name="action_search">Search</string>
 
 
   <string-array name="days_of_week_array">
@@ -69,8 +70,7 @@
   <!-- Menu items -->
   <string name="home">Home</string>
   <string name="programs">Programs</string>
-  <string name="lists">Lists</string>
+  <string name="list">List</string>
   <string name="profile">Profile</string>
   <string name="logout">Logout</string>
-  <string name="action_search">Search</string>
 </resources>
