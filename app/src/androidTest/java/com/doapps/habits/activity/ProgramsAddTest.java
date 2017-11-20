@@ -30,12 +30,12 @@ public class ProgramsAddTest {
   @Test
   public void DoubleAddProgram() {
     onView(withId(R.id.drawer_layout)).perform(open());
-    onView(withText("Programs")).perform(click());
+    onView(withText(R.string.programs)).perform(click());
     onView(withText("Running")).perform(click());
     onView(withId(R.id.fab)).perform(click());
     onView(withId(R.id.fab)).perform(click());
     onView(withId(R.id.drawer_layout)).perform(open());
-    onView(withText("Lists")).perform(click());
+    onView(withText(R.string.list)).perform(click());
     onView(withId(R.id.habits_list))
         .perform(RecyclerViewActions.actionOnItemAtPosition(0, swipeRight()));
   }
