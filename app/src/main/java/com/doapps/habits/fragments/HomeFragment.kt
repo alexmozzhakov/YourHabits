@@ -156,9 +156,9 @@ class HomeFragment : Fragment(), IWeatherUpdater {
   }
 
   @SuppressLint("StaticFieldLeak")
-  private inner class GetTask internal constructor(private val view: View) : AsyncTask<Void, Void, List<Habit>>() {
+  private inner class GetTask internal constructor(private val view: View) : AsyncTask<Unit, Unit, List<Habit>>() {
 
-    override fun doInBackground(vararg voids: Void): MutableList<Habit> = habitsDatabase!!.habitDao().all
+    override fun doInBackground(vararg voids: Unit): MutableList<Habit> = habitsDatabase!!.habitDao().all
 
     override fun onPostExecute(habits: List<Habit>) {
       super.onPostExecute(habits)

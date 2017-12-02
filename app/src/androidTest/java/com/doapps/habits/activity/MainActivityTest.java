@@ -46,14 +46,14 @@ public class MainActivityTest {
     onView(withText("Home")).perform(click());
     onView(withText("Running")).check(matches(isDisplayed()));
     onView(withId(R.id.drawer_layout)).perform(open());
-    onView(withText("Lists")).perform(click());
+    onView(withText("List")).perform(click());
     onView(withId(R.id.habits_list))
         .perform(RecyclerViewActions.actionOnItemAtPosition(0, swipeRight()));
     onView(withId(R.id.empty_view)).check(matches(isDisplayed()));
     onView(withId(R.id.drawer_layout)).perform(open());
     onView(withText("Home")).perform(click());
     onView(withId(R.id.drawer_layout)).perform(open());
-    onView(withText("Lists")).perform(click());
+    onView(withText("List")).perform(click());
     onView(withId(R.id.empty_view)).check(matches(isDisplayed()));
   }
 

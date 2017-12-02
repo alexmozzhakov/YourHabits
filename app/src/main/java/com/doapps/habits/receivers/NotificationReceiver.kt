@@ -23,37 +23,36 @@ class NotificationReceiver : BroadcastReceiver() {
     // Notification is handled in MainActivity
   }
 
-  companion object {
-    val TAG: String = NotificationReceiver::class.java.simpleName
-  }
-
   fun setAlarm(context: Context, id: Long, question: String?) {
     val am = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
     val intent = Intent(context, NotificationReceiver::class.java)
     intent.putExtra("id", id)
-    if (question == null)
-      intent.putExtra("question", "Did you do something today?")
-    else
-      intent.putExtra("question", question)
+    Log.i(TAG, "GOT setAlarm id = $id")
+    intent.putExtra("question", question)
 
-    val pi = PendingIntent.getBroadcast(context, 0, intent, 0)
+    val pi = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
     val calendar = Calendar.getInstance()
     val hour = calendar.get(Calendar.HOUR_OF_DAY)
     val minute = calendar.get(Calendar.MINUTE)
-    val hourOff = 9
-    val minuteOff = 0
+    val hourOff = if (BuildConfig.DEBUG) 10 else 9
+    val minuteOff = if (BuildConfig.DEBUG) 50 else 0
     val startMs = TimeUnit.MINUTES.toMillis((60L + minuteOff - minute) % 60) +
         TimeUnit.HOURS.toMillis((24L + hourOff - hour) % 24)
     if (BuildConfig.DEBUG) Log.i(TAG, "Starts in ${startMs / 1000} seconds")
     am.setRepeating(AlarmManager.RTC, System.currentTimeMillis() + startMs, AlarmManager.INTERVAL_DAY, pi)
   }
 
-  fun cancelAlarm(context: Context) {
-    val intent = Intent(context, NotificationReceiver::class.java)
-    val sender = PendingIntent.getBroadcast(context, 0, intent, 0)
-    val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-    alarmManager.cancel(sender)
+  companion object {
+    val TAG: String = NotificationReceiver::class.java.simpleName
+
+    fun cancelAlarm(context: Context, habitId: Int) {
+      val am = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+      val myIntent = Intent(context, NotificationIntentService::class.java)
+      val pendingIntent = PendingIntent.getActivity(context, habitId, myIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+      pendingIntent.cancel()
+      am.cancel(pendingIntent)
+    }
   }
 }
 

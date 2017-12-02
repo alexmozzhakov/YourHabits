@@ -85,20 +85,19 @@ class ProgramFragment : Fragment() {
     return result
   }
 
-  private class InsertTask : AsyncTask<Program, Void, Void>() {
+  private class InsertTask : AsyncTask<Program, Unit, Unit>() {
 
-    override fun doInBackground(vararg programs: Program): Void? {
+    override fun doInBackground(vararg programs: Program) {
       Log.i("DatabaseContains", "New program added")
       programDatabase.programDao().insertAll(*programs)
       DatabasePrintTask().execute()
-      return null
     }
   }
 
   @SuppressLint("StaticFieldLeak")
-  private class InsertIfNotExists internal constructor(private val mSnapshot: DataSnapshot, private val mContext: Context) : AsyncTask<Void, Void, Boolean>() {
+  private class InsertIfNotExists internal constructor(private val mSnapshot: DataSnapshot, private val mContext: Context) : AsyncTask<Unit, Unit, Boolean>() {
 
-    override fun doInBackground(vararg voids: Void): Boolean? {
+    override fun doInBackground(vararg voids: Unit): Boolean? {
       val exists = programDatabase.programDao().idExists(Integer.parseInt(mSnapshot.key)) == 0
       if (exists) {
         InsertHabitTask(mSnapshot, mContext).execute()
@@ -107,18 +106,17 @@ class ProgramFragment : Fragment() {
     }
   }
 
-  private class DatabasePrintTask : AsyncTask<Void, Void, Void>() {
+  private class DatabasePrintTask : AsyncTask<Unit, Unit, Unit>() {
 
-    override fun doInBackground(vararg voids: Void): Void? {
+    override fun doInBackground(vararg voids: Unit) {
       Log.i("New Database", Arrays.toString(programDatabase.programDao().all.toTypedArray()))
-      return null
     }
   }
 
   @SuppressLint("StaticFieldLeak")
-  private class InsertHabitTask internal constructor(private val dataSnapshot: DataSnapshot, private val context: Context) : AsyncTask<Void, Void, Long>() {
+  private class InsertHabitTask internal constructor(private val dataSnapshot: DataSnapshot, private val context: Context) : AsyncTask<Unit, Unit, Long>() {
 
-    override fun doInBackground(vararg voids: Void): Long? {
+    override fun doInBackground(vararg voids: Unit): Long? {
       Log.i("DatabaseContains", "New program added")
       val upd = Calendar.getInstance()
       val habit = Habit(

@@ -3,6 +3,7 @@ package com.doapps.habits.activity
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Handler
 import android.support.design.widget.NavigationView
@@ -34,7 +35,7 @@ import io.fabric.sdk.android.Fabric
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
   val callbackManager: CallbackManager = CallbackManager.Factory.create()
-  private var mLastFragment = -1
+  var mLastFragment = -1
   private lateinit var mNavigationView: NavigationView
   private var user: FirebaseUser? = null
   private lateinit var mDrawerToggle: ActionBarDrawerToggle
@@ -51,7 +52,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     setSupportActionBar(toolbar)
     handleIntentAction()
 
-    if (savedInstanceState == null && mLastFragment != R.id.nav_lists) {
+    if (savedInstanceState == null && mLastFragment != R.id.nav_list) {
       supportFragmentManager
           .beginTransaction()
           .add(R.id.content_frame, HomeFragment())
@@ -63,7 +64,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     if (user == null) {
       FirebaseAuth.getInstance().signInAnonymously().addOnCompleteListener { user = FirebaseAuth.getInstance().currentUser }
-
       anonymousMenuSetup()
     } else {
       onSetupNavigationDrawer(user)
@@ -95,6 +95,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
   private fun handleIntentAction() {
     if (intent.action == "no" || intent.action == "yes") {
+      Log.i("MainActivity", "id = ${intent.extras["id"]}")
       val id: Long = intent.getLongExtra("id", 0)
       val habit: Habit = HabitListManager.getInstance(this)[id]
       if (BuildConfig.DEBUG) Log.i("Notification Action", intent.action)
@@ -109,7 +110,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
           .beginTransaction()
           .add(R.id.content_frame, ListFragment())
           .commit()
-      mLastFragment = R.id.nav_lists
+      mLastFragment = R.id.nav_list
       toolbar.title = "List"
     }
   }
@@ -133,7 +134,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         when (id) {
           R.id.nav_home -> transaction.replace(R.id.content_frame, HomeFragment()).commit()
           R.id.nav_programs -> transaction.replace(R.id.content_frame, ProgramsFragment()).commit()
-          R.id.nav_lists -> transaction.replace(R.id.content_frame, ListFragment()).commit()
+          R.id.nav_list -> transaction.replace(R.id.content_frame, ListFragment()).commit()
           R.id.nav_profile -> transaction.replace(R.id.content_frame, ProfileFragment()).commit()
         }
         mLastFragment = id
@@ -289,6 +290,18 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             .forEach { return true }
       }
       return false
+    }
+  }
+
+  override fun onConfigurationChanged(newConfig: Configuration) {
+    super.onConfigurationChanged(newConfig)
+    toolbar.title = when (mLastFragment) {
+      R.id.nav_home -> "Home"
+      R.id.nav_list -> "List"
+      R.id.nav_profile -> "Profile"
+      R.id.nav_programs -> "Programs"
+      5 -> "Create habit"
+      else -> "Home"
     }
   }
 }

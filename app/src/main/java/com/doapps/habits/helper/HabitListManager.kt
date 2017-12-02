@@ -4,12 +4,14 @@ import android.annotation.SuppressLint
 import android.arch.persistence.room.Room
 import android.content.Context
 import android.os.AsyncTask
+import android.util.Log
 import com.doapps.habits.database.HabitsDatabase
 import com.doapps.habits.database.ProgramsDatabase
 import com.doapps.habits.models.Habit
+import com.doapps.habits.receivers.NotificationReceiver
 import java.util.concurrent.ExecutionException
 
-class HabitListManager private constructor(context: Context) {
+class HabitListManager private constructor(private val context: Context) {
 
   val list: MutableList<Habit>
     @Throws(InterruptedException::class, ExecutionException::class)
@@ -19,7 +21,7 @@ class HabitListManager private constructor(context: Context) {
   var programDatabase = Room.databaseBuilder(context, ProgramsDatabase::class.java, "programs").build()
 
   @Throws(InterruptedException::class, ExecutionException::class)
-  operator fun get(id: Long?): Habit = GetHabitTask().execute(id).get()
+  operator fun get(id: Long): Habit = GetHabitTask().execute(id).get()
 
   @Throws(InterruptedException::class, ExecutionException::class)
   fun update(habit: Habit) {
@@ -27,21 +29,24 @@ class HabitListManager private constructor(context: Context) {
   }
 
   fun onItemDismiss(position: Int) {
-    DeleteTask().execute(position)
+    val habitId = DeleteTask().execute(position).get()
+    Log.i("ListManager", "habitId = $habitId")
+    NotificationReceiver.cancelAlarm(context, habitId)
   }
 
   fun onItemMove(fromPosition: Habit, toPosition: Habit) {
     MoveTask().execute(fromPosition, toPosition)
   }
 
-  private class DeleteTask : AsyncTask<Int, Unit, Unit>() {
-    override fun doInBackground(vararg params: Int?) {
+  private class DeleteTask : AsyncTask<Int, Unit, Int>() {
+    override fun doInBackground(vararg params: Int?): Int {
       val habits = HabitListManager.instance!!.habitsDatabase.habitDao().all
       val habit = habits[params[0]!!]
       if (habit.isProgram) {
         HabitListManager.instance!!.programDatabase.programDao().delete(habit.id)
       }
       HabitListManager.instance!!.habitsDatabase.habitDao().delete(habit)
+      return habit.id
     }
   }
 
@@ -53,22 +58,18 @@ class HabitListManager private constructor(context: Context) {
     }
   }
 
-  private class GetTask : AsyncTask<Void, Void, MutableList<Habit>>() {
-    override fun doInBackground(vararg voids: Void): MutableList<Habit> = HabitListManager.instance!!.habitsDatabase.habitDao().all
+  private class GetTask : AsyncTask<Unit, Unit, MutableList<Habit>>() {
+    override fun doInBackground(vararg voids: Unit): MutableList<Habit> = HabitListManager.instance!!.habitsDatabase.habitDao().all
   }
 
-  private class GetHabitTask : AsyncTask<Long, Void, Habit>() {
+  private class GetHabitTask : AsyncTask<Long, Unit, Habit>() {
     override fun doInBackground(vararg params: Long?): Habit? = HabitListManager.instance!!.habitsDatabase.habitDao().get(params[0]!!)
   }
 
 
   @SuppressLint("StaticFieldLeak")
-  private inner class UpdateTask : AsyncTask<Habit, Void, Void>() {
-
-    override fun doInBackground(habits: Array<Habit>): Void? {
-      habitsDatabase.habitDao().update(habits[0])
-      return null
-    }
+  private inner class UpdateTask : AsyncTask<Habit, Unit, Unit>() {
+    override fun doInBackground(habits: Array<Habit>) = habitsDatabase.habitDao().update(habits[0])
   }
 
   companion object {

@@ -1,134 +1,161 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:layout_marginTop="?android:attr/actionBarSize"
-  android:layout_marginLeft="16dp"
-  android:layout_marginRight="16dp"
-  android:orientation="vertical"
   tools:context="com.doapps.habits.fragments.CreateFragment">
-
-  <android.support.design.widget.TextInputLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingTop="10dp"
-    android:hint="@string/title"
-    android:textColorHint="@color/grey_500">
-
-    <android.support.design.widget.TextInputEditText
-      android:id="@+id/edit_title"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:imeOptions="actionNext"
-      android:inputType="textAutoComplete"
-      android:maxLines="1"/>
-
-  </android.support.design.widget.TextInputLayout>
-
-  <android.support.design.widget.TextInputLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingTop="10dp"
-    android:hint="@string/question"
-    android:textColorHint="@color/grey_500">
-
-    <android.support.design.widget.TextInputEditText
-      android:id="@+id/edit_question"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:imeOptions="actionNext"
-      android:inputType="textAutoComplete"/>
-  </android.support.design.widget.TextInputLayout>
-
-
-  <android.support.design.widget.TextInputLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingTop="10dp"
-    android:hint="@string/time_needed"
-    android:textColorHint="@color/grey_500">
-
-    <android.support.design.widget.TextInputEditText
-      android:id="@+id/edit_time"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:inputType="number"/>
-  </android.support.design.widget.TextInputLayout>
-
-
   <LinearLayout
-    style="@style/dialogFormRow"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp">
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
+    android:orientation="vertical">
 
-    <TextView
-      style="@style/dialogFormLabel"
-      android:layout_width="wrap_content"
-      android:layout_height="match_parent"
-      android:gravity="center"
-      android:text="@string/repeat"/>
+    <android.support.design.widget.TextInputLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:paddingTop="10dp"
+      android:hint="@string/title"
+      android:textColorHint="@color/grey_500">
 
-    <android.support.v7.widget.AppCompatSpinner
-      android:id="@+id/sFrequency"
-      android:layout_width="wrap_content"
-      android:layout_height="25dp"
-      android:layout_gravity="center"
-      android:entries="@array/frequencyQuickSelect"
-      android:minWidth="400dp"
-      android:theme="@style/dialogFormText"/>
+      <android.support.design.widget.TextInputEditText
+        android:id="@+id/edit_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:imeOptions="actionNext"
+        android:inputType="textAutoComplete"
+        android:maxLines="1"/>
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:paddingTop="10dp"
+      android:hint="@string/question"
+      android:textColorHint="@color/grey_500">
+
+      <android.support.design.widget.TextInputEditText
+        android:id="@+id/edit_question"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:imeOptions="actionNext"
+        android:inputType="textAutoComplete"/>
+    </android.support.design.widget.TextInputLayout>
+
+
+    <android.support.constraint.ConstraintLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="10dp">
+      <TextView
+        android:id="@+id/text_min"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:paddingTop="10dp"
+        android:paddingEnd="4dp"
+        android:paddingRight="4dp"
+        android:gravity="center_vertical"
+        android:text="@string/minutes"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="RtlSymmetry"/>
+
+      <android.support.design.widget.TextInputLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:hint="@string/time_needed"
+        android:textColorHint="@color/grey_500"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/text_min"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <android.support.design.widget.TextInputEditText
+          android:id="@+id/edit_time"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:inputType="number"/>
+      </android.support.design.widget.TextInputLayout>
+    </android.support.constraint.ConstraintLayout>
+
 
     <LinearLayout
-      android:id="@+id/llCustomFrequency"
-      android:layout_width="match_parent"
+      style="@style/dialogFormRow"
+      android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginStart="2dp"
-      android:layout_marginLeft="2dp"
-      android:visibility="visible">
-
-      <EditText
-        android:id="@+id/input_freq_num"
-        style="@style/dialogFormInputSmallNumber"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="number"/>
+      android:layout_margin="8dp">
 
       <TextView
-        style="@style/dialogFormText"
+        style="@style/dialogFormLabel"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:text="@string/times_every"/>
+        android:text="@string/repeat"/>
 
-      <EditText
-        android:id="@+id/input_freq_den"
-        style="@style/dialogFormInputSmallNumber"
+      <android.support.v7.widget.AppCompatSpinner
+        android:id="@+id/sFrequency"
         android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:layout_gravity="center"
+        android:entries="@array/frequencyQuickSelect"
+        android:minWidth="400dp"
+        android:theme="@style/dialogFormText"/>
+
+      <LinearLayout
+        android:id="@+id/llCustomFrequency"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="number"/>
+        android:layout_marginStart="2dp"
+        android:layout_marginLeft="2dp"
+        android:visibility="gone">
 
-      <TextView
-        style="@style/dialogFormText"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:paddingStart="12dp"
-        android:paddingLeft="12dp"
-        android:gravity="center_vertical"
-        android:text="@string/days"
-        tools:ignore="RtlSymmetry"/>
+        <EditText
+          android:id="@+id/input_freq_num"
+          style="@style/dialogFormInputSmallNumber"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:inputType="number"/>
 
+        <TextView
+          style="@style/dialogFormText"
+          android:layout_width="wrap_content"
+          android:layout_height="match_parent"
+          android:gravity="center"
+          android:text="@string/times_every"/>
+
+        <EditText
+          android:id="@+id/input_freq_den"
+          style="@style/dialogFormInputSmallNumber"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:inputType="number"/>
+
+        <TextView
+          style="@style/dialogFormText"
+          android:layout_width="wrap_content"
+          android:layout_height="match_parent"
+          android:paddingStart="12dp"
+          android:paddingLeft="12dp"
+          android:gravity="center_vertical"
+          android:text="@string/days"
+          tools:ignore="RtlSymmetry"/>
+
+      </LinearLayout>
     </LinearLayout>
+
+    <Button
+      android:id="@+id/btnCreate"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="20dp"
+      android:layout_marginBottom="20dp"
+      android:layout_gravity="bottom"
+      android:background="@color/colorAccent"
+      android:text="@string/create"
+      android:textColor="@color/white"/>
   </LinearLayout>
-
-  <Button
-    android:id="@+id/btnCreate"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="20dp"
-    android:layout_gravity="bottom"
-    android:background="?colorAccent"
-    android:text="@string/create"
-    android:textColor="@color/white"/>
-
-</LinearLayout>
+</ScrollView>

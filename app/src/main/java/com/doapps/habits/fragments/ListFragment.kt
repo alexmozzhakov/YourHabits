@@ -27,7 +27,7 @@ import java.util.concurrent.ExecutionException
 
 class ListFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.OnCloseListener {
 
-  private var searchView: SearchView? = null
+  private lateinit var searchView: SearchView
   private var recycleAdapter: RecyclerView.Adapter<HabitViewHolder>? = null
   private var recyclerView: RecyclerView? = null
 
@@ -41,10 +41,11 @@ class ListFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.OnCl
     val emptyView = result.findViewById<View>(R.id.empty_view)
     val toolbar = (activity as MainActivity).toolbar
     toolbar.setTitle(R.string.list)
+    searchView = toolbar.rootView.findViewById(R.id.toolbar_search)
     EmptyListListener.listener.addObserver { _, _ ->
       recyclerView!!.visibility = View.GONE
       emptyView.visibility = View.VISIBLE
-      searchView?.visibility = View.GONE
+      searchView.visibility = View.GONE
     }
 
     val habitListManager = HabitListManager.getInstance(context)
@@ -70,13 +71,13 @@ class ListFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.OnCl
         val callback = SimpleItemTouchHelperCallback(recycleAdapter as IMovableListAdapter)
         val touchHelper = ItemTouchHelper(callback)
         touchHelper.attachToRecyclerView(recyclerView)
-        searchView = toolbar.rootView.findViewById(R.id.toolbar_search)
-        searchView!!.visibility = View.VISIBLE
+        //FIXME
+        searchView.visibility = View.VISIBLE
 //        Log.i(TAG, "height = ${toolbar.height}")
 //        searchView!!.layoutParams = CoordinatorLayout.LayoutParams(toolbar.width - 72f.dpToPixel(context!!), toolbar.height)
-        searchView!!.setOnQueryTextListener(this)
-        searchView!!.setOnCloseListener(this)
-        val searchEditText = searchView!!.findViewById<EditText>(R.id.search_src_text)
+        searchView.setOnQueryTextListener(this)
+        searchView.setOnCloseListener(this)
+        val searchEditText = searchView.findViewById<EditText>(R.id.search_src_text)
         searchEditText.setTextColor(Color.WHITE)
       }
     } catch (e: InterruptedException) {
@@ -114,7 +115,7 @@ class ListFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.OnCl
   }
 
   override fun onDestroy() {
-    searchView?.visibility = View.GONE
+    searchView.visibility = View.GONE
     super.onDestroy()
   }
 
@@ -122,9 +123,5 @@ class ListFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.OnCl
     recycleAdapter = HabitRecycleAdapter(HabitListManager.getInstance(context))
     recyclerView!!.adapter = recycleAdapter
     return false
-  }
-
-  companion object {
-    private val TAG: String = ListFragment::class.java.simpleName
   }
 }
