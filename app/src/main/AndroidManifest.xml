@@ -28,6 +28,7 @@
       android:name=".activity.AuthActivity"
       android:theme="@style/AppTheme.Auth"/>
     <activity
+      android:configChanges="orientation|screenSize"
       android:launchMode="standard"
       android:name=".activity.MainActivity"
       android:theme="@style/AppTheme.NoActionBar"
@@ -50,13 +51,7 @@
       android:name="io.fabric.ApiKey"
       android:value="8bc9b90775695010010f33ba4511eafaccc57b46"/>
 
-    <receiver android:name=".receivers.NotificationReceiver">
-      <intent-filter>
-        <action
-          android:name="android.net.conn.CONNECTIVITY_CHANGE"
-          tools:ignore="BatteryLife"/>
-      </intent-filter>
-    </receiver>
+    <receiver android:name=".receivers.NotificationReceiver"/>
 
     <service
       android:exported="false"

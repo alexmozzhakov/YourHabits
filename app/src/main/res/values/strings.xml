@@ -73,4 +73,5 @@
   <string name="list">List</string>
   <string name="profile">Profile</string>
   <string name="logout">Logout</string>
+  <string name="minutes">minutes</string>
 </resources>

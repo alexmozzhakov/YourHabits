@@ -13,8 +13,8 @@
       android:icon="@drawable/ic_groups"
       android:title="@string/programs"/>
     <item
-      android:id="@+id/nav_lists"
-      android:icon="@drawable/ic_lists"
+      android:id="@+id/nav_list"
+      android:icon="@drawable/ic_list"
       android:title="@string/list"/>
     <item
       android:id="@+id/nav_profile"

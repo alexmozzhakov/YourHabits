@@ -111,12 +111,18 @@ class CreateFragment : Fragment(), AdapterView.OnItemSelectedListener {
     }
   }
 
-  override fun onItemSelected(adapterView: AdapterView<*>, view: View, i: Int, l: Long) {
-    lastSpinnerSelection = i
-    if (i == 4) {
-      sFrequency.visibility = View.GONE
-      llCustomFrequency.visibility = View.VISIBLE
+  override fun onItemSelected(adapterView: AdapterView<*>, view: View?, i: Int, l: Long) {
+    if (view != null) {
+      lastSpinnerSelection = i
+      if (i == 4) {
+        sFrequency.visibility = View.GONE
+        llCustomFrequency.visibility = View.VISIBLE
+      }
     }
+//    else {
+//      sFrequency.visibility = View.VISIBLE
+//      llCustomFrequency.visibility = View.GONE
+//    }
   }
 
   override fun onNothingSelected(adapterView: AdapterView<*>) {
@@ -129,7 +135,7 @@ class CreateFragment : Fragment(), AdapterView.OnItemSelectedListener {
   }
 
   @SuppressLint("StaticFieldLeak")
-  private inner class InsertHabitTask : AsyncTask<Habit, Void, Long>() {
+  private inner class InsertHabitTask : AsyncTask<Habit, Unit, Long>() {
 
     override fun doInBackground(vararg habit: Habit): Long? {
       if (BuildConfig.DEBUG) {
@@ -143,6 +149,7 @@ class CreateFragment : Fragment(), AdapterView.OnItemSelectedListener {
       notificationService.setAlarm(context!!, id!!, editQuestion.text.toString())
       (activity as MainActivity).toolbar.title = getString(R.string.list)
       (activity as MainActivity).setChecked(2)
+      (activity as MainActivity).mLastFragment = R.id.nav_list
 
       fragmentManager!!.beginTransaction().replace(R.id.content_frame, ListFragment())
           .commit()
