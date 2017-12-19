@@ -3,7 +3,6 @@ package com.doapps.habits.fragments
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
 import android.util.Log
 import android.view.Gravity
@@ -39,12 +38,12 @@ class ProfileFragment : Fragment() {
     val result = inflater.inflate(R.layout.fragment_profile, container, false)
     val toolbar = (activity as MainActivity).toolbar
     toolbar.setTitle(R.string.profile)
-    val name = result.findViewById<TextView>(R.id.name)
-    val email = result.findViewById<TextView>(R.id.email)
-    val location = result.findViewById<TextView>(R.id.location)
-    val btnDelete = result.findViewById<Button>(R.id.btn_delete_user)
-    val fab = result.findViewById<FloatingActionButton>(R.id.fab)
-    val plus = result.findViewById<ImageView>(R.id.plus_overlay)
+    val name: TextView = result.findViewById(R.id.name)
+    val email: TextView = result.findViewById(R.id.email)
+    val location: TextView = result.findViewById(R.id.location)
+    val btnDelete: Button = result.findViewById(R.id.btn_delete_user)
+    val fab: View = result.findViewById(R.id.fab)
+    val plus: ImageView = result.findViewById(R.id.plus_overlay)
 
     fab.setOnClickListener {
       childFragmentManager
@@ -72,24 +71,28 @@ class ProfileFragment : Fragment() {
         AvatarData.getAvatar(context!!.applicationContext, avatar)
       }
 
-      if (MainActivity.isFacebook(user!!) || user!!.photoUrl != null) {
-        val topPanel = result.findViewById<View>(R.id.topPanel)
-        topPanel.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
-          if (topPanel.height - PixelUtils.dpToPixel(context, 50f) < 200) {
+      // FIXME
+      val topPanel: View = result.findViewById(R.id.topPanel)
+      topPanel.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
+        if (topPanel.height - PixelUtils.dpToPixel(context, 50f) < 200) {
+          if (user!!.photoUrl != null) {
             avatar.imageAlpha = 0
-            plus.imageAlpha = 0
-            name.gravity = Gravity.CENTER
-            location.gravity = Gravity.CENTER
-            Log.i("Top Panel", "I really can't fit on top panel, the view is only " + (topPanel.height - PixelUtils.dpToPixel(context, 50f)))
-          } else {
-            avatar.imageAlpha = 255
-            plus.imageAlpha = 255
-            name.gravity = Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL
-            location.gravity = Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL
-            Log.i("Top Panel", "I fit on top panel")
           }
+          plus.imageAlpha = 0
+          name.gravity = Gravity.CENTER
+          location.gravity = Gravity.CENTER
+          Log.i("Top Panel", "I really can't fit on top panel, the view is only " + (topPanel.height - PixelUtils.dpToPixel(context, 50f)))
+        } else {
+          if (user!!.photoUrl != null) {
+            avatar.imageAlpha = 255
+          }
+          plus.imageAlpha = 255
+          name.gravity = Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL
+          location.gravity = Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL
+          Log.i("Top Panel", "I fit on top panel")
         }
       }
+
       if (!MainActivity.isFacebook(user!!)) {
         val btnFacebook = result.findViewById<Button>(R.id.btn_connect_facebook)
         btnFacebook.visibility = View.VISIBLE

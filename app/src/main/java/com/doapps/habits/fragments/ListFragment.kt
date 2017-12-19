@@ -1,13 +1,20 @@
 package com.doapps.habits.fragments
 
+import android.annotation.SuppressLint
+import android.content.res.Configuration
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
+import android.support.constraint.ConstraintLayout
+import android.support.design.widget.CoordinatorLayout
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
+import android.support.v7.widget.Toolbar
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,15 +28,18 @@ import com.doapps.habits.helper.HabitListManager
 import com.doapps.habits.helper.SimpleItemTouchHelperCallback
 import com.doapps.habits.listeners.EmptyListListener
 import com.doapps.habits.models.Habit
+import com.doapps.habits.slider.swipeselector.dpToPixel
 import com.doapps.habits.view.holders.HabitViewHolder
 import java.util.*
 import java.util.concurrent.ExecutionException
+
 
 class ListFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.OnCloseListener {
 
   private lateinit var searchView: SearchView
   private var recycleAdapter: RecyclerView.Adapter<HabitViewHolder>? = null
   private var recyclerView: RecyclerView? = null
+  private lateinit var toolbar: Toolbar
 
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                             savedInstanceState: Bundle?): View? {
@@ -39,7 +49,7 @@ class ListFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.OnCl
     recyclerView!!.setHasFixedSize(true)
 
     val emptyView = result.findViewById<View>(R.id.empty_view)
-    val toolbar = (activity as MainActivity).toolbar
+    toolbar = (activity as MainActivity).toolbar
     toolbar.setTitle(R.string.list)
     searchView = toolbar.rootView.findViewById(R.id.toolbar_search)
     EmptyListListener.listener.addObserver { _, _ ->
@@ -71,13 +81,19 @@ class ListFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.OnCl
         val callback = SimpleItemTouchHelperCallback(recycleAdapter as IMovableListAdapter)
         val touchHelper = ItemTouchHelper(callback)
         touchHelper.attachToRecyclerView(recyclerView)
-        //FIXME
         searchView.visibility = View.VISIBLE
-//        Log.i(TAG, "height = ${toolbar.height}")
-//        searchView!!.layoutParams = CoordinatorLayout.LayoutParams(toolbar.width - 72f.dpToPixel(context!!), toolbar.height)
+        searchView.setOnSearchClickListener {
+          val params = CoordinatorLayout.LayoutParams(toolbar.width - 56f.dpToPixel(context!!), toolbar.height)
+          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            params.marginStart = 56f.dpToPixel(context!!)
+          } else {
+            params.leftMargin = 56f.dpToPixel(context!!)
+          }
+          it.layoutParams = params
+        }
         searchView.setOnQueryTextListener(this)
         searchView.setOnCloseListener(this)
-        val searchEditText = searchView.findViewById<EditText>(R.id.search_src_text)
+        val searchEditText: EditText = searchView.findViewById(R.id.search_src_text)
         searchEditText.setTextColor(Color.WHITE)
       }
     } catch (e: InterruptedException) {
@@ -120,8 +136,27 @@ class ListFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.OnCl
   }
 
   override fun onClose(): Boolean {
+    val params = CoordinatorLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT, toolbar.height)
+    params.gravity = Gravity.END
+    searchView.layoutParams = params
     recycleAdapter = HabitRecycleAdapter(HabitListManager.getInstance(context))
     recyclerView!!.adapter = recycleAdapter
     return false
+  }
+
+  @SuppressLint("NewApi")
+  override fun onConfigurationChanged(newConfig: Configuration) {
+    super.onConfigurationChanged(newConfig)
+    val params = when {
+      searchView.isIconified -> CoordinatorLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT, toolbar.height)
+      else -> CoordinatorLayout.LayoutParams((newConfig.screenWidthDp - 56f).dpToPixel(context!!), toolbar.height)
+    }.apply {
+      gravity = Gravity.END
+      when {
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 -> marginStart = 56f.dpToPixel(context!!)
+        else -> leftMargin = 56f.dpToPixel(context!!)
+      }
+    }
+    searchView.layoutParams = params
   }
 }

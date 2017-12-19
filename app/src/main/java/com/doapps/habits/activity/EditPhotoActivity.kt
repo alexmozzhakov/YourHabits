@@ -46,10 +46,10 @@ class EditPhotoActivity : AppCompatActivity() {
       Toast.makeText(this, "This function needs read/write permission", Toast.LENGTH_SHORT).show()
 
 
-  override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+  override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
     super.onActivityResult(requestCode, resultCode, data)
     if (requestCode == requestImage) {
-      if (resultCode == RESULT_OK) {
+      if (resultCode == RESULT_OK && data != null) {
         // Get the result list of select image paths
 
         @Suppress("UNCHECKED_CAST")
