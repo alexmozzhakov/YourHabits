@@ -11,7 +11,7 @@
     android:id="@+id/toolbar"
     android:layout_width="match_parent"
     android:layout_height="?android:attr/actionBarSize"
-    android:background="?colorPrimary"
+    android:background="@color/colorPrimary"
     android:theme="@style/AppTheme.AppBarOverlay"
     app:elevation="0dp"
     app:popupTheme="@style/AppTheme.PopupOverlay"/>
@@ -30,6 +30,7 @@
     android:layout_width="wrap_content"
     android:layout_height="?android:attr/actionBarSize"
     android:layout_gravity="end"
-    android:visibility="gone"/>
+    android:visibility="gone"
+    tools:ignore="RtlSymmetry"/>
 
 </android.support.design.widget.CoordinatorLayout>

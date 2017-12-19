@@ -20,6 +20,7 @@ import com.doapps.habits.BuildConfig
 import com.doapps.habits.R
 import com.doapps.habits.activity.EditPhotoActivity
 import com.doapps.habits.activity.MainActivity
+import com.doapps.habits.data.AvatarData
 import com.facebook.FacebookCallback
 import com.facebook.FacebookException
 import com.facebook.login.LoginManager
@@ -30,6 +31,7 @@ class ProfileEditFragment : Fragment() {
   private var inputPassword = ""
   private var fab: FloatingActionButton? = null
   private var plus: ImageView? = null
+  private val user: FirebaseUser? = FirebaseAuth.getInstance().currentUser
 
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                             savedInstanceState: Bundle?): View? {
@@ -41,16 +43,14 @@ class ProfileEditFragment : Fragment() {
 
     fab!!.setImageResource(R.drawable.ic_check_white_24dp)
     fab!!.setOnClickListener {
-      val user = FirebaseAuth.getInstance().currentUser
 
       if (user != null && user.email != null) {
-        val email = (result.findViewById<View>(R.id.edit_email) as TextView).text.toString()
-            .toLowerCase()
+        val email = (result.findViewById<View>(R.id.edit_email) as TextView).text.toString().toLowerCase()
         val name = (result.findViewById<View>(R.id.edit_name) as TextView).text.toString()
 
         if (!isUpdated(user, email, name)) { // same info
           fragmentManager!!.beginTransaction().remove(this).commit()
-          Log.i("EditProfile", "Nothing to update")
+          Log.i(TAG, "Nothing to update")
           return@setOnClickListener
         }
         if (MainActivity.isFacebook(user)) {
@@ -119,8 +119,10 @@ class ProfileEditFragment : Fragment() {
   }
 
   override fun onPause() {
-    plus!!.setOnClickListener(null)
-    plus!!.visibility = View.GONE
+    if (AvatarData.hasAvatar(context!!)) {
+      plus!!.setOnClickListener(null)
+      plus!!.visibility = View.GONE
+    }
     // Set up fab back
     fab!!.setImageResource(R.drawable.ic_edit_white_24dp)
     fab!!.setOnClickListener {

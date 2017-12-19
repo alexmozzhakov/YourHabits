@@ -1,5 +1,3 @@
-.idea/**.*
-
 .idea/**/*.*
 
 build
@@ -9,7 +7,9 @@ build
 local.properties
 
 gradle
+
 app/app.iml
+
 import-summary.txt
 
 *.hprof
@@ -21,3 +21,13 @@ captures/*
 .DS_Store
 
 *.trace
+
+/app/src/androidTest/java/com/doapps/habits/activity/FacebookLoginTest.java
+
+app/fabric.properties
+
+app/schemas/*
+
+codeiris/
+
+projectFilesBackup/.idea/

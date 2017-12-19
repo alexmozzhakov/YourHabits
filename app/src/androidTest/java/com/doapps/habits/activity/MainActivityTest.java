@@ -41,6 +41,7 @@ public class MainActivityTest {
     closeSoftKeyboard();
     onView(withId(R.id.btnCreate)).perform(click());
     onView(withId(R.id.habits_list)).check(matches(isDisplayed()));
+    onView(withId(R.id.toolbar_search)).check(matches(isDisplayed()));
     onView(withId(R.id.drawer_layout)).perform(swipeRight());
     onView(withId(R.id.drawer_layout)).perform(open());
     onView(withText("Home")).perform(click());
