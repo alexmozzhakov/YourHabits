@@ -6,7 +6,6 @@ android:
     - tools
     - platform-tools
     - tools
-    - build-tools-26.0.0
     - android-26
     - android-22
     - extra-google-google_play_services
@@ -17,7 +16,7 @@ android:
 
 before_script:
   # Create and start emulator
-  - echo no | android create avd --force -n test  -t android-22 --abi armeabi-v7a
+  - echo no | android create avd --force -n test -t android-22 --abi armeabi-v7a
   - emulator -avd test -no-skin -no-audio -no-window &
   - android-wait-for-emulator
   - adb shell input keyevent 82 &
