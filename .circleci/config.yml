@@ -18,8 +18,11 @@ jobs:
             - ~/.gradle
           key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
       - run:
+          name: chmod permissions
+          command: chmod +x .circleci/start_emulator.sh
+      - run:
           name: Start Device
-          command: chmod 777 .circleci/start_emulator.sh | .circleci/start_emulator.sh --headless
+          command: .circleci/start_emulator.sh --headless
       - run:
           name: Run Tests
           command: ./gradlew test connectedAndroidTest
