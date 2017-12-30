@@ -17,10 +17,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import com.doapps.habits.BuildConfig
-import com.doapps.habits.R
 import com.doapps.habits.activity.EditPhotoActivity
 import com.doapps.habits.activity.MainActivity
 import com.doapps.habits.data.AvatarData
+import com.doapps.habits.slider.swipeselector.PixelUtils
 import com.facebook.FacebookCallback
 import com.facebook.FacebookException
 import com.facebook.login.LoginManager
@@ -30,7 +30,7 @@ import com.google.firebase.auth.*
 class ProfileEditFragment : Fragment() {
   private var inputPassword = ""
   private var fab: FloatingActionButton? = null
-  private var plus: ImageView? = null
+  private lateinit var plus: ImageView
   private val user: FirebaseUser? = FirebaseAuth.getInstance().currentUser
 
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -39,11 +39,10 @@ class ProfileEditFragment : Fragment() {
     val result = inflater.inflate(R.layout.fragment_edit_profile, container, false)
     fab = activity!!.findViewById(R.id.fab)
     plus = activity!!.findViewById(R.id.plus_overlay)
-    setUpPhotoEdition(plus, activity, this)
+    if (plus.imageAlpha == 255) setUpPhotoEdition(plus, activity, this)
 
     fab!!.setImageResource(R.drawable.ic_check_white_24dp)
     fab!!.setOnClickListener {
-
       if (user != null && user.email != null) {
         val email = (result.findViewById<View>(R.id.edit_email) as TextView).text.toString().toLowerCase()
         val name = (result.findViewById<View>(R.id.edit_name) as TextView).text.toString()
@@ -120,8 +119,8 @@ class ProfileEditFragment : Fragment() {
 
   override fun onPause() {
     if (AvatarData.hasAvatar(context!!)) {
-      plus!!.setOnClickListener(null)
-      plus!!.visibility = View.GONE
+      plus.setOnClickListener(null)
+      plus.visibility = View.GONE
     }
     // Set up fab back
     fab!!.setImageResource(R.drawable.ic_edit_white_24dp)
@@ -197,8 +196,10 @@ class ProfileEditFragment : Fragment() {
 
     }
 
-    private fun setUpPhotoEdition(plus: ImageView?, activity: Activity?, fragment: Fragment) {
-      plus!!.visibility = View.VISIBLE
+    private fun setUpPhotoEdition(plus: ImageView, activity: Activity?, fragment: Fragment) {
+      if (fragment.view != null && fragment.view!!.height / 3 - PixelUtils.dpToPixel(activity, 50f) > 200) {
+        plus.imageAlpha = 255
+      }
       plus.setOnClickListener {
         fragment.parentFragment!!.childFragmentManager.beginTransaction()
             .remove(fragment).commit()

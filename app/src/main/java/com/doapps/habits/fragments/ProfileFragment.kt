@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.util.Log
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +13,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import com.doapps.habits.BuildConfig
-import com.doapps.habits.R
 import com.doapps.habits.activity.EditPhotoActivity
 import com.doapps.habits.activity.MainActivity
 import com.doapps.habits.data.AvatarData
@@ -54,41 +52,40 @@ class ProfileFragment : Fragment() {
     }
 
     val avatar = result.findViewById<ImageView>(R.id.avatarImage)
+    val topPanel: View = result.findViewById(R.id.topPanel)
 
     if (user != null) {
       location.text = activity!!
           .getSharedPreferences("pref", Context.MODE_PRIVATE)
           .getString("location", "")
 
-      if (!AvatarData.hasAvatar(context!!.applicationContext)) {
-        Log.w(TAG, "no avatar")
-        plus.visibility = View.VISIBLE
+      if (AvatarData.hasAvatar(context!!.applicationContext)) {
+        AvatarData.getAvatar(context!!.applicationContext, avatar)
+      } else {
+        if (BuildConfig.DEBUG) Log.i(TAG, "No avatar")
+        if (topPanel.height - PixelUtils.dpToPixel(context, 50f) < 200) {
+          plus.visibility = View.VISIBLE
+        }
         plus.setOnClickListener {
           val intent = Intent(activity, EditPhotoActivity::class.java)
           startActivity(intent)
         }
-      } else {
-        AvatarData.getAvatar(context!!.applicationContext, avatar)
       }
 
       // FIXME
-      val topPanel: View = result.findViewById(R.id.topPanel)
       topPanel.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
         if (topPanel.height - PixelUtils.dpToPixel(context, 50f) < 200) {
           if (user!!.photoUrl != null) {
-            avatar.imageAlpha = 0
+            avatar.visibility = View.GONE
           }
           plus.imageAlpha = 0
-          name.gravity = Gravity.CENTER
-          location.gravity = Gravity.CENTER
           Log.i("Top Panel", "I really can't fit on top panel, the view is only " + (topPanel.height - PixelUtils.dpToPixel(context, 50f)))
         } else {
           if (user!!.photoUrl != null) {
-            avatar.imageAlpha = 255
+            avatar.visibility = View.VISIBLE
+            avatar.scaleType = ImageView.ScaleType.FIT_CENTER
           }
           plus.imageAlpha = 255
-          name.gravity = Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL
-          location.gravity = Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL
           Log.i("Top Panel", "I fit on top panel")
         }
       }

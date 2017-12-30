@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.percent.PercentFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:layout_marginTop="?android:attr/actionBarSize"
+  android:orientation="vertical">
+
+  <FrameLayout
+    android:id="@+id/topPanel"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:layout_heightPercent="30%">
+
+    <ImageView
+      android:id="@+id/imageView3"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:paddingBottom="55dp"
+      android:adjustViewBounds="true"
+      android:background="@color/colorPrimary"
+      android:contentDescription="@string/avatar"
+      android:scaleType="center"
+      android:src="@drawable/ic_add_avatar"/>
+
+    <TextView
+      android:id="@+id/name"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="30dp"
+      android:layout_gravity="bottom"
+      android:gravity="center_horizontal"
+      android:textColor="@color/white"
+      android:textIsSelectable="true"
+      android:textSize="18sp"/>
+
+    <TextView
+      android:id="@+id/location"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="10dp"
+      android:layout_gravity="bottom"
+      android:gravity="center_horizontal"
+      android:textColor="#bfffffff"
+      android:textIsSelectable="true"
+      android:textSize="14sp"/>
+
+  </FrameLayout>
+
+
+  <!--fix position-->
+  <!-- Connect with facebook button -->
+  <Button
+    android:id="@+id/btn_connect_facebook"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
+    android:paddingTop="14dp"
+    android:paddingBottom="14dp"
+    android:paddingLeft="16dp"
+    android:background="@color/facebook"
+    android:drawableLeft="@drawable/ic_facebook_icon"
+    android:drawablePadding="-32dp"
+    android:gravity="center"
+    android:text="@string/connect_with_facebook"
+    android:textColor="@color/white"
+    android:visibility="gone"
+    app:layout_constraintBottom_toTopOf="@+id/btn_delete_user"
+    app:layout_constraintLeft_toLeftOf="@+id/constraintLayout3"
+    app:layout_constraintRight_toRightOf="@+id/constraintLayout3"
+    tools:ignore="RtlSymmetry"/>
+
+  <!-- Delete user Button -->
+  <Button
+    android:id="@+id/btn_delete_user"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="16dp"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
+    android:layout_gravity="bottom"
+    android:background="@color/colorRed"
+    android:text="@string/delete_user"
+    android:textColor="@color/white"/>
+
+
+  <FrameLayout
+    android:id="@+id/userInfo"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:orientation="vertical"
+    app:layout_marginTopPercent="30%">
+
+    <ImageView
+      android:id="@+id/ivContactItem3"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="40dp"
+      android:layout_marginEnd="16dp"
+      android:layout_marginRight="16dp"
+      android:layout_gravity="end"
+      android:src="@drawable/ic_email_blue_24dp"
+      tools:ignore="ContentDescription"/>
+
+    <TextView
+      android:id="@+id/email"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="40dp"
+      android:paddingStart="44dp"
+      android:paddingEnd="44dp"
+      android:paddingLeft="44dp"
+      android:paddingRight="44dp"
+      android:ellipsize="end"
+      android:gravity="center_horizontal"
+      android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+      android:textColor="#212121"
+      android:textIsSelectable="true"/>
+
+    <View
+      android:layout_width="match_parent"
+      android:layout_height="1dp"
+      android:layout_marginTop="70dp"
+      android:layout_marginStart="16dp"
+      android:layout_marginEnd="16dp"
+      android:layout_marginLeft="16dp"
+      android:layout_marginRight="16dp"
+      android:paddingTop="50dp"
+      android:background="#ccc"/>
+  </FrameLayout>
+
+  <FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:layout_heightPercent="60%">
+
+    <android.support.design.widget.FloatingActionButton
+      android:id="@+id/fab"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginEnd="16dp"
+      android:layout_marginRight="16dp"
+      android:layout_gravity="center|end"
+      android:src="@drawable/ic_edit_white_24dp"/>
+
+  </FrameLayout>
+</android.support.percent.PercentFrameLayout>

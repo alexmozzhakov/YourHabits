@@ -26,7 +26,8 @@ object AvatarData : LiveData<Uri>() {
     else -> value
   }
 
-  fun hasAvatar(context: Context): Boolean = context.getSharedPreferences("pref", Context.MODE_PRIVATE).getString("avatar", null) != null || FirebaseAuth.getInstance().currentUser?.photoUrl != null
+  fun hasAvatar(context: Context): Boolean =
+      context.getSharedPreferences("pref", Context.MODE_PRIVATE).getString("avatar", null) != null || FirebaseAuth.getInstance().currentUser?.photoUrl != null
 
   fun getAvatar(context: Context, imageView: ImageView) {
     val localAvatarUri = context.getSharedPreferences("pref", Context.MODE_PRIVATE).getString("avatar", null)
@@ -38,6 +39,7 @@ object AvatarData : LiveData<Uri>() {
           .transform(PicassoRoundedTransformation())
           .fit().centerInside()
           .into(imageView)
+      imageView.visibility = View.VISIBLE
     } else {
       val user = FirebaseAuth.getInstance().currentUser
       if (user != null) {
