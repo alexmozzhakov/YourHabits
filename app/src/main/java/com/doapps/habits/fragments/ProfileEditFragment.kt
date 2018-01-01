@@ -17,10 +17,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import com.doapps.habits.BuildConfig
+import com.doapps.habits.R
 import com.doapps.habits.activity.EditPhotoActivity
 import com.doapps.habits.activity.MainActivity
 import com.doapps.habits.data.AvatarData
-import com.doapps.habits.slider.swipeselector.PixelUtils
 import com.facebook.FacebookCallback
 import com.facebook.FacebookException
 import com.facebook.login.LoginManager
@@ -197,9 +197,7 @@ class ProfileEditFragment : Fragment() {
     }
 
     private fun setUpPhotoEdition(plus: ImageView, activity: Activity?, fragment: Fragment) {
-      if (fragment.view != null && fragment.view!!.height / 3 - PixelUtils.dpToPixel(activity, 50f) > 200) {
-        plus.imageAlpha = 255
-      }
+      plus.visibility = View.VISIBLE
       plus.setOnClickListener {
         fragment.parentFragment!!.childFragmentManager.beginTransaction()
             .remove(fragment).commit()

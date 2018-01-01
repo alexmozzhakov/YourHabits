@@ -13,6 +13,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import com.doapps.habits.BuildConfig
+import com.doapps.habits.R
 import com.doapps.habits.activity.EditPhotoActivity
 import com.doapps.habits.activity.MainActivity
 import com.doapps.habits.data.AvatarData
@@ -76,7 +77,7 @@ class ProfileFragment : Fragment() {
       topPanel.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
         if (topPanel.height - PixelUtils.dpToPixel(context, 50f) < 200) {
           if (user!!.photoUrl != null) {
-            avatar.visibility = View.GONE
+            avatar.visibility = View.INVISIBLE
           }
           plus.imageAlpha = 0
           Log.i("Top Panel", "I really can't fit on top panel, the view is only " + (topPanel.height - PixelUtils.dpToPixel(context, 50f)))

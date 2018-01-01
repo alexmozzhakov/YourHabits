@@ -12,17 +12,12 @@ import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import com.doapps.habits.R;
-import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import tools.fastlane.screengrab.locale.LocaleTestRule;
 
 @RunWith(AndroidJUnit4.class)
 public class IntegerOverflowTest {
-
-  @ClassRule
-  public static final LocaleTestRule localeTestRule = new LocaleTestRule();
 
   @Rule
   public ActivityTestRule<MainActivity> mainActivityActivityTestRule =

@@ -4,14 +4,12 @@
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
-  android:layout_height="match_parent"
-  android:layout_marginTop="?android:attr/actionBarSize"
-  android:orientation="vertical">
+  android:layout_height="match_parent">
 
   <android.support.constraint.Guideline
     android:id="@+id/top_padding"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
     android:orientation="horizontal"
     app:layout_constraintGuide_percent=".3"/>
 
@@ -72,7 +70,7 @@
     android:layout_height="0dp"
     android:adjustViewBounds="true"
     android:contentDescription="@string/avatar"
-    android:scaleType="fitCenter"
+    android:scaleType="centerInside"
     app:layout_constraintBottom_toTopOf="@id/name"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
@@ -192,6 +190,5 @@
     app:layout_constraintBottom_toTopOf="@id/top_padding"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintTop_toTopOf="@id/top_padding"/>
-
 
 </android.support.constraint.ConstraintLayout>

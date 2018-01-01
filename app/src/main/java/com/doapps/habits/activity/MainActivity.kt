@@ -164,7 +164,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         .beginTransaction()
         .replace(R.id.content_frame, CreateFragment())
         .commit()
-
   }
 
   @Suppress("UNUSED_PARAMETER")
