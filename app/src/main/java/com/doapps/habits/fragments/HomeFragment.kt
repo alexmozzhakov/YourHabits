@@ -22,7 +22,7 @@ import com.android.volley.toolbox.Volley
 import com.doapps.habits.BuildConfig
 import com.doapps.habits.R
 import com.doapps.habits.activity.MainActivity
-import com.doapps.habits.adapter.TimeLineAdapter
+import com.doapps.habits.adapter.TimeLineRecycleAdapter
 import com.doapps.habits.database.HabitsDatabase
 import com.doapps.habits.helper.ConnectionManager
 import com.doapps.habits.helper.ConnectionReceiver
@@ -54,8 +54,6 @@ class HomeFragment : Fragment(), IWeatherUpdater {
 
     weather = view.findViewById(R.id.weather)
     weatherBot = view.findViewById(R.id.weatherBot)
-
-    habitsDatabase = HabitListManager.getInstance(context).habitsDatabase
     GetTask(view).execute()
 
     if (ConnectionManager.isConnected(activity!!)) {
@@ -114,8 +112,7 @@ class HomeFragment : Fragment(), IWeatherUpdater {
                 val jsonResponse = JSONObject(response)
 
                 if (jsonResponse.has("error")) {
-                  onNetworkFail(
-                      Exception(jsonResponse.getString("error")), habitListSize)
+                  onNetworkFail(Exception(jsonResponse.getString("error")), habitListSize)
                 } else {
                   if (activity != null) {
                     activity!!
@@ -134,7 +131,11 @@ class HomeFragment : Fragment(), IWeatherUpdater {
               }
 
             }
-        ) { error -> onNetworkFail(error, habitListSize) }
+        ) { error ->
+          onNetworkFail(error, habitListSize)
+          val mainActivity = (activity as MainActivity?)
+          if (mainActivity != null && mainActivity.avatarEmpty()) mainActivity.removeAvatarPadding()
+        }
     )
   }
 
@@ -145,7 +146,6 @@ class HomeFragment : Fragment(), IWeatherUpdater {
     Log.e("StringRequest error", error.toString())
     weather.text = listSize.toString()
     weatherBot.setText(R.string.all_tasks)
-    (activity as MainActivity).removeAvatarPadding()
   }
 
   override fun onDestroy() {
@@ -157,14 +157,15 @@ class HomeFragment : Fragment(), IWeatherUpdater {
 
   @SuppressLint("StaticFieldLeak")
   private inner class GetTask internal constructor(private val view: View) : AsyncTask<Unit, Unit, List<Habit>>() {
+    private var habitsDatabase: HabitsDatabase = HabitListManager.getInstance(context).habitsDatabase
 
-    override fun doInBackground(vararg voids: Unit): MutableList<Habit> = habitsDatabase!!.habitDao().all
+    override fun doInBackground(vararg voids: Unit): MutableList<Habit> = habitsDatabase.habitDao().all
 
     override fun onPostExecute(habits: List<Habit>) {
       super.onPostExecute(habits)
 
       // set filtered list to adapter
-      val timeLineAdapter = TimeLineAdapter(habits)
+      val timeLineAdapter = TimeLineRecycleAdapter(habits)
       timeLineAdapter.setHasStableIds(true)
       val recyclerView = view.findViewById<RecyclerView>(R.id.timeline)
       recyclerView.layoutManager = LinearLayoutManager(activity)
@@ -197,10 +198,18 @@ class HomeFragment : Fragment(), IWeatherUpdater {
 
   companion object {
 
+    /**
+     * URL to json weather api which returns both location and degrees in celsius
+     */
     private val URL_WEATHER_API = "http://habit.esy.es/weather.php"
+    /**
+     * Broadcast name for monitoring broadcast changes
+     */
     private val BROADCAST = "android.net.conn.CONNECTIVITY_CHANGE"
+    /**
+     * TAG is defined for logging errors and debugging information
+     */
     private val TAG = HomeFragment::class.java.simpleName
-    private var habitsDatabase: HabitsDatabase? = null
 
     /**
      * Initiates

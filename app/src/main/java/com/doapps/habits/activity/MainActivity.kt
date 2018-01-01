@@ -36,11 +36,12 @@ import io.fabric.sdk.android.Fabric
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
   val callbackManager: CallbackManager = CallbackManager.Factory.create()
   var mLastFragment = -1
-  private lateinit var mNavigationView: NavigationView
-  private var user: FirebaseUser? = null
   private lateinit var mDrawerToggle: ActionBarDrawerToggle
+  private lateinit var mNavigationView: NavigationView
+  private lateinit var avatar: ImageView
   lateinit var toolbar: Toolbar
     private set
+  private var user: FirebaseUser? = null
   private var mDrawerLayout: DrawerLayout? = null
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,6 +62,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     mNavigationView = findViewById(R.id.navigationView)
+    avatar = mNavigationView.getHeaderView(0).findViewById(R.id.profile_photo)
 
     if (user == null) {
       FirebaseAuth.getInstance().signInAnonymously().addOnCompleteListener { user = FirebaseAuth.getInstance().currentUser }
@@ -95,9 +97,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
   private fun handleIntentAction() {
     if (intent.action == "no" || intent.action == "yes") {
-      Log.i("MainActivity", "id = ${intent.extras["id"]}")
-      val id: Long = intent.getLongExtra("id", 0)
-      val habit: Habit = HabitListManager.getInstance(this)[id]
+      Log.i(TAG, "id = ${intent.extras["id"]}")
+      val id: Int = intent.getIntExtra("id", 0)
+      val habit: Habit = HabitListManager.getInstance(this)[id.toLong()]!!
       if (BuildConfig.DEBUG) Log.i("Notification Action", intent.action)
       when (intent.action) {
         "yes" -> habit.isDoneMarker = true
@@ -105,13 +107,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
       }
       HabitListManager.getInstance(this).update(habit)
       val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-      notificationManager.cancel(id.toInt())
+      notificationManager.cancel(id)
+      mLastFragment = R.id.nav_list
       supportFragmentManager
           .beginTransaction()
           .add(R.id.content_frame, ListFragment())
           .commit()
-      mLastFragment = R.id.nav_list
-      toolbar.title = "List"
     }
   }
 
@@ -164,7 +165,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         .beginTransaction()
         .replace(R.id.content_frame, CreateFragment())
         .commit()
-
   }
 
   @Suppress("UNUSED_PARAMETER")
@@ -203,7 +203,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
   }
 
   fun onSetupNavigationDrawer(user: FirebaseUser?) {
-
     mNavigationView.setNavigationItemSelectedListener(this)
     mNavigationView.menu.getItem(0).isChecked = true
     if (user != null && user.isAnonymous) {
@@ -220,7 +219,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
       navName.text = user.displayName
       navEmail.text = user.email
       mNavigationView.getHeaderView(0).setOnClickListener({ toProfile(it) })
-      val avatar = mNavigationView.getHeaderView(0).findViewById<ImageView>(R.id.profile_photo)
       if (AvatarData.hasAvatar(applicationContext)) {
         AvatarData.getAvatar(applicationContext, avatar)
         mNavigationView.getHeaderView(0)
@@ -233,6 +231,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
       mNavigationView.getHeaderView(0).visibility = View.GONE
     }
   }
+
+  fun avatarEmpty() : Boolean = avatar.drawable == null
 
   private fun logoutUser() {
     // Sign out from account manager
@@ -291,6 +291,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
       }
       return false
     }
+
+    /**
+     * TAG is defined for logging errors and debugging information
+     */
+    private val TAG = MainActivity::class.java.simpleName
   }
 
   override fun onConfigurationChanged(newConfig: Configuration) {

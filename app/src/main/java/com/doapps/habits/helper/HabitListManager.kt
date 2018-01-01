@@ -5,13 +5,13 @@ import android.arch.persistence.room.Room
 import android.content.Context
 import android.os.AsyncTask
 import android.util.Log
+import com.doapps.habits.BuildConfig
 import com.doapps.habits.database.HabitsDatabase
 import com.doapps.habits.database.ProgramsDatabase
 import com.doapps.habits.models.Habit
-import com.doapps.habits.receivers.NotificationReceiver
 import java.util.concurrent.ExecutionException
 
-class HabitListManager private constructor(private val context: Context) {
+class HabitListManager private constructor(context: Context) {
 
   val list: MutableList<Habit>
     @Throws(InterruptedException::class, ExecutionException::class)
@@ -21,7 +21,7 @@ class HabitListManager private constructor(private val context: Context) {
   var programDatabase = Room.databaseBuilder(context, ProgramsDatabase::class.java, "programs").build()
 
   @Throws(InterruptedException::class, ExecutionException::class)
-  operator fun get(id: Long): Habit = GetHabitTask().execute(id).get()
+  operator fun get(id: Long): Habit? = GetHabitTask().execute(id).get()
 
   @Throws(InterruptedException::class, ExecutionException::class)
   fun update(habit: Habit) {
@@ -30,8 +30,7 @@ class HabitListManager private constructor(private val context: Context) {
 
   fun onItemDismiss(position: Int) {
     val habitId = DeleteTask().execute(position).get()
-    Log.i("ListManager", "habitId = $habitId")
-    NotificationReceiver.cancelAlarm(context, habitId)
+    if (BuildConfig.DEBUG) Log.i(TAG, "Removed habit with id = $habitId")
   }
 
   fun onItemMove(fromPosition: Habit, toPosition: Habit) {
@@ -73,6 +72,11 @@ class HabitListManager private constructor(private val context: Context) {
   }
 
   companion object {
+    /**
+     * TAG is defined for logging errors and debugging information
+     */
+    private val TAG = HabitListManager::class.java.simpleName
+
     @Volatile private var instance: HabitListManager? = null
 
     fun getInstance(context: Context?): HabitListManager {

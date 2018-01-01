@@ -30,7 +30,10 @@ class UserRemoveCompleteListener(private val activity: FragmentActivity) : OnCom
 
   override fun onComplete(task: Task<Void>) = when {
     task.isSuccessful -> onSuccess()
-    task.exception is FirebaseException -> onReAuthNeeded()
+    task.exception is FirebaseException -> {
+      if (BuildConfig.DEBUG) Log.e(TAG, task.exception.toString())
+      onReAuthNeeded()
+    }
     else -> Toast.makeText(activity.applicationContext, task.exception.toString(), Toast.LENGTH_SHORT).show()
   }
 
@@ -40,7 +43,7 @@ class UserRemoveCompleteListener(private val activity: FragmentActivity) : OnCom
       val callbackManager = (activity as MainActivity).callbackManager
       LoginManager.getInstance().registerCallback(callbackManager,
           object : FacebookCallback<LoginResult> {
-            private val TAG: String = "FacebookCallback"
+            private val TAG = "FacebookCallback"
 
             override fun onSuccess(result: LoginResult) {
               if (BuildConfig.DEBUG) Log.d(TAG, "facebook:onSuccess:" + result)
@@ -94,5 +97,12 @@ class UserRemoveCompleteListener(private val activity: FragmentActivity) : OnCom
     if (BuildConfig.DEBUG) Log.d("FA", "User account deleted.")
     AvatarData.clear(activity)
     activity.startActivity(Intent(activity, MainActivity::class.java))
+  }
+
+  companion object {
+    /**
+     * TAG is defined for logging errors and debugging information
+     */
+    private val TAG = UserRemoveCompleteListener::class.java.simpleName
   }
 }

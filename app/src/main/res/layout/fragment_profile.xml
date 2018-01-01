@@ -4,14 +4,12 @@
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
-  android:layout_height="match_parent"
-  android:layout_marginTop="?android:attr/actionBarSize"
-  android:orientation="vertical">
+  android:layout_height="match_parent">
 
   <android.support.constraint.Guideline
     android:id="@+id/top_padding"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
     android:orientation="horizontal"
     app:layout_constraintGuide_percent=".3"/>
 
@@ -39,14 +37,14 @@
     android:id="@+id/location"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="8dp"
+    android:layout_marginBottom="4dp"
     android:layout_marginStart="8dp"
     android:layout_marginEnd="8dp"
     android:layout_gravity="bottom"
     android:gravity="center_horizontal"
     android:textColor="#bfffffff"
     android:textIsSelectable="true"
-    android:textSize="14sp"
+    android:textSize="16sp"
     app:layout_constraintBottom_toTopOf="@id/triangle"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"/>
@@ -61,7 +59,7 @@
     android:gravity="center_horizontal"
     android:textColor="@color/white"
     android:textIsSelectable="true"
-    android:textSize="18sp"
+    android:textSize="20sp"
     app:layout_constraintBottom_toTopOf="@id/location"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"/>
@@ -72,7 +70,7 @@
     android:layout_height="0dp"
     android:adjustViewBounds="true"
     android:contentDescription="@string/avatar"
-    android:scaleType="fitCenter"
+    android:scaleType="centerInside"
     app:layout_constraintBottom_toTopOf="@id/name"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
@@ -133,52 +131,71 @@
     app:layout_constraintStart_toStartOf="parent"
     tools:ignore="RtlSymmetry"/>
 
-
   <RelativeLayout
     android:id="@+id/user_info"
-    android:layout_width="match_parent"
+    android:layout_width="0dp"
     android:layout_height="0dp"
+    android:layout_marginTop="8dp"
     android:paddingStart="16dp"
     android:paddingEnd="16dp"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
     android:orientation="vertical"
-    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintBottom_toTopOf="@id/btn_delete_user"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="@id/top_padding">
+    app:layout_constraintTop_toBottomOf="@id/fab">
 
     <ImageView
       android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_alignParentEnd="true"
-      android:layout_alignParentRight="true"
+      android:layout_height="72dp"
       android:layout_alignTop="@+id/email"
+      android:layout_centerVertical="true"
       android:src="@drawable/ic_email_blue_24dp"
       tools:ignore="ContentDescription"/>
 
     <TextView
       android:id="@+id/email"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginTop="40dp"
-      android:layout_marginStart="44dp"
-      android:layout_marginEnd="44dp"
-      android:layout_marginLeft="44dp"
-      android:layout_marginRight="44dp"
+      android:layout_width="wrap_content"
+      android:layout_height="72dp"
+      android:layout_marginStart="56dp"
+      android:layout_marginLeft="56dp"
       android:ellipsize="end"
-      android:gravity="center_horizontal"
+      android:gravity="center_vertical"
       android:textAppearance="@style/TextAppearance.AppCompat.Medium"
       android:textColor="#212121"
       android:textIsSelectable="true"/>
 
     <View
+      android:id="@+id/sector_separator"
       android:layout_width="match_parent"
       android:layout_height="1dp"
       android:layout_marginTop="8dp"
-      android:layout_below="@+id/email"
-      android:layout_centerHorizontal="true"
-      android:background="#ccc"/>
+      android:layout_marginLeft="56dp"
+      android:layout_below="@id/email"
+      android:background="#dbdbdb"
+      tools:ignore="RtlHardcoded"/>
+
+    <ImageView
+      android:id="@+id/achievements_icon"
+      android:layout_width="wrap_content"
+      android:layout_height="72dp"
+      android:layout_marginTop="8dp"
+      android:layout_below="@id/sector_separator"
+      android:src="@drawable/ic_grade_blue_24dp"
+      android:visibility="gone"
+      tools:ignore="ContentDescription"/>
+
+    <ListView
+      android:id="@+id/achievements_list"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="8dp"
+      android:layout_marginStart="56dp"
+      android:layout_marginLeft="56dp"
+      android:layout_below="@id/sector_separator"
+      android:visibility="invisible"
+      tools:ignore="NestedScrolling,RtlSymmetry"/>
   </RelativeLayout>
 
   <android.support.design.widget.FloatingActionButton
@@ -192,6 +209,5 @@
     app:layout_constraintBottom_toTopOf="@id/top_padding"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintTop_toTopOf="@id/top_padding"/>
-
 
 </android.support.constraint.ConstraintLayout>

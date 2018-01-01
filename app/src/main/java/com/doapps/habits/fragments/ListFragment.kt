@@ -22,7 +22,7 @@ import android.widget.EditText
 import com.doapps.habits.R
 import com.doapps.habits.activity.MainActivity
 import com.doapps.habits.adapter.HabitRecycleAdapter
-import com.doapps.habits.adapter.HabitSearchAdapter
+import com.doapps.habits.adapter.HabitSearchRecycleAdapter
 import com.doapps.habits.adapter.IMovableListAdapter
 import com.doapps.habits.helper.HabitListManager
 import com.doapps.habits.helper.SimpleItemTouchHelperCallback
@@ -121,7 +121,7 @@ class ListFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.OnCl
       habitList.indices
           .filter { habitList[it].title.toLowerCase().contains(lowerCaseString) }
           .mapTo(searchResult) { habitList[it] }
-      recycleAdapter = HabitSearchAdapter(searchResult, HabitListManager.getInstance(context))
+      recycleAdapter = HabitSearchRecycleAdapter(searchResult, HabitListManager.getInstance(context))
       recyclerView!!.adapter = recycleAdapter
     } catch (e: InterruptedException) {
       e.printStackTrace()
@@ -147,10 +147,11 @@ class ListFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.OnCl
   @SuppressLint("NewApi")
   override fun onConfigurationChanged(newConfig: Configuration) {
     super.onConfigurationChanged(newConfig)
-    val params = when {
-      searchView.isIconified -> CoordinatorLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT, toolbar.height)
-      else -> CoordinatorLayout.LayoutParams((newConfig.screenWidthDp - 56f).dpToPixel(context!!), toolbar.height)
-    }.apply {
+    val width = when {
+      searchView.isIconified -> ConstraintLayout.LayoutParams.WRAP_CONTENT
+      else -> (newConfig.screenWidthDp - 56f).dpToPixel(context!!)
+    }
+    val params = CoordinatorLayout.LayoutParams(width, toolbar.height).apply {
       gravity = Gravity.END
       when {
         Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 -> marginStart = 56f.dpToPixel(context!!)

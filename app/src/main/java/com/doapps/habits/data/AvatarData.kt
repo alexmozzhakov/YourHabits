@@ -29,8 +29,11 @@ object AvatarData : LiveData<Uri>() {
   fun hasAvatar(context: Context): Boolean =
       context.getSharedPreferences("pref", Context.MODE_PRIVATE).getString("avatar", null) != null || FirebaseAuth.getInstance().currentUser?.photoUrl != null
 
+  fun getLocalAvatarUri(context: Context): String? =
+      context.getSharedPreferences("pref", Context.MODE_PRIVATE).getString("avatar", null)
+
   fun getAvatar(context: Context, imageView: ImageView) {
-    val localAvatarUri = context.getSharedPreferences("pref", Context.MODE_PRIVATE).getString("avatar", null)
+    val localAvatarUri = getLocalAvatarUri(context)
     if (localAvatarUri != null) {
       val optimalFile = File(localAvatarUri)
       if (BuildConfig.DEBUG) Log.i(TAG, localAvatarUri.toString())

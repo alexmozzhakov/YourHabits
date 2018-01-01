@@ -11,7 +11,7 @@ import com.doapps.habits.models.Habit
 import com.doapps.habits.view.holders.HabitViewHolder
 import java.util.*
 
-class HabitSearchAdapter(private val habitList: List<Habit>, private val habitsDatabase: HabitListManager)
+class HabitSearchRecycleAdapter(private val habitList: List<Habit>, private val habitsDatabase: HabitListManager)
   : RecyclerView.Adapter<HabitViewHolder>(), IMovableListAdapter {
 
   // ignored

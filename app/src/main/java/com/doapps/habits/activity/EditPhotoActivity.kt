@@ -128,7 +128,7 @@ class EditPhotoActivity : AppCompatActivity() {
      */
     private val KEY_IMAGE = "image"
     /**
-     * Defined for logging errors and debugging information
+     * TAG is defined for logging errors and debugging information
      */
     private val TAG = EditPhotoActivity::class.java.simpleName
 

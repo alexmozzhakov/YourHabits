@@ -25,7 +25,7 @@ public final class Habit {
   private int markerUpdatedDay;
   private int markerUpdatedMonth;
   private int markerUpdatedYear;
-  private long followingFrom;
+  private long followingFrom = 0;
   private int doneCounter = 0;
 
   public Habit(String title, String question, boolean doneMarker,

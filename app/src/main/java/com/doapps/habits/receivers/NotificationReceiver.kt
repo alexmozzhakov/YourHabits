@@ -14,21 +14,18 @@ import java.util.concurrent.TimeUnit
 class NotificationReceiver : BroadcastReceiver() {
 
   override fun onReceive(context: Context, intent: Intent) {
-    if (BuildConfig.DEBUG)
-      Log.i("NotificationReceiver", "received for id = ${intent.extras.getLong("id")}")
+    if (BuildConfig.DEBUG) Log.i(TAG, "received for id = ${intent.extras.getLong("id")}")
     val notificationIntent = Intent(context, NotificationIntentService::class.java)
     notificationIntent.putExtra("id", intent.extras.getLong("id"))
-    notificationIntent.putExtra("question", intent.extras.getString("question"))
     context.startService(notificationIntent)
     // Notification is handled in MainActivity
   }
 
-  fun setAlarm(context: Context, id: Long, question: String?) {
+  fun setAlarm(context: Context, id: Long) {
     val am = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
     val intent = Intent(context, NotificationReceiver::class.java)
     intent.putExtra("id", id)
-    Log.i(TAG, "GOT setAlarm id = $id")
-    intent.putExtra("question", question)
+    if (BuildConfig.DEBUG) Log.i(TAG, "Setting an alarm for id = $id")
 
     val pi = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
@@ -44,15 +41,10 @@ class NotificationReceiver : BroadcastReceiver() {
   }
 
   companion object {
-    val TAG: String = NotificationReceiver::class.java.simpleName
-
-    fun cancelAlarm(context: Context, habitId: Int) {
-      val am = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-      val myIntent = Intent(context, NotificationIntentService::class.java)
-      val pendingIntent = PendingIntent.getActivity(context, habitId, myIntent, PendingIntent.FLAG_UPDATE_CURRENT)
-      pendingIntent.cancel()
-      am.cancel(pendingIntent)
-    }
+    /**
+     * TAG is defined for logging errors and debugging information
+     */
+    private val TAG = NotificationReceiver::class.java.simpleName
   }
 }
 

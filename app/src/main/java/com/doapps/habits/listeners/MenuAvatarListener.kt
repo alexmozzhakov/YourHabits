@@ -63,6 +63,9 @@ class MenuAvatarListener(lifecycleOwner: LifecycleOwner,
   }
 
   companion object {
-    val TAG: String = MenuAvatarListener::class.java.simpleName
+    /**
+     * TAG is defined for logging errors and debugging information
+     */
+    private val TAG = MenuAvatarListener::class.java.simpleName
   }
 }

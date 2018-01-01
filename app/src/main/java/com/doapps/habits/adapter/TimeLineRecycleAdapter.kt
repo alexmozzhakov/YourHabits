@@ -10,7 +10,7 @@ import com.doapps.habits.view.holders.TimeLineViewHolder
 import com.github.vipulasri.timelineview.TimelineView
 
 
-class TimeLineAdapter(private var feedList: List<Habit>)
+class TimeLineRecycleAdapter(private var feedList: List<Habit>)
   : RecyclerView.Adapter<TimeLineViewHolder>(), IListUpdater<Habit> {
 
   override fun getItemViewType(position: Int): Int = TimelineView.getTimeLineViewType(position, itemCount)

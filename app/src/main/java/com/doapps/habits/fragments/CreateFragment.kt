@@ -119,6 +119,7 @@ class CreateFragment : Fragment(), AdapterView.OnItemSelectedListener {
         llCustomFrequency.visibility = View.VISIBLE
       }
     }
+    //FIXME commented out code
 //    else {
 //      sFrequency.visibility = View.VISIBLE
 //      llCustomFrequency.visibility = View.GONE
@@ -139,14 +140,14 @@ class CreateFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
     override fun doInBackground(vararg habit: Habit): Long? {
       if (BuildConfig.DEBUG) {
-        Log.i("InsertHabitTask", "New program added")
+        Log.i("InsertHabitTask", "New habit added")
       }
       return habitsDatabase!!.habitDao().insert(habit[0])
     }
 
     override fun onPostExecute(id: Long?) {
       val notificationService = NotificationReceiver()
-      notificationService.setAlarm(context!!, id!!, editQuestion.text.toString())
+      notificationService.setAlarm(context!!, id!!)
       (activity as MainActivity).toolbar.title = getString(R.string.list)
       (activity as MainActivity).setChecked(2)
       (activity as MainActivity).mLastFragment = R.id.nav_list

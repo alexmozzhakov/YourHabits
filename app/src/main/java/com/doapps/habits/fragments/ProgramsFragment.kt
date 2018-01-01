@@ -197,7 +197,6 @@ class ProgramsFragment : Fragment(), ClickableDataSnapshotFragment {
   }
 
   companion object {
-
     /**
      * TAG is defined for logging errors and debugging information
      */

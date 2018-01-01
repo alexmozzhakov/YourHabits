@@ -1,23 +1,26 @@
 package com.doapps.habits.fragments
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import com.doapps.habits.BuildConfig
+import com.doapps.habits.R
 import com.doapps.habits.activity.EditPhotoActivity
 import com.doapps.habits.activity.MainActivity
 import com.doapps.habits.data.AvatarData
+import com.doapps.habits.database.ProgramsDatabase
+import com.doapps.habits.helper.HabitListManager
 import com.doapps.habits.listeners.ProfileAvatarListener
 import com.doapps.habits.listeners.UserRemoveCompleteListener
+import com.doapps.habits.models.Program
 import com.doapps.habits.slider.swipeselector.PixelUtils
 import com.facebook.FacebookCallback
 import com.facebook.FacebookException
@@ -26,6 +29,7 @@ import com.facebook.login.LoginResult
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import java.util.*
+import kotlin.math.roundToInt
 
 class ProfileFragment : Fragment() {
 
@@ -55,10 +59,15 @@ class ProfileFragment : Fragment() {
     val topPanel: View = result.findViewById(R.id.topPanel)
 
     if (user != null) {
-      location.text = activity!!
+      val locationInfo = activity!!
           .getSharedPreferences("pref", Context.MODE_PRIVATE)
           .getString("location", "")
 
+      if (locationInfo != "") {
+        location.text = locationInfo
+      } else {
+        location.visibility = View.GONE
+      }
       if (AvatarData.hasAvatar(context!!.applicationContext)) {
         AvatarData.getAvatar(context!!.applicationContext, avatar)
       } else {
@@ -76,7 +85,7 @@ class ProfileFragment : Fragment() {
       topPanel.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
         if (topPanel.height - PixelUtils.dpToPixel(context, 50f) < 200) {
           if (user!!.photoUrl != null) {
-            avatar.visibility = View.GONE
+            avatar.visibility = View.INVISIBLE
           }
           plus.imageAlpha = 0
           Log.i("Top Panel", "I really can't fit on top panel, the view is only " + (topPanel.height - PixelUtils.dpToPixel(context, 50f)))
@@ -140,13 +149,51 @@ class ProfileFragment : Fragment() {
       }
       AvatarData.observe(this, ProfileAvatarListener(context!!, avatar, activity!!, this, plus))
     }
-
+    val habitListManager = HabitListManager.getInstance(context)
+    val programDatabase = habitListManager.programDatabase
+    val achievementsIcon = result.findViewById<View>(R.id.achievements_icon)
+    val achievementsList = result.findViewById<ListView>(R.id.achievements_list)
+    ShowAchievements(programDatabase, achievementsIcon, achievementsList).execute()
     return result
   }
 
+  @SuppressLint("StaticFieldLeak")
+  private class ShowAchievements internal constructor(val programDatabase: ProgramsDatabase, val icon: View, val listView: ListView) : AsyncTask<Unit, Unit, MutableList<Program>?>() {
+    val mContext: Context = icon.context
+    override fun doInBackground(vararg voids: Unit): MutableList<Program>? = programDatabase.programDao().all
+    override fun onPostExecute(result: MutableList<Program>?) {
+      if (result != null) {
+        val habitListManager = HabitListManager.getInstance(mContext)
+        if (result.any { getDaysFollowed(habitListManager, it) > 0 }) {
+          icon.visibility = View.VISIBLE
+          listView.visibility = View.VISIBLE
+
+          listView.adapter =
+              ArrayAdapter<String>(mContext, R.layout.achievement_list_item,
+                  result.filter { getDaysFollowed(habitListManager, it) > 0 }.map { it.title + " for " + getDaysFollowed(habitListManager, it) + " days" })
+
+          listView.isEnabled = false
+        }
+        Log.i(TAG, result.toString())
+        super.onPostExecute(result)
+      }
+    }
+
+    private fun getDaysFollowed(habitListManager: HabitListManager, program: Program) =
+        ((System.currentTimeMillis() - habitListManager[program.habitId]!!.followingFrom) / 8.64e7).roundToInt()
+
+  }
+
+
   companion object {
-    internal val editorOpened = BooleanArray(1)
+    /**
+     * TAG is defined for logging errors and debugging information
+     */
     private val TAG = ProfileFragment::class.java.simpleName
+    /**
+     * Array showing if profile editing fragment is opened
+     */
+    internal val editorOpened = BooleanArray(1)
     var user = FirebaseAuth.getInstance().currentUser
   }
 }

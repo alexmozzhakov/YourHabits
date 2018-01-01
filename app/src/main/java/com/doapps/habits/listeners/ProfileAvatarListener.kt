@@ -60,6 +60,9 @@ class ProfileAvatarListener(private val context: Context, private val avatar: Im
   }
 
   companion object {
-    val TAG: String = ProfileAvatarListener::class.java.simpleName
+    /**
+     * TAG is defined for logging errors and debugging information
+     */
+    private val TAG = ProfileAvatarListener::class.java.simpleName
   }
 }

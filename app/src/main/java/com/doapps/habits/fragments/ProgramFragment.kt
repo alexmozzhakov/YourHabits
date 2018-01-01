@@ -56,9 +56,7 @@ class ProgramFragment : Fragment() {
     })
     programRef.addValueEventListener(object : ValueEventListener {
       override fun onDataChange(dataSnapshot: DataSnapshot) {
-        if (BuildConfig.DEBUG) {
-          Log.i("Program fragment", dataSnapshot.toString())
-        }
+        if (BuildConfig.DEBUG) Log.i(TAG, dataSnapshot.toString())
 
         fab.setOnClickListener {
           try {
@@ -137,8 +135,7 @@ class ProgramFragment : Fragment() {
     override fun onPostExecute(id: Long?) {
       super.onPostExecute(id)
       val notificationService = NotificationReceiver()
-      notificationService.setAlarm(context, id!!,
-          dataSnapshot.child("habit").child("question").getValue(String::class.java))
+      notificationService.setAlarm(context, id!!)
 
       val achievements = createAchievementList(dataSnapshot.child("achievements"))
 
@@ -155,7 +152,10 @@ class ProgramFragment : Fragment() {
   }
 
   companion object {
-
+    /**
+     * TAG is defined for logging errors and debugging information
+     */
+    private val TAG = ProgramFragment::class.java.simpleName
     private lateinit var programDatabase: ProgramsDatabase
     private lateinit var habitDatabase: HabitsDatabase
 

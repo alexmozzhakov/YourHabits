@@ -9,9 +9,9 @@ android {
     defaultConfig {
         applicationId "com.doapps.habit"
         minSdkVersion 16
-        targetSdkVersion 26
+        targetSdkVersion 27
         versionCode 1
-        versionName "0.9.5"
+        versionName "0.9.6"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         javaCompileOptions {
@@ -75,7 +75,6 @@ dependencies {
         exclude group: 'com.android.support'
     }
     androidTestImplementation "com.android.support.test:runner:$runnerVersion"
-    androidTestImplementation 'tools.fastlane:screengrab:1.1.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
 }
 
