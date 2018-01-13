@@ -23,6 +23,7 @@ class HabitNotificationBuilder(val id: Int) : NotificationBuilder {
     val resultPendingIntent = taskStackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
 
     mBuilder.setSmallIcon(R.drawable.ic_check_white_24dp)
+    mBuilder.setContentTitle(context.getString(R.string.app_name))
     mBuilder.setContentText(str)
 
     // Setting up yesIntent

@@ -29,6 +29,8 @@ import com.doapps.habits.listeners.NameChangeListener
 import com.doapps.habits.models.Habit
 import com.doapps.habits.slider.swipeselector.dpToPixel
 import com.facebook.CallbackManager
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.GoogleApiAvailability
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import io.fabric.sdk.android.Fabric
@@ -65,7 +67,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     avatar = mNavigationView.getHeaderView(0).findViewById(R.id.profile_photo)
 
     if (user == null) {
-      FirebaseAuth.getInstance().signInAnonymously().addOnCompleteListener { user = FirebaseAuth.getInstance().currentUser }
+      if (isGooglePlayServicesAvailable(this))
+        FirebaseAuth.getInstance().signInAnonymously().addOnCompleteListener { user = FirebaseAuth.getInstance().currentUser }
       anonymousMenuSetup()
     } else {
       onSetupNavigationDrawer(user)
@@ -114,6 +117,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
           .add(R.id.content_frame, ListFragment())
           .commit()
     }
+  }
+
+  fun isGooglePlayServicesAvailable(context: Context): Boolean {
+    val googleApiAvailability = GoogleApiAvailability.getInstance();
+    val resultCode = googleApiAvailability.isGooglePlayServicesAvailable(context);
+    return resultCode == ConnectionResult.SUCCESS;
   }
 
   override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -232,7 +241,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
   }
 
-  fun avatarEmpty() : Boolean = avatar.drawable == null
+  fun avatarEmpty(): Boolean = avatar.drawable == null
 
   private fun logoutUser() {
     // Sign out from account manager

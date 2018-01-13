@@ -17,12 +17,12 @@ class HabitViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
   internal fun setProgressBar(habit: Habit) {
     if (habit.doneCounter != 0) {
-      val progress = when (habit.frequencyArray.size) {
-        2 -> habit.doneCounter * 100 / habit.frequencyArray[0]
+      val progress = when (habit.frequency.size) {
+        2 -> habit.doneCounter * 100 / habit.frequency[0]
         else -> {
-          val daysCount = when (habit.frequencyArray.last()) {
+          val daysCount = when (habit.frequency.last()) {
             0 -> 1
-            else -> habit.frequencyArray.size - 1
+            else -> habit.frequency.size - 1
           }
           habit.doneCounter * 100 / daysCount
         }

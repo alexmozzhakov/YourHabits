@@ -12,7 +12,7 @@ object DayFilter {
     val dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK)
     val habitIterator = todayHabits.iterator()
     while (habitIterator.hasNext()) {
-      val freq = habitIterator.next().frequencyArray
+      val freq = habitIterator.next().frequency
 
       if (!freq.isEmpty() && freq.size > 2 && notToday(freq, dayOfWeek)) habitIterator.remove()
       else if (freq.isEmpty() && BuildConfig.DEBUG) Log.w("filterListByDay()", "frequency not set")
@@ -23,7 +23,7 @@ object DayFilter {
   fun filterListByDay(dayHabits: MutableCollection<Habit>, dayOfWeek: Int) {
     val habitIterator: MutableIterator<Habit> = dayHabits.iterator()
     while (habitIterator.hasNext()) {
-      val freq = habitIterator.next().frequencyArray
+      val freq = habitIterator.next().frequency
 
       if (!freq.isEmpty() && !isEveryday(freq) && (once(freq) || notToday(freq, dayOfWeek))) habitIterator.remove()
       else if (freq.isEmpty() && BuildConfig.DEBUG) Log.w("filterListByDay()", "frequency not set")
