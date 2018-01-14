@@ -82,28 +82,23 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     mDrawerToggle = object : ActionBarDrawerToggle(this, mDrawerLayout, toolbar,
         R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
       override fun onDrawerOpened(drawerView: View) {
-        if (mLastFragment == R.id.nav_profile) {
-          closeImm()
-        }
+        if (mLastFragment == R.id.nav_profile) closeImm()
         super.onDrawerOpened(drawerView)
       }
     }
 
     mDrawerLayout!!.addDrawerListener(mDrawerToggle)
 
-    if (actionBar != null) {
-      actionBar!!.setHomeButtonEnabled(true)
-    }
+    if (actionBar != null) actionBar.setHomeButtonEnabled(true)
 
     AvatarData.observe(this, MenuAvatarListener(this, applicationContext, mNavigationView))
   }
 
   private fun handleIntentAction() {
     if (intent.action == "no" || intent.action == "yes") {
-      Log.i(TAG, "id = ${intent.extras["id"]}")
       val id: Int = intent.getIntExtra("id", 0)
       val habit: Habit = HabitListManager.getInstance(this)[id.toLong()]!!
-      if (BuildConfig.DEBUG) Log.i("Notification Action", intent.action)
+      if (BuildConfig.DEBUG) Log.i(TAG, "${intent.action} for id = $id")
       when (intent.action) {
         "yes" -> habit.isDoneMarker = true
         "no" -> habit.isDoneMarker = false
@@ -112,6 +107,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
       val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
       notificationManager.cancel(id)
       mLastFragment = R.id.nav_list
+      toolbar.title = getString(R.string.list)
       supportFragmentManager
           .beginTransaction()
           .add(R.id.content_frame, ListFragment())
@@ -119,10 +115,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
   }
 
-  fun isGooglePlayServicesAvailable(context: Context): Boolean {
-    val googleApiAvailability = GoogleApiAvailability.getInstance();
-    val resultCode = googleApiAvailability.isGooglePlayServicesAvailable(context);
-    return resultCode == ConnectionResult.SUCCESS;
+  private fun isGooglePlayServicesAvailable(context: Context): Boolean {
+    val googleApiAvailability = GoogleApiAvailability.getInstance()
+    val resultCode = googleApiAvailability.isGooglePlayServicesAvailable(context)
+    return resultCode == ConnectionResult.SUCCESS
   }
 
   override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -201,8 +197,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     mNavigationView.menu.getItem(0).isChecked = true
 
     if (BuildConfig.DEBUG) Log.i("FirebaseAuth", "User is anonymous")
-    mNavigationView.menu.findItem(R.id.nav_logout).isVisible = true
-    mNavigationView.menu.findItem(R.id.nav_logout).title = "Login"
+    if (isGooglePlayServicesAvailable(this)) {
+      mNavigationView.menu.findItem(R.id.nav_logout).title = "Login"
+    } else {
+      mNavigationView.menu.findItem(R.id.nav_logout).isVisible = false
+    }
     mNavigationView.getHeaderView(0).visibility = View.GONE
 
   }
@@ -290,16 +289,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
   }
 
   companion object {
+    /**
+     * A delay to let NavigationDrawer close and not freeze
+     */
     private val INFLATE_DELAY = 200L
 
-    fun isFacebook(user: FirebaseUser): Boolean {
-      if (user.providers != null) {
-        user.providers!!
-            .filter { it.contains("facebook") }
-            .forEach { return true }
-      }
-      return false
-    }
+    /**
+     * Checks whether given Firebase user is connected with Facebook
+     * @param user FirebaseUser item to be checked
+     */
+    fun isFacebook(user: FirebaseUser) = user.providers!!.any { it.contains("facebook") }
 
     /**
      * TAG is defined for logging errors and debugging information

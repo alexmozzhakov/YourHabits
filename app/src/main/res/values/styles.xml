@@ -16,6 +16,7 @@
     <item name="colorControlNormal">#80cbc4</item>
     <item name="colorControlActivated">#80cbc4</item>
     <item name="colorControlHighlight">#80cbc4</item>
+    <item name="android:fontFamily">@font/montserrat_regular</item>
   </style>
 
   <style name="AppTheme.NoShadow" parent="AppTheme.NoActionBar">

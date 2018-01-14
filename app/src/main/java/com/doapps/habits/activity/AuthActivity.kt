@@ -82,8 +82,7 @@ class AuthActivity : AppCompatActivity() {
   }
 
   @Suppress("UNUSED_PARAMETER")
-  fun toTerms(view: View) =
-      startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("http://habit.esy.es/terms.txt")))
+  fun toTerms(view: View) = startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("http://habit.esy.es/terms.txt")))
 
   override fun onBackPressed() = finishAffinity()
 }

@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.TextInputEditText
 import android.support.v7.app.AppCompatActivity
+import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import com.doapps.habits.R
@@ -20,7 +21,8 @@ class PasswordRecoveryActivity : AppCompatActivity() {
     emailEdit = findViewById(R.id.textInputEditText)
   }
 
-  fun recoverPassword() {
+  @Suppress("UNUSED_PARAMETER")
+  fun recoverPassword(view: View) {
     val newEmail = emailEdit.text.toString().trim { it <= ' ' }
     when {
       newEmail.isEmpty() -> Toast.makeText(applicationContext, "Email is empty", Toast.LENGTH_SHORT).show()
