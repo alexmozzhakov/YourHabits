@@ -1,7 +1,10 @@
 package com.doapps.habits.slider.swipeselector;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -9,6 +12,7 @@ import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import com.doapps.habits.R;
@@ -58,16 +62,16 @@ public class SwipeStringSelector extends FrameLayout implements IStringSelector 
     TypedArray ta = context.getTheme().obtainStyledAttributes(attrs,
         R.styleable.SwipeStringSelector, defStyleAttr, 0);
 
-    int leftButtonResource;
-    int rightButtonResource;
+    int startButtonResource;
+    int endButtonResource;
 
     int titleTextAppearance;
 
     try {
-      leftButtonResource = ta
+      startButtonResource = ta
           .getResourceId(R.styleable.SwipeStringSelector_swipe_leftButtonResource,
               R.drawable.ic_action_navigation_chevron_left);
-      rightButtonResource = ta
+      endButtonResource = ta
           .getResourceId(R.styleable.SwipeStringSelector_swipe_rightButtonResource,
               R.drawable.ic_action_navigation_chevron_right);
 
@@ -82,13 +86,24 @@ public class SwipeStringSelector extends FrameLayout implements IStringSelector 
     inflater.inflate(R.layout.swipeselector_layout, this);
 
     ViewPager pager = findViewById(R.id.swipe_selector_layout_swipePager);
-    ImageView leftButton = findViewById(R.id.swipe_selector_layout_leftButton);
-    ImageView rightButton = findViewById(R.id.swipe_selector_layout_rightButton);
+    ImageView leftButton = findViewById(R.id.swipe_selector_start_button);
+    ImageView rightButton = findViewById(R.id.swipe_selector_layout_end_button);
 
-    mAdapter = new SwipeAdapter(pager,
-        leftButtonResource, rightButtonResource,
-        leftButton, rightButton,
-        titleTextAppearance);
+    Configuration config = context.getResources().getConfiguration();
+    if (VERSION.SDK_INT >= VERSION_CODES.JELLY_BEAN_MR1
+        && config.getLayoutDirection() == View.LAYOUT_DIRECTION_RTL) {
+      //RTL
+      mAdapter = new SwipeAdapter(pager,
+          startButtonResource, endButtonResource,
+          rightButton, leftButton,
+          titleTextAppearance);
+    } else {
+      mAdapter = new SwipeAdapter(pager,
+          startButtonResource, endButtonResource,
+          leftButton, rightButton,
+          titleTextAppearance);
+
+    }
 
     pager.setAdapter(mAdapter);
   }

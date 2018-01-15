@@ -10,10 +10,10 @@
     android:layout_height="wrap_content"/>
 
   <ImageView
-    android:id="@+id/swipe_selector_layout_leftButton"
+    android:id="@+id/swipe_selector_start_button"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_gravity="center_vertical"
+    android:layout_gravity="center_vertical|start"
     android:paddingStart="8dp"
     android:paddingLeft="8dp"
     android:background="?selectableItemBackgroundBorderless"
@@ -21,7 +21,7 @@
     tools:ignore="RtlSymmetry"/>
 
   <ImageView
-    android:id="@+id/swipe_selector_layout_rightButton"
+    android:id="@+id/swipe_selector_layout_end_button"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center_vertical|end"

@@ -56,7 +56,7 @@ public class SwipeAdapter extends PagerAdapter
 
   private int mCurrentPosition;
 
-  SwipeAdapter(ViewPager viewPager, int leftButtonResource, int rightButtonResource,
+  SwipeAdapter(ViewPager viewPager, int startButtonResource, int endButtonResource,
       ImageView leftButton, ImageView rightButton,
       int titleTextAppearance) {
     mContext = viewPager.getContext();
@@ -67,16 +67,16 @@ public class SwipeAdapter extends PagerAdapter
     mTitleTextAppearance = titleTextAppearance;
 
     mLeftButton = leftButton;
-    mLeftButton.setImageResource(leftButtonResource);
+    mLeftButton.setImageResource(startButtonResource);
 
     mRightButton = rightButton;
-    mRightButton.setImageResource(rightButtonResource);
+    mRightButton.setImageResource(endButtonResource);
 
     // Calculate padding for the content so the left and right buttons don't overlap.
     mSweetSixteen = (int) PixelUtils.dpToPixel(mContext, 16);
-    mContentLeftPadding = ContextCompat.getDrawable(mContext, leftButtonResource)
+    mContentLeftPadding = ContextCompat.getDrawable(mContext, startButtonResource)
         .getIntrinsicWidth() + mSweetSixteen;
-    mContentRightPadding = ContextCompat.getDrawable(mContext, rightButtonResource)
+    mContentRightPadding = ContextCompat.getDrawable(mContext, endButtonResource)
         .getIntrinsicWidth() + mSweetSixteen;
 
     mLeftButton.setOnClickListener(this);
