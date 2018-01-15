@@ -119,11 +119,6 @@ class CreateFragment : Fragment(), AdapterView.OnItemSelectedListener {
         llCustomFrequency.visibility = View.VISIBLE
       }
     }
-    //FIXME commented out code
-//    else {
-//      sFrequency.visibility = View.VISIBLE
-//      llCustomFrequency.visibility = View.GONE
-//    }
   }
 
   override fun onNothingSelected(adapterView: AdapterView<*>) {

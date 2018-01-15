@@ -1,6 +1,7 @@
 package com.doapps.habits.fragments
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.os.AsyncTask
@@ -81,7 +82,6 @@ class ProfileFragment : Fragment() {
         }
       }
 
-      // FIXME
       topPanel.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
         if (topPanel.height - PixelUtils.dpToPixel(context, 50f) < 200) {
           if (user!!.photoUrl != null) {
@@ -145,7 +145,14 @@ class ProfileFragment : Fragment() {
       email.text = user!!.email
 
       btnDelete.setOnClickListener {
-        user!!.delete().addOnCompleteListener(UserRemoveCompleteListener(activity!!))
+        val builder = AlertDialog.Builder(activity)
+        builder.setTitle("Do you really want to remove your account?")
+        builder.setMessage("Remember, this action cannot be undone")
+        builder.setPositiveButton("OK") { _, _ ->
+          user!!.delete().addOnCompleteListener(UserRemoveCompleteListener(activity!!))
+        }.setNegativeButton("Cancel") { dialog, _ -> dialog.cancel() }
+        val dialog = builder.create()
+        dialog.show()
       }
       AvatarData.observe(this, ProfileAvatarListener(context!!, avatar, activity!!, this, plus))
     }
