@@ -103,12 +103,11 @@
       android:layout_width="0dp"
       android:layout_height="40dp"
       android:layout_weight=".5"
-      android:paddingStart="10dp"
-      android:paddingEnd="10dp"
-      android:paddingLeft="10dp"
+      android:padding="10dp"
       android:gravity="start|center_vertical"
       android:onClick="toTerms"
       android:text="@string/btn_terms_and_conditions"
+      android:textAlignment="viewStart"
       android:textColor="@color/grey_500"
       android:textSize="12sp"/>
 
@@ -120,11 +119,10 @@
       android:layout_width="0dp"
       android:layout_height="40dp"
       android:layout_weight=".5"
-      android:paddingStart="10dp"
-      android:paddingEnd="10dp"
-      android:paddingRight="10dp"
+      android:padding="10dp"
       android:gravity="end|center_vertical"
       android:text="@string/btn_link_to_login"
+      android:textAlignment="viewEnd"
       android:textColor="@color/colorAccent"
       android:textSize="12sp"/>
 
