@@ -28,7 +28,7 @@
       android:name=".activity.AuthActivity"
       android:theme="@style/AppTheme.Auth"/>
     <activity
-      android:configChanges="orientation"
+      android:configChanges="orientation|screenSize"
       android:launchMode="standard"
       android:name=".activity.MainActivity"
       android:theme="@style/AppTheme.NoActionBar"

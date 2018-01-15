@@ -107,7 +107,7 @@ class ProgramsFragment : Fragment(), ClickableDataSnapshotFragment {
         Log.i(TAG, "onChildChanged: ()")
         val position = Integer.parseInt(dataSnapshot.key) - 1
 
-        if (position > 0) {
+        if (position >= 0) {
           mProgramData!!.removeAt(position)
           mProgramData!!.add(position, FirebaseProgramView(dataSnapshot))
           mAdapter!!.notifyItemChanged(position)
