@@ -22,7 +22,7 @@ import com.doapps.habits.helper.HabitListManager
 import com.doapps.habits.listeners.ProfileAvatarListener
 import com.doapps.habits.listeners.UserRemoveCompleteListener
 import com.doapps.habits.models.Program
-import com.doapps.habits.slider.swipeselector.PixelUtils
+import com.doapps.habits.slider.swipeselector.dpToPixel
 import com.facebook.FacebookCallback
 import com.facebook.FacebookException
 import com.facebook.login.LoginManager
@@ -70,10 +70,10 @@ class ProfileFragment : Fragment() {
         location.visibility = View.GONE
       }
       if (AvatarData.hasAvatar(context!!.applicationContext)) {
-        AvatarData.getAvatar(context!!.applicationContext, avatar)
+        AvatarData.setAvatarImage(context!!.applicationContext, avatar)
       } else {
         if (BuildConfig.DEBUG) Log.i(TAG, "No avatar")
-        if (topPanel.height - PixelUtils.dpToPixel(context, 50f) < 200) {
+        if (topPanel.height - 50f.dpToPixel() < 200) {
           plus.visibility = View.VISIBLE
         }
         plus.setOnClickListener {
@@ -83,12 +83,12 @@ class ProfileFragment : Fragment() {
       }
 
       topPanel.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
-        if (topPanel.height - PixelUtils.dpToPixel(context, 50f) < 200) {
+        if (topPanel.height - 50f.dpToPixel() < 200) {
           if (user!!.photoUrl != null) {
             avatar.visibility = View.INVISIBLE
           }
           plus.imageAlpha = 0
-          Log.i("Top Panel", "I really can't fit on top panel, the view is only " + (topPanel.height - PixelUtils.dpToPixel(context, 50f)))
+          Log.i("Top Panel", "I really can't fit on top panel, the view is only " + (topPanel.height - 50f.dpToPixel()))
         } else {
           if (user!!.photoUrl != null) {
             avatar.visibility = View.VISIBLE

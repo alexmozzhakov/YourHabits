@@ -73,7 +73,7 @@ public class SwipeAdapter extends PagerAdapter
     mRightButton.setImageResource(endButtonResource);
 
     // Calculate padding for the content so the left and right buttons don't overlap.
-    mSweetSixteen = (int) PixelUtils.dpToPixel(mContext, 16);
+    mSweetSixteen = ToolsKt.dpToPixel(16);
     mContentLeftPadding = ContextCompat.getDrawable(mContext, startButtonResource)
         .getIntrinsicWidth() + mSweetSixteen;
     mContentRightPadding = ContextCompat.getDrawable(mContext, endButtonResource)
@@ -97,8 +97,15 @@ public class SwipeAdapter extends PagerAdapter
     }
   }
 
-  private static void animate(float alpha, ImageView button) {
-    button.animate()
+  /**
+   * Animates button opacity
+   *
+   * @param alpha The alpha to be animated to.
+   * @param imageView The button to be animated.
+   * @see View#setAlpha(float)
+   */
+  private static void animate(float alpha, ImageView imageView) {
+    imageView.animate()
         .alpha(alpha)
         .setDuration(120)
         .start();

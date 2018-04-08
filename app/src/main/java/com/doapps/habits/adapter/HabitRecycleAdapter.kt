@@ -14,6 +14,9 @@ import java.util.*
 class HabitRecycleAdapter(private val movableHabitList: HabitListManager)
   : RecyclerView.Adapter<HabitViewHolder>(), IMovableListAdapter {
 
+  /**
+   * A list of [com.doapps.habits.models.Habit]s for binding
+   */
   private val habitList: MutableList<Habit> = movableHabitList.list
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HabitViewHolder {
@@ -43,8 +46,16 @@ class HabitRecycleAdapter(private val movableHabitList: HabitListManager)
 
   }
 
+  /**
+   * The function to return number of items in list
+   * @return Number of items in list
+   */
   override fun getItemCount() = habitList.size
 
+  /**
+   * Handles item dismissing
+   * @param position item position to be dismissed
+   */
   override fun onItemDismiss(position: Int) {
     movableHabitList.onItemDismiss(position)
     habitList.removeAt(position)
@@ -52,6 +63,11 @@ class HabitRecycleAdapter(private val movableHabitList: HabitListManager)
     notifyItemRemoved(position)
   }
 
+  /**
+   * The function to handle item moving in list
+   * @param fromPosition Item start position
+   * @param toPosition Item finish position
+   */
   override fun onItemMove(fromPosition: Int, toPosition: Int) {
     Collections.swap(habitList, fromPosition, toPosition)
     val fromPositionId = habitList[fromPosition].id

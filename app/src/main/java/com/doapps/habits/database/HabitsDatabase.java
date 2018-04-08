@@ -11,5 +11,9 @@ import com.doapps.habits.models.Habit;
 @TypeConverters({IntegerArrayConverter.class})
 public abstract class HabitsDatabase extends RoomDatabase {
 
+  /**
+   * Gets database data access object
+   * @return Data Access Object
+   */
   public abstract HabitDao habitDao();
 }

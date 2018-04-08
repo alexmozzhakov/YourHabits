@@ -26,9 +26,7 @@ class TimeLineRecycleAdapter(private var feedList: List<Habit>)
     holder.textView.text = habit.title
   }
 
-  override fun getItemCount(): Int {
-    return feedList.size
-  }
+  override fun getItemCount() = feedList.size
 
   override fun updateList(data: List<Habit>) {
     feedList = data

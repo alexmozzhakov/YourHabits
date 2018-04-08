@@ -33,7 +33,6 @@ import com.doapps.habits.view.holders.HabitViewHolder
 import java.util.*
 import java.util.concurrent.ExecutionException
 
-
 class ListFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.OnCloseListener {
 
   private lateinit var searchView: SearchView
@@ -83,11 +82,11 @@ class ListFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.OnCl
         touchHelper.attachToRecyclerView(recyclerView)
         searchView.visibility = View.VISIBLE
         searchView.setOnSearchClickListener {
-          val params = CoordinatorLayout.LayoutParams(toolbar.width - 56f.dpToPixel(context!!), toolbar.height)
+          val params = CoordinatorLayout.LayoutParams(toolbar.width - 56f.dpToPixel(), toolbar.height)
           if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            params.marginStart = 56f.dpToPixel(context!!)
+            params.marginStart = 56f.dpToPixel()
           } else {
-            params.leftMargin = 56f.dpToPixel(context!!)
+            params.leftMargin = 56f.dpToPixel()
           }
           it.layoutParams = params
         }
@@ -149,13 +148,13 @@ class ListFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.OnCl
     super.onConfigurationChanged(newConfig)
     val width = when {
       searchView.isIconified -> ConstraintLayout.LayoutParams.WRAP_CONTENT
-      else -> (newConfig.screenWidthDp - 56f).dpToPixel(context!!)
+      else -> (newConfig.screenWidthDp - 56f).dpToPixel()
     }
     val params = CoordinatorLayout.LayoutParams(width, toolbar.height).apply {
       gravity = Gravity.END
       when {
-        Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 -> marginStart = 56f.dpToPixel(context!!)
-        else -> leftMargin = 56f.dpToPixel(context!!)
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 -> marginStart = 56f.dpToPixel()
+        else -> leftMargin = 56f.dpToPixel()
       }
     }
     searchView.layoutParams = params

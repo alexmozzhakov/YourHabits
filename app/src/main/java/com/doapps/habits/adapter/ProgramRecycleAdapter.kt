@@ -17,8 +17,17 @@ class ProgramRecycleAdapter(private val mProgramList: List<IProgramViewProvider>
                             private val mContext: Context,
                             private val mFragment: ClickableDataSnapshotFragment)
   : RecyclerView.Adapter<ProgramViewHolder>() {
+  /**
+   * Top program image ImageView
+   */
   private lateinit var mImageTop: ImageView
+  /**
+   * Top program title TextView
+   */
   private lateinit var mTitleTop: TextView
+  /**
+   * Top program success rate TextView
+   */
   private lateinit var mSuccessTop: TextView
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProgramViewHolder {
@@ -48,5 +57,9 @@ class ProgramRecycleAdapter(private val mProgramList: List<IProgramViewProvider>
     }
   }
 
+  /**
+   * A function to return list size
+   * @return size of the list
+   */
   override fun getItemCount() = mProgramList.size
 }

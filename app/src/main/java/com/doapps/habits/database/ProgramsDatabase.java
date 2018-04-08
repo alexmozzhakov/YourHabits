@@ -8,5 +8,9 @@ import com.doapps.habits.models.Program;
 @Database(entities = {Program.class}, version = 1)
 public abstract class ProgramsDatabase extends RoomDatabase {
 
+  /**
+   * Gets database data access object
+   * @return Data Access Object
+   */
   public abstract ProgramDao programDao();
 }

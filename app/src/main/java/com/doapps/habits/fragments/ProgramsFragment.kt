@@ -154,6 +154,12 @@ class ProgramsFragment : Fragment(), ClickableDataSnapshotFragment {
     return result
   }
 
+
+  /**
+   * The function sets up view for the first program in the list with given {@link #DataSnapshot}
+   * by downloading photo, setting onClick and success rate.
+   * @param dataSnapshot DataSnapshot of the program to be on top
+   */
   private fun generateTopProgram(dataSnapshot: DataSnapshot?) {
     mTitleTop!!.text = dataSnapshot!!.child("name").getValue(String::class.java)
     val imageLink = String.format("http://habit.esy.es/img_progs/%s.jpg",
@@ -180,6 +186,11 @@ class ProgramsFragment : Fragment(), ClickableDataSnapshotFragment {
     mSuccessTop!!.text = dataSnapshot.child("success").getValue(String::class.java)
   }
 
+  /**
+   * Handles click events on list items
+   * @param position the position of an item
+   * @param dataSnapshot DataSnapshot the position of an item
+   */
   override fun onClick(position: Int, dataSnapshot: DataSnapshot) {
     val fragmentManager = childFragmentManager
     if (isShowing) {

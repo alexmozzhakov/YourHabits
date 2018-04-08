@@ -28,7 +28,14 @@ import java.io.ByteArrayOutputStream
 import java.util.*
 
 class EditPhotoActivity : AppCompatActivity() {
+
+  /**
+   * The filed to store [Bitmap] of an image for the user's avatar
+   */
   private lateinit var bitmap: Bitmap
+  /**
+   * Request code for an image
+   */
   private val requestImage: Int = ImageSelectorActivity.REQUEST_IMAGE
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,10 +49,16 @@ class EditPhotoActivity : AppCompatActivity() {
     }
   }
 
+  /**
+   * The function to show toast when program has not enough permissions
+   */
   private fun deniedToast() =
       Toast.makeText(this, "This function needs read/write permission", Toast.LENGTH_SHORT).show()
 
 
+  /**
+   * Gets result from [ImageSelectorActivity] and starts image upload on success
+   */
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
     super.onActivityResult(requestCode, resultCode, data)
     if (requestCode == requestImage) {
@@ -56,7 +69,7 @@ class EditPhotoActivity : AppCompatActivity() {
         val images = data.getSerializableExtra(ImageSelectorActivity.REQUEST_OUTPUT) as ArrayList<String>
         getSharedPreferences("pref", Context.MODE_PRIVATE).edit().putString("avatar", images[0]).apply()
         bitmap = BitmapFactory.decodeFile(images[0])
-        if (BuildConfig.DEBUG) Log.i(TAG, String.format("%.2f Mb image is going to upload", bitmap.byteCount / 10e6))
+        if (BuildConfig.DEBUG) Log.i(TAG, String.format("%.2f MB image is going to upload", bitmap.byteCount / 10e6))
         uploadImage()
       } else {
         finish()
@@ -64,6 +77,9 @@ class EditPhotoActivity : AppCompatActivity() {
     }
   }
 
+  /**
+   * The function uploads image to backend server
+   */
   private fun uploadImage() {
     Toast.makeText(applicationContext, "Uploading...", Toast.LENGTH_LONG).show()
     val stringRequest = object : StringRequest(Request.Method.POST, UPLOAD_URL,
@@ -88,9 +104,9 @@ class EditPhotoActivity : AppCompatActivity() {
         val params = HashMap<String, String>(1)
 
         //Adding parameters
-        params.put(KEY_IMAGE, getStringImage(bitmap))
+        params[KEY_IMAGE] = getStringImage(bitmap)
         val user = FirebaseAuth.getInstance().currentUser!!
-        params.put("uid", user.uid)
+        params["uid"] = user.uid
 
         //returning parameters
         return params
@@ -109,6 +125,9 @@ class EditPhotoActivity : AppCompatActivity() {
     finish()
   }
 
+  /**
+   * Handles permission request result
+   */
   override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
                                           grantResults: IntArray) {
     super.onRequestPermissionsResult(requestCode, permissions, grantResults)
@@ -122,16 +141,20 @@ class EditPhotoActivity : AppCompatActivity() {
     /**
      * The [String] instance representing backend server API for base64 image uploading
      */
-    private val UPLOAD_URL = "http://habit.esy.es/upload.php"
+    private const val UPLOAD_URL = "http://habit.esy.es/upload.php"
     /**
-     * Key which server parses as an image
+     * POST parameter which server parses as an image
      */
-    private val KEY_IMAGE = "image"
+    private const val KEY_IMAGE = "image"
     /**
      * TAG is defined for logging errors and debugging information
      */
     private val TAG = EditPhotoActivity::class.java.simpleName
 
+    /**
+     * The function translates a given Bitmap to Base64
+     * @param bmp a [Bitmap] to convert
+     */
     private fun getStringImage(bmp: Bitmap): String {
       val stream = ByteArrayOutputStream()
       bmp.compress(Bitmap.CompressFormat.JPEG, 100, stream)
@@ -140,6 +163,9 @@ class EditPhotoActivity : AppCompatActivity() {
     }
   }
 
+  /**
+   * The function opens image selector
+   */
   private fun openImageSelector() {
     ImageSelectorActivity.start(this, 1, ImageSelectorActivity.MODE_SINGLE, true, false, true)
   }

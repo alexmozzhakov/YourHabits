@@ -1,5 +1,6 @@
 package com.doapps.habits.activity
 
+import android.annotation.SuppressLint
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
@@ -18,6 +19,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import com.crashlytics.android.Crashlytics
 import com.doapps.habits.BuildConfig
 import com.doapps.habits.R
@@ -36,14 +38,39 @@ import com.google.firebase.auth.FirebaseUser
 import io.fabric.sdk.android.Fabric
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+  /**
+   * The callback manager for Facebook
+   */
   val callbackManager: CallbackManager = CallbackManager.Factory.create()
+  /**
+   * An [Integer] to save last fragment number
+   * -1 by default
+   */
   var mLastFragment = -1
+  /**
+   * A listener of NavigationDrawer opening
+   */
   private lateinit var mDrawerToggle: ActionBarDrawerToggle
+  /**
+   * [NavigationView] view
+   */
   private lateinit var mNavigationView: NavigationView
+  /**
+   * User's avatar [ImageView]
+   */
   private lateinit var avatar: ImageView
+  /**
+   * A toolbar of an [AppCompatActivity]
+   */
   lateinit var toolbar: Toolbar
     private set
+  /**
+   * [FirebaseUser] user object
+   */
   private var user: FirebaseUser? = null
+  /**
+   * A layout of a drawer
+   */
   private var mDrawerLayout: DrawerLayout? = null
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -94,6 +121,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     AvatarData.observe(this, MenuAvatarListener(this, applicationContext, mNavigationView))
   }
 
+  /**
+   * Handles notification response if supplied with intent
+   */
   private fun handleIntentAction() {
     if (intent.action == "no" || intent.action == "yes") {
       val id: Int = intent.getIntExtra("id", 0)
@@ -115,12 +145,18 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
   }
 
+  /**
+   * Checks for GooglePlayServices
+   */
   private fun isGooglePlayServicesAvailable(context: Context): Boolean {
     val googleApiAvailability = GoogleApiAvailability.getInstance()
     val resultCode = googleApiAvailability.isGooglePlayServicesAvailable(context)
     return resultCode == ConnectionResult.SUCCESS
   }
 
+  /**
+   * Handles navigation item selection
+   */
   override fun onNavigationItemSelected(item: MenuItem): Boolean {
     mDrawerLayout!!.closeDrawer(GravityCompat.START)
 
@@ -128,6 +164,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     if (id == R.id.nav_logout) {
       logoutUser()
+      startActivity(Intent(this, AuthActivity::class.java))
     } else if (mLastFragment != id) {
       if (mLastFragment == R.id.nav_profile) {
         findViewById<View>(R.id.toolbar_shadow).visibility = View.VISIBLE
@@ -150,16 +187,26 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     return true
   }
 
+  /**
+   * Syncs the toggle state after onRestoreInstanceState has occurred.
+   */
   override fun onPostCreate(savedInstanceState: Bundle?) {
     super.onPostCreate(savedInstanceState)
-    // Sync the toggle state after onRestoreInstanceState has occurred.
     mDrawerToggle.syncState()
   }
 
+  /**
+   * Sets an navigation item of the Activity checked by index
+   * @param index an index to be set as checked
+   */
   fun setChecked(index: Int) {
     mNavigationView.menu.getItem(index).isChecked = true
   }
 
+
+  /**
+   * Handles transition to CreateFragment
+   */
   @Suppress("UNUSED_PARAMETER")
   fun toCreateFragment(view: View) {
     mNavigationView.menu.getItem(0).isChecked = false
@@ -172,6 +219,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         .commit()
   }
 
+  /**
+   * Handles transition to profile from navigation drawer
+   */
   @Suppress("UNUSED_PARAMETER")
   private fun toProfile(view: View) {
     mDrawerLayout!!.closeDrawer(GravityCompat.START)
@@ -192,6 +242,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }, INFLATE_DELAY)
   }
 
+  /**
+   * Sets up menu for anonymous user
+   */
   private fun anonymousMenuSetup() {
     mNavigationView.setNavigationItemSelectedListener(this)
     mNavigationView.menu.getItem(0).isChecked = true
@@ -200,16 +253,23 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     if (isGooglePlayServicesAvailable(this)) {
       mNavigationView.menu.findItem(R.id.nav_logout).title = "Login"
     } else {
+      Toast.makeText(applicationContext, "Please enable Google Play Services for login to work", Toast.LENGTH_SHORT).show()
       mNavigationView.menu.findItem(R.id.nav_logout).isVisible = false
     }
     mNavigationView.getHeaderView(0).visibility = View.GONE
 
   }
 
+  /**
+   * Removes padding from user's avatar in navigation drawer
+   */
   fun removeAvatarPadding() {
     mNavigationView.getHeaderView(0).findViewById<View>(R.id.fields_info).setPadding(0, 0, 0, 0)
   }
 
+  /**
+   * Handles start up of the navigation drawer
+   */
   fun onSetupNavigationDrawer(user: FirebaseUser?) {
     mNavigationView.setNavigationItemSelectedListener(this)
     mNavigationView.menu.getItem(0).isChecked = true
@@ -228,10 +288,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
       navEmail.text = user.email
       mNavigationView.getHeaderView(0).setOnClickListener({ toProfile(it) })
       if (AvatarData.hasAvatar(applicationContext)) {
-        AvatarData.getAvatar(applicationContext, avatar)
+        AvatarData.setAvatarImage(applicationContext, avatar)
         mNavigationView.getHeaderView(0)
             .findViewById<View>(R.id.fields_info).setPadding(
-            72f.dpToPixel(applicationContext), 0, 0, 0)
+                72f.dpToPixel(), 0, 0, 0)
       }
     } else {
       if (BuildConfig.DEBUG) Log.w("FirebaseAuth", "User is null")
@@ -240,10 +300,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
   }
 
+  /**
+   * Checks whether the current avatar view value is empty
+   */
   fun avatarEmpty(): Boolean = avatar.drawable == null
 
+  /**
+   * Logs out user and removes user if he/she was anonymous.
+   */
   private fun logoutUser() {
-    // Sign out from account manager
     if (user != null) {
       if (user!!.isAnonymous) {
         user!!.delete()
@@ -253,16 +318,19 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         if (BuildConfig.DEBUG) Log.i("FA", "user was signed out")
       }
     }
-    // Launching the login activity
-    val intent = Intent(this, AuthActivity::class.java)
-    startActivity(intent)
   }
 
+  /**
+   * Sends an activity result to a callback manager
+   */
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
     super.onActivityResult(requestCode, resultCode, data)
     callbackManager.onActivityResult(requestCode, resultCode, data)
   }
 
+  /**
+   * Handles closing of an application keyboard
+   */
   fun closeImm() {
     val imm = applicationContext.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     if (currentFocus != null) {
@@ -272,6 +340,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     if (BuildConfig.DEBUG) Log.i("IMM", "Closed imm")
   }
 
+  /**
+   * Handles pressing of back button
+   */
   override fun onBackPressed() {
     if (BuildConfig.DEBUG) Log.d("CDA", "onBackPressed Called")
     if (mLastFragment == R.id.nav_home) finishAffinity()
@@ -283,6 +354,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     mNavigationView.menu.getItem(0).isChecked = true
   }
 
+  /**
+   * Destroys an [AppCompatActivity] and removes user if it was anonymous
+   */
   override fun onDestroy() {
     super.onDestroy()
     if (user != null && user?.isAnonymous!!) user!!.delete()
@@ -290,14 +364,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
   companion object {
     /**
-     * A delay to let NavigationDrawer close and not freeze
+     * A delay to let a navigation drawer close and not freeze
      */
-    private val INFLATE_DELAY = 200L
+    private const val INFLATE_DELAY = 200L
 
     /**
      * Checks whether given Firebase user is connected with Facebook
-     * @param user FirebaseUser item to be checked
+     * @param user [FirebaseUser] item to be checked
      */
+    @SuppressLint("RestrictedApi")
     fun isFacebook(user: FirebaseUser) = user.providers!!.any { it.contains("facebook") }
 
     /**
@@ -306,6 +381,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private val TAG = MainActivity::class.java.simpleName
   }
 
+  /**
+   * Handles device rotation
+   */
   override fun onConfigurationChanged(newConfig: Configuration) {
     super.onConfigurationChanged(newConfig)
     toolbar.title = when (mLastFragment) {

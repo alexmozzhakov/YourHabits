@@ -118,8 +118,7 @@ class LoginFragment : Fragment() {
                     }
                   } else {
                     Log.w(TAG, "signInWithCredential", task.exception)
-                    Toast.makeText(context, "Authentication failed.", Toast.LENGTH_SHORT)
-                        .show()
+                    Toast.makeText(context, "Authentication failed.", Toast.LENGTH_SHORT).show()
                   }
                 }
           }

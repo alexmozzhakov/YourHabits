@@ -13,9 +13,16 @@ import java.util.*
 class HabitSearchRecycleAdapter(private val habitList: List<Habit>, private val habitsDatabase: HabitListManager)
   : RecyclerView.Adapter<HabitViewHolder>(), IMovableListAdapter {
 
+  /**
+   * Handles item movement
+   */
   // ignored
   override fun onItemMove(fromPosition: Int, toPosition: Int) = Unit
 
+  /**
+   * Handles item dismissing
+   */
+  // ignored
   override fun onItemDismiss(position: Int) = Unit
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HabitViewHolder {
@@ -48,7 +55,9 @@ class HabitSearchRecycleAdapter(private val habitList: List<Habit>, private val 
 
   }
 
-  override fun getItemCount(): Int {
-    return habitList.size
-  }
+  /**
+   * A function to return list size
+   * @return size of the list
+   */
+  override fun getItemCount() = habitList.size
 }

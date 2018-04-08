@@ -14,7 +14,7 @@ object DayFilter {
     while (habitIterator.hasNext()) {
       val freq = habitIterator.next().frequency
 
-      if (!freq.isEmpty() && freq.size > 2 && notToday(freq, dayOfWeek)) habitIterator.remove()
+      if (freq.isNotEmpty() && freq.size > 2 && notToday(freq, dayOfWeek)) habitIterator.remove()
       else if (freq.isEmpty() && BuildConfig.DEBUG) Log.w("filterListByDay()", "frequency not set")
     }
   }
@@ -25,7 +25,7 @@ object DayFilter {
     while (habitIterator.hasNext()) {
       val freq = habitIterator.next().frequency
 
-      if (!freq.isEmpty() && !isEveryday(freq) && (once(freq) || notToday(freq, dayOfWeek))) habitIterator.remove()
+      if (freq.isNotEmpty() && !isEveryday(freq) && (once(freq) || notToday(freq, dayOfWeek))) habitIterator.remove()
       else if (freq.isEmpty() && BuildConfig.DEBUG) Log.w("filterListByDay()", "frequency not set")
     }
   }

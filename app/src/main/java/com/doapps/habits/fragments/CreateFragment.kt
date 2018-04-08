@@ -26,6 +26,9 @@ import java.util.*
 
 class CreateFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
+  /**
+   *
+   */
   private lateinit var editTime: TextInputEditText
   private lateinit var editQuestion: TextInputEditText
   private lateinit var editTitle: TextInputEditText
@@ -121,9 +124,8 @@ class CreateFragment : Fragment(), AdapterView.OnItemSelectedListener {
     }
   }
 
-  override fun onNothingSelected(adapterView: AdapterView<*>) {
-    // ignored
-  }
+  // ignored
+  override fun onNothingSelected(adapterView: AdapterView<*>) = Unit
 
   override fun onPause() {
     (activity as MainActivity).closeImm()

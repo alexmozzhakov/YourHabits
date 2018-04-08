@@ -3,8 +3,8 @@ apply plugin: 'kotlin-android'
 apply plugin: 'io.fabric'
 
 android {
-    compileSdkVersion 'android-26'
-    buildToolsVersion '26.0.2'
+    compileSdkVersion 'android-27'
+    buildToolsVersion '27.0.3'
 
     defaultConfig {
         applicationId "com.doapps.habit"
@@ -45,12 +45,11 @@ dependencies {
     // App's dependencies, including test
     implementation "com.android.support:design:$supportLibraryVersion"
     implementation "com.android.support:recyclerview-v7:$supportLibraryVersion"
-    implementation "com.android.support.constraint:constraint-layout:1.1.0-beta4"
+    implementation "com.android.support.constraint:constraint-layout:1.1.0-beta6"
     implementation "com.android.volley:volley:1.0.0"
 
     implementation "android.arch.lifecycle:extensions:$architectureComponentsVersion"
-    implementation "android.arch.lifecycle:common-java8:1.0.0"
-    implementation "android.arch.persistence.room:runtime:$architectureComponentsVersion"
+    implementation "android.arch.persistence.room:runtime:$roomVersion"
 
     implementation 'com.squareup.picasso:picasso:2.5.2'
     implementation 'com.github.vipulasri:timelineview:1.0.5'
@@ -65,7 +64,7 @@ dependencies {
     implementation "com.google.firebase:firebase-auth:$firebaseVersion"
     implementation('com.crashlytics.sdk.android:crashlytics:2.7.1@aar') { transitive = true }
 
-    annotationProcessor "android.arch.persistence.room:compiler:$architectureComponentsVersion"
+    annotationProcessor "android.arch.persistence.room:compiler:$roomVersion"
     testImplementation "junit:junit:$junitVersion"
     androidTestImplementation "com.android.support:support-annotations:$supportLibraryVersion"
     androidTestImplementation("com.android.support.test.espresso:espresso-core:$espressoVersion") {
@@ -76,6 +75,17 @@ dependencies {
     }
     androidTestImplementation "com.android.support.test:runner:$runnerVersion"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
+}
+
+android.applicationVariants.all { variant ->
+    task("generate${variant.name.capitalize()}Javadoc", type: Javadoc) {
+        description "Generates Javadoc for $variant.name."
+        source = variant.getJavaCompiler().source
+        ext.androidJar = "${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar"
+        classpath = files(variant.getJavaCompiler().classpath.files) + files(ext.androidJar)
+        options.links("http://docs.oracle.com/javase/7/docs/api/");
+        options.links("http://d.android.com/reference/");
+    }
 }
 
 tasks.whenTaskAdded {

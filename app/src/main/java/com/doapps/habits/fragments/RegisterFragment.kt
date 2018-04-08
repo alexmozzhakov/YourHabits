@@ -21,9 +21,6 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
 
-/**
- * A simple [Fragment] subclass.
- */
 class RegisterFragment : Fragment() {
 
   private fun handleRegisterError(task: Task<*>, activity: Activity?) {

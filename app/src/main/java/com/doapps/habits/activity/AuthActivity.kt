@@ -16,10 +16,22 @@ import com.facebook.CallbackManager
 import com.google.firebase.auth.FirebaseAuth
 
 class AuthActivity : AppCompatActivity() {
+  /**
+   * The callback manager for Facebook
+   */
   val callbackManager: CallbackManager = CallbackManager.Factory.create()
+  /**
+   * Firebase authentication listener
+   */
   private lateinit var mAuthListener: FirebaseAuth.AuthStateListener
+  /**
+   * Firebase authentication object
+   */
   private lateinit var mAuth: FirebaseAuth
 
+  /**
+   * Starts auth state listener on the activity start
+   */
   public override fun onStart() {
     super.onStart()
     mAuth.addAuthStateListener(mAuthListener)
@@ -44,16 +56,25 @@ class AuthActivity : AppCompatActivity() {
         .commit()
   }
 
+  /**
+   * Passes result from activity to Facebook callback manager
+   */
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
     super.onActivityResult(requestCode, resultCode, data)
     callbackManager.onActivityResult(requestCode, resultCode, data)
   }
 
+  /**
+   * Removes [FirebaseAuth.AuthStateListener] and stops an Activity
+   */
   public override fun onStop() {
     mAuth.removeAuthStateListener(mAuthListener)
     super.onStop()
   }
 
+  /**
+   * Changes top image visibility and content margin on device rotation
+   */
   override fun onConfigurationChanged(newConfig: Configuration) {
     super.onConfigurationChanged(newConfig)
     val topImageText = findViewById<View>(R.id.top_image_text)
@@ -70,19 +91,28 @@ class AuthActivity : AppCompatActivity() {
     }
   }
 
+  /**
+   * Sets up top margin of frame layout
+   */
   private fun setTopMargin(margin: Float) {
     val layout = findViewById<FrameLayout>(R.id.frame_layout)
     val params = layout.layoutParams as FrameLayout.LayoutParams
     params.topMargin =
         when (margin) {
           0f -> 0
-          else -> margin.dpToPixel(applicationContext)
+          else -> margin.dpToPixel()
         }
     layout.layoutParams = params
   }
 
+  /**
+   * Creates an activity with application terms and conditions page
+   */
   @Suppress("UNUSED_PARAMETER")
   fun toTerms(view: View) = startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("http://habit.esy.es/terms.txt")))
 
+  /**
+   * Triggers application close when clicking back button
+   */
   override fun onBackPressed() = finishAffinity()
 }

@@ -9,7 +9,7 @@ import com.github.vipulasri.timelineview.TimelineView
 
 class TimeLineViewHolder(itemView: View, viewType: Int) : RecyclerView.ViewHolder(itemView) {
     var textView: TextView = itemView.findViewById(R.id.habit_title)
-    val mTimelineView: TimelineView = itemView.findViewById(R.id.time_marker)
+    private val mTimelineView: TimelineView = itemView.findViewById(R.id.time_marker)
 
     init {
         mTimelineView.initLine(viewType)

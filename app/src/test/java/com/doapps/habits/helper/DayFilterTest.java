@@ -13,7 +13,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 @SuppressWarnings("HardCodedStringLiteral")
-public class HomeDayManagerTest {
+public class DayFilterTest {
 
   private static List<Habit> generateListOfHabits() {
     final List<Habit> list = new ArrayList<>(15);

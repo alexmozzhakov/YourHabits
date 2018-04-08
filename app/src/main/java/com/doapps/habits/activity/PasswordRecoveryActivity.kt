@@ -13,6 +13,9 @@ import com.doapps.habits.helper.EmailTextWatcher
 import com.google.firebase.auth.FirebaseAuth
 
 class PasswordRecoveryActivity : AppCompatActivity() {
+  /**
+   * Text input of email editing field
+   */
   private lateinit var emailEdit: TextInputEditText
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,6 +24,9 @@ class PasswordRecoveryActivity : AppCompatActivity() {
     emailEdit = findViewById(R.id.textInputEditText)
   }
 
+  /**
+   * The function sends recovery mail to user
+   */
   @Suppress("UNUSED_PARAMETER")
   fun recoverPassword(view: View) {
     val newEmail = emailEdit.text.toString().trim { it <= ' ' }

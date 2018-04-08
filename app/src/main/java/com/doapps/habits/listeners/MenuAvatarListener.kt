@@ -50,7 +50,7 @@ class MenuAvatarListener(lifecycleOwner: LifecycleOwner,
       }
       avatar.invalidate()
 
-      val padding = 68f.dpToPixel(context)
+      val padding = 68f.dpToPixel()
       val fieldsInfo = navigationView.getHeaderView(0).findViewById<View>(R.id.fields_info)
 
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
