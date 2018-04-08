@@ -1,4 +1,4 @@
-# doHabit
+# doHabits
 Android doHabits app
 
 [![CircleCI](https://circleci.com/gh/alexmozzhakov/doHabit.svg?style=svg)](https://circleci.com/gh/alexmozzhakov/doHabit)
