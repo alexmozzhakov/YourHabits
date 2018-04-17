@@ -121,15 +121,6 @@ public class Program {
     return habitId;
   }
 
-  /**
-   * Sets habit id.
-   *
-   * @param habitId the habit id
-   */
-  public void setHabitId(long habitId) {
-    this.habitId = habitId;
-  }
-
   @Override
   public String toString() {
     return "Program{" +

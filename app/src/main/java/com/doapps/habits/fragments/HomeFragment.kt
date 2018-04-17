@@ -201,11 +201,11 @@ class HomeFragment : Fragment(), IWeatherUpdater {
     /**
      * URL to json weather api which returns both location and degrees in celsius
      */
-    private val URL_WEATHER_API = "http://habit.esy.es/weather.php"
+    private const val URL_WEATHER_API = "http://habit.esy.es/weather.php"
     /**
      * Broadcast name for monitoring broadcast changes
      */
-    private val BROADCAST = "android.net.conn.CONNECTIVITY_CHANGE"
+    private const val BROADCAST = "android.net.conn.CONNECTIVITY_CHANGE"
     /**
      * TAG is defined for logging errors and debugging information
      */
@@ -228,13 +228,13 @@ class HomeFragment : Fragment(), IWeatherUpdater {
           if (value == 0) {
             habitDayManager.updateForToday()
 
-            if (BuildConfig.DEBUG) Log.i(TAG, "Selected day (today) = " + dayOfWeek)
+            if (BuildConfig.DEBUG) Log.i(TAG, "Selected day (today) = $dayOfWeek")
 
           } else {
             val daysFromWeekStart = dayOfWeek + value
             val day = if (daysFromWeekStart > 7) daysFromWeekStart % 7 else daysFromWeekStart
 
-            if (BuildConfig.DEBUG) Log.i(TAG, "Selected day = " + day)
+            if (BuildConfig.DEBUG) Log.i(TAG, "Selected day = $day")
             habitDayManager.updateListByDayOfWeek(day)
           }
         }

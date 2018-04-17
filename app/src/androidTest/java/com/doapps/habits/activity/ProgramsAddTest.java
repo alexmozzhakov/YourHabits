@@ -23,7 +23,7 @@ public class ProgramsAddTest {
       new ActivityTestRule<>(MainActivity.class);
 
   @Test
-  public void DoubleAddProgram() {
+  public void doubleAddProgram() {
     onView(withId(R.id.drawer_layout)).perform(open());
     onView(withText(R.string.programs)).perform(click());
     onView(withText("Running")).perform(click());
