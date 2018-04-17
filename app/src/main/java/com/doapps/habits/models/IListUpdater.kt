@@ -1,5 +1,8 @@
 package com.doapps.habits.models
 
+/**
+ * An interface for list updaters
+ */
 interface IListUpdater<in T> {
 
   /**

@@ -2,6 +2,9 @@ package com.doapps.habits.models
 
 import com.doapps.habits.slider.swipeselector.SwipeAdapter
 
+/**
+ * An interface for string selectors
+ */
 interface IStringSelector {
   /**
    * Register a callback to be invoked when an item in this selector has been clicked.

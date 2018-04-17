@@ -1,5 +1,8 @@
 package com.doapps.habits.models
 
+/**
+ * An interface for item selection listeners
+ */
 interface IOnItemSelectedListener<in T> {
 
   /**

@@ -27,8 +27,8 @@ public class BackButtonCheck {
   public void checkBackButton() {
     onView(withId(R.id.drawer_layout)).perform(open());
     onView(withText(R.string.list)).perform(click());
-    mActivityTestRule.getActivity().runOnUiThread(() ->
-        mActivityTestRule.getActivity().onBackPressed());
+    mActivityTestRule.getActivity()
+        .runOnUiThread(() -> mActivityTestRule.getActivity().onBackPressed());
     onView(withText(R.string.tasks_due)).check(matches(isDisplayed()));
   }
 

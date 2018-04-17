@@ -1,7 +1,7 @@
 package com.doapps.habits.models
 
 /**
- * Manages days changes
+ * An interface for days change managers
  */
 interface IDayManager {
   /**

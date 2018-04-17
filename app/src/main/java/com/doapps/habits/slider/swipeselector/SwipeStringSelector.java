@@ -20,6 +20,9 @@ import com.doapps.habits.models.IOnItemSelectedListener;
 import com.doapps.habits.models.IStringSelector;
 
 
+/**
+ * The string selector with swipe selection.
+ */
 /*
  * SwipeStringSelector library for Android
  * Copyright (c) 2016 Iiro Krankka (http://github.com/roughike).
@@ -42,16 +45,34 @@ public class SwipeStringSelector extends FrameLayout implements IStringSelector 
 
   private SwipeAdapter mAdapter;
 
+  /**
+   * Instantiates a new swipe string selector.
+   *
+   * @param context the context
+   */
   public SwipeStringSelector(Context context) {
     super(context);
     init(context, null, 0);
   }
 
+  /**
+   * Instantiates a new swipe string selector.
+   *
+   * @param context the context
+   * @param attrs the attributes
+   */
   public SwipeStringSelector(Context context, AttributeSet attrs) {
     super(context, attrs);
     init(context, attrs, 0);
   }
 
+  /**
+   * Instantiates a new swipe string selector.
+   *
+   * @param context the context
+   * @param attrs the attributes
+   * @param defStyleAttr the default style attribute
+   */
   public SwipeStringSelector(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
     init(context, attrs, defStyleAttr);

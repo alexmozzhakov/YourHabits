@@ -14,6 +14,9 @@ import android.widget.TextView;
 import com.doapps.habits.R;
 import com.doapps.habits.models.IOnItemSelectedListener;
 
+/**
+ * The swipe adapter.
+ */
 /*
  * SwipeStringSelector library for Android
  * Copyright (c) 2016 Iiro Krankka (http://github.com/roughike).
@@ -56,6 +59,16 @@ public class SwipeAdapter extends PagerAdapter
 
   private int mCurrentPosition;
 
+  /**
+   * Instantiates a new Swipe adapter.
+   *
+   * @param viewPager the view pager
+   * @param startButtonResource the start button resource
+   * @param endButtonResource the end button resource
+   * @param leftButton the left button
+   * @param rightButton the right button
+   * @param titleTextAppearance the title text appearance
+   */
   SwipeAdapter(ViewPager viewPager, int startButtonResource, int endButtonResource,
       ImageView leftButton, ImageView rightButton,
       int titleTextAppearance) {
@@ -113,11 +126,18 @@ public class SwipeAdapter extends PagerAdapter
 
   /**
    * methods used by SwipeStringSelector
+   *
+   * @param listener the listener
    */
   void setOnItemSelectedListener(IOnItemSelectedListener<? super String> listener) {
     mOnItemSelectedListener = listener;
   }
 
+  /**
+   * Sets items.
+   *
+   * @param items the items
+   */
   void setItems(String... items) {
     mItems = items;
     mCurrentPosition = 0;
@@ -129,12 +149,22 @@ public class SwipeAdapter extends PagerAdapter
     return mItems[mCurrentPosition];
   }
 
+  /**
+   * On save instance state bundle.
+   *
+   * @return the bundle
+   */
   Bundle onSaveInstanceState() {
     Bundle bundle = new Bundle();
     bundle.putInt(STATE_CURRENT_POSITION, mCurrentPosition);
     return bundle;
   }
 
+  /**
+   * On restore instance state.
+   *
+   * @param state the state
+   */
   void onRestoreInstanceState(Bundle state) {
     mViewPager.setCurrentItem(state.getInt(STATE_CURRENT_POSITION), false);
     notifyDataSetChanged();
@@ -244,6 +274,11 @@ public class SwipeAdapter extends PagerAdapter
     }
   }
 
+  /**
+   * Gets current position.
+   *
+   * @return the current position
+   */
   public int getCurrentPosition() {
     return mCurrentPosition;
   }

@@ -16,7 +16,7 @@ import android.widget.TextView
 import com.doapps.habits.R
 import com.doapps.habits.activity.MainActivity
 import com.doapps.habits.adapter.ProgramRecycleAdapter
-import com.doapps.habits.helper.ClickableDataSnapshotFragment
+import com.doapps.habits.helper.ClickableDataSnapshotList
 import com.doapps.habits.models.FirebaseProgramView
 import com.doapps.habits.models.IProgramViewProvider
 import com.google.firebase.database.ChildEventListener
@@ -26,7 +26,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.squareup.picasso.Picasso
 import java.util.*
 
-class ProgramsFragment : Fragment(), ClickableDataSnapshotFragment {
+class ProgramsFragment : Fragment(), ClickableDataSnapshotList {
   private var mAdapter: ProgramRecycleAdapter? = null
   private var mProgramData: MutableList<IProgramViewProvider>? = null
   private var mTitleTop: TextView? = null

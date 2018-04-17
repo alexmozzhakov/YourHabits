@@ -11,8 +11,17 @@ import com.doapps.habits.services.NotificationIntentService
 import java.util.*
 import java.util.concurrent.TimeUnit
 
+/**
+ * The receiver for an application notifications
+ */
 class NotificationReceiver : BroadcastReceiver() {
 
+  /**
+   * Handles notification and binds it to a habit id, before passing to service
+   *
+   * @param context application context
+   * @param intent intent of a notification
+   */
   override fun onReceive(context: Context, intent: Intent) {
     if (BuildConfig.DEBUG) Log.i(TAG, "received for id = ${intent.extras.getLong("id")}")
     val notificationIntent = Intent(context, NotificationIntentService::class.java)
@@ -21,6 +30,12 @@ class NotificationReceiver : BroadcastReceiver() {
     // Notification is handled in MainActivity
   }
 
+  /**
+   * Sets timer for a notification to run
+   *
+   * @param context application context
+   * @param id the id of an habit to build a notification for
+   */
   fun setAlarm(context: Context, id: Long) {
     val am = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
     val intent = Intent(context, NotificationReceiver::class.java)

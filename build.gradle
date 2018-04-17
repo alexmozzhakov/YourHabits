@@ -1,5 +1,6 @@
 buildscript {
     ext.kotlin_version = '1.2.31'
+    ext.dokka_version = '0.9.16'
     repositories {
         jcenter()
         google()
@@ -7,10 +8,11 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.0'
-        classpath 'com.google.gms:google-services:3.1.1'
+        classpath 'com.android.tools.build:gradle:3.1.1'
+        classpath 'com.google.gms:google-services:3.2.0'
         classpath 'io.fabric.tools:gradle:1.24.4'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.jetbrains.dokka:dokka-android-gradle-plugin:$dokka_version"
     }
 }
 

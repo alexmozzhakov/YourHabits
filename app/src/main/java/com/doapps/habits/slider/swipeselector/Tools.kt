@@ -3,9 +3,9 @@ package com.doapps.habits.slider.swipeselector
 import android.content.res.Resources
 
 /**
- * Converts dps to pixels
+ * Converts dps to pixels using the formula:
+ * pixels = density * density independent pixels
  *
- * Pixels = density * density independent pixels
  * @return dimension in pixels
  */
 fun Float.dpToPixel(): Int {

@@ -8,14 +8,14 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.doapps.habits.R
-import com.doapps.habits.helper.ClickableDataSnapshotFragment
+import com.doapps.habits.helper.ClickableDataSnapshotList
 import com.doapps.habits.models.IProgramViewProvider
 import com.doapps.habits.view.holders.ProgramViewHolder
 import com.squareup.picasso.Picasso
 
 class ProgramRecycleAdapter(private val mProgramList: List<IProgramViewProvider>,
                             private val mContext: Context,
-                            private val mFragment: ClickableDataSnapshotFragment)
+                            private val mFragment: ClickableDataSnapshotList)
   : RecyclerView.Adapter<ProgramViewHolder>() {
   /**
    * Top program image ImageView
