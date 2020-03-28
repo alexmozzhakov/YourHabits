@@ -31,3 +31,5 @@ app/schemas/*
 codeiris/
 
 projectFilesBackup/.idea/
+
+*.swp
