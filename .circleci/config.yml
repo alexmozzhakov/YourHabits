@@ -6,7 +6,7 @@ jobs:
     steps:
       - run:
           name: Accept licenses
-          command: yes | sdkmanager --licenses
+          command: yes | sdkmanager --licenses || exit 0
       - run:
           name: Update licenses
           command: yes | sdkmanager --update || exit 0
